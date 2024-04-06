@@ -37,7 +37,7 @@ import java.util.List;
 
 public class ItemThrowableProjectile extends ItemBase {
     public static final int MAX_USE_DURATION = 3 * 20; //TODO config
-    public static final float THROW_VELOCITY = 0.1f;
+    public static final float THROW_VELOCITY = 0.5f;
 
     public static final TextComponentTranslation ERROR_THROWING_INTERFACE = new TextComponentTranslation("error.icbmclassic:projectile.throwing.interface", IProjectileThrowable.class.getSimpleName());
     public static final TextComponentTranslation ERROR_THROWING_TYPE = new TextComponentTranslation("error.icbmclassic:projectile.throwing.type", ProjectileType.TYPE_THROWABLE.getID());
@@ -114,7 +114,7 @@ public class ItemThrowableProjectile extends ItemBase {
             final float yaw = thrower instanceof EntityLivingBase ? ((EntityLivingBase) thrower).rotationYawHead : thrower.rotationYaw;
             final float pitch = thrower.rotationPitch;
             final double x = thrower.posX;
-            final double y = thrower.posY;
+            final double y = thrower.posY + thrower.getEyeHeight()  ;
             final double z = thrower.posZ;
 
             final IMissileSource source = new MissileSource(world, new Vec3d(x, y, z), new EntityCause(thrower));
@@ -134,7 +134,6 @@ public class ItemThrowableProjectile extends ItemBase {
 
             // Run post spawn logic
             projectileStack.getProjectileData().onEntitySpawned(parachute, thrower);
-            ICBMClassic.logger().info("spawned: " + parachute);
 
             return true;
         }
