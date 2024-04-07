@@ -12,6 +12,7 @@ import icbm.classic.content.blast.helpers.BlastBlockHelpers;
 import icbm.classic.content.blast.redmatter.DamageSourceRedmatter;
 import icbm.classic.content.blast.redmatter.EntityRedmatter;
 import icbm.classic.content.entity.EntityExplosion;
+import icbm.classic.content.entity.flyingblock.BlockCaptureData;
 import icbm.classic.content.entity.flyingblock.EntityFlyingBlock;
 import icbm.classic.content.entity.flyingblock.FlyingBlock;
 import icbm.classic.lib.CalculationHelpers;
@@ -268,24 +269,25 @@ public class RedmatterLogic
         //We are looping in a shell orbit around the center
         if (dist < (this.currentBlockDestroyRadius + 1))
         {
-            final IBlockState blockState = host.world.getBlockState(blockPos);
-            if (shouldRemoveBlock(blockPos, blockState)) //TODO calculate a pressure or pull force to destroy weaker blocks before stronger blocks
+            final BlockCaptureData blockCaptureData = new BlockCaptureData(host.world, blockPos);
+            if (shouldRemoveBlock(blockPos, blockCaptureData.getBlockState())) //TODO calculate a pressure or pull force to destroy weaker blocks before stronger blocks
             {
                 //TODO handle multi-blocks
                 //TODO: render fluid streams moving into hole
 
+
                 if (host.world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 3))
                 {
                     //Freeze fluid blocks to improve pull rate
-                    if (blockState.getBlock() == Blocks.WATER || blockState.getBlock() == Blocks.FLOWING_WATER)
+                    if (blockCaptureData.getBlockState().getBlock() == Blocks.WATER || blockCaptureData.getBlockState().getBlock() == Blocks.FLOWING_WATER)
                     {
                         freezeWaterAround(blockPos);
                     }
 
                     //Convert a random amount of destroyed blocks into flying blocks for visuals
-                    if (canTurnIntoFlyingBlock(blockState) && host.world.rand.nextFloat() > ConfigBlast.redmatter.CHANCE_FOR_FLYING_BLOCK)
+                    if (canTurnIntoFlyingBlock(blockCaptureData.getBlockState()) && host.world.rand.nextFloat() > ConfigBlast.redmatter.CHANCE_FOR_FLYING_BLOCK)
                     {
-                        spawnFlyingBlock(blockPos, blockState);
+                        spawnFlyingBlock(blockPos, blockCaptureData);
                     }
                     markBlockRemoved();
                 }
@@ -335,8 +337,9 @@ public class RedmatterLogic
         return ConfigBlast.redmatter.SPAWN_FLYING_BLOCKS && !BlastBlockHelpers.isFluid(blockState);
     }
 
-    protected void spawnFlyingBlock(BlockPos blockPos, IBlockState blockState) {
-        FlyingBlock.spawnFlyingBlock(host.world, blockPos, blockState, (entity) -> {
+    protected void spawnFlyingBlock(BlockPos blockPos, BlockCaptureData blockCaptureData) {
+        // TODO get itemStack, do rng for if stack is complete version or broken version
+        FlyingBlock.spawnFlyingBlock(host.world, blockPos, blockCaptureData, (entity) -> {
             entity.yawChange = 50 * host.world.rand.nextFloat(); //TODO why 50?
             entity.pitchChange = 50 * host.world.rand.nextFloat();
             entity.noClip = true;

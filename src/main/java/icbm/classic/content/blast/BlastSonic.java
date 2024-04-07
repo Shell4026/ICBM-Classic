@@ -6,6 +6,7 @@ import icbm.classic.client.ICBMSounds;
 import icbm.classic.config.ConfigDebug;
 import icbm.classic.content.blast.thread.ThreadLargeExplosion;
 import icbm.classic.content.blocks.explosive.TileEntityExplosive;
+import icbm.classic.content.entity.flyingblock.BlockCaptureData;
 import icbm.classic.content.entity.flyingblock.EntityFlyingBlock;
 import icbm.classic.content.entity.flyingblock.FlyingBlock;
 import icbm.classic.content.reg.BlockReg;
@@ -90,14 +91,17 @@ public class BlastSonic extends Blast implements IBlastTickable
                                     }
                                 }
 
-                                //Destroy block
-                                this.world().setBlockToAir(targetPosition);
+                                final BlockCaptureData blockCaptureData = new BlockCaptureData(world, targetPosition);
 
-                                //Create floating block
-                                if (!(block instanceof IFluidBlock) //TODO add ban list covered by a utility, but also try fixing fluids by causing a rain/slash effect
+                                //Destroy block
+                                if(this.world().setBlockToAir(targetPosition)) {
+
+                                    //Create floating block
+                                    if (!(block instanceof IFluidBlock) //TODO add ban list covered by a utility, but also try fixing fluids by causing a rain/slash effect
                                         && this.world().rand.nextFloat() < 0.1) //TODO add config for chance, increase chance if we fail to spawn a block
-                                {
-                                    FlyingBlock.spawnFlyingBlock(world, targetPosition, blockState);
+                                    {
+                                        FlyingBlock.spawnFlyingBlock(world, targetPosition, blockCaptureData);
+                                    }
                                 }
                             }
                         }

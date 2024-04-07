@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
@@ -33,9 +34,9 @@ public class EntityBombDroplet extends EntityProjectile<EntityBombDroplet> imple
     }
 
     @Override
-    protected void onImpact(Vec3d impactLocation) {
-       super.onImpact(impactLocation);
-       explosive.doExplosion(impactLocation);
+    protected void onImpact(RayTraceResult hit) {
+       super.onImpact(hit);
+       explosive.doExplosion(hit.hitVec);
     }
 
     @Override

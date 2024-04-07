@@ -7,6 +7,7 @@ import icbm.classic.api.missiles.projectile.IProjectileData;
 import icbm.classic.api.missiles.projectile.IProjectileDataRegistry;
 import icbm.classic.api.missiles.projectile.ProjectileType;
 import icbm.classic.api.reg.obj.IBuilderRegistry;
+import icbm.classic.content.entity.flyingblock.BlockCaptureData;
 import icbm.classic.content.entity.flyingblock.EntityFlyingBlock;
 import icbm.classic.content.entity.flyingblock.FlyingBlock;
 import icbm.classic.lib.saving.NbtSaveHandler;
@@ -183,7 +184,8 @@ public abstract class CargoProjectileData<T extends IBuildableObject, ENTITY ext
         }
 
         // TODO add itemstack to flying block for better placement and handling of TE data
-        if (!FlyingBlock.spawnFlyingBlock(entity.world, entity.getPosition(), iblockstate, (flyingBlock) -> {
+        final BlockCaptureData blockCaptureData = new BlockCaptureData(iblockstate, heldItem.copy());
+        if (!FlyingBlock.spawnFlyingBlock(entity.world, entity.getPosition(), blockCaptureData, (flyingBlock) -> {
             flyingBlock.startRiding(entity);
         }, null)) {
             spawnItemEntity(entity);

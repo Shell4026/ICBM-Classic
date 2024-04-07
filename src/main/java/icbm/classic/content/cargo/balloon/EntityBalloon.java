@@ -152,7 +152,7 @@ public class EntityBalloon extends EntityProjectile<EntityBalloon> implements IE
     }
 
     @Override
-    protected void onImpact(Vec3d impactLocation) {
+    protected void onImpact(RayTraceResult hit) {
         releaseCargoAndDespawn();
     }
 

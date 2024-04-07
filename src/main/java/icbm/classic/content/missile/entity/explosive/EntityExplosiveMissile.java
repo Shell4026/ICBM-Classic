@@ -18,6 +18,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
@@ -141,9 +142,9 @@ public class EntityExplosiveMissile extends EntityMissile<EntityExplosiveMissile
     }
 
     @Override
-    protected void onImpact(Vec3d impactLocation) {
+    protected void onImpact(RayTraceResult impactLocation) {
         super.onImpact(impactLocation);
-        explosive.doExplosion(impactLocation);
+        explosive.doExplosion(impactLocation.hitVec);
     }
 
     @Override

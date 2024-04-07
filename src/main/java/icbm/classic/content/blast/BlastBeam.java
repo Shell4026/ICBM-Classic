@@ -2,6 +2,7 @@ package icbm.classic.content.blast;
 
 import icbm.classic.api.explosion.IBlastTickable;
 import icbm.classic.client.ICBMSounds;
+import icbm.classic.content.entity.flyingblock.BlockCaptureData;
 import icbm.classic.content.entity.flyingblock.EntityFlyingBlock;
 import icbm.classic.content.entity.EntityLightBeam;
 import icbm.classic.content.entity.flyingblock.FlyingBlock;
@@ -96,13 +97,13 @@ public abstract class BlastBeam extends Blast implements IBlastTickable
                 //Edit blocks and queue spawning
                 for (BlockPos blockPos : blocksToRemove)
                 {
-                    final IBlockState state = world.getBlockState(blockPos); //TODO filter what can turn into a flying block
+                    final BlockCaptureData blockCaptureData = new BlockCaptureData(world, blockPos);
 
                     //Remove block
                     if (world.setBlockToAir(blockPos))
                     {
-                        FlyingBlock.spawnFlyingBlock(this.world, blockPos, state, (entity) -> {
-                            entity.gravity = -0.01f;
+                        FlyingBlock.spawnFlyingBlock(this.world, blockPos, blockCaptureData, (entity) -> {
+                            entity.setGravity(entity.getGravity() - 0.01f);
                         }, null);
                     }
                 }
@@ -125,7 +126,7 @@ public abstract class BlastBeam extends Blast implements IBlastTickable
             if (!hasEnabledGravityForFlyingBlocks)
             {
                 hasEnabledGravityForFlyingBlocks = true;
-                flyingBlocks.forEach(entity -> entity.gravity = 0.5f);
+                flyingBlocks.forEach(entity -> entity.setGravity(0.5f));
             }
 
             if (!hasPlacedBlocks)

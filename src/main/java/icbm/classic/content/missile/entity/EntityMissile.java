@@ -282,10 +282,10 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
     }
 
     @Override
-    protected void onImpact(Vec3d impactLocation) {
+    protected void onImpact(RayTraceResult impactLocation) {
         if(!hasImpacted) {
             this.hasImpacted = true;
-            logImpact(impactLocation);
+            logImpact(impactLocation.hitVec);
             dismountRidingEntity();
             removePassengers();
             setDead();

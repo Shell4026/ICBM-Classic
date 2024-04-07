@@ -52,6 +52,9 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
      */
     public static final DamageSource DAMAGE_SOURCE = new DamageSource("icbm:projectile").setProjectile();
 
+    // Default is motionY *= 0.9800000190734863D
+    public static final float DEFAULT_GRAVITY = 0.05F;
+
     /**
      * The entity who shot this projectile and can be used for damage calculations
      * As well useful for causing argo on the shooter
@@ -334,7 +337,7 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
      * @return true to expire
      */
     protected boolean shouldExpire() {
-        return ticksInAir >= inAirKillTime || ticksInGround >= inGroundKillTime;
+        return ticksInAir >= inAirKillTime || ticksInGround >= inGroundKillTime || this.posY < -100;
     }
 
     /**
@@ -436,7 +439,7 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
      * @param hit - exact hit position
      */
     protected void onImpactTile(RayTraceResult hit) {
-        onImpact(hit.hitVec);
+        onImpact(hit);
     }
 
     /**
@@ -468,7 +471,7 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
                 && entityHit instanceof EntityLivingBase) {
                 applyKnockBack(entityHit);
             }
-            onImpact(hit.hitVec);
+            onImpact(hit);
             // TODO add deflection for some projectiles, so when impact entities the projectile might redirect rather than vanish
         }
     }
@@ -532,7 +535,7 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
      * Use {@link #onImpactEntity(Entity, float, RayTraceResult)} or {@link #onImpactTile(RayTraceResult)} for
      * better handling of impacts.
      */
-    protected void onImpact(Vec3d impactLocation) {
+    protected void onImpact(RayTraceResult hit) {
         this.setDead();
     }
 
@@ -625,8 +628,7 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
      * @return gravity acceleration as m/t
      */
     protected float getGravity() {
-        // Default is motionY *= 0.9800000190734863D
-        return 0.05F;
+        return DEFAULT_GRAVITY;
     }
 
     @Override

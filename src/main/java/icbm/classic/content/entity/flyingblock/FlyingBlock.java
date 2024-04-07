@@ -3,6 +3,7 @@ package icbm.classic.content.entity.flyingblock;
 import icbm.classic.config.ConfigFlyingBlocks;
 import icbm.classic.config.util.BlockStateConfigList;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -59,11 +60,11 @@ public class FlyingBlock {
      *
      * @param world to spawn into
      * @param pos   to set
-     * @param state to spawn, can be replaced by other systems and user config
+     * @param blockCaptureData to spawn, can be replaced by other systems and user config
      * @return true if spawned
      */
-    public static boolean spawnFlyingBlock(World world, BlockPos pos, IBlockState state) {
-        return spawnFlyingBlock(world, pos, state, null, null);
+    public static boolean spawnFlyingBlock(World world, BlockPos pos, BlockCaptureData blockCaptureData) {
+        return spawnFlyingBlock(world, pos, blockCaptureData, null, null);
     }
 
     /**
@@ -73,20 +74,20 @@ public class FlyingBlock {
      *
      * @param world to spawn into
      * @param pos   to set
-     * @param state to spawn, can be replaced by other systems and user config
+     * @param blockCaptureData to spawn, can be replaced by other systems and user config
      * @return true if spawned
      */
-    public static boolean spawnFlyingBlock(World world, BlockPos pos, IBlockState state,
+    public static boolean spawnFlyingBlock(World world, BlockPos pos, BlockCaptureData blockCaptureData,
                                            Consumer<EntityFlyingBlock> preSpawnCallback,
                                            Consumer<EntityFlyingBlock> postSpawnCallback) {
-        if (!isAllowed(state)) {
+        if (!isAllowed(blockCaptureData.getBlockState())) {
             return false;
         }
 
         // TODO limit per chunk and per world to help reduce lag
 
         final EntityFlyingBlock flyingBlock = new EntityFlyingBlock(world);
-        flyingBlock.setBlockState(state); //TODO allow mutations of state
+        flyingBlock.setBlockData(blockCaptureData); //TODO allow mutations of state
         flyingBlock.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 
         // Pre-spawn data set, needed for extra properties that should be exposed to spawn event

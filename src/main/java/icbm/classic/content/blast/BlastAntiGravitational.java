@@ -4,12 +4,14 @@ import icbm.classic.ICBMClassic;
 import icbm.classic.api.explosion.IBlastTickable;
 import icbm.classic.content.blast.thread.ThreadSmallExplosion;
 import icbm.classic.content.blast.threaded.BlastThreaded;
+import icbm.classic.content.entity.flyingblock.BlockCaptureData;
 import icbm.classic.content.entity.flyingblock.EntityFlyingBlock;
 import icbm.classic.content.entity.flyingblock.FlyingBlock;
 import icbm.classic.lib.transform.PosDistanceSorter;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.IFluidBlock;
@@ -84,27 +86,28 @@ public class BlastAntiGravitational extends BlastThreaded implements IBlastTicka
                                 {
                                     if (world().rand.nextInt(3) > 0) //TODO config
                                     {
-                                        //Remove block
-                                        world.setBlockToAir(targetPosition);
-
                                         //Mark blocks taken
                                         blocksToTake--;
                                         if (blocksToTake <= 0)
                                         {
+                                            world.setBlockToAir(targetPosition);
                                             break;
                                         }
 
-                                        //Create flying block
-                                        FlyingBlock.spawnFlyingBlock(world, targetPosition, blockState, (entity) -> {
-                                            entity.yawChange = 50 * world().rand.nextFloat();
-                                            entity.pitchChange = 100 * world().rand.nextFloat();
-                                            entity.motionY += Math.max(0.15 * world().rand.nextFloat(), 0.1);
-                                            entity.noClip = true;
-                                            entity.gravity = 0;
-                                        }, entityFlyingBlock -> {
-                                            flyingBlocks.add(entityFlyingBlock);
-                                            ICBMClassic.logger().info("Spawned flying block" + entityFlyingBlock);
-                                        });
+                                        final BlockCaptureData blockCaptureData = new BlockCaptureData(world, targetPosition);
+                                        if(world.setBlockToAir(targetPosition)) {
+                                            //Create flying block
+                                            FlyingBlock.spawnFlyingBlock(world, targetPosition, blockCaptureData, (entity) -> {
+                                                entity.yawChange = 50 * world().rand.nextFloat();
+                                                entity.pitchChange = 100 * world().rand.nextFloat();
+                                                entity.motionY += Math.max(0.15 * world().rand.nextFloat(), 0.1);
+                                                entity.noClip = true;
+                                                entity.setGravity(0);
+                                            }, entityFlyingBlock -> {
+                                                flyingBlocks.add(entityFlyingBlock);
+                                                ICBMClassic.logger().info("Spawned flying block" + entityFlyingBlock);
+                                            });
+                                        }
                                     }
                                 }
                             }
