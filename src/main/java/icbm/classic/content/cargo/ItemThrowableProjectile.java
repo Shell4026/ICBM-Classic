@@ -22,6 +22,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
@@ -86,6 +87,7 @@ public class ItemThrowableProjectile extends ItemBase {
     // TODO move logic to common helper called `throwProjectile` to better reuse common spawn logic
     public static boolean throwProjectile(@Nonnull ItemStack stack, @Nonnull World world, @Nonnull Entity thrower) {
         final boolean isCreative = thrower instanceof EntityPlayer && ((EntityPlayer) thrower).isCreative();
+        final EnumHand hand = thrower instanceof EntityLivingBase ? ((EntityLivingBase) thrower).getActiveHand() : EnumHand.MAIN_HAND;
         if (!stack.hasCapability(ICBMClassicAPI.PROJECTILE_STACK_CAPABILITY, null)) {
             return false;
         }
@@ -133,7 +135,7 @@ public class ItemThrowableProjectile extends ItemBase {
         if (world.spawnEntity(parachute)) {
 
             // Run post spawn logic
-            projectileStack.getProjectileData().onEntitySpawned(parachute, thrower);
+            projectileStack.getProjectileData().onEntitySpawned(parachute, thrower, hand);
 
             return true;
         }
@@ -172,6 +174,8 @@ public class ItemThrowableProjectile extends ItemBase {
 
             if(this == ItemReg.itemParachute) {
                 items.add(parachuteWith(new ParachuteProjectileData().setHeldItem(new ItemStack(Items.EGG)).setParachuteMode(ProjectileCargoMode.ITEM)));
+                items.add(parachuteWith(new ParachuteProjectileData().setHeldItem(new ItemStack(Blocks.FURNACE)).setParachuteMode(ProjectileCargoMode.BLOCK)));
+                items.add(parachuteWith(new ParachuteProjectileData().setHeldItem(new ItemStack(Blocks.TNT)).setParachuteMode(ProjectileCargoMode.BLOCK)));
             }
             else if(this == ItemReg.itemBalloon) {
                 items.add(parachuteWith(new BalloonProjectileData().setHeldItem(new ItemStack(Items.EGG)).setParachuteMode(ProjectileCargoMode.ITEM)));

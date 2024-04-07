@@ -10,6 +10,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
@@ -119,7 +120,7 @@ public class ProjectileDataRegistry extends BuildableObjectRegistry<IProjectileD
                     preSpawnCallback.accept(entity);
                 }
                 if(world.spawnEntity(entity)) {
-                    data.onEntitySpawned(entity, source);
+                    data.onEntitySpawned(entity, source, EnumHand.MAIN_HAND);
                     return entity;
                 }
             }

@@ -4,6 +4,8 @@ import icbm.classic.api.missiles.cause.IMissileSource;
 import icbm.classic.api.missiles.parts.IBuildableObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemEgg;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -73,8 +75,9 @@ public interface IProjectileData<E extends Entity>  extends IBuildableObject {
      *
      * @param entity created and added to the world
      * @param source that created the entity, may not always be present
+     * @param hand used to spawn entity, for non-humanoid this will always be main hand
      */
-    default void onEntitySpawned(@Nonnull E entity, @Nullable Entity source) { //TODO consider moving to a spawnAction
+    default void onEntitySpawned(@Nonnull E entity, @Nullable Entity source, @Nullable EnumHand hand) { //TODO consider moving to a spawnAction
 
     }
 
