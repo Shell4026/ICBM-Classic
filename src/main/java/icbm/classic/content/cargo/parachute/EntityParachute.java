@@ -17,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
@@ -30,6 +31,7 @@ public class EntityParachute extends EntityProjectile<EntityParachute> implement
 
     public static final float GRAVITY = 0.01f; // TODO config
     public static final float AIR_RESISTANCE = 0.95f; // TODO config
+    public static final float ENTITY_SIZE = 0.5f;
 
     /** Stack to render */
     @Nonnull @Setter @Getter @Accessors(chain = true)
@@ -39,12 +41,25 @@ public class EntityParachute extends EntityProjectile<EntityParachute> implement
     @Nonnull @Setter @Getter @Accessors(chain = true)
     private ItemStack dropItemStack = new ItemStack(ItemReg.itemParachute); // TODO consider used parachute item
 
+    @Getter
+    private float renderScale = 1;
+    private float prevRenderScale = 1;
+
+
     public EntityParachute(World world)
     {
         super(world);
-        this.setSize(0.5f, 0.5f);
+        this.setSize(ENTITY_SIZE, ENTITY_SIZE);
         this.preventEntitySpawning = true;
         this.ignoreFrustumCheck = true;
+    }
+
+    protected void setRenderScale(float scale) {
+        this.renderScale = scale;
+        if(Math.abs(prevRenderScale - scale) > 0.01) {
+            this.prevRenderScale = this.renderScale;
+            this.setSize(ENTITY_SIZE * scale, ENTITY_SIZE * scale);
+        }
     }
 
     @Override
@@ -64,6 +79,7 @@ public class EntityParachute extends EntityProjectile<EntityParachute> implement
     {
         this.ticksInAir = data.readInt();
         renderItemStack = ByteBufUtils.readItemStack(data);
+        // TODO pull iBakedModel and cache
     }
 
     @Override
@@ -78,6 +94,35 @@ public class EntityParachute extends EntityProjectile<EntityParachute> implement
     }
 
     @Override
+    protected boolean canFitPassenger(Entity passenger)
+    {
+        return this.getPassengers().isEmpty();
+    }
+
+    @Override
+    protected void removePassenger(Entity passenger) {
+        super.removePassenger(passenger);
+        this.setRenderScale(1);
+    }
+
+    @Override
+    public void addPassenger(Entity passenger) {
+        super.addPassenger(passenger);
+        if(passenger instanceof EntityItem)
+        {
+            this.setRenderScale(1);
+        }
+        else if(passenger instanceof EntityFlyingBlock)
+        {
+            this.setRenderScale(2);
+        }
+        else
+        {
+            this.setRenderScale(2);
+        }
+    }
+
+    @Override
     public void updatePassenger(Entity passenger)
     {
         if (this.isPassenger(passenger))
@@ -86,16 +131,16 @@ public class EntityParachute extends EntityProjectile<EntityParachute> implement
             {
                 if(((EntityItem) passenger).getItem().getItem() instanceof ItemBlock)
                 {
-                    passenger.setPosition(this.posX, this.posY - 0.25, this.posZ);
+                    passenger.setPosition(this.posX, this.posY - 0.6, this.posZ);
                 }
                 else
                 {
-                    passenger.setPosition(this.posX, this.posY - 0.35, this.posZ);
+                    passenger.setPosition(this.posX, this.posY - 0.7, this.posZ);
                 }
             }
             else if(passenger instanceof EntityFlyingBlock)
             {
-                passenger.setPosition(this.posX, this.posY - 0.62, this.posZ);
+                passenger.setPosition(this.posX, this.posY - 1.5, this.posZ);
             }
             else
             {
