@@ -2,6 +2,7 @@ package icbm.classic.content.entity.flyingblock;
 
 import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
+import icbm.classic.content.entity.EntityPlayerSeat;
 import icbm.classic.lib.projectile.EntityProjectile;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import io.netty.buffer.ByteBuf;
@@ -132,7 +133,15 @@ public class EntityFlyingBlock extends EntityProjectile<EntityFlyingBlock> imple
     }
 
     @Override
+    protected boolean shouldCollideWith(Entity entity) {
+        return super.shouldCollideWith(entity) && !(entity instanceof EntityFlyingBlock);
+    }
+
+    @Override
     protected void onImpact(RayTraceResult impactLocation) {
+        //Grace period to get away from the ground
+        if(ticksInAir < 5) return;
+
         if(impactLocation.entityHit == null) {
             this.placeBlockIntoWorld(new BlockPos(impactLocation.hitVec), impactLocation);
         }
