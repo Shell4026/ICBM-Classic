@@ -7,6 +7,8 @@ import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.client.mapper.BlockModelMapperExplosive;
 import icbm.classic.client.mapper.ItemModelMapperExplosive;
 import icbm.classic.client.render.entity.*;
+import icbm.classic.client.render.entity.item.RenderAsItem;
+import icbm.classic.content.cargo.parachute.RenderParachute;
 import icbm.classic.config.ConfigItems;
 import icbm.classic.content.blast.cluster.bomblet.EntityBombDroplet;
 import icbm.classic.content.blast.cluster.RenderBombDroplet;
@@ -176,9 +178,12 @@ public class ClientReg
         RenderingRegistry.registerEntityRenderingHandler(EntityRedmatter.class, RenderRedmatter::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityFlyingBlock.class, RenderEntityBlock::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityExplosion.class, RenderExplosion::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityGrenade.class, (rm) -> new RenderAsItem<EntityGrenade>(rm, EntityGrenade::renderItemStack));
-        RenderingRegistry.registerEntityRenderingHandler(EntityParachute.class, (rm) -> new RenderAsItem<EntityParachute>(rm, EntityParachute::getRenderItemStack));
-        RenderingRegistry.registerEntityRenderingHandler(EntityBalloon.class, (rm) -> new RenderAsItem<EntityBalloon>(rm, EntityBalloon::getRenderItemStack));
+        RenderingRegistry.registerEntityRenderingHandler(EntityGrenade.class,
+            (rm) -> new RenderAsItem<EntityGrenade>(rm, EntityGrenade::renderItemStack).setBillboard(true));
+        RenderingRegistry.registerEntityRenderingHandler(EntityParachute.class,
+                RenderParachute::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityBalloon.class,
+            (rm) -> new RenderAsItem<EntityBalloon>(rm, EntityBalloon::getRenderItemStack));
         RenderingRegistry.registerEntityRenderingHandler(EntityLightBeam.class, RenderLightBeam::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityFragments.class, RenderFragments::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityBombDroplet.class, RenderBombDroplet::new);
