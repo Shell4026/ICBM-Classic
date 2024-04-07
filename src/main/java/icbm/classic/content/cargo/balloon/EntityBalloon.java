@@ -94,11 +94,11 @@ public class EntityBalloon extends EntityProjectile<EntityBalloon> implements IE
         {
             if(passenger instanceof EntityItem)
             {
-                passenger.setPosition(this.posX, this.posY -0.35, this.posZ);
+                passenger.setPosition(this.posX, this.posY - 0.65, this.posZ);
             }
             else
             {
-                passenger.setPosition(this.posX, this.posY + passenger.height -0.25, this.posZ);
+                passenger.setPosition(this.posX, this.posY + passenger.height - 0.55, this.posZ);
             }
         }
     }

@@ -1,5 +1,7 @@
 package icbm.classic.content.cargo.parachute;
 
+import icbm.classic.content.entity.flyingblock.EntityFlyingBlock;
+import icbm.classic.content.entity.flyingblock.FlyingBlock;
 import icbm.classic.content.reg.ItemReg;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import icbm.classic.lib.projectile.EntityProjectile;
@@ -9,6 +11,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.RayTraceResult;
@@ -81,7 +84,18 @@ public class EntityParachute extends EntityProjectile<EntityParachute> implement
         {
             if(passenger instanceof EntityItem)
             {
-                passenger.setPosition(this.posX, this.posY -0.35, this.posZ);
+                if(((EntityItem) passenger).getItem().getItem() instanceof ItemBlock)
+                {
+                    passenger.setPosition(this.posX, this.posY - 0.25, this.posZ);
+                }
+                else
+                {
+                    passenger.setPosition(this.posX, this.posY - 0.35, this.posZ);
+                }
+            }
+            else if(passenger instanceof EntityFlyingBlock)
+            {
+                passenger.setPosition(this.posX, this.posY - 0.62, this.posZ);
             }
             else
             {
@@ -131,7 +145,7 @@ public class EntityParachute extends EntityProjectile<EntityParachute> implement
         this.removePassengers();
         this.setDead(); //TODO have parachute drift away and then despawn with particles
 
-        if(this.dropItemStack != null && !this.dropItemStack.isEmpty()) {
+        if(isServer() && this.dropItemStack != null && !this.dropItemStack.isEmpty()) {
             final EntityItem entityitem = new EntityItem(this.world, this.posX, this.posY, this.posZ, this.dropItemStack.copy());
             entityitem.setDefaultPickupDelay();
             world.spawnEntity(entityitem);
