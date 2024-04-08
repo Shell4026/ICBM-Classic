@@ -9,6 +9,8 @@ import net.minecraft.util.EnumFacing;
  * all machines support this option
  *
  * @author Calclavia
+ *
+ * @deprecated will be removed
  */
 public interface IRotatable extends IRotation
 {

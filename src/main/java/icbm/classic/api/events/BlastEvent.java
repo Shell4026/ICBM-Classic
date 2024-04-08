@@ -8,6 +8,8 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 /**
  *
  * Created by Dark(DarkGuardsman, Robert) on 1/3/19.
+ *
+ * @deprecated will be replaced with an event providing {@link icbm.classic.api.actions.IAction}
  */
 public abstract class BlastEvent<B extends IBlast> extends Event
 {

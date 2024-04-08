@@ -13,6 +13,7 @@ import javax.annotation.Nonnull;
  * <p>
  * <p>
  * Created by Dark(DarkGuardsman, Robert) on 1/3/19.
+ * @deprecated being replaced with {@link icbm.classic.api.actions.IActionData#create(World, double, double, double, IActionSource)} and likely a customization provider
  */
 public interface IBlastInit extends IBlast
 {

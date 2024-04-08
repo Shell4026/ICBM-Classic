@@ -10,7 +10,9 @@ import javax.annotation.Nonnull;
  *
  *
  * Created by Dark(DarkGuardsman, Robert) on 1/3/19.
+ * @deprecated will be moved internal
  */
+@Deprecated
 @FunctionalInterface
 public interface IBlastFactory
 {

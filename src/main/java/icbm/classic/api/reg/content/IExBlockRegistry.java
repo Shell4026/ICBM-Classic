@@ -4,8 +4,9 @@ import icbm.classic.api.data.BlockActivateFunction;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 1/4/19.
+ * @deprecated being removed in 1.13
  */
+@Deprecated
 public interface IExBlockRegistry extends IExplosiveContentRegistry, IExFuseBlockRegistry
 {
     /**

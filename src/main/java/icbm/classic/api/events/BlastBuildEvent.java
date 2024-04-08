@@ -7,6 +7,9 @@ import icbm.classic.api.explosion.IBlastInit;
  *
  *
  * Created by Dark(DarkGuardsman, Robert) on 1/3/19.
+ *
+ * @deprecated being replaced with {@link icbm.classic.api.actions.IAction} which will not
+ * provide an event for creating. Only an event for pre-run and post-run.
  */
 public class BlastBuildEvent extends BlastEvent<IBlastInit>
 {

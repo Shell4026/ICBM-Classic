@@ -8,6 +8,8 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 1/7/19.
+ *
+ * @deprecated will be replaced by {@link icbm.classic.api.actions.IAction} event
  */
 public abstract class MissileEvent extends Event
 {
