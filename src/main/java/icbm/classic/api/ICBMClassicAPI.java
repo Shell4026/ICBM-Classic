@@ -6,7 +6,7 @@ import icbm.classic.api.caps.IGPSData;
 import icbm.classic.api.caps.IMissileHolder;
 import icbm.classic.api.explosion.IBlast;
 import icbm.classic.api.explosion.redmatter.IBlastVelocity;
-import icbm.classic.api.launcher.IActionStatus;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.launcher.IMissileLauncher;
 import icbm.classic.api.missiles.ICapabilityMissileStack;
 import icbm.classic.api.missiles.IMissile;
@@ -23,6 +23,7 @@ import icbm.classic.api.reg.content.IExGrenadeRegistry;
 import icbm.classic.api.reg.content.IExMinecartRegistry;
 import icbm.classic.api.reg.content.IExMissileRegistry;
 import icbm.classic.api.reg.obj.IBuilderRegistry;
+import icbm.classic.api.actions.conditions.ICondition;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
@@ -60,6 +61,8 @@ public final class ICBMClassicAPI
     public static IBuilderRegistry<IActionStatus> ACTION_STATUS_REGISTRY;
     /** Registry for explosive customizations */
     public static IBuilderRegistry<IExplosiveCustomization> EXPLOSIVE_CUSTOMIZATION_REGISTRY;
+    /** Registry for conditional triggers for actions */
+    public static IBuilderRegistry<ICondition> TRIGGER_REGISTRY;
     /** Registry for projectile information */
     public static IProjectileDataRegistry PROJECTILE_DATA_REGISTRY;
 
