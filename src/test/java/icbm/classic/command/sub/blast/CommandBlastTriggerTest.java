@@ -5,11 +5,11 @@ import com.builtbroken.mc.testing.junit.testers.DummyCommandSender;
 import com.builtbroken.mc.testing.junit.testers.TestPlayer;
 import icbm.classic.api.EnumTier;
 import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.explosion.BlastState;
-import icbm.classic.api.explosion.responses.BlastResponse;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.command.FakeBlast;
 import icbm.classic.command.ICBMCommands;
+import icbm.classic.content.blast.BlastStatus;
 import icbm.classic.lib.explosive.reg.ExplosiveRegistry;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -39,7 +39,7 @@ public class CommandBlastTriggerTest
 
     private final CommandBlastTrigger command = new CommandBlastTrigger();
     private IExplosiveData fakeExData;
-    private BlastResponse triggerState = BlastState.TRIGGERED.genericResponse;
+    private IActionStatus triggerState = BlastStatus.TRIGGERED;
 
     private final Queue<FakeBlast> blastsCreated = new LinkedList();
 
@@ -134,17 +134,17 @@ public class CommandBlastTriggerTest
     private static Stream<Arguments> provideBlastOutputTypes()
     {
         return Stream.of(
-                Arguments.of(BlastState.TRIGGERED.genericResponse, CommandBlastTrigger.TRANSLATION_TRIGGERED),
-                Arguments.of(BlastState.THREADING.genericResponse, CommandBlastTrigger.TRANSLATION_THREADING),
-                Arguments.of(BlastState.CANCELED.genericResponse, CommandBlastTrigger.TRANSLATION_ERROR_BLOCKED),
-                Arguments.of(BlastState.ERROR.genericResponse, CommandBlastTrigger.TRANSLATION_ERROR),
-                Arguments.of(BlastState.ALREADY_TRIGGERED.genericResponse, CommandBlastTrigger.TRANSLATION_ERROR_TRIGGERED)
+                Arguments.of(BlastStatus.TRIGGERED, CommandBlastTrigger.TRANSLATION_TRIGGERED),
+                Arguments.of(BlastStatus.TRIGGERED, CommandBlastTrigger.TRANSLATION_THREADING),
+                Arguments.of(BlastStatus.SETUP_ERROR, CommandBlastTrigger.TRANSLATION_ERROR_BLOCKED),
+                Arguments.of(BlastStatus.UNKNOWN_ERROR, CommandBlastTrigger.TRANSLATION_ERROR),
+                Arguments.of(BlastStatus.TRIGGERED_DONE, CommandBlastTrigger.TRANSLATION_ERROR_TRIGGERED)
         );
     }
 
     @ParameterizedTest
     @MethodSource("provideBlastOutputTypes")
-    void command_short(BlastResponse stateToTest, String outputExpected) throws CommandException
+    void command_short(IActionStatus stateToTest, String outputExpected) throws CommandException
     {
         this.triggerState = stateToTest;
 
@@ -165,7 +165,7 @@ public class CommandBlastTriggerTest
 
     @ParameterizedTest
     @MethodSource("provideBlastOutputTypes")
-    void command_long(BlastResponse stateToTest, String outputExpected) throws CommandException
+    void command_long(IActionStatus stateToTest, String outputExpected) throws CommandException
     {
         this.triggerState = stateToTest;
 

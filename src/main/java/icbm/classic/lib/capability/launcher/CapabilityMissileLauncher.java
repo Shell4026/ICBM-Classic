@@ -5,7 +5,7 @@ import icbm.classic.api.launcher.ILauncherSolution;
 import icbm.classic.api.launcher.IMissileLauncher;
 import icbm.classic.api.missiles.cause.IMissileCause;
 import icbm.classic.api.missiles.parts.IMissileTarget;
-import icbm.classic.lib.capability.launcher.data.LauncherStatus;
+import icbm.classic.content.blocks.launcher.status.LauncherStatus;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;

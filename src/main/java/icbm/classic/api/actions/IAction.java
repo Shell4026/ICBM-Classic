@@ -1,7 +1,11 @@
 package icbm.classic.api.actions;
 
+import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.reg.obj.IBuildableObject;
+import icbm.classic.api.reg.obj.IBuilderRegistry;
+
+import javax.annotation.Nonnull;
 
 /**
  * Generic action system allowing for abstract triggering of behaviors
@@ -23,4 +27,11 @@ public interface IAction extends IBuildableObject {
      * @return the status of the action
      */
     IActionStatus doAction();
+
+
+    @Nonnull
+    @Override
+    default IBuilderRegistry<IAction> getRegistry() {
+        return ICBMClassicAPI.ACTION_REGISTRY;
+    }
 }

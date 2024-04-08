@@ -1,4 +1,4 @@
-package icbm.classic.lib.capability.launcher.data;
+package icbm.classic.content.blocks.launcher.status;
 
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.ICBMClassicAPI;

@@ -1,9 +1,9 @@
 package icbm.classic.content.blast.imp;
 
-import icbm.classic.api.explosion.BlastState;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.explosion.IBlastInit;
-import icbm.classic.api.explosion.responses.BlastNullResponses;
-import icbm.classic.api.explosion.responses.BlastResponse;
+import icbm.classic.content.blast.BlastStatus;
+import icbm.classic.lib.data.status.MissingFieldStatus;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -42,7 +42,7 @@ public abstract class BlastBase implements IBlastInit
 
     @Nonnull
     @Override
-    public BlastResponse runBlast()
+    public IActionStatus doAction()
     {
         final World world = world();
         if (world != null)
@@ -51,12 +51,12 @@ public abstract class BlastBase implements IBlastInit
             {
                 return triggerBlast();
             }
-            return BlastState.TRIGGERED.genericResponse;
+            return BlastStatus.TRIGGERED;
         }
-        return BlastNullResponses.WORLD.get();
+        return MissingFieldStatus.get("blast.run","blast.world");
     }
 
-    protected abstract BlastResponse triggerBlast();
+    protected abstract IActionStatus triggerBlast();
 
     //<editor-fold desc="pos-data">
     @Override

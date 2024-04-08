@@ -1,9 +1,8 @@
 package icbm.classic.content.blast.redmatter;
 
-import icbm.classic.api.explosion.BlastState;
-import icbm.classic.api.explosion.responses.BlastForgeResponses;
-import icbm.classic.api.explosion.responses.BlastResponse;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.config.blast.ConfigBlast;
+import icbm.classic.content.blast.BlastStatus;
 import icbm.classic.content.blast.imp.BlastBase;
 
 import javax.annotation.Nonnull;
@@ -17,7 +16,7 @@ public class BlastRedmatterSpawner extends BlastBase
 {
     @Nonnull
     @Override
-    public BlastResponse triggerBlast()
+    public IActionStatus triggerBlast()
     {
         //Build entity
         final EntityRedmatter entityRedmatter = new EntityRedmatter(world());
@@ -28,8 +27,8 @@ public class BlastRedmatterSpawner extends BlastBase
         //Attempt to spawn
         if (world().spawnEntity(entityRedmatter))
         {
-            return BlastState.TRIGGERED.genericResponse;
+            return BlastStatus.TRIGGERED;
         }
-        return BlastForgeResponses.ENTITY_SPAWNING.get();
+        return BlastStatus.ENTITY_SPAWN_CANCELED;
     }
 }

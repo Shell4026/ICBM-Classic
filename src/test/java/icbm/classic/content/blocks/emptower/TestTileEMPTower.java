@@ -1,13 +1,13 @@
 package icbm.classic.content.blocks.emptower;
 
 import icbm.classic.api.EnumTier;
-import icbm.classic.api.explosion.responses.BlastResponse;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.refs.ICBMExplosives;
-import icbm.classic.api.explosion.BlastState;
 import icbm.classic.api.explosion.IBlast;
 import icbm.classic.api.explosion.IBlastFactory;
 import icbm.classic.content.blast.Blast;
 import icbm.classic.content.blast.BlastEMP;
+import icbm.classic.content.blast.BlastStatus;
 import icbm.classic.lib.explosive.reg.ExplosiveData;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import javax.annotation.Nonnull;
 
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -192,10 +194,11 @@ public class TestTileEMPTower
         //Mock blast so we don't invoke world calls
         when(tileEMPTower.buildBlast()).thenReturn(new Blast()
         {
+            @Nonnull
             @Override
-            public BlastResponse runBlast()
+            public IActionStatus doAction()
             {
-                return BlastState.TRIGGERED.genericResponse;
+                return BlastStatus.TRIGGERED;
             }
         });
 

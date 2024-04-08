@@ -1,9 +1,7 @@
 package icbm.classic.command.sub.blast;
 
-import icbm.classic.ICBMClassic;
 import icbm.classic.api.ICBMClassicHelpers;
-import icbm.classic.api.explosion.BlastState;
-import icbm.classic.api.explosion.responses.BlastResponse;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.command.CommandUtils;
 import icbm.classic.command.ICBMCommands;
@@ -14,7 +12,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.SyntaxErrorException;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -150,36 +147,12 @@ public class CommandBlastTrigger extends SubCommand
      */
     private void trigger(ICommandSender sender, World world, double x, double y, double z, IExplosiveData explosiveData, float scale)
     {
-        final BlastResponse result = ExplosiveHandler.createExplosion(null,
+        final IActionStatus result = ExplosiveHandler.createExplosion(null,
                 world, x, y, z,
                 explosiveData.getRegistryID(), scale,
                 null);
 
         //Send translated message to user
-        sender.sendMessage(new TextComponentTranslation(getTranslationKey(result.state), //TODO update to include sub-errors
-                explosiveData.getRegistryName(), scale,
-                world.provider.getDimension(), world.getWorldType().getName(),
-                x, y, z));
-    }
-
-    //Used to select translation for output message
-    public static String getTranslationKey(BlastState result)
-    {
-        switch (result)
-        {
-            case TRIGGERED:
-                return TRANSLATION_TRIGGERED;
-            case THREADING:
-                return TRANSLATION_THREADING;
-            case CANCELED:
-                return TRANSLATION_ERROR_BLOCKED;
-            case ERROR:
-                return TRANSLATION_ERROR;
-            case ALREADY_TRIGGERED:
-                return TRANSLATION_ERROR_TRIGGERED;
-            default:
-                ICBMClassic.logger().error("CommandBlastTrigger: unknown blast status code " + result);
-                return TRANSLATION_ERROR_UNKNOWN;
-        }
+        sender.sendMessage(result.getTooltip());
     }
 }

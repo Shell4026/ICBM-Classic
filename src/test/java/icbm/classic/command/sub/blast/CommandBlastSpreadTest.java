@@ -4,10 +4,10 @@ import com.builtbroken.mc.testing.junit.TestManager;
 import com.builtbroken.mc.testing.junit.testers.DummyCommandSender;
 import icbm.classic.api.EnumTier;
 import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.explosion.BlastState;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.command.FakeBlast;
 import icbm.classic.command.ICBMCommands;
+import icbm.classic.content.blast.BlastStatus;
 import icbm.classic.lib.explosive.reg.ExplosiveRegistry;
 import net.minecraft.command.CommandException;
 import net.minecraft.util.ResourceLocation;
@@ -50,7 +50,7 @@ public class CommandBlastSpreadTest
         ICBMClassicAPI.EXPLOSIVE_REGISTRY = new ExplosiveRegistry();
         fakeExData = ICBMClassicAPI.EXPLOSIVE_REGISTRY.register(new ResourceLocation("tree", "small"), EnumTier.ONE, () ->
         {
-            FakeBlast fakeBlast = new FakeBlast(BlastState.TRIGGERED.genericResponse);
+            FakeBlast fakeBlast = new FakeBlast(BlastStatus.TRIGGERED);
             blastsCreated.add(fakeBlast);
             return fakeBlast;
         });

@@ -2,20 +2,19 @@ package icbm.classic.lib.capability.ex;
 
 import icbm.classic.ICBMClassic;
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.caps.IExplosive;
-import icbm.classic.api.explosion.BlastState;
 import icbm.classic.api.explosion.IBlast;
-import icbm.classic.api.explosion.responses.BlastResponse;
 import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.api.reg.IExplosiveCustomization;
 import icbm.classic.api.reg.IExplosiveData;
+import icbm.classic.content.blast.BlastStatus;
 import icbm.classic.lib.explosive.ExplosiveHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,35 +50,27 @@ public class CapabilityExplosiveEntity implements IExplosive
             stack = new ItemStack(nbt);
         }
     }
-    public BlastResponse doExplosion(Vec3d pos)
+    public IActionStatus doExplosion(Vec3d pos)
     {
         return doExplosion(pos.x, pos.y, pos.z);
     }
 
 
-    public BlastResponse doExplosion(double x, double y, double z)
+    public IActionStatus doExplosion(double x, double y, double z)
     {
-        try
+        // Make sure the missile is not already exploding
+        if (!this.isExploding)
         {
-            // Make sure the missile is not already exploding
-            if (!this.isExploding)
-            {
-                //Make sure to note we are currently exploding
-                this.isExploding = true;
+            //Make sure to note we are currently exploding
+            this.isExploding = true;
 
-                if (!this.entity.world.isRemote)
-                {
-                    return ExplosiveHandler.createExplosion(this.entity, this.entity.world, x, y, z, this);
-                }
-                return BlastState.TRIGGERED_CLIENT.genericResponse;
+            if (!this.entity.world.isRemote)
+            {
+                return ExplosiveHandler.createExplosion(this.entity, this.entity.world, x, y, z, this);
             }
-            return BlastState.ALREADY_TRIGGERED.genericResponse;
+            return BlastStatus.TRIGGERED_CLIENT;
         }
-        catch (Exception e)
-        {
-            //TODO fire on EventTracker system
-            return new BlastResponse(BlastState.ERROR, e.getMessage(), e);
-        }
+        return BlastStatus.TRIGGERED_DONE;
     }
 
     @Nullable

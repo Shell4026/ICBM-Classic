@@ -1,7 +1,6 @@
 package icbm.classic.command.sub.blast;
 
-import icbm.classic.api.explosion.BlastState;
-import icbm.classic.api.explosion.responses.BlastResponse;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.command.CommandUtils;
 import icbm.classic.command.ICBMCommands;
@@ -87,19 +86,13 @@ public class CommandBlastSpread extends SubCommand
                 final double z = zInput + zi * distance;
 
                 //Trigger blast
-                final BlastResponse result = ExplosiveHandler.createExplosion(null,
+                final IActionStatus result = ExplosiveHandler.createExplosion(null,
                         world, x, yInput, z,
                         explosiveData.getRegistryID(), scale,
                         null);
 
-                if(result.state != BlastState.TRIGGERED && result.state != BlastState.THREADING)
-                {
-                    //Send translated message to user
-                    sender.sendMessage(new TextComponentTranslation(CommandBlastTrigger.getTranslationKey(result.state), //TODO handle sub-error
-                            explosiveData.getRegistryName(), scale,
-                            world.provider.getDimension(), world.getWorldType().getName(),
-                            x, yInput, z));
-                }
+                //Send translated message to user
+                sender.sendMessage(result.getTooltip());
             }
         }
     }

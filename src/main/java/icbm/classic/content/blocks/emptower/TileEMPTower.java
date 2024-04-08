@@ -3,7 +3,6 @@ package icbm.classic.content.blocks.emptower;
 import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.explosion.BlastState;
 import icbm.classic.api.explosion.IBlast;
 import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.client.ICBMSounds;
@@ -286,7 +285,7 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
         if (this.isReady())
         {
             //Finish and trigger
-            if (buildBlast().runBlast().state == BlastState.TRIGGERED)
+            if (!buildBlast().doAction().isBlocking())
             {
                 //Consume energy
                 this.energyStorage.consumePower(getFiringCost(), false);

@@ -1,8 +1,6 @@
 package icbm.classic.content.blast;
 
-import icbm.classic.api.explosion.BlastState;
-import icbm.classic.api.explosion.responses.BlastForgeResponses;
-import icbm.classic.api.explosion.responses.BlastResponse;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.content.blast.imp.BlastBase;
 import icbm.classic.content.entity.EntitySmoke;
 
@@ -12,14 +10,14 @@ public class BlastSmoke extends BlastBase
 {
     @Nonnull
     @Override
-    public BlastResponse triggerBlast()
+    public IActionStatus triggerBlast()
     {
         final EntitySmoke smoke = new EntitySmoke(world());
         smoke.setPosition(x(), y(), z());
         if(world().spawnEntity(smoke))
         {
-            return BlastState.TRIGGERED.genericResponse;
+            return BlastStatus.TRIGGERED;
         }
-        return BlastForgeResponses.ENTITY_SPAWNING.get();
+        return BlastStatus.ENTITY_SPAWN_CANCELED;
     }
 }

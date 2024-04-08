@@ -1,11 +1,10 @@
 package icbm.classic.content.blast.cluster;
 
 import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.explosion.BlastState;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.explosion.IBlastInit;
-import icbm.classic.api.explosion.responses.BlastForgeResponses;
-import icbm.classic.api.explosion.responses.BlastResponse;
 import icbm.classic.api.missiles.projectile.IProjectileData;
+import icbm.classic.content.blast.BlastStatus;
 import icbm.classic.content.blast.cluster.bomblet.EntityBombDroplet;
 import icbm.classic.content.blast.imp.BlastBase;
 import icbm.classic.content.reg.ItemReg;
@@ -112,7 +111,7 @@ public class BlastCluster extends BlastBase {
     }
 
     @Override
-    protected BlastResponse triggerBlast() {
+    protected IActionStatus triggerBlast() {
         if (!world().isRemote) {
             boolean spawnedSomething = spawnEmptyMissile();
 
@@ -166,9 +165,9 @@ public class BlastCluster extends BlastBase {
                 discIndex += 1;
             }
 
-            return spawnedSomething ? BlastState.TRIGGERED.genericResponse : BlastForgeResponses.ENTITY_SPAWNING.get();
+            return spawnedSomething ? BlastStatus.TRIGGERED : BlastStatus.ENTITY_SPAWN_CANCELED;
         }
-        return BlastState.TRIGGERED.genericResponse;
+        return BlastStatus.TRIGGERED_CLIENT;
     }
 
     private boolean spawnProjectile(int index, double x, double y, double z, double mx, double my, double mz) {

@@ -1,8 +1,8 @@
 package icbm.classic.content.blast.redmatter.caps;
 
-import icbm.classic.api.explosion.BlastState;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.explosion.IBlast;
-import icbm.classic.api.explosion.responses.BlastResponse;
+import icbm.classic.content.blast.BlastStatus;
 import icbm.classic.content.blast.redmatter.EntityRedmatter;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
@@ -15,6 +15,7 @@ import javax.annotation.Nullable;
  *
  * Created by Dark(DarkGuardsman, Robert) on 4/19/2020.
  */
+@Deprecated //TODO rework so we don't need a blast wrapper as this is an entity that should be spawned using IAction not IBlast
 public class BlastRedmatterWrapper implements IBlast
 {
     private final EntityRedmatter host;
@@ -26,9 +27,9 @@ public class BlastRedmatterWrapper implements IBlast
 
     @Nonnull
     @Override
-    public BlastResponse runBlast()
+    public IActionStatus doAction()
     {
-        return BlastState.ALREADY_TRIGGERED.genericResponse;
+        return BlastStatus.TRIGGERED_DONE;
     }
 
     @Override

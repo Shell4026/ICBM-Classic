@@ -1,7 +1,7 @@
 package icbm.classic.command;
 
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.explosion.IBlastInit;
-import icbm.classic.api.explosion.responses.BlastResponse;
 import icbm.classic.api.reg.IExplosiveData;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,9 +29,9 @@ public class FakeBlast implements IBlastInit
     public boolean triggered = false;
     public boolean isAlive = true;
 
-    private final BlastResponse blastResponse;
+    private final IActionStatus blastResponse;
 
-    public FakeBlast(BlastResponse blastResponse)
+    public FakeBlast(IActionStatus blastResponse)
     {
         this.blastResponse = blastResponse;
     }
@@ -110,8 +110,9 @@ public class FakeBlast implements IBlastInit
         return this.source;
     }
 
+    @Nonnull
     @Override
-    public BlastResponse runBlast()
+    public IActionStatus doAction()
     {
         triggered = true;
         return blastResponse;

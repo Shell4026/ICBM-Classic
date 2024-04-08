@@ -3,17 +3,15 @@ package icbm.classic.lib.explosive;
 import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.caps.IExplosive;
 import icbm.classic.api.explosion.IBlast;
 import icbm.classic.api.explosion.IBlastInit;
-import icbm.classic.api.explosion.responses.BlastErrorResponses;
-import icbm.classic.api.explosion.responses.BlastNullResponses;
-import icbm.classic.api.explosion.responses.BlastResponse;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.content.blast.Blast;
+import icbm.classic.lib.data.status.MissingFieldStatus;
 import icbm.classic.lib.transform.vector.Pos;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -84,34 +82,31 @@ public class ExplosiveHandler
         return toRemove.size();
     }
 
-    public static BlastResponse createExplosion(Entity cause, World world, double x, double y, double z, IExplosive capabilityExplosive)
+    public static IActionStatus createExplosion(Entity cause, World world, double x, double y, double z, IExplosive capabilityExplosive)
     {
         if (capabilityExplosive == null)
         {
-            return logEventThenRespond(cause, world, x, y, z, null, 1, BlastNullResponses.EXPLOSIVE_CAPABILITY.get());
+            return logEventThenRespond(cause, world, x, y, z, null, 1, MissingFieldStatus.get("explosive.create.capability", "explosive.capability"));
         }
         return createExplosion(cause, world, x, y, z, capabilityExplosive.getExplosiveData(), 1, capabilityExplosive::applyCustomizations);
     }
 
-    public static BlastResponse createExplosion(Entity cause, World world, double x, double y, double z, int blastID, float scale, Consumer<IBlast> customizer)
+    public static IActionStatus createExplosion(Entity cause, World world, double x, double y, double z, int blastID, float scale, Consumer<IBlast> customizer)
     {
         final IExplosiveData explosiveData = ICBMClassicAPI.EXPLOSIVE_REGISTRY.getExplosiveData(blastID);
         if (explosiveData == null)
         {
-            //Log missing registry
-            ICBMClassic.logger().error("Missing explosive data in registry for blastID({})", blastID);
-
-            return logEventThenRespond(cause, world, x, y, z, null, 1, BlastErrorResponses.MISSING_BLAST_REGISTRY.get());
+            return logEventThenRespond(cause, world, x, y, z, null, 1, MissingFieldStatus.get("explosive.create.id", "explosive.data"));
         }
         return createExplosion(cause, world, x, y, z, explosiveData, scale, customizer);
     }
 
-    public static BlastResponse createExplosion(Entity cause, World world, double x, double y, double z, IExplosiveData explosiveData, float scale, Consumer<IBlast> customizer)
+    public static IActionStatus createExplosion(Entity cause, World world, double x, double y, double z, IExplosiveData explosiveData, float scale, Consumer<IBlast> customizer)
     {
-        BlastResponse response = BlastNullResponses.BLAST_CREATION.get();
+        IActionStatus response;
         if (explosiveData == null)
         {
-            response = BlastNullResponses.EXPLOSIVE_DATA.get();
+            response = MissingFieldStatus.get("explosive.create.data", "explosive.data");
         }
         else if (explosiveData.getBlastFactory() != null)
         {
@@ -126,58 +121,51 @@ public class ExplosiveHandler
                 factoryBlast.scaleBlast(scale);
                 factoryBlast.setBlastSource(cause);
                 factoryBlast.setExplosiveData(explosiveData);
-                customizer.accept(factoryBlast);
+                if(customizer != null) {
+                    customizer.accept(factoryBlast);
+                }
                 factoryBlast.buildBlast();
 
                 //run blast
-                response = factoryBlast.runBlast();
+                response = factoryBlast.doAction();
+            }
+            else {
+                response = MissingFieldStatus.get("explosive.create.data", "explosive.data.factory.blast");
             }
         }
         else
         {
-            response = BlastNullResponses.BLAST_FACTORY.get();
+            response = MissingFieldStatus.get("explosive.create.data", "explosive.data.factory");
         }
         return logEventThenRespond(cause, world, x, y, z, explosiveData, scale, response);
     }
 
-    private static BlastResponse logEventThenRespond(Entity cause, World world, double x, double y, double z, IExplosiveData explosiveData, float scale, BlastResponse blastResponse)
+    private static IActionStatus logEventThenRespond(Entity cause, World world, double x, double y, double z, IExplosiveData explosiveData, float scale, IActionStatus blastResponse)
     {
         final String explosiveName = explosiveData == null ? "null" : explosiveData.getRegistryName().toString();
         final String entitySource = cause != null ? Integer.toString(cause.getEntityId()) : "null";
 
-        if (blastResponse.errorMessage != null)
+        // TODO make optional via config
+        // TODO log to ICBM file separated from main config
+        // TODO offer hook for database logging
+        final String formatString = "Explosion[%s] | Scale(x%,.1f) | EntitySource(%s) | Impacted (%,.1fx %,.1fy %,.1fz %sd) | Status(%s)";
+        final String formattedMessage = String.format(formatString,
+            explosiveName,
+            scale,
+            entitySource,
+            x,
+            y,
+            z,
+            world.provider.getDimension(),
+            blastResponse.message().getFormattedText()
+        );
+
+        if (blastResponse.isError())
         {
-            final String formatString = "Explosion[%s] | Scale(x%,.1f) | BlastState(%s) | EntitySource(%s) | Impacted (%,.1fx %,.1fy %,.1fz %sd) | ErrorMessage: %s";
-            final String formattedMessage = String.format(formatString,
-                    explosiveName,
-                    scale,
-                    blastResponse.state,
-                    entitySource,
-                    x,
-                    y,
-                    z,
-                    world.provider.getDimension(),
-                    blastResponse.errorMessage
-            );
-            ICBMClassic.logger().error(formattedMessage, blastResponse.error);
+            ICBMClassic.logger().error(formattedMessage);
         }
         else
         {
-            // TODO make optional via config
-            // TODO log to ICBM file separated from main config
-            // TODO offer hook for database logging
-            final String formatString = "Explosion[%s] | Scale(x%,.1f) | BlastState(%s) | EntitySource(%s) | Impacted (%,.1fx %,.1fy %,.1fz %sd)";
-            final String formattedMessage = String.format(formatString,
-                    explosiveName,
-                    scale,
-                    blastResponse.state,
-                    entitySource,
-                    x,
-                    y,
-                    z,
-                    world.provider.getDimension()
-            );
-
             ICBMClassic.logger().info(formattedMessage);
         }
         return blastResponse;

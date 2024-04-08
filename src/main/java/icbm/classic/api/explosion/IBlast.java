@@ -2,9 +2,9 @@ package icbm.classic.api.explosion;
 
 import icbm.classic.api.actions.IAction;
 import icbm.classic.api.data.IWorldPosition;
-import icbm.classic.api.explosion.responses.BlastResponse;
 import icbm.classic.api.reg.IExplosiveData;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -14,10 +14,19 @@ import javax.annotation.Nullable;
  *
  * @author Calclavia, Darkguardsman
  *
- * Future version will implement {@link IAction}
+ * @deprecated being phased out in favor of {@link IAction} with sub-interfaces for specific action categories.
+ * This will be a world-edit action and might use tags like projectile system does to selectively detection blast themed actions.
  */
-public interface IBlast extends IWorldPosition
+@Deprecated
+public interface IBlast extends IWorldPosition, IAction
 {
+
+    @Nonnull
+    @Override
+    default ResourceLocation getRegistryKey(){
+        return null; //TODO implement
+    }
+
     /**
      * Gets the radius/size of the effect of the blast.
      *
@@ -35,14 +44,6 @@ public interface IBlast extends IWorldPosition
     }
 
     /**
-     * Called to start the blast
-     *
-     * @return this
-     */
-    @Nonnull
-    BlastResponse runBlast();
-
-    /**
      * Is the blast completed and
      * can be marked as dead.
      *
@@ -58,7 +59,7 @@ public interface IBlast extends IWorldPosition
      * Data used to create the blast. Used
      * for save state recovery
      *
-     * @return
+     * @return data
      */
     @Nullable
     @Deprecated
@@ -75,8 +76,7 @@ public interface IBlast extends IWorldPosition
      * <p>
      * Blasts with entities should be viewed as entities first
      * and blasts second. With the blast existing as an API
-     * drive way to provide information and events to interact
-     * with the entity's actions.
+     * wrapper to provide access to entity's behavior.
      *
      * @return controller
      */

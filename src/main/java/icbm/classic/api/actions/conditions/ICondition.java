@@ -13,7 +13,7 @@ public interface ICondition extends IBuildableObject {
 
     @Nonnull
     default IBuilderRegistry<ICondition> getRegistry() {
-        return ICBMClassicAPI.TRIGGER_REGISTRY;
+        return ICBMClassicAPI.CONDITION_REGISTRY;
     }
 
     /**

@@ -1,5 +1,6 @@
 package icbm.classic.api;
 
+import icbm.classic.api.actions.IAction;
 import icbm.classic.api.caps.IEMPReceiver;
 import icbm.classic.api.caps.IExplosive;
 import icbm.classic.api.caps.IGPSData;
@@ -57,12 +58,17 @@ public final class ICBMClassicAPI
     public static IBuilderRegistry<IMissileFlightLogic> MISSILE_FLIGHT_LOGIC_REGISTRY;
     /** Registry for missile cause save/load in missiles */
     public static IBuilderRegistry<IMissileCause> MISSILE_CAUSE_REGISTRY;
+
     /** Registry for status messages produced by machines, items, and entities in the mod */
     public static IBuilderRegistry<IActionStatus> ACTION_STATUS_REGISTRY;
+    /** Registry for actions that can be run */
+    public static IBuilderRegistry<IAction> ACTION_REGISTRY;
+    /** Registry for conditional logic, often used for actions */
+    public static IBuilderRegistry<ICondition> CONDITION_REGISTRY;
+
     /** Registry for explosive customizations */
     public static IBuilderRegistry<IExplosiveCustomization> EXPLOSIVE_CUSTOMIZATION_REGISTRY;
-    /** Registry for conditional triggers for actions */
-    public static IBuilderRegistry<ICondition> TRIGGER_REGISTRY;
+
     /** Registry for projectile information */
     public static IProjectileDataRegistry PROJECTILE_DATA_REGISTRY;
 

@@ -208,7 +208,7 @@ public class BlastNuclear extends BlastThreaded {
                         .setBlastPosition(location.x(), location.y(), location.z())
                         .setBlastSize((float)ConfigBlast.nuclear.rotScale)
                         .setExplosiveData(ICBMExplosives.ROT)
-                        .buildBlast().runBlast();  //TODO trigger from explosive handler
+                        .buildBlast().doAction();  //TODO trigger from explosive handler
                 }
 
                 if(ConfigBlast.nuclear.useMutationBlast) {
@@ -218,7 +218,7 @@ public class BlastNuclear extends BlastThreaded {
                         .setBlastPosition(location.x(), location.y(), location.z())
                         .setBlastSize((float)ConfigBlast.nuclear.mutationScale)
                         .setExplosiveData(ICBMExplosives.MUTATION)
-                        .buildBlast().runBlast();  //TODO trigger from explosive handler
+                        .buildBlast().doAction();  //TODO trigger from explosive handler
                 }
 
                 //Play audio

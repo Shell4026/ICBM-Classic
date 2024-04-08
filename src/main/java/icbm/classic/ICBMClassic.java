@@ -48,7 +48,7 @@ import icbm.classic.lib.capability.ex.CapabilityExplosive;
 import icbm.classic.lib.capability.gps.CapabilityGPSData;
 import icbm.classic.lib.capability.launcher.CapabilityMissileHolder;
 import icbm.classic.lib.capability.launcher.CapabilityMissileLauncher;
-import icbm.classic.lib.capability.launcher.data.LauncherStatus;
+import icbm.classic.content.blocks.launcher.status.LauncherStatus;
 import icbm.classic.lib.capability.missile.CapabilityMissileStack;
 import icbm.classic.lib.projectile.CapabilityProjectileStack;
 import icbm.classic.lib.energy.system.EnergySystem;

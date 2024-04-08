@@ -1,13 +1,11 @@
 package icbm.classic.content.blast;
 
 import icbm.classic.ICBMClassic;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.events.BlastBuildEvent;
-import icbm.classic.api.explosion.BlastState;
 import icbm.classic.api.explosion.IBlastInit;
 import icbm.classic.api.explosion.IBlastRestore;
 import icbm.classic.api.explosion.IBlastTickable;
-import icbm.classic.api.explosion.responses.BlastForgeResponses;
-import icbm.classic.api.explosion.responses.BlastResponse;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.config.ConfigDebug;
 import icbm.classic.content.blast.thread.ThreadExplosion;
@@ -85,8 +83,9 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
         return explosiveData;
     }
 
+    @Nonnull
     @Override
-    public BlastResponse runBlast()
+    public IActionStatus doAction()
     {
         try
         {
@@ -95,7 +94,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
                 //Forge event, allows for interaction and canceling the explosion
                 if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(world, this))
                 {
-                    return BlastForgeResponses.EXPLOSION_EVENT.get();
+                    return BlastStatus.EXPLOSIVE_EVENT_CANCELED;
                 }
 
                 //Play audio to confirm explosion triggered
@@ -107,16 +106,16 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
                     if (!this.world().spawnEntity(new EntityExplosion(this)))
                     {
                         isAlive = false;
-                        return BlastForgeResponses.ENTITY_SPAWNING.get();
+                        return BlastStatus.ENTITY_SPAWN_CANCELED;
                     }
-                    return BlastState.TRIGGERED.genericResponse;
+                    return BlastStatus.TRIGGERED;
                 }
                 else
                 {
                     //Do setup tasks
                     if (!this.doFirstSetup())
                     {
-                        return BlastState.CANCELED.genericResponse; //TODO specify why
+                        return BlastStatus.SETUP_ERROR; //TODO specify why we failed during setup
                     }
 
                     //Call explosive, only complete if true
@@ -130,12 +129,12 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
             {
                 clientRunBlast();
             }
-            return BlastState.TRIGGERED.genericResponse;
+            return BlastStatus.TRIGGERED_CLIENT;
         }
         catch (Exception e)
         {
             ICBMClassic.logger().error(this + ": Unexpected error running blast", e);
-            return new BlastResponse(BlastState.ERROR, e.getMessage(), e);
+            return BlastStatus.UNKNOWN_ERROR; //TODO provide dynamic data
         }
     }
 
@@ -179,6 +178,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
      *
      * @return true if the blast should continue to run, false otherwhise
      */
+    @Deprecated // TODO inline with runBlast to provide proper feedback using IActionStatus
     public final boolean doFirstSetup()
     {
         if (isAlive && !hasSetupBlast)
