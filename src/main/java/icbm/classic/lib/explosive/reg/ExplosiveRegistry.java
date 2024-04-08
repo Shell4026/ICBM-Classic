@@ -19,10 +19,7 @@ import net.minecraft.util.ResourceLocation;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 1/4/19.
@@ -87,7 +84,7 @@ public class ExplosiveRegistry implements IExplosiveRegistry
         setReg(name, assignedID);
 
         //Store factory
-        explosiveData.put(name, new ExplosiveData(name, assignedID, tier).blastFactory(blastFactory));
+        explosiveData.put(name, new ExplosiveData(name, assignedID, tier, blastFactory));
 
         //Return data
         return explosiveData.get(name);
@@ -98,7 +95,7 @@ public class ExplosiveRegistry implements IExplosiveRegistry
         if (!allExplosivesLocked)
         {
             allExplosivesLocked = true;
-            allExplosives = explosiveData.values().stream().filter(e -> e != null).collect(ImmutableSet.toImmutableSet());
+            allExplosives = explosiveData.values().stream().filter(Objects::nonNull).collect(ImmutableSet.toImmutableSet());
         }
         else
         {

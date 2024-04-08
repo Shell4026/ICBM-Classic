@@ -27,7 +27,7 @@ public class CommandBlastList extends SubCommand
     {
         //Convert list of explosives to string registry names
         String names = ICBMClassicAPI.EXPLOSIVE_REGISTRY.getExplosives().stream()
-                .map(IExplosiveData::getRegistryName)
+                .map(IExplosiveData::getRegistryKey)
                 .map(ResourceLocation::toString)
                 .sorted()
                 .collect(Collectors.joining(", "));

@@ -87,7 +87,7 @@ public class TileEntityExplosive extends TileEntity implements IRotatable
             world.spawnEntity(entityExplosive);
             world.setBlockToAir(pos);
 
-            ICBMClassic.logger().info("TileEntityExplosive: Triggered ITEM{" + capabilityExplosive.toStack() + "] " + capabilityExplosive.getExplosiveData().getRegistryName() + " at location " + getPos());
+            ICBMClassic.logger().info("TileEntityExplosive: Triggered ITEM{" + capabilityExplosive.toStack() + "] " + capabilityExplosive.getExplosiveData().getRegistryKey() + " at location " + getPos());
         }
     }
 

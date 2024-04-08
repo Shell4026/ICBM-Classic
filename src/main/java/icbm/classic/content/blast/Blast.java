@@ -1,6 +1,8 @@
 package icbm.classic.content.blast;
 
 import icbm.classic.ICBMClassic;
+import icbm.classic.api.actions.IActionData;
+import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.events.BlastBuildEvent;
 import icbm.classic.api.explosion.IBlastInit;
@@ -68,6 +70,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
     private boolean hasBuilt = false;
 
     private IExplosiveData explosiveData;
+    private IActionSource actionSource;
 
     /**
      * Only use the default if you plan to init required data
@@ -78,9 +81,26 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
     }
 
     @Override
-    public IExplosiveData getExplosiveData()
-    {
+    @Nonnull
+    public IActionSource getSource() {
+        return this.actionSource;
+    }
+
+    /**
+     * Gets data used to create this action
+     *
+     * @return data
+     */
+    @Override
+    @Nonnull
+    public IExplosiveData getActionData() {
         return explosiveData;
+    }
+
+    @Override
+    public IBlastInit setActionSource(IActionSource source) {
+        this.actionSource = source;
+        return this;
     }
 
     @Nonnull

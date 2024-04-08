@@ -6,7 +6,7 @@ import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.launcher.ILauncherSolution;
 import icbm.classic.api.missiles.ICapabilityMissileStack;
 import icbm.classic.api.missiles.IMissile;
-import icbm.classic.api.missiles.cause.IMissileCause;
+import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.api.missiles.parts.IMissileFlightLogic;
 import icbm.classic.api.missiles.parts.IMissileFlightLogicStep;
 import icbm.classic.api.missiles.parts.IMissileTarget;
@@ -17,7 +17,7 @@ import icbm.classic.content.blocks.launcher.LauncherBaseCapability;
 import icbm.classic.content.missile.logic.flight.ArcFlightLogic;
 import icbm.classic.content.missile.logic.flight.WarmupFlightLogic;
 import icbm.classic.content.missile.logic.flight.move.MoveByFacingLogic;
-import icbm.classic.content.missile.logic.source.MissileSource;
+import icbm.classic.content.missile.logic.source.ActionSource;
 import icbm.classic.content.missile.logic.source.cause.BlockCause;
 import icbm.classic.content.missile.logic.targeting.BallisticTargetingData;
 import icbm.classic.content.blocks.launcher.status.FiringWithDelay;
@@ -78,7 +78,7 @@ public class LauncherCapability extends LauncherBaseCapability {
     }
 
     @Override
-    public IActionStatus preCheckLaunch(IMissileTarget targetData, @Nullable IMissileCause cause) {
+    public IActionStatus preCheckLaunch(IMissileTarget targetData, @Nullable IActionCause cause) {
         // Validate target data
         if(targetData == null || targetData.getPosition() == null) {
             return LauncherStatus.ERROR_TARGET_NULL;
@@ -96,7 +96,7 @@ public class LauncherCapability extends LauncherBaseCapability {
     }
 
     @Override
-    public IActionStatus launch(ILauncherSolution solution, @Nullable IMissileCause cause, boolean simulate) {
+    public IActionStatus launch(ILauncherSolution solution, @Nullable IActionCause cause, boolean simulate) {
 
         final IMissileTarget targetData = solution.getTarget(this);
 
@@ -111,7 +111,7 @@ public class LauncherCapability extends LauncherBaseCapability {
         selfCause.setPreviousCause(cause);
 
         final Vec3d spawnPosition = SPAWN_OFFSETS[host.getLaunchDirection().ordinal()].addVector(host.getPos().getX() + 0.5, host.getPos().getY() + 0.5, host.getPos().getZ() + 0.5);
-        final MissileSource source = new MissileSource(host.getWorld(), spawnPosition, selfCause);
+        final ActionSource source = new ActionSource(host.getWorld(), spawnPosition, selfCause);
 
         //Allow canceling missile launches
         final LauncherEvent.PreLaunch event = new LauncherEvent.PreLaunch(source, this, host.missileHolder, targetData, simulate);
@@ -163,7 +163,7 @@ public class LauncherCapability extends LauncherBaseCapability {
         return LauncherStatus.ERROR_INVALID_STACK;
     }
 
-    private IActionStatus fireMissile(IMissile missile, MissileSource source, Vec3d target) {
+    private IActionStatus fireMissile(IMissile missile, ActionSource source, Vec3d target) {
 
         // Should always work but in rare cases capability might have failed
         if(!host.missileHolder.consumeMissile()) {

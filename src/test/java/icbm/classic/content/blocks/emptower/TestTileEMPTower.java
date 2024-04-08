@@ -40,8 +40,8 @@ public class TestTileEMPTower
     @BeforeAll
     public static void setupForAllTests() {
         final ResourceLocation name = new ResourceLocation("ICBM:EMP");
-        final IBlastFactory factory = () -> new BlastEMP().setEffectBlocks().setEffectEntities().setBlastSize(50);
-        ICBMExplosives.EMP = new ExplosiveData(name,16,EnumTier.THREE).blastFactory(factory);
+        final IBlastFactory factory = (w, x, y, z, a) -> new BlastEMP().setEffectBlocks().setEffectEntities().setBlastSize(50);
+        ICBMExplosives.EMP = new ExplosiveData(name,16, EnumTier.THREE, factory);
     }
 
     @AfterAll

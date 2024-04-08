@@ -1,10 +1,17 @@
 package icbm.classic.content.blast.redmatter.caps;
 
+import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.explosion.IBlast;
+import icbm.classic.api.refs.ICBMExplosives;
+import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.content.blast.BlastStatus;
 import icbm.classic.content.blast.redmatter.EntityRedmatter;
+import icbm.classic.content.missile.logic.source.ActionSource;
+import icbm.classic.content.missile.logic.source.cause.EntityCause;
+import icbm.classic.lib.explosive.reg.ExplosiveRegistry;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -32,6 +39,12 @@ public class BlastRedmatterWrapper implements IBlast
         return BlastStatus.TRIGGERED_DONE;
     }
 
+    @Nonnull
+    @Override
+    public IActionSource getSource() {
+        return new ActionSource(host.world, new Vec3d(host.posX, host.posY, host.posZ), new EntityCause(host));
+    }
+
     @Override
     public void clearBlast()
     {
@@ -43,6 +56,12 @@ public class BlastRedmatterWrapper implements IBlast
     public boolean isCompleted()
     {
         return host.isDead;
+    }
+
+    @Nonnull
+    @Override
+    public IExplosiveData getActionData() {
+        return ICBMExplosives.REDMATTER;
     }
 
     @Override

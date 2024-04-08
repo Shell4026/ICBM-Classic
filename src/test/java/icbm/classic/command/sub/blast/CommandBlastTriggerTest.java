@@ -47,7 +47,7 @@ public class CommandBlastTriggerTest
     public void setupBeforeTest()
     {
         ICBMClassicAPI.EXPLOSIVE_REGISTRY = new ExplosiveRegistry();
-        fakeExData = ICBMClassicAPI.EXPLOSIVE_REGISTRY.register(new ResourceLocation("tree", "small"), EnumTier.ONE, () ->
+        fakeExData = ICBMClassicAPI.EXPLOSIVE_REGISTRY.register(new ResourceLocation("tree", "small"), EnumTier.ONE, (w, x, y, z, a) ->
         {
             FakeBlast fakeBlast = new FakeBlast(triggerState);
             blastsCreated.add(fakeBlast);
@@ -213,7 +213,7 @@ public class CommandBlastTriggerTest
         Assertions.assertEquals(world, blast.world(), "World of the blast is incorrect");
 
         //Check explosive settings
-        Assertions.assertEquals(fakeExData, blast.getExplosiveData(), "Explosive data does not match");
+        Assertions.assertEquals(fakeExData, blast.getActionData(), "Explosive data does not match");
         Assertions.assertNull(blast.customData, "Explosive custom data should be empty");
         Assertions.assertEquals(size, (int) Math.floor(blast.getBlastRadius()), "Explosive radius should be 2");
     }

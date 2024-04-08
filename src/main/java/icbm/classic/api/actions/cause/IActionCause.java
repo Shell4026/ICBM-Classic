@@ -1,4 +1,4 @@
-package icbm.classic.api.missiles.cause;
+package icbm.classic.api.actions.cause;
 
 import icbm.classic.api.reg.obj.IBuildableObject;
 import net.minecraft.block.state.IBlockState;
@@ -7,21 +7,21 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
- * Cause of a missile launch event. Stored as part of {@link IMissileSource}
- * used to track who or what fired the missile. Can be stored as a chain of
+ * Cause of an action. Stored as part of {@link IActionSource}
+ * used to track who or what triggered an action. Can be stored as a chain of
  * causes allowing detailed information to be tracked.
  *
  * Example: player -> remote -> screen -> silo -> cluster missile -> missile
  */
-public interface IMissileCause extends IBuildableObject {
+public interface IActionCause extends IBuildableObject {
 
     /**
      * First cause in the history
      *
      * @return first entry
      */
-    default IMissileCause getRootCause() {
-        final IMissileCause cause = getPreviousCause();
+    default IActionCause getRootCause() {
+        final IActionCause cause = getPreviousCause();
         if(cause != null) { //TODO add logic to prevent infinite loop
             return cause.getPreviousCause();
         }
@@ -33,26 +33,26 @@ public interface IMissileCause extends IBuildableObject {
      *
      * @return cause
      */
-    IMissileCause getPreviousCause();
+    IActionCause getPreviousCause();
 
     /**
      * Sets the missile cause
      * @param parent to use
      * @return self
      */
-    IMissileCause setPreviousCause(IMissileCause parent);
+    IActionCause setPreviousCause(IActionCause parent);
 
     /**
      * Cause containing entity information
      */
-    interface IEntityCause extends IMissileCause {
+    interface IEntityCause extends IActionCause {
         Entity getEntity();
     }
 
     /**
      * Cause containing block information
      */
-    interface IBlockCause extends IMissileCause {
+    interface IBlockCause extends IActionCause {
         World getWorld();
         BlockPos getBlockPos();
         IBlockState getBlockState();

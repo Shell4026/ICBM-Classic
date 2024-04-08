@@ -6,6 +6,7 @@ import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.command.CommandUtils;
 import icbm.classic.command.ICBMCommands;
 import icbm.classic.command.system.SubCommand;
+import icbm.classic.content.missile.logic.source.ActionSource;
 import icbm.classic.lib.explosive.ExplosiveHandler;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -149,7 +150,7 @@ public class CommandBlastTrigger extends SubCommand
     {
         final IActionStatus result = ExplosiveHandler.createExplosion(null,
                 world, x, y, z,
-                explosiveData.getRegistryID(), scale,
+                explosiveData.getRegistryID(), new ActionSource(), scale,
                 null);
 
         //Send translated message to user

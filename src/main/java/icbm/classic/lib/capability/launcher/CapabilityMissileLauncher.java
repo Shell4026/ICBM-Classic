@@ -3,7 +3,7 @@ package icbm.classic.lib.capability.launcher;
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.launcher.ILauncherSolution;
 import icbm.classic.api.launcher.IMissileLauncher;
-import icbm.classic.api.missiles.cause.IMissileCause;
+import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.api.missiles.parts.IMissileTarget;
 import icbm.classic.content.blocks.launcher.status.LauncherStatus;
 import net.minecraft.nbt.NBTBase;
@@ -50,12 +50,12 @@ public class CapabilityMissileLauncher implements IMissileLauncher
     }
 
     @Override
-    public IActionStatus preCheckLaunch(IMissileTarget target, @Nullable IMissileCause cause) {
+    public IActionStatus preCheckLaunch(IMissileTarget target, @Nullable IActionCause cause) {
         return LauncherStatus.ERROR_GENERIC;
     }
 
     @Override
-    public IActionStatus launch(ILauncherSolution firingSolution, @Nullable IMissileCause cause, boolean simulate) {
+    public IActionStatus launch(ILauncherSolution firingSolution, @Nullable IActionCause cause, boolean simulate) {
         return LauncherStatus.ERROR_GENERIC;
     }
 }

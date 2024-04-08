@@ -3,6 +3,7 @@ package icbm.classic.lib.explosive;
 import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.caps.IExplosive;
 import icbm.classic.api.explosion.IBlast;
@@ -82,67 +83,43 @@ public class ExplosiveHandler
         return toRemove.size();
     }
 
-    public static IActionStatus createExplosion(Entity cause, World world, double x, double y, double z, IExplosive capabilityExplosive)
+    public static IActionStatus createExplosion(Entity cause, World world, double x, double y, double z, IExplosive capabilityExplosive, IActionSource source)
     {
         if (capabilityExplosive == null)
         {
             return logEventThenRespond(cause, world, x, y, z, null, 1, MissingFieldStatus.get("explosive.create.capability", "explosive.capability"));
         }
-        return createExplosion(cause, world, x, y, z, capabilityExplosive.getExplosiveData(), 1, capabilityExplosive::applyCustomizations);
+        return createExplosion(cause, world, x, y, z, capabilityExplosive.getExplosiveData(), source, 1, capabilityExplosive::applyCustomizations);
     }
 
-    public static IActionStatus createExplosion(Entity cause, World world, double x, double y, double z, int blastID, float scale, Consumer<IBlast> customizer)
+    public static IActionStatus createExplosion(Entity cause, World world, double x, double y, double z, int blastID, IActionSource source, float scale, Consumer<IBlast> customizer)
     {
         final IExplosiveData explosiveData = ICBMClassicAPI.EXPLOSIVE_REGISTRY.getExplosiveData(blastID);
         if (explosiveData == null)
         {
             return logEventThenRespond(cause, world, x, y, z, null, 1, MissingFieldStatus.get("explosive.create.id", "explosive.data"));
         }
-        return createExplosion(cause, world, x, y, z, explosiveData, scale, customizer);
+        return createExplosion(cause, world, x, y, z, explosiveData, source, scale, customizer);
     }
 
-    public static IActionStatus createExplosion(Entity cause, World world, double x, double y, double z, IExplosiveData explosiveData, float scale, Consumer<IBlast> customizer)
+    public static IActionStatus createExplosion(Entity cause, World world, double x, double y, double z, IExplosiveData explosiveData, IActionSource source, float scale, Consumer<IBlast> customizer)
     {
-        IActionStatus response;
         if (explosiveData == null)
         {
-            response = MissingFieldStatus.get("explosive.create.data", "explosive.data");
+            return logEventThenRespond(cause, world, x, y, z, null, scale, MissingFieldStatus.get("explosive.create.data", "explosive.data"));
         }
-        else if (explosiveData.getBlastFactory() != null)
-        {
-            //TODO add way to hook blast builder to add custom blasts
-            final IBlastInit factoryBlast = explosiveData.getBlastFactory().create();
 
-            if (factoryBlast != null)
-            {
-                //Setup blast using factory
-                factoryBlast.setBlastWorld(world);
-                factoryBlast.setBlastPosition(x, y, z);
-                factoryBlast.scaleBlast(scale);
-                factoryBlast.setBlastSource(cause);
-                factoryBlast.setExplosiveData(explosiveData);
-                if(customizer != null) {
-                    customizer.accept(factoryBlast);
-                }
-                factoryBlast.buildBlast();
-
-                //run blast
-                response = factoryBlast.doAction();
-            }
-            else {
-                response = MissingFieldStatus.get("explosive.create.data", "explosive.data.factory.blast");
-            }
+        //TODO add way to hook blast builder to add custom blasts
+        final IBlastInit blast = explosiveData.create(world, x, y, z, source).scaleBlast(scale).setBlastSource(cause).setExplosiveData(explosiveData).setActionSource(source);
+        if(customizer != null) {
+            customizer.accept(blast);
         }
-        else
-        {
-            response = MissingFieldStatus.get("explosive.create.data", "explosive.data.factory");
-        }
-        return logEventThenRespond(cause, world, x, y, z, explosiveData, scale, response);
+        return logEventThenRespond(cause, world, x, y, z, explosiveData, scale, blast.buildBlast().doAction());
     }
 
     private static IActionStatus logEventThenRespond(Entity cause, World world, double x, double y, double z, IExplosiveData explosiveData, float scale, IActionStatus blastResponse)
     {
-        final String explosiveName = explosiveData == null ? "null" : explosiveData.getRegistryName().toString();
+        final String explosiveName = explosiveData == null ? "null" : explosiveData.getRegistryKey().toString();
         final String entitySource = cause != null ? Integer.toString(cause.getEntityId()) : "null";
 
         // TODO make optional via config

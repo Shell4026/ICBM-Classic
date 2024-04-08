@@ -1,9 +1,7 @@
 package icbm.classic.api.actions;
 
-import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.actions.status.IActionStatus;
-import icbm.classic.api.reg.obj.IBuildableObject;
-import icbm.classic.api.reg.obj.IBuilderRegistry;
+import icbm.classic.api.actions.cause.IActionSource;
 
 import javax.annotation.Nonnull;
 
@@ -12,7 +10,7 @@ import javax.annotation.Nonnull;
  *
  * Example: triggering a blast, this would be an action that fall inside world-editing category
  */
-public interface IAction extends IBuildableObject {
+public interface IAction {
 
     /**
      * Executes the action and returns the status of the action.
@@ -24,14 +22,29 @@ public interface IAction extends IBuildableObject {
      * This will be the case for missiles where impact may still trigger
      * the warhead's action(blast).
      *
+     * Actions should always be instant. If something needs to run over several ticks then it should
+     * spawn a thread, listener, entity, or other system. This way actions can stay simple and not
+     * require callbacks. If a callback is still needed... consider a status obj that provides access to
+     * what was created.
+     *
      * @return the status of the action
      */
+    @Nonnull
     IActionStatus doAction();
 
-
+    /**
+     * Source of the action
+     *
+     * @return source
+     */
     @Nonnull
-    @Override
-    default IBuilderRegistry<IAction> getRegistry() {
-        return ICBMClassicAPI.ACTION_REGISTRY;
-    }
+    IActionSource getSource();
+
+    /**
+     * Gets data used to create this action
+     *
+     * @return data
+     */
+    @Nonnull
+    IActionData getActionData();
 }

@@ -102,7 +102,7 @@ public class ItemGrenade extends ItemBase
         final IExplosiveData data = ICBMClassicAPI.EXPLOSIVE_REGISTRY.getExplosiveData(itemstack.getItemDamage());
         if (data != null)
         {
-            return "grenade." + data.getRegistryName();
+            return "grenade." + data.getRegistryKey();
         }
         return "grenade";
     }

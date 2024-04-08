@@ -1,10 +1,12 @@
 package icbm.classic.api.explosion;
 
 import icbm.classic.api.actions.IAction;
+import icbm.classic.api.actions.IActionData;
+import icbm.classic.api.actions.cause.IActionSource;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.data.IWorldPosition;
 import icbm.classic.api.reg.IExplosiveData;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,13 +22,6 @@ import javax.annotation.Nullable;
 @Deprecated
 public interface IBlast extends IWorldPosition, IAction
 {
-
-    @Nonnull
-    @Override
-    default ResourceLocation getRegistryKey(){
-        return null; //TODO implement
-    }
-
     /**
      * Gets the radius/size of the effect of the blast.
      *
@@ -55,18 +50,9 @@ public interface IBlast extends IWorldPosition, IAction
         return true;
     }
 
-    /**
-     * Data used to create the blast. Used
-     * for save state recovery
-     *
-     * @return data
-     */
-    @Nullable
-    @Deprecated
-    default IExplosiveData getExplosiveData() //TODO move to save handler, this shouldn't be exposed
-    {
-        return null;
-    }
+    @Override
+    @Nonnull
+    IExplosiveData getActionData();
 
     /**
      * Entity that represents the blast

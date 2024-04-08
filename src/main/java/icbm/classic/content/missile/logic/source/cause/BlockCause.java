@@ -2,8 +2,7 @@ package icbm.classic.content.missile.logic.source.cause;
 
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.missiles.cause.IMissileCause;
-import icbm.classic.api.reg.IExplosiveCustomization;
+import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.api.reg.obj.IBuilderRegistry;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.Data;
@@ -24,7 +23,7 @@ import javax.annotation.Nonnull;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class BlockCause extends MissileCause implements IMissileCause.IBlockCause {
+public class BlockCause extends ActionCause implements IActionCause.IBlockCause {
 
     public static final ResourceLocation REG_NAME = new ResourceLocation(ICBMConstants.DOMAIN, "block");
 
@@ -56,8 +55,8 @@ public class BlockCause extends MissileCause implements IMissileCause.IBlockCaus
 
     @Nonnull
     @Override
-    public IBuilderRegistry<IMissileCause> getRegistry() {
-        return ICBMClassicAPI.MISSILE_CAUSE_REGISTRY;
+    public IBuilderRegistry<IActionCause> getRegistry() {
+        return ICBMClassicAPI.ACTION_CAUSE_REGISTRY;
     }
 
     @Override

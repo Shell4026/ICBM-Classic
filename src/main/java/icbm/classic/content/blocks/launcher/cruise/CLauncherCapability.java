@@ -5,14 +5,14 @@ import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.launcher.ILauncherSolution;
 import icbm.classic.api.missiles.ICapabilityMissileStack;
 import icbm.classic.api.missiles.IMissile;
-import icbm.classic.api.missiles.cause.IMissileCause;
-import icbm.classic.api.missiles.cause.IMissileSource;
+import icbm.classic.api.actions.cause.IActionCause;
+import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.missiles.parts.IMissileTarget;
 import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.content.blocks.launcher.FiringPackage;
 import icbm.classic.content.blocks.launcher.LauncherBaseCapability;
 import icbm.classic.content.missile.logic.flight.DirectFlightLogic;
-import icbm.classic.content.missile.logic.source.MissileSource;
+import icbm.classic.content.missile.logic.source.ActionSource;
 import icbm.classic.content.missile.logic.source.cause.BlockCause;
 import icbm.classic.content.blocks.launcher.status.FiringWithDelay;
 import icbm.classic.content.blocks.launcher.status.LauncherStatus;
@@ -52,12 +52,12 @@ public class CLauncherCapability extends LauncherBaseCapability {
     }
 
     @Override
-    public IActionStatus preCheckLaunch(IMissileTarget target, @Nullable IMissileCause cause) {
+    public IActionStatus preCheckLaunch(IMissileTarget target, @Nullable IActionCause cause) {
         return getStatus();
     }
 
     @Override
-    public IActionStatus launch(ILauncherSolution solution, @Nullable IMissileCause cause, boolean simulate) {
+    public IActionStatus launch(ILauncherSolution solution, @Nullable IActionCause cause, boolean simulate) {
 
         final IMissileTarget target = solution.getTarget(this);
 
@@ -81,7 +81,7 @@ public class CLauncherCapability extends LauncherBaseCapability {
 
         final BlockCause selfCause = new BlockCause(host.getWorld(), host.getPos(), host.getBlockState());
         selfCause.setPreviousCause(cause);
-        final IMissileSource missileSource = new MissileSource(getHost().getWorld(), new Vec3d(host.getPos().getX() + 0.5, host.getPos().getY() + TileCruiseLauncher.MISSILE__HOLDER_Y, host.getPos().getZ() + 0.5), selfCause);
+        final IActionSource missileSource = new ActionSource(getHost().getWorld(), new Vec3d(host.getPos().getX() + 0.5, host.getPos().getY() + TileCruiseLauncher.MISSILE__HOLDER_Y, host.getPos().getZ() + 0.5), selfCause);
 
         if (host.canLaunch()) //TODO update to mirror launch pad better
         {

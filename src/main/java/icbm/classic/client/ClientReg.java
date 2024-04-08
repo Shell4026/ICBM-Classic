@@ -204,11 +204,11 @@ public class ClientReg
         {
             //Add block state
             final HashMap<EnumFacing,ModelResourceLocation> facingModelMap = new HashMap<>();
-            final String resourcePath = data.getRegistryName().getResourceDomain() + ":explosives/" + data.getRegistryName().getResourcePath();
+            final String resourcePath = data.getRegistryKey().getResourceDomain() + ":explosives/" + data.getRegistryKey().getResourcePath();
 
             for(EnumFacing facing : EnumFacing.VALUES)
             {
-                facingModelMap.put(facing, new ModelResourceLocation(resourcePath, "explosive=" + data.getRegistryName().toString().replace(":", "_") + ",rotation=" + facing));
+                facingModelMap.put(facing, new ModelResourceLocation(resourcePath, "explosive=" + data.getRegistryKey().toString().replace(":", "_") + ",rotation=" + facing));
             }
 
             blockModelMap.put(data, facingModelMap);
@@ -233,7 +233,7 @@ public class ClientReg
     {
         for (IExplosiveData data : ICBMClassicAPI.EX_GRENADE_REGISTRY.getExplosives()) //TODO run loop once for all 4 content types
         {
-            final String resourcePath = data.getRegistryName().getResourceDomain() + ":grenades/" + data.getRegistryName().getResourcePath();
+            final String resourcePath = data.getRegistryKey().getResourceDomain() + ":grenades/" + data.getRegistryKey().getResourcePath();
             grenadeModelMap.put(data, new ModelResourceLocation(resourcePath, "inventory"));
         }
 
@@ -246,7 +246,7 @@ public class ClientReg
     {
         for (IExplosiveData data : ICBMClassicAPI.EX_MINECART_REGISTRY.getExplosives()) //TODO run loop once for all 4 content types
         {
-            final String resourcePath = data.getRegistryName().getResourceDomain() + ":bombcarts/" + data.getRegistryName().getResourcePath();
+            final String resourcePath = data.getRegistryKey().getResourceDomain() + ":bombcarts/" + data.getRegistryKey().getResourcePath();
             cartModelMap.put(data, new ModelResourceLocation(resourcePath, "inventory"));
         }
         ModelLoader.registerItemVariants(ItemReg.itemBombCart, cartModelMap.values()
@@ -258,7 +258,7 @@ public class ClientReg
     {
         for (IExplosiveData data : ICBMClassicAPI.EX_MISSILE_REGISTRY.getExplosives()) //TODO run loop once for all 4 content types
         {
-            final String resourcePath = data.getRegistryName().getResourceDomain() + ":missiles/" + data.getRegistryName().getResourcePath();
+            final String resourcePath = data.getRegistryKey().getResourceDomain() + ":missiles/" + data.getRegistryKey().getResourcePath();
             missileModelMap.put(data, new ModelResourceLocation(resourcePath, "inventory"));
         }
 

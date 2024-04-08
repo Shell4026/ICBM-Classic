@@ -2,7 +2,7 @@ package icbm.classic.content.cargo;
 
 import icbm.classic.ICBMClassic;
 import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.missiles.cause.IMissileSource;
+import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.missiles.projectile.IProjectileData;
 import icbm.classic.api.missiles.projectile.IProjectileStack;
 import icbm.classic.api.missiles.projectile.IProjectileThrowable;
@@ -10,7 +10,7 @@ import icbm.classic.api.missiles.projectile.ProjectileType;
 import icbm.classic.content.cargo.balloon.BalloonProjectileData;
 import icbm.classic.content.cargo.parachute.EntityParachute;
 import icbm.classic.content.cargo.parachute.ParachuteProjectileData;
-import icbm.classic.content.missile.logic.source.MissileSource;
+import icbm.classic.content.missile.logic.source.ActionSource;
 import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.content.reg.ItemReg;
 import icbm.classic.lib.LanguageUtility;
@@ -119,7 +119,7 @@ public class ItemThrowableProjectile extends ItemBase {
             final double y = thrower.posY + thrower.getEyeHeight()  ;
             final double z = thrower.posZ;
 
-            final IMissileSource source = new MissileSource(world, new Vec3d(x, y, z), new EntityCause(thrower));
+            final IActionSource source = new ActionSource(world, new Vec3d(x, y, z), new EntityCause(thrower));
             ((IProjectileThrowable<Entity>) parachute).throwProjectile(parachute, source, x, y, z, yaw, pitch, THROW_VELOCITY, 0);
 
         } else {

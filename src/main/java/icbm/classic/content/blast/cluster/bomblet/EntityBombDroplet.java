@@ -2,6 +2,8 @@ package icbm.classic.content.blast.cluster.bomblet;
 
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.reg.IExplosiveData;
+import icbm.classic.content.missile.logic.source.ActionSource;
+import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.lib.capability.ex.CapabilityExplosiveEntity;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import icbm.classic.lib.saving.NbtSaveNode;
@@ -36,7 +38,7 @@ public class EntityBombDroplet extends EntityProjectile<EntityBombDroplet> imple
     @Override
     protected void onImpact(RayTraceResult hit) {
        super.onImpact(hit);
-       explosive.doExplosion(hit.hitVec);
+       explosive.doExplosion(hit.hitVec.x, hit.hitVec.y, hit.hitVec.z, new ActionSource(world, new Vec3d(posX, posY, posZ), new EntityCause(this))); //TODO include impact cause info
     }
 
     @Override
@@ -64,7 +66,7 @@ public class EntityBombDroplet extends EntityProjectile<EntityBombDroplet> imple
         // TODO add config
         // TODO add random chance modifier
         if (source.isExplosion() || source.isFireDamage()) {
-            explosive.doExplosion(this.getPositionVector());
+            explosive.doExplosion(posX, posY, posZ, new ActionSource(world, new Vec3d(posX, posY, posZ), new EntityCause(this))); //TODO include source of damage
         }
     }
 
@@ -90,7 +92,7 @@ public class EntityBombDroplet extends EntityProjectile<EntityBombDroplet> imple
         final IExplosiveData data = explosive.getExplosiveData();
         if (data != null)
         {
-            return I18n.translateToLocal("bomb.droplet." + data.getRegistryName().toString() + ".name");
+            return I18n.translateToLocal("bomb.droplet." + data.getRegistryKey().toString() + ".name");
         }
         return I18n.translateToLocal("bomb.droplet.icbmclassic:generic.name");
     }

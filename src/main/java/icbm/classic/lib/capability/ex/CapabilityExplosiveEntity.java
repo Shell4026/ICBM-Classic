@@ -2,6 +2,7 @@ package icbm.classic.lib.capability.ex;
 
 import icbm.classic.ICBMClassic;
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.caps.IExplosive;
 import icbm.classic.api.explosion.IBlast;
@@ -50,27 +51,23 @@ public class CapabilityExplosiveEntity implements IExplosive
             stack = new ItemStack(nbt);
         }
     }
-    public IActionStatus doExplosion(Vec3d pos)
+
+    public IActionStatus doExplosion(double x, double y, double z, IActionSource source)
     {
-        return doExplosion(pos.x, pos.y, pos.z);
-    }
-
-
-    public IActionStatus doExplosion(double x, double y, double z)
-    {
-        // Make sure the missile is not already exploding
-        if (!this.isExploding)
-        {
-            //Make sure to note we are currently exploding
-            this.isExploding = true;
-
-            if (!this.entity.world.isRemote)
-            {
-                return ExplosiveHandler.createExplosion(this.entity, this.entity.world, x, y, z, this);
-            }
-            return BlastStatus.TRIGGERED_CLIENT;
+        if (this.isExploding) {
+            return BlastStatus.TRIGGERED_DONE;
         }
-        return BlastStatus.TRIGGERED_DONE;
+
+        //Make sure to note we are currently exploding
+        this.isExploding = true;
+
+        if (!this.entity.world.isRemote)
+        {
+            return ExplosiveHandler.createExplosion(this.entity, this.entity.world, x, y, z, this, source);
+        }
+        return BlastStatus.TRIGGERED_CLIENT;
+
+
     }
 
     @Nullable

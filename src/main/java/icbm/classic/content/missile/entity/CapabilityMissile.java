@@ -3,21 +3,18 @@ package icbm.classic.content.missile.entity;
 import icbm.classic.ICBMClassic;
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.missiles.IMissile;
-import icbm.classic.api.missiles.cause.IMissileSource;
+import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.missiles.parts.IMissileFlightLogic;
 import icbm.classic.api.missiles.parts.IMissileTarget;
 import icbm.classic.client.ICBMSounds;
 import icbm.classic.config.ConfigDebug;
-import icbm.classic.content.missile.logic.source.MissileSource;
 import icbm.classic.lib.CalculationHelpers;
 import icbm.classic.lib.radar.RadarRegistry;
 import icbm.classic.lib.saving.NbtSaveHandler;
-import icbm.classic.lib.saving.NbtSaveNode;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -35,7 +32,7 @@ public class CapabilityMissile implements IMissile, INBTSerializable<NBTTagCompo
     private final EntityMissile missile;
     private IMissileTarget targetData;
 
-    private IMissileSource firingSource;
+    private IActionSource firingSource;
 
     private IMissileFlightLogic flightLogic;
     private boolean doFlight = false;
@@ -99,13 +96,13 @@ public class CapabilityMissile implements IMissile, INBTSerializable<NBTTagCompo
     }
 
     @Override
-    public void setMissileSource(IMissileSource source)
+    public void setMissileSource(IActionSource source)
     {
         this.firingSource = source;
     }
 
     @Override
-    public IMissileSource getMissileSource()
+    public IActionSource getMissileSource()
     {
         return firingSource;
     }

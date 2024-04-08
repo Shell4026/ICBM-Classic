@@ -1,6 +1,9 @@
 package icbm.classic.api.explosion;
 
-import javax.annotation.Nullable;
+import icbm.classic.api.actions.cause.IActionSource;
+import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
 
 /**
  * Simple interface for use in creating blasts
@@ -15,6 +18,6 @@ public interface IBlastFactory
      * Creates a new blast
      * @return new blast
      */
-    @Nullable
-    IBlastInit create();
+    @Nonnull
+    IBlastInit create(World world, double x, double y, double z, IActionSource source);
 }

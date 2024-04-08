@@ -15,6 +15,8 @@ import icbm.classic.content.entity.EntityExplosion;
 import icbm.classic.content.entity.flyingblock.BlockCaptureData;
 import icbm.classic.content.entity.flyingblock.EntityFlyingBlock;
 import icbm.classic.content.entity.flyingblock.FlyingBlock;
+import icbm.classic.content.missile.logic.source.ActionSource;
+import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.lib.CalculationHelpers;
 import icbm.classic.lib.explosive.ExplosiveHandler;
 import net.minecraft.block.Block;
@@ -473,7 +475,8 @@ public class RedmatterLogic
             else if (entity.hasCapability(ICBMClassicAPI.EXPLOSIVE_CAPABILITY, null))
             {
                 final IExplosive explosive = entity.getCapability(ICBMClassicAPI.EXPLOSIVE_CAPABILITY, null);
-                ExplosiveHandler.createExplosion(host, entity.world, entity.posX, entity.posY, entity.posZ, explosive);
+                ActionSource actionSource = new ActionSource(entity.world, new Vec3d(entity.posX, entity.posY, entity.posZ), new EntityCause(this.host)); //TODO provide additional cause information related to what created the redmatter
+                ExplosiveHandler.createExplosion(host, entity.world, entity.posX, entity.posY, entity.posZ, explosive, actionSource);
                 entity.setDead();
             }
             else if (entity instanceof EntityLiving || entity instanceof EntityPlayer)

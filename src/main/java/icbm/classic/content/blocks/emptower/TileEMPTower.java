@@ -3,6 +3,7 @@ package icbm.classic.content.blocks.emptower;
 import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.explosion.IBlast;
 import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.client.ICBMSounds;
@@ -11,6 +12,8 @@ import icbm.classic.config.machines.ConfigEmpTower;
 import icbm.classic.content.blast.BlastEMP;
 import icbm.classic.content.blocks.emptower.gui.ContainerEMPTower;
 import icbm.classic.content.blocks.emptower.gui.GuiEMPTower;
+import icbm.classic.content.missile.logic.source.ActionSource;
+import icbm.classic.content.missile.logic.source.cause.BlockCause;
 import icbm.classic.lib.data.IMachineInfo;
 import icbm.classic.lib.energy.storage.EnergyBuffer;
 import icbm.classic.lib.energy.system.EnergySystem;
@@ -37,6 +40,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -270,9 +274,11 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
 
     protected IBlast buildBlast()
     {
-        return ((BlastEMP)ICBMExplosives.EMP.create()
-                .setBlastWorld(world)
-                .setBlastPosition(getPos().getX() + 0.5, getPos().getY() + 1.2, getPos().getZ() + 0.5)
+        final BlockCause selfCause = new BlockCause(world, getPos(), getBlockState()); // TODO add caused by such as redstone, remote, etc
+
+        final ActionSource source = new ActionSource(world, new Vec3d(getPos().getX() + 0.5, getPos().getY() + 1.2, getPos().getZ() + 0.5), selfCause);
+
+        return ((BlastEMP)ICBMExplosives.EMP.create(world, getPos().getX() + 0.5, getPos().getY() + 1.2, getPos().getZ() + 0.5, source)
                 .setBlastSize(range))
                 .clearSetEffectBlocksAndEntities()
                 .setEffectBlocks().setEffectEntities()

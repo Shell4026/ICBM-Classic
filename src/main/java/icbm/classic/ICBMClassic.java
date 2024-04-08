@@ -2,7 +2,7 @@ package icbm.classic;
 
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.actions.status.IActionStatus;
-import icbm.classic.api.missiles.cause.IMissileCause;
+import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.api.missiles.parts.IMissileFlightLogic;
 import icbm.classic.api.missiles.parts.IMissileTarget;
 import icbm.classic.api.reg.IExplosiveCustomization;
@@ -299,19 +299,19 @@ public class ICBMClassic
 
     void handleMissileCauseRegistry()
     {
-        ICBMClassicAPI.MISSILE_CAUSE_REGISTRY =  new BuildableObjectRegistry<IMissileCause>("CAUSE_DATA");;
+        ICBMClassicAPI.ACTION_CAUSE_REGISTRY =  new BuildableObjectRegistry<IActionCause>("CAUSE_DATA");;
 
         // Register defaults
-        ICBMClassicAPI.MISSILE_CAUSE_REGISTRY.register(EntityCause.REG_NAME, EntityCause::new);
-        ICBMClassicAPI.MISSILE_CAUSE_REGISTRY.register(BlockCause.REG_NAME, BlockCause::new);
-        ICBMClassicAPI.MISSILE_CAUSE_REGISTRY.register(BlockScreenCause.REG_NAME, BlockScreenCause::new);
-        ICBMClassicAPI.MISSILE_CAUSE_REGISTRY.register(RedstoneCause.REG_NAME, RedstoneCause::new);
+        ICBMClassicAPI.ACTION_CAUSE_REGISTRY.register(EntityCause.REG_NAME, EntityCause::new);
+        ICBMClassicAPI.ACTION_CAUSE_REGISTRY.register(BlockCause.REG_NAME, BlockCause::new);
+        ICBMClassicAPI.ACTION_CAUSE_REGISTRY.register(BlockScreenCause.REG_NAME, BlockScreenCause::new);
+        ICBMClassicAPI.ACTION_CAUSE_REGISTRY.register(RedstoneCause.REG_NAME, RedstoneCause::new);
 
         //Fire registry event
-        MinecraftForge.EVENT_BUS.post(new MissileCauseRegistryEvent(ICBMClassicAPI.MISSILE_CAUSE_REGISTRY));
+        MinecraftForge.EVENT_BUS.post(new MissileCauseRegistryEvent(ICBMClassicAPI.ACTION_CAUSE_REGISTRY));
 
         //Lock to prevent late registry
-        ((BuildableObjectRegistry)ICBMClassicAPI.MISSILE_CAUSE_REGISTRY).lock();
+        ((BuildableObjectRegistry)ICBMClassicAPI.ACTION_CAUSE_REGISTRY).lock();
     }
 
     void handleStatusRegistry()

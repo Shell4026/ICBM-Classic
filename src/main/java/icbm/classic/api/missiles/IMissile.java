@@ -2,7 +2,7 @@ package icbm.classic.api.missiles;
 
 
 import icbm.classic.api.data.IWorldPosition;
-import icbm.classic.api.missiles.cause.IMissileSource;
+import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.missiles.parts.IMissileFlightLogic;
 import icbm.classic.api.missiles.parts.IMissileTarget;
 import net.minecraft.entity.Entity;
@@ -58,7 +58,7 @@ public interface IMissile extends IWorldPosition // TODO add registry and requir
      * Sets the missile source information
      * @param source
      */
-    void setMissileSource(IMissileSource source);
+    void setMissileSource(IActionSource source);
 
     /**
      * Gets the missile source
@@ -67,7 +67,7 @@ public interface IMissile extends IWorldPosition // TODO add registry and requir
      *
      * @return source
      */
-    IMissileSource getMissileSource();
+    IActionSource getMissileSource();
 
     /**
      * Tells the missile to start motion

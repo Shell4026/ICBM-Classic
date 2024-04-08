@@ -1,7 +1,7 @@
 package icbm.classic.api.launcher;
 
 import icbm.classic.api.actions.status.IActionStatus;
-import icbm.classic.api.missiles.cause.IMissileCause;
+import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.api.missiles.parts.IMissileTarget;
 import net.minecraft.util.math.Vec3d;
 
@@ -27,7 +27,7 @@ public interface IMissileLauncher
     /**
      * Direct way to get launcher's current status
      *
-     * {@link #launch(IMissileTarget, IMissileCause, boolean)} will often invoke this in addition
+     * {@link #launch(IMissileTarget, IActionCause, boolean)} will often invoke this in addition
      * to other logic. This only allows exacting status without triggering pre-checks or launch
      * results. Useful for checking how the launcher itself is doing and not what launcher will do
      * with the missile.
@@ -39,13 +39,13 @@ public interface IMissileLauncher
     /**
      * Direct way to get launcher's validate result of the target and cause.
      *
-     * {@link #launch(IMissileTarget, IMissileCause, boolean)} will often invoke this in addition
+     * {@link #launch(IMissileTarget, IActionCause, boolean)} will often invoke this in addition
      * to other logic. This only allows exacting pre-validation logic directly without worrying
      * about launch results.
      *
      * @return status from pre-checks
      */
-    IActionStatus preCheckLaunch(IMissileTarget target, @Nullable IMissileCause cause);
+    IActionStatus preCheckLaunch(IMissileTarget target, @Nullable IActionCause cause);
 
     /**
      * Tries to launch the missile
@@ -59,14 +59,14 @@ public interface IMissileLauncher
      * @param simulate to do pre-flight checks and get current status
      * @return status of launch
      */
-    IActionStatus launch(ILauncherSolution firingSolution, @Nullable IMissileCause cause, boolean simulate);
+    IActionStatus launch(ILauncherSolution firingSolution, @Nullable IActionCause cause, boolean simulate);
 
 
     /**
-     * @Deprecated use {@link #launch(ILauncherSolution, IMissileCause, boolean)}
+     * @Deprecated use {@link #launch(ILauncherSolution, IActionCause, boolean)}
      */
     @Deprecated
-    default IActionStatus launch(IMissileTarget target, @Nullable IMissileCause cause, boolean simulate) {
+    default IActionStatus launch(IMissileTarget target, @Nullable IActionCause cause, boolean simulate) {
         return launch((launcher) -> target, cause, simulate);
     }
 

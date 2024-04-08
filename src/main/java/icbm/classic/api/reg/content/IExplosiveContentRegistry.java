@@ -75,7 +75,7 @@ public interface IExplosiveContentRegistry
      * @return new device stack
      */
     default ItemStack getDeviceStack(IExplosiveData data) {
-        return getDeviceStack(data.getRegistryName());
+        return getDeviceStack(data.getRegistryKey());
     }
 
     /**

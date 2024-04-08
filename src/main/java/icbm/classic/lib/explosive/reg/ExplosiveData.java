@@ -1,12 +1,18 @@
 package icbm.classic.lib.explosive.reg;
 
 import icbm.classic.api.EnumTier;
+import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.explosion.IBlastFactory;
+import icbm.classic.api.explosion.IBlastInit;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.api.reg.content.IExplosiveContentRegistry;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,33 +23,26 @@ import java.util.Set;
  * Created by Dark(DarkGuardsman, Robert) on 1/4/19.
  */
 @ToString(of={"regName", "id"})
+@RequiredArgsConstructor
+@Data
 public class ExplosiveData implements IExplosiveData
 {
+    @Nonnull
     public final ResourceLocation regName;
-    public final int id;
-    public final EnumTier tier;
+    /** Will be removed in 1.13 */
+    @Deprecated
+    private final int id;
+    @Nonnull
+    private  final EnumTier tier;
+    @Nonnull
+    private final IBlastFactory blastCreationFactory;
 
-    public IBlastFactory blastCreationFactory;
+    private final Set<ResourceLocation> enabledContent = new HashSet();
 
-    public final Set<ResourceLocation> enabledContent = new HashSet();
-
-    public boolean enabled = true;
-
-    public ExplosiveData(ResourceLocation regName, int id, EnumTier tier)
-    {
-        this.regName = regName;
-        this.id = id;
-        this.tier = tier;
-    }
-
-    public ExplosiveData blastFactory(IBlastFactory factory)
-    {
-        blastCreationFactory = factory;
-        return this;
-    }
+    private boolean enabled = true;
 
     @Override
-    public ResourceLocation getRegistryName()
+    public ResourceLocation getRegistryKey()
     {
         return regName;
     }
@@ -55,27 +54,9 @@ public class ExplosiveData implements IExplosiveData
     }
 
     @Override
-    public IBlastFactory getBlastFactory()
-    {
-        return blastCreationFactory;
-    }
-
-    @Override
-    public EnumTier getTier()
-    {
-        return tier;
-    }
-
-    @Override
-    public boolean isEnabled()
-    {
-        return enabled;
-    }
-
-    @Override
-    public void setEnabled(boolean b)
-    {
-        this.enabled = b;
+    @Nonnull
+    public IBlastInit create(World world, double x, double y, double z, @Nonnull IActionSource source) {
+        return blastCreationFactory.create(world, x, y, z, source);
     }
 
     @Override

@@ -3,7 +3,7 @@ package icbm.classic.content.blocks.launcher.network;
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.launcher.ILauncherSolution;
 import icbm.classic.api.launcher.IMissileLauncher;
-import icbm.classic.api.missiles.cause.IMissileCause;
+import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.content.blocks.launcher.FiringPackage;
 import lombok.Getter;
 import net.minecraft.util.EnumFacing;
@@ -50,7 +50,7 @@ public class LauncherNetwork implements ICapabilityProvider {
         return launchers.stream().filter(l -> group < 0 || l.getLauncher().getLauncherGroup() == group);
     }
 
-    public Stream<LauncherEntry> launch(ILauncherSolution solution, IMissileCause cause, boolean simulate) {
+    public Stream<LauncherEntry> launch(ILauncherSolution solution, IActionCause cause, boolean simulate) {
         //TODO consider pre-checking launchers to calculate actual firing count rather than desired... for inaccuracy reasons
         return streamLaunchers(solution.getFiringGroup()).peek(entry -> {
             entry.setLastFiringPackage(new FiringPackage(solution.getTarget(entry.getLauncher()), cause));

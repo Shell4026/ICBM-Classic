@@ -1,6 +1,6 @@
 package icbm.classic.api;
 
-import icbm.classic.api.actions.IAction;
+import icbm.classic.api.actions.IActionData;
 import icbm.classic.api.caps.IEMPReceiver;
 import icbm.classic.api.caps.IExplosive;
 import icbm.classic.api.caps.IGPSData;
@@ -11,7 +11,7 @@ import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.launcher.IMissileLauncher;
 import icbm.classic.api.missiles.ICapabilityMissileStack;
 import icbm.classic.api.missiles.IMissile;
-import icbm.classic.api.missiles.cause.IMissileCause;
+import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.api.missiles.parts.IMissileFlightLogic;
 import icbm.classic.api.missiles.parts.IMissileTarget;
 import icbm.classic.api.missiles.projectile.IProjectileDataRegistry;
@@ -56,13 +56,13 @@ public final class ICBMClassicAPI
     public static IBuilderRegistry<IMissileTarget> MISSILE_TARGET_DATA_REGISTRY;
     /** Registry for flight logic save/load in missiles */
     public static IBuilderRegistry<IMissileFlightLogic> MISSILE_FLIGHT_LOGIC_REGISTRY;
-    /** Registry for missile cause save/load in missiles */
-    public static IBuilderRegistry<IMissileCause> MISSILE_CAUSE_REGISTRY;
 
+    /** Registry for actions that can be run */
+    public static IBuilderRegistry<IActionData> ACTION_REGISTRY;
     /** Registry for status messages produced by machines, items, and entities in the mod */
     public static IBuilderRegistry<IActionStatus> ACTION_STATUS_REGISTRY;
-    /** Registry for actions that can be run */
-    public static IBuilderRegistry<IAction> ACTION_REGISTRY;
+    /** Registry for missile cause save/load in missiles */
+    public static IBuilderRegistry<IActionCause> ACTION_CAUSE_REGISTRY;
     /** Registry for conditional logic, often used for actions */
     public static IBuilderRegistry<ICondition> CONDITION_REGISTRY;
 

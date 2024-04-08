@@ -4,6 +4,8 @@ import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.ICBMClassicHelpers;
 import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.content.blocks.explosive.BlockExplosive;
+import icbm.classic.content.missile.logic.source.ActionSource;
+import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.content.reg.BlockReg;
 import icbm.classic.content.reg.ItemReg;
 import icbm.classic.lib.NBTConstants;
@@ -24,6 +26,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -60,9 +63,7 @@ public class EntityBombCart extends EntityMinecartTNT implements IEntityAddition
     @Override
     protected void explodeCart(double par1)
     {
-        // TODO add event
-        this.world.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
-        explosive.doExplosion(this.posX, this.posY, this.posZ); //TODO handle output
+        explosive.doExplosion(this.posX, this.posY, this.posZ, new ActionSource(world, new Vec3d(posX, posY, posZ), new EntityCause(this))); //TODO handle output and include trigger source & player of the cart
         this.setDead();
     }
 

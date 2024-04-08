@@ -63,7 +63,7 @@ public class ItemMissile extends ItemBase
                 final IExplosiveData data = explosive.getExplosiveData();
                 if (data != null)
                 {
-                    return "missile." + data.getRegistryName();
+                    return "missile." + data.getRegistryKey();
                 }
             }
         }

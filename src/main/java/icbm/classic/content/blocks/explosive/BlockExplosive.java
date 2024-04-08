@@ -118,7 +118,7 @@ public class BlockExplosive extends BlockICBM
         }
         else { // if the explosives id doesnt exist, then fallback to the one with the id 0
             prop = ICBMClassicAPI.EXPLOSIVE_REGISTRY.getExplosiveData(0);
-            ICBMClassic.logger().log(Level.ERROR, "Unable to get explosives kind, choosing "+prop.getRegistryName().toString()+" as a fallback.");
+            ICBMClassic.logger().log(Level.ERROR, "Unable to get explosives kind, choosing "+prop.getRegistryKey().toString()+" as a fallback.");
             stack.setItemDamage(0);
             return state.withProperty(EX_PROP, prop);
         }
@@ -171,7 +171,7 @@ public class BlockExplosive extends BlockICBM
             {
                 //TODO turn into event and logger
                 ICBMClassic.logger().info("ICBMClassic>>BlockExplosive#onBlockPlacedBy: " + entityLiving.getName()
-                        + " placed " + explosive.capabilityExplosive.getExplosiveData().getRegistryName() + " in: " + pos);
+                        + " placed " + explosive.capabilityExplosive.getExplosiveData().getRegistryKey() + " in: " + pos);
             }
         }
     }

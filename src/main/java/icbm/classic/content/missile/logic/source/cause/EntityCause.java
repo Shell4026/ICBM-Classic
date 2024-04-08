@@ -2,7 +2,7 @@ package icbm.classic.content.missile.logic.source.cause;
 
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.missiles.cause.IMissileCause;
+import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.api.reg.obj.IBuilderRegistry;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.Data;
@@ -22,7 +22,7 @@ import java.util.UUID;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class EntityCause extends MissileCause implements IMissileCause.IEntityCause {
+public class EntityCause extends ActionCause implements IActionCause.IEntityCause {
 
     public static final ResourceLocation REG_NAME = new ResourceLocation(ICBMConstants.DOMAIN, "entity");
 
@@ -53,8 +53,8 @@ public class EntityCause extends MissileCause implements IMissileCause.IEntityCa
 
     @Nonnull
     @Override
-    public IBuilderRegistry<IMissileCause> getRegistry() {
-        return ICBMClassicAPI.MISSILE_CAUSE_REGISTRY;
+    public IBuilderRegistry<IActionCause> getRegistry() {
+        return ICBMClassicAPI.ACTION_CAUSE_REGISTRY;
     }
 
     @Override

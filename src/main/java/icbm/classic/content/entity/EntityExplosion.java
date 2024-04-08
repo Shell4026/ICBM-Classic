@@ -6,6 +6,8 @@ import icbm.classic.api.explosion.*;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.config.ConfigDebug;
 import icbm.classic.content.blast.Blast;
+import icbm.classic.content.missile.logic.source.ActionSource;
+import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.lib.NBTConstants;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
@@ -13,6 +15,7 @@ import net.minecraft.entity.MoverType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -59,7 +62,7 @@ public class EntityExplosion extends Entity implements IEntityAdditionalSpawnDat
     @Override
     public void writeSpawnData(ByteBuf data)
     {
-        ByteBufUtils.writeUTF8String(data, blast.getExplosiveData().getRegistryName().toString());
+        ByteBufUtils.writeUTF8String(data, blast.getActionData().getRegistryKey().toString());
         data.writeDouble(blastYOffset);
     }
 
@@ -193,7 +196,7 @@ public class EntityExplosion extends Entity implements IEntityAdditionalSpawnDat
     @Override
     protected void writeEntityToNBT(NBTTagCompound nbt)
     {
-        if (getBlast() != null && getBlast().getExplosiveData() != null) //TODO add save/load mechanic to bypass need for ex data
+        if (getBlast() != null) //TODO add save/load mechanic to bypass need for ex data
         {
             //Save position
             nbt.setDouble(NBTConstants.BLAST_POS_Y, blastYOffset);
@@ -204,7 +207,7 @@ public class EntityExplosion extends Entity implements IEntityAdditionalSpawnDat
             {
                 ((IBlastRestore) getBlast()).save(blastSave);
             }
-            blastSave.setString(NBTConstants.EX_ID, getBlast().getExplosiveData().getRegistryName().toString());
+            blastSave.setString(NBTConstants.EX_ID, getBlast().getActionData().getRegistryKey().toString());
 
             //Encode into NBT
             nbt.setTag(NBTConstants.BLAST, blastSave);
@@ -239,17 +242,11 @@ public class EntityExplosion extends Entity implements IEntityAdditionalSpawnDat
         IExplosiveData exData = ICBMClassicAPI.EXPLOSIVE_REGISTRY.getExplosiveData(id);
         if (exData != null)
         {
-            final IBlastFactory factory = exData.getBlastFactory(); //TODO convert load code to blast creation helper
-            if (factory != null)
-            {
-                blast = factory.create();
-                ((IBlastInit) blast).setBlastWorld(world);
-                ((IBlastInit) blast).setBlastPosition(posX, posY + yOffset, posZ);
-                ((IBlastInit) blast).setEntityController(this);
-                ((IBlastInit) blast).setExplosiveData(exData);
-                ((IBlastInit) blast).buildBlast();
-                return;
-            }
+            ActionSource actionSource = new ActionSource(world, new Vec3d(posX, posY + yOffset, posZ), new EntityCause(this)); //TODO provide additional cause information such as fire, lighter, player, etc
+            blast = exData.create(world, posX, posY + yOffset, posZ, actionSource);
+            ((IBlastInit) blast).setEntityController(this);
+            ((IBlastInit) blast).setExplosiveData(exData);
+            ((IBlastInit) blast).buildBlast();
         }
 
         ICBMClassic.logger().error("EntityExplosion: Failed to locate explosive with id '" + id + "'!");

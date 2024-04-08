@@ -1,12 +1,13 @@
-package icbm.classic.api.missiles.cause;
+package icbm.classic.api.actions.cause;
 
+import icbm.classic.api.actions.cause.IActionCause;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
 
 /**
- * Information about the source (starting point) of the missile.
+ * Information about the source (starting point) of an action
  *
  * This is for tracking purposes and should never be exposed to the player. Main purpose of this data
  * should always be for mod interaction and admin tools. Player are not meant to see this data directly as it could
@@ -16,7 +17,7 @@ import net.minecraftforge.common.util.INBTSerializable;
  * That said ICBM team will not stop anyone from using the data. As there are valid interaction uses. Such as showing
  * missiles on an interactive map or exposing the player's own missile launch position to themselves.
  */
-public interface IMissileSource extends INBTSerializable<NBTTagCompound> //TODO rename to IProjectileSource
+public interface IActionSource extends INBTSerializable<NBTTagCompound>
 {
     /**
      * World the missile was launched from
@@ -30,7 +31,7 @@ public interface IMissileSource extends INBTSerializable<NBTTagCompound> //TODO 
      *
      * @return cause of the launch
      */
-    IMissileCause getCause();
+    IActionCause getCause();
 
     /**
      * Exact position source fired the missile

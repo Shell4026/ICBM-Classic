@@ -6,7 +6,7 @@ import icbm.classic.api.events.LauncherSetTargetEvent;
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.launcher.ILauncherSolution;
 import icbm.classic.api.launcher.IMissileLauncher;
-import icbm.classic.api.missiles.cause.IMissileCause;
+import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.api.missiles.parts.IMissileTarget;
 import icbm.classic.config.ConfigMain;
 import icbm.classic.config.machines.ConfigLauncher;
@@ -220,7 +220,7 @@ public class TileLauncherScreen extends TileMachine implements ILauncherComponen
         return launcher.preCheckLaunch(new BasicTargetData(this.getTarget()), createCause());
     }
 
-    private IMissileCause createCause() {
+    private IActionCause createCause() {
         return new BlockScreenCause(world, pos, getBlockState()); //TODO cache?
     }
 
@@ -233,7 +233,7 @@ public class TileLauncherScreen extends TileMachine implements ILauncherComponen
 
         final List<LauncherEntry> launchers = getLaunchersInGroup();
 
-        final IMissileCause cause = createCause();
+        final IActionCause cause = createCause();
         final IMissileTarget target = new BasicTargetData(getTarget());
         final ILauncherSolution solution = new LauncherSolution(target, getFiringGroup(), launchers.size());
         return getNetworkNode().getNetwork()

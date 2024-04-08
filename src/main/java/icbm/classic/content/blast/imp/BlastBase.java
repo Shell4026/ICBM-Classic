@@ -1,7 +1,9 @@
 package icbm.classic.content.blast.imp;
 
+import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.explosion.IBlastInit;
+import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.content.blast.BlastStatus;
 import icbm.classic.lib.data.status.MissingFieldStatus;
 import net.minecraft.world.World;
@@ -20,19 +22,12 @@ public abstract class BlastBase implements IBlastInit
     @Deprecated //TODO remove from base, not all explosives have a size
     private double blastSize;
 
-    @Override
-    public float getBlastRadius()
-    {
-        return (float) Math.min(blastSize, 1);
-    }
+    private IExplosiveData explosiveData;
+    private IActionSource actionSource;
 
-    @Override
-    public IBlastInit setBlastSize(double size) {
-        if(!locked) {
-            this.blastSize = size;
-        }
-        return this;
-    }
+    protected abstract IActionStatus triggerBlast();
+
+
 
     @Override
     public void clearBlast()
@@ -56,7 +51,29 @@ public abstract class BlastBase implements IBlastInit
         return MissingFieldStatus.get("blast.run","blast.world");
     }
 
-    protected abstract IActionStatus triggerBlast();
+    @Override
+    public float getBlastRadius()
+    {
+        return (float) Math.min(blastSize, 1);
+    }
+
+    @Override
+    @Nonnull
+    public IActionSource getSource() {
+        return this.actionSource;
+    }
+
+    /**
+     * Gets data used to create this action
+     *
+     * @return data
+     */
+    @Override
+    @Nonnull
+    public IExplosiveData getActionData() {
+        return explosiveData;
+    }
+
 
     //<editor-fold desc="pos-data">
     @Override
@@ -85,6 +102,15 @@ public abstract class BlastBase implements IBlastInit
     //</editor-fold>
 
     //<editor-fold desc="blast-init">
+
+    @Override
+    public IBlastInit setBlastSize(double size) {
+        if(!locked) {
+            this.blastSize = size;
+        }
+        return this;
+    }
+
     @Override
     public IBlastInit setBlastWorld(World world)
     {
@@ -103,6 +129,23 @@ public abstract class BlastBase implements IBlastInit
             this.x = x;
             this.y = y;
             this.z = z;
+        }
+        return this;
+    }
+
+    @Override
+    public IBlastInit setActionSource(IActionSource source) {
+        if(!locked) {
+            this.actionSource = source;
+        }
+        return this;
+    }
+
+    @Override
+    public IBlastInit setExplosiveData(IExplosiveData data)
+    {
+        if(!locked) {
+            this.explosiveData = data;
         }
         return this;
     }

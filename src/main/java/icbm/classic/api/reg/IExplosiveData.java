@@ -1,14 +1,15 @@
 package icbm.classic.api.reg;
 
 import icbm.classic.api.EnumTier;
+import icbm.classic.api.actions.IActionData;
+import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.explosion.IBlastFactory;
 import icbm.classic.api.explosion.IBlastInit;
 import icbm.classic.api.reg.content.IExplosiveContentRegistry;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Optional;
 
 /**
  * Stores data about an explosive
@@ -16,43 +17,20 @@ import java.util.Optional;
  * <p>
  * Created by Dark(DarkGuardsman, Robert) on 1/4/19.
  */
-public interface IExplosiveData extends Comparable<IExplosiveData>
+public interface IExplosiveData extends Comparable<IExplosiveData>, IActionData
 {
-    static IBlastFactory EMPTY = () -> null;
-
-    /**
-     * Unique registry name of the explosive
-     *
-     * @return
-     */
-    ResourceLocation getRegistryName();
-
     /**
      * Assigned ID of the explosive. Is
      * saved to config file and automatically
      * assigned for new explosives.
      *
      * @return ID
+     * @deprecated will be removed in MC 1.13 and replaced with {@link #getRegistryKey()}
      */
     int getRegistryID();
 
-    /**
-     * Blast factory used to create new blast instances
-     *
-     * @return
-     */
-    @Nullable
-    IBlastFactory getBlastFactory();
-
-    /**
-     * Creates a new blast factory
-     *
-     * @return
-     */
-    default IBlastInit create()
-    {
-        return Optional.ofNullable(getBlastFactory()).orElseGet(() -> EMPTY).create();
-    }
+    @Override
+    IBlastInit create(World world, double x, double y, double z, @Nonnull IActionSource source);
 
     /**
      * Tier of the explosive.

@@ -40,6 +40,6 @@ public class PropertyExplosive implements IProperty<IExplosiveData>
     @Override
     public String getName(IExplosiveData value)
     {
-        return value.getRegistryName().toString().replaceAll(":", "_");
+        return value.getRegistryKey().toString().replaceAll(":", "_");
     }
 }

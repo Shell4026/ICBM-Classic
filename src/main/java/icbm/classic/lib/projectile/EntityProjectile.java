@@ -3,7 +3,7 @@ package icbm.classic.lib.projectile;
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.data.D3Consumer;
 import icbm.classic.api.missiles.IMissileAiming;
-import icbm.classic.api.missiles.cause.IMissileSource;
+import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.missiles.projectile.IProjectileThrowable;
 import icbm.classic.content.entity.EntityPlayerSeat;
 import icbm.classic.lib.saving.NbtSaveHandler;
@@ -183,7 +183,7 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
     }
 
     @Override
-    public boolean throwProjectile(@Nonnull EntityProjectile entity, @Nullable IMissileSource source, double x, double y, double z, float yaw, float pitch, float velocity, float random) {
+    public boolean throwProjectile(@Nonnull EntityProjectile entity, @Nullable IActionSource source, double x, double y, double z, float yaw, float pitch, float velocity, float random) {
         initAimingPosition(
             x, y, z,
             yaw, pitch,
