@@ -3,8 +3,10 @@ package icbm.classic.api.explosion;
 import icbm.classic.api.explosion.responses.BlastResponse;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 1/3/19.
+ * Created by Robin Seifert on 1/3/19.
+ * @deprecated being replaced by {@link icbm.classic.api.actions.status.IActionStatus}
  */
+@Deprecated
 public enum BlastState
 {
     /**
@@ -24,7 +26,7 @@ public enum BlastState
     /**
      * Forge TNT event canceled blast
      */
-    CANCLED(false),
+    CANCELED(false),
     /**
      * Unexpected error
      */

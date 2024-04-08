@@ -1,5 +1,6 @@
 package icbm.classic.api.missiles.parts;
 
+import icbm.classic.api.reg.obj.IBuildableObject;
 import net.minecraft.util.math.Vec3d;
 
 /**

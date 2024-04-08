@@ -1,6 +1,6 @@
 package icbm.classic.lib.saving;
 
-import icbm.classic.api.missiles.parts.IBuildableObject;
+import icbm.classic.api.reg.obj.IBuildableObject;
 import icbm.classic.api.reg.obj.IBuilderRegistry;
 import icbm.classic.lib.saving.nodes.*;
 import icbm.classic.lib.transform.rotation.EulerAngle;

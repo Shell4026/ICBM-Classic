@@ -1,6 +1,7 @@
 package icbm.classic.api.missiles.parts;
 
 import icbm.classic.api.missiles.IMissile;
+import icbm.classic.api.reg.obj.IBuildableObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 

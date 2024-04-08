@@ -1,6 +1,6 @@
 package icbm.classic.api.missiles.cause;
 
-import icbm.classic.api.missiles.parts.IBuildableObject;
+import icbm.classic.api.reg.obj.IBuildableObject;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;

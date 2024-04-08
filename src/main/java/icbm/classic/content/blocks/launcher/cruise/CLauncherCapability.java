@@ -1,7 +1,7 @@
 package icbm.classic.content.blocks.launcher.cruise;
 
 import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.launcher.IActionStatus;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.launcher.ILauncherSolution;
 import icbm.classic.api.missiles.ICapabilityMissileStack;
 import icbm.classic.api.missiles.IMissile;
@@ -63,7 +63,7 @@ public class CLauncherCapability extends LauncherBaseCapability {
 
         // Do pre-checks
         final IActionStatus preCheck = preCheckLaunch(target, cause);
-        if(preCheck.shouldBlockInteraction()) {
+        if(preCheck.isBlocking()) {
             return preCheck;
         }
         else if(simulate) { //TODO handle better by checking if we are already aimed

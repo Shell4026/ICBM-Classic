@@ -1,7 +1,7 @@
 package icbm.classic.lib.buildable;
 
 import icbm.classic.ICBMClassic;
-import icbm.classic.api.missiles.parts.IBuildableObject;
+import icbm.classic.api.reg.obj.IBuildableObject;
 import icbm.classic.api.reg.obj.IBuilderRegistry;
 import lombok.Getter;
 import net.minecraft.util.ResourceLocation;

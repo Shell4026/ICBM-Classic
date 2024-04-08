@@ -9,8 +9,8 @@ import icbm.classic.api.explosion.BlastState;
  */
 public enum BlastForgeResponses
 {
-    EXPLOSION_EVENT(BlastState.CANCLED, "Forge:event.explosion"),
-    ENTITY_SPAWNING(BlastState.CANCLED, "Forge:event.entity.spawning");
+    EXPLOSION_EVENT(BlastState.CANCELED, "Forge:event.explosion"),
+    ENTITY_SPAWNING(BlastState.CANCELED, "Forge:event.entity.spawning");
 
     private final BlastResponse response;
 

@@ -1,6 +1,6 @@
 package icbm.classic.api.radio.messages;
 
-import icbm.classic.api.launcher.IActionStatus;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.radio.IRadioMessage;
 
 import java.util.List;

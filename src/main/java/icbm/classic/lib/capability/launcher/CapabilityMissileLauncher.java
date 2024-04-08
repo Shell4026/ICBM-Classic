@@ -1,6 +1,6 @@
 package icbm.classic.lib.capability.launcher;
 
-import icbm.classic.api.launcher.IActionStatus;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.launcher.ILauncherSolution;
 import icbm.classic.api.launcher.IMissileLauncher;
 import icbm.classic.api.missiles.cause.IMissileCause;

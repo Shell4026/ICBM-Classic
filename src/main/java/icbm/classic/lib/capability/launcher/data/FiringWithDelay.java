@@ -2,21 +2,17 @@ package icbm.classic.lib.capability.launcher.data;
 
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.launcher.IActionStatus;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.reg.obj.IBuilderRegistry;
 import icbm.classic.content.blocks.launcher.LauncherLangs;
-import icbm.classic.content.missile.logic.flight.prefab.FlightLogic;
 import icbm.classic.lib.buildable.BuildableObject;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
-
-import javax.annotation.Nonnull;
 
 public class FiringWithDelay extends BuildableObject<FiringWithDelay, IBuilderRegistry<IActionStatus>> implements IActionStatus {
 
@@ -40,7 +36,7 @@ public class FiringWithDelay extends BuildableObject<FiringWithDelay, IBuilderRe
         return false;
     }
 
-    public boolean shouldBlockInteraction() {
+    public boolean isBlocking() {
         return true;
     }
 

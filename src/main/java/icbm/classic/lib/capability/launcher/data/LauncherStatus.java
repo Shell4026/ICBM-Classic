@@ -1,14 +1,11 @@
 package icbm.classic.lib.capability.launcher.data;
 
-import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.launcher.IActionStatus;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.reg.obj.IBuilderRegistry;
 import icbm.classic.content.blocks.launcher.LauncherLangs;
-import icbm.classic.lib.buildable.BuildableObject;
 import lombok.NoArgsConstructor;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -76,7 +73,7 @@ public final class LauncherStatus implements IActionStatus {
     }
 
     @Override
-    public boolean shouldBlockInteraction() {
+    public boolean isBlocking() {
         return isError() || block;
     }
 

@@ -171,7 +171,7 @@ public class CommandBlastTrigger extends SubCommand
                 return TRANSLATION_TRIGGERED;
             case THREADING:
                 return TRANSLATION_THREADING;
-            case CANCLED:
+            case CANCELED:
                 return TRANSLATION_ERROR_BLOCKED;
             case ERROR:
                 return TRANSLATION_ERROR;

@@ -1,5 +1,6 @@
 package icbm.classic.api.explosion;
 
+import icbm.classic.api.actions.IAction;
 import icbm.classic.api.data.IWorldPosition;
 import icbm.classic.api.explosion.responses.BlastResponse;
 import icbm.classic.api.reg.IExplosiveData;
@@ -12,6 +13,8 @@ import javax.annotation.Nullable;
  * Applied to the object that represents or wrappers the explosion/blast.
  *
  * @author Calclavia, Darkguardsman
+ *
+ * Future version will implement {@link IAction}
  */
 public interface IBlast extends IWorldPosition
 {
@@ -22,7 +25,10 @@ public interface IBlast extends IWorldPosition
      * Rather is used more as a scale factor
      *
      * @return size in blocks (meters)
+     *
+     * @deprecated will eventually be moved to blast data or sub-interface. As not all blasts have a radius of impact.
      */
+    @Deprecated
     default float getBlastRadius() //TODO update or add more methods to get true size
     {
         return -1; //TODO move to sub-interface (IScalableBlast) as not all blasts have a radius

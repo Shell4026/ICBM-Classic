@@ -16,9 +16,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class BlastCluster extends BlastBase {

@@ -136,7 +136,7 @@ public class CommandBlastTriggerTest
         return Stream.of(
                 Arguments.of(BlastState.TRIGGERED.genericResponse, CommandBlastTrigger.TRANSLATION_TRIGGERED),
                 Arguments.of(BlastState.THREADING.genericResponse, CommandBlastTrigger.TRANSLATION_THREADING),
-                Arguments.of(BlastState.CANCLED.genericResponse, CommandBlastTrigger.TRANSLATION_ERROR_BLOCKED),
+                Arguments.of(BlastState.CANCELED.genericResponse, CommandBlastTrigger.TRANSLATION_ERROR_BLOCKED),
                 Arguments.of(BlastState.ERROR.genericResponse, CommandBlastTrigger.TRANSLATION_ERROR),
                 Arguments.of(BlastState.ALREADY_TRIGGERED.genericResponse, CommandBlastTrigger.TRANSLATION_ERROR_TRIGGERED)
         );

@@ -2,7 +2,7 @@ package icbm.classic.content.blocks.launcher.base;
 
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.events.LauncherEvent;
-import icbm.classic.api.launcher.IActionStatus;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.launcher.ILauncherSolution;
 import icbm.classic.api.missiles.ICapabilityMissileStack;
 import icbm.classic.api.missiles.IMissile;
@@ -102,7 +102,7 @@ public class LauncherCapability extends LauncherBaseCapability {
 
         // Check current status, if blocking stop launch and return
         final IActionStatus preCheck = preCheckLaunch(targetData, cause);
-        if(preCheck.shouldBlockInteraction()) {
+        if(preCheck.isBlocking()) {
             return preCheck;
         }
 

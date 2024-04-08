@@ -1,6 +1,6 @@
 package icbm.classic.lib.buildable;
 
-import icbm.classic.api.missiles.parts.IBuildableObject;
+import icbm.classic.api.reg.obj.IBuildableObject;
 import icbm.classic.api.reg.obj.IBuilderRegistry;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.AccessLevel;

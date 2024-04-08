@@ -1,4 +1,4 @@
-package icbm.classic.api.missiles.parts;
+package icbm.classic.api.reg.obj;
 
 import icbm.classic.api.reg.obj.IBuilderRegistry;
 import net.minecraft.nbt.NBTTagCompound;

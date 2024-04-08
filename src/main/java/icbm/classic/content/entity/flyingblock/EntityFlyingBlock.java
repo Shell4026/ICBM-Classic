@@ -175,6 +175,7 @@ public class EntityFlyingBlock extends EntityProjectile<EntityFlyingBlock> imple
             final FakePlayer player = FakePlayerFactory.getMinecraft((WorldServer) world); //TODO attempt to get actual player who create the source of this entity
             player.setHeldItem(EnumHand.MAIN_HAND, sourceStack);
 
+            //TODO pull entityYaw to get placement direction. This way furnace places facing the same way as it renders.
             final EnumActionResult result =  sourceStack.getItem()
                 .onItemUse(player, world, pos, EnumHand.MAIN_HAND, hit.sideHit, (float)hit.hitVec.x, (float)hit.hitVec.y, (float)hit.hitVec.z);
 

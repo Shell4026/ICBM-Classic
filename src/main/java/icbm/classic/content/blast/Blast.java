@@ -10,10 +10,7 @@ import icbm.classic.api.explosion.responses.BlastForgeResponses;
 import icbm.classic.api.explosion.responses.BlastResponse;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.config.ConfigDebug;
-import icbm.classic.config.blast.ConfigBlast;
-import icbm.classic.content.blast.redmatter.EntityRedmatter;
 import icbm.classic.content.blast.thread.ThreadExplosion;
-import icbm.classic.content.blast.threaded.BlastAntimatter;
 import icbm.classic.content.entity.EntityExplosion;
 import icbm.classic.lib.NBTConstants;
 import icbm.classic.lib.explosive.ExplosiveHandler;
@@ -119,7 +116,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
                     //Do setup tasks
                     if (!this.doFirstSetup())
                     {
-                        return BlastState.CANCLED.genericResponse; //TODO specify why
+                        return BlastState.CANCELED.genericResponse; //TODO specify why
                     }
 
                     //Call explosive, only complete if true
