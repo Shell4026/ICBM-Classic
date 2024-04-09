@@ -96,7 +96,7 @@ public class LauncherCapability extends LauncherBaseCapability {
     }
 
     @Override
-    public IActionStatus launch(ILauncherSolution solution, @Nullable IActionCause cause, boolean simulate) {
+    public IActionStatus launch(ILauncherSolution solution, @Nullable IActionCause cause, boolean simulate) { //TODO rework to intentionally used IActionSolution
 
         final IMissileTarget targetData = solution.getTarget(this);
 

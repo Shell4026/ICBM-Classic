@@ -6,9 +6,11 @@ import icbm.classic.api.actions.cause.IActionSource;
 import javax.annotation.Nonnull;
 
 /**
- * Generic action system allowing for abstract triggering of behaviors
+ * Generic action system allowing for abstract logic as reusable behaviors. Will include
+ * data to describe what the action is and source for how it triggered.
  *
- * Example: triggering a blast, this would be an action that fall inside world-editing category
+ * Avoid caching actions outside a source. As the action may be recycled or cached by the source itself. This will
+ * especially be the case for blasts that may fire 1000s of actions for event purposes.
  */
 public interface IAction {
 
@@ -26,6 +28,9 @@ public interface IAction {
      * spawn a thread, listener, entity, or other system. This way actions can stay simple and not
      * require callbacks. If a callback is still needed... consider a status obj that provides access to
      * what was created.
+     *
+     * When running action make sure to push through event listeners. Allowing external systems to intercept
+     * and validate if action is good to complete. This will especially be useful in cases of world editing.
      *
      * @return the status of the action
      */

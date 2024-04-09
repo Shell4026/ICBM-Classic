@@ -1,5 +1,6 @@
 package icbm.classic.api.reg;
 
+import icbm.classic.api.actions.IPotentialAction;
 import icbm.classic.api.explosion.IBlast;
 import icbm.classic.api.reg.obj.IBuildableObject;
 
@@ -8,7 +9,7 @@ import java.util.function.Consumer;
 /**
  * Way to customize how a blast is built before it is spawned into the world
  *
- * @deprecated being replaced by {@link icbm.classic.api.actions.IActionSolution}
+ * @deprecated being replaced by {@link IPotentialAction}
  */
 public interface IExplosiveCustomization extends IBuildableObject {
 

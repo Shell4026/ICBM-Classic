@@ -1,23 +1,20 @@
 package icbm.classic.api.caps;
 
+import icbm.classic.api.actions.IPotentialAction;
 import icbm.classic.api.explosion.IBlast;
-import icbm.classic.api.explosion.IBlastInit;
 import icbm.classic.api.reg.IExplosiveCustomization;
 import icbm.classic.api.reg.IExplosiveData;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.function.Consumer;
 
 /**
  * Used in capabilities to provide an explosive for usage
  * Created by Dark(DarkGuardsman, Robert) on 1/7/19.
  *
- * @deprecated will be replaced by a capacitity providing {@link icbm.classic.api.actions.IActionSolution}
+ * @deprecated will be replaced by a capacitity providing {@link IPotentialAction}
  */
 public interface IExplosive
 {

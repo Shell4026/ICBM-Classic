@@ -64,6 +64,9 @@ public interface ICondition extends IBuildableObject {
     /**
      * Checks if the requirements are met for the condition to be considered passable.
      *
+     * This call must be read-only and not mutate each time it is called withing the same logic block. This means
+     * any random should be done in {@link #onTick()} or outside by the host of this condition.
+     *
      * Do not assume result can be checked only once. As conditions may change between ticks or dependent variables
      * may modify validation. It is up to the condition to decide cached or continuous. This
      * behavior is abstracted to avoid assumings behavior. So make sure to call each time before triggering logic.

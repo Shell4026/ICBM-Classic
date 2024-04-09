@@ -1,9 +1,11 @@
 package icbm.classic.api.launcher;
 
+import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.api.missiles.parts.IMissileTarget;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -44,6 +46,8 @@ public interface IMissileLauncher
      * about launch results.
      *
      * @return status from pre-checks
+     *
+     * @deprecated will be replaced with {@link icbm.classic.api.actions.IPotentialAction#checkAction(World, double, double, double, IActionSource)}
      */
     IActionStatus preCheckLaunch(IMissileTarget target, @Nullable IActionCause cause);
 
@@ -58,6 +62,8 @@ public interface IMissileLauncher
      * @param cause to note, optional but recommended to create a history of firing reason
      * @param simulate to do pre-flight checks and get current status
      * @return status of launch
+     *
+     * @deprecated will be replaced with {@link icbm.classic.api.actions.IPotentialAction#doAction(World, double, double, double, IActionSource)}
      */
     IActionStatus launch(ILauncherSolution firingSolution, @Nullable IActionCause cause, boolean simulate);
 
