@@ -2,6 +2,7 @@ package icbm.classic.api.reg.obj;
 
 import icbm.classic.ICBMClassic;
 import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTPrimitive;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
@@ -68,7 +69,7 @@ public interface IBuilderRegistry<Part extends IBuildableObject> {
         if(part instanceof INBTSerializable) {
             // Data is optional, only id is required as some objects are constants and need no save info
             final NBTBase additionalData = ((INBTSerializable<NBTBase>)part).serializeNBT();
-            if (additionalData != null && !additionalData.hasNoTags()) {
+            if (additionalData != null && (!additionalData.hasNoTags() || additionalData instanceof NBTPrimitive)) {
                 save.setTag("data", additionalData);
             }
         }
