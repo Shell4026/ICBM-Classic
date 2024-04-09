@@ -3,6 +3,8 @@
 # Info
 ICBM-Classic is an addon for the game Minecraft via MinecraftForge. It provides a series of small explosive missiles and launchers.
 
+Discord: https://discord.gg/KcT6eGWxYE
+
 ## Description
 
 ICBM is a Minecraft Mod that introduces intercontinental ballistic missiles to Minecraft. But the fun doesn't end there! This mod also features many different explosives, missiles and machines classified in four different tiers. If strategic warfare, carefully coordinated airstrikes, messing with matter and general destruction are up your alley, then this mod is for you!
