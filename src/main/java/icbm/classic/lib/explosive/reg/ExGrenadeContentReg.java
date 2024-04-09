@@ -1,6 +1,7 @@
 package icbm.classic.lib.explosive.reg;
 
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.ICBMClassicHelpers;
 import icbm.classic.api.data.EntityTickFunction;
 import icbm.classic.api.data.WorldEntityIntSupplier;
 import icbm.classic.api.reg.IExplosiveData;
@@ -33,7 +34,7 @@ public class ExGrenadeContentReg extends ExplosiveContentRegistry implements IEx
     @Override
     public ItemStack getDeviceStack(ResourceLocation regName)
     {
-        IExplosiveData ex = getExplosive(regName);
+        IExplosiveData ex = ICBMClassicHelpers.getExplosive(regName, false);
         if(ex != null)
         {
             return new ItemStack(ItemReg.itemGrenade, 1, ex.getRegistryID());

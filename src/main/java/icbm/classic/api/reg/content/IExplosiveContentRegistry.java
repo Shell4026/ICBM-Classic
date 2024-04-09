@@ -54,14 +54,6 @@ public interface IExplosiveContentRegistry
     Set<IExplosiveData> getExplosives();
 
     /**
-     * Gets a supported explosive by name
-     *
-     * @param regName - registry name of the explosive
-     * @return
-     */
-    IExplosiveData getExplosive(ResourceLocation regName);
-
-    /**
      * Creates a new explosive device represented by
      * this registry.
      * <p>

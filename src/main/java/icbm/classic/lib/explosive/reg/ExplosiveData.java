@@ -56,7 +56,7 @@ public class ExplosiveData implements IExplosiveData
     @Override
     @Nonnull
     public IBlastInit create(World world, double x, double y, double z, @Nonnull IActionSource source) {
-        return blastCreationFactory.create(world, x, y, z, source);
+        return blastCreationFactory.create(world, x, y, z, source).setExplosiveData(this);
     }
 
     @Override

@@ -5,6 +5,7 @@ import icbm.classic.api.explosion.IBlastFactory;
 import icbm.classic.api.reg.content.IExplosiveContentRegistry;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Set;
 
@@ -38,6 +39,7 @@ public interface IExplosiveRegistry
      * @param name - registry name
      * @return explosive data if registered
      */
+    @Nonnull
     IExplosiveData getExplosiveData(ResourceLocation name);
 
     /**

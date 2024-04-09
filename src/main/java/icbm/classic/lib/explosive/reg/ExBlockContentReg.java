@@ -1,12 +1,14 @@
 package icbm.classic.lib.explosive.reg;
 
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.ICBMClassicHelpers;
 import icbm.classic.api.data.BlockActivateFunction;
 import icbm.classic.api.data.WorldPosIntSupplier;
 import icbm.classic.api.data.WorldTickFunction;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.api.reg.content.IExBlockRegistry;
 import icbm.classic.content.reg.BlockReg;
+import icbm.classic.content.reg.ItemReg;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IntHashMap;
 import net.minecraft.util.ResourceLocation;
@@ -35,12 +37,7 @@ public class ExBlockContentReg extends ExplosiveContentRegistry implements IExBl
     @Override
     public ItemStack getDeviceStack(ResourceLocation regName)
     {
-        IExplosiveData ex = getExplosive(regName);
-        if(ex != null)
-        {
-            return new ItemStack(BlockReg.blockExplosive, 1, ex.getRegistryID());
-        }
-        return null;
+        return new ItemStack(BlockReg.blockExplosive, 1, ICBMClassicHelpers.getExplosive(regName, false).getRegistryID());
     }
 
     @Override

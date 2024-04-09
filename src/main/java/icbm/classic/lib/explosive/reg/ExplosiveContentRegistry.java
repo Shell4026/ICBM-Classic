@@ -85,16 +85,6 @@ public abstract class ExplosiveContentRegistry implements IExplosiveContentRegis
     }
 
     @Override
-    public IExplosiveData getExplosive(ResourceLocation regName)
-    {
-        if(mapCache != null)
-        {
-            return mapCache.get(regName);
-        }
-        return null;
-    }
-
-    @Override
     public void lockRegistry()
     {
         if(!locked)

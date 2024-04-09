@@ -160,18 +160,7 @@ public class EntityExplosion extends Entity implements IEntityAdditionalSpawnDat
             this.blastYOffset = nbt.getDouble(NBTConstants.BLAST_POS_Y);
             if (getBlast() == null)
             {
-                //Legacy code
-                if (blastSave.hasKey(NBTConstants.CLASS))
-                {
-                    Class clazz = Class.forName(blastSave.getString(NBTConstants.CLASS));
-                    Constructor constructor = clazz.getConstructor();
-                    Blast blast = (Blast) constructor.newInstance();
-                    blast.setBlastWorld(world);
-                    blast.setPosition(posX, posY + blastYOffset, posZ);
-                    blast.setEntityController(this);
-                    blast.buildBlast();
-                }
-                else if (blastSave.hasKey(NBTConstants.EX_ID))
+                if (blastSave.hasKey(NBTConstants.EX_ID))
                 {
                     constructBlast(blastSave.getString(NBTConstants.EX_ID), blastYOffset);
                 }
@@ -240,14 +229,12 @@ public class EntityExplosion extends Entity implements IEntityAdditionalSpawnDat
     {
         ResourceLocation id = new ResourceLocation(exId);
         IExplosiveData exData = ICBMClassicAPI.EXPLOSIVE_REGISTRY.getExplosiveData(id);
-        if (exData != null)
-        {
-            ActionSource actionSource = new ActionSource(world, new Vec3d(posX, posY + yOffset, posZ), new EntityCause(this)); //TODO provide additional cause information such as fire, lighter, player, etc
-            blast = exData.create(world, posX, posY + yOffset, posZ, actionSource);
-            ((IBlastInit) blast).setEntityController(this);
-            ((IBlastInit) blast).setExplosiveData(exData);
-            ((IBlastInit) blast).buildBlast();
-        }
+
+        ActionSource actionSource = new ActionSource(world, new Vec3d(posX, posY + yOffset, posZ), new EntityCause(this)); //TODO provide additional cause information such as fire, lighter, player, etc
+        blast = exData.create(world, posX, posY + yOffset, posZ, actionSource)
+            .setEntityController(this)
+            .setExplosiveData(exData)
+            .buildBlast();
 
         ICBMClassic.logger().error("EntityExplosion: Failed to locate explosive with id '" + id + "'!");
     }

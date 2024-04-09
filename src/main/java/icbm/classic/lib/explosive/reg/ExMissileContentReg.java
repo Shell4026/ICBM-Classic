@@ -1,6 +1,7 @@
 package icbm.classic.lib.explosive.reg;
 
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.ICBMClassicHelpers;
 import icbm.classic.api.data.EntityInteractionFunction;
 import icbm.classic.api.events.MissileEvent;
 import icbm.classic.api.missiles.IMissile;
@@ -66,11 +67,6 @@ public class ExMissileContentReg extends ExplosiveContentRegistry implements IEx
     @Override
     public ItemStack getDeviceStack(ResourceLocation regName)
     {
-        IExplosiveData ex = getExplosive(regName);
-        if(ex != null)
-        {
-            return new ItemStack(ItemReg.itemExplosiveMissile, 1, ex.getRegistryID());
-        }
-        return null;
+        return new ItemStack(ItemReg.itemExplosiveMissile, 1, ICBMClassicHelpers.getExplosive(regName, false).getRegistryID());
     }
 }

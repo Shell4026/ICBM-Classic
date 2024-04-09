@@ -1,6 +1,7 @@
 package icbm.classic.lib.explosive.reg;
 
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.ICBMClassicHelpers;
 import icbm.classic.api.data.EntityTickFunction;
 import icbm.classic.api.data.WorldEntityIntSupplier;
 import icbm.classic.api.reg.IExplosiveData;
@@ -33,12 +34,7 @@ public class ExMinecartContentReg extends ExplosiveContentRegistry implements IE
     @Override
     public ItemStack getDeviceStack(ResourceLocation regName)
     {
-        IExplosiveData ex = getExplosive(regName);
-        if(ex != null)
-        {
-            return new ItemStack(ItemReg.itemBombCart, 1, ex.getRegistryID());
-        }
-        return null;
+        return new ItemStack(ItemReg.itemBombCart, 1, ICBMClassicHelpers.getExplosive(regName, false).getRegistryID());
     }
 
     @Override
