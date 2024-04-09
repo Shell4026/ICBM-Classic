@@ -5,6 +5,7 @@ import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.api.explosion.IBlast;
 import icbm.classic.api.explosion.IBlastFactory;
+import icbm.classic.content.actions.status.ActionResponses;
 import icbm.classic.content.blast.Blast;
 import icbm.classic.content.blast.BlastEMP;
 import icbm.classic.content.blast.BlastStatus;
@@ -198,7 +199,7 @@ public class TestTileEMPTower
             @Override
             public IActionStatus doAction()
             {
-                return BlastStatus.TRIGGERED;
+                return ActionResponses.COMPLETED;
             }
         });
 

@@ -10,7 +10,10 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 1/9/19.
+ *
+ * @deprecated will be replaced with an event providing {@link icbm.classic.api.actions.IAction}
  */
+@Deprecated
 public abstract class LauncherEvent extends Event
 {
     /** Starting point of the missile */

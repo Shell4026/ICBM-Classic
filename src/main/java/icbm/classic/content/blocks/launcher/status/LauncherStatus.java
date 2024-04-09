@@ -1,9 +1,9 @@
 package icbm.classic.content.blocks.launcher.status;
 
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.content.actions.status.ActionStatus;
 import icbm.classic.content.blocks.launcher.LauncherLangs;
-import icbm.classic.content.blocks.launcher.status.FiringWithDelay;
-import icbm.classic.lib.data.status.ActionStatus;
+import icbm.classic.content.actions.status.ActionStatus;
 import lombok.NoArgsConstructor;
 
 

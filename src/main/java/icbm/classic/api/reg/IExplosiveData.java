@@ -16,6 +16,8 @@ import javax.annotation.Nonnull;
  * <p>
  * <p>
  * Created by Dark(DarkGuardsman, Robert) on 1/4/19.
+ *
+ * @deprecated will be replaced by {@link IActionData}
  */
 public interface IExplosiveData extends Comparable<IExplosiveData>, IActionData
 {
@@ -29,6 +31,7 @@ public interface IExplosiveData extends Comparable<IExplosiveData>, IActionData
      */
     int getRegistryID();
 
+    @Nonnull
     @Override
     IBlastInit create(World world, double x, double y, double z, @Nonnull IActionSource source);
 

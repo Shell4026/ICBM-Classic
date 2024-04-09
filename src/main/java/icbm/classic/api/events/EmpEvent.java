@@ -12,7 +12,10 @@ import net.minecraftforge.fml.common.eventhandler.Cancelable;
  *
  *
  * Created by Dark(DarkGuardsman, Robert) on 3/12/2018.
+ *
+ * @deprecated will be replaced by an event providing {@link icbm.classic.api.actions.IAction}
  */
+@Deprecated
 public abstract class EmpEvent extends BlastEvent
 {
     public EmpEvent(IBlast blast)

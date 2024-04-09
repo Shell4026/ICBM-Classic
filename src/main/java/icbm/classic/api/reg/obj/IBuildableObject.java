@@ -54,6 +54,32 @@ public interface IBuildableObject {
         return String.format("%s.%s", this.getRegistry().getUniqueName(), this.getRegistryKey());
     }
 
+    /** <pre>
+     * Display name to use when showing in GUIs, sub-items, commands, etc.
+     *
+     * Example:
+     *   item generating tooltip of what information is contained
+     *
+     *     Item Name
+     *      Description
+     *      Held: buildable.getDisplayName()
+     *
+     *   command feedback telling user what was created
+     *
+     *     'Missile has been spawned with flight logic {missile.flightLogic.getDisplayName()} using action {action.getDisplayName()}'
+     *
+     * Calling systems often use {@link icbm.classic.lib.LanguageUtility#buildToolTipString(ITextComponent)}
+     * to add extra features such as line splitting, indents, and colors
+     *
+     * </pre>
+     *
+     * @return text component for display
+     */
+    @Nonnull
+    default ITextComponent getDisplayName() {
+        return new TextComponentTranslation(getTranslationKey());
+    }
+
     /**
      * Tooltip information to show in GUIs or on an item
      *

@@ -6,7 +6,7 @@ import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.missiles.projectile.IProjectileData;
 import icbm.classic.api.missiles.projectile.IProjectileStack;
 import icbm.classic.api.missiles.projectile.IProjectileThrowable;
-import icbm.classic.api.missiles.projectile.ProjectileType;
+import icbm.classic.api.missiles.projectile.ProjectileTypes;
 import icbm.classic.content.cargo.balloon.BalloonProjectileData;
 import icbm.classic.content.cargo.parachute.EntityParachute;
 import icbm.classic.content.cargo.parachute.ParachuteProjectileData;
@@ -41,7 +41,7 @@ public class ItemThrowableProjectile extends ItemBase {
     public static final float THROW_VELOCITY = 0.5f;
 
     public static final TextComponentTranslation ERROR_THROWING_INTERFACE = new TextComponentTranslation("error.icbmclassic:projectile.throwing.interface", IProjectileThrowable.class.getSimpleName());
-    public static final TextComponentTranslation ERROR_THROWING_TYPE = new TextComponentTranslation("error.icbmclassic:projectile.throwing.type", ProjectileType.TYPE_THROWABLE.getID());
+    public static final TextComponentTranslation ERROR_THROWING_TYPE = new TextComponentTranslation("error.icbmclassic:projectile.throwing.type", ProjectileTypes.TYPE_THROWABLE.getId());
 
     // TODO split into empty crafting item and version holding item
     // TODO add a damaged/used version to drop after deploying cargo
@@ -102,7 +102,7 @@ public class ItemThrowableProjectile extends ItemBase {
         }
 
         final Entity parachute = projectileData.newEntity(world, !isCreative);
-        if (!projectileData.isType(ProjectileType.TYPE_THROWABLE)) {
+        if (!projectileData.isType(ProjectileTypes.TYPE_THROWABLE)) {
             if(thrower instanceof EntityPlayer) {
                 ((EntityPlayer) thrower).sendStatusMessage(ERROR_THROWING_TYPE, true);
             }

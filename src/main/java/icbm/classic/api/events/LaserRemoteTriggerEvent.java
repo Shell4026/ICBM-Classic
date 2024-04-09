@@ -13,7 +13,10 @@ import javax.annotation.Nonnull;
  * the laser detonator. Use this to change the target
  * block position, or cancel the event to not activate
  * the affected launcher.
+ *
+ * @deprecated will be replaced with an event providing {@link icbm.classic.api.actions.IAction}
  */
+@Deprecated
 @Cancelable
 public class LaserRemoteTriggerEvent extends Event
 {

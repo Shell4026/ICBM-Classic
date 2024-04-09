@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 
 /**
  * Should only be applied to projectiles that act as throwable items/weapons. When implementing should be combined
- * with {@link IProjectileData} with type {@link ProjectileType#TYPE_THROWABLE}. This way systems can spawn
+ * with {@link IProjectileData} with type {@link ProjectileTypes#TYPE_THROWABLE}. This way systems can spawn
  * the projectile and understand it can be thrown with a fixed velocity. Without the type any projectile system
  * will ignore the interface assuming a common entity parent is being used. That a subtype exists that may
  * not used the common logic.

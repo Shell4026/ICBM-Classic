@@ -2,9 +2,10 @@ package icbm.classic.content.blast.cluster.bomblet;
 
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.data.meta.MetaTag;
 import icbm.classic.api.missiles.projectile.IProjectileData;
 import icbm.classic.api.missiles.projectile.IProjectileDataRegistry;
-import icbm.classic.api.missiles.projectile.ProjectileType;
+import icbm.classic.api.missiles.projectile.ProjectileTypes;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,12 +22,13 @@ import javax.annotation.Nonnull;
 public class BombletProjectileData implements IProjectileData<EntityBombDroplet>, INBTSerializable<NBTTagCompound> {
 
     public static final ResourceLocation NAME = new ResourceLocation(ICBMConstants.DOMAIN, "bomblet");
-    public static final ProjectileType[] TYPES = new ProjectileType[]{ProjectileType.TYPE_BOMB};
+    public static final MetaTag[] TYPES = new MetaTag[]{ProjectileTypes.TYPE_EXPLOSIVE};
 
     @Setter @Getter @Accessors(chain = true)
     private ItemStack explosiveStack = ItemStack.EMPTY;
 
-    public ProjectileType[] getTypes() {
+    @Nonnull
+    public MetaTag[] getTypes() {
         return TYPES;
     }
 

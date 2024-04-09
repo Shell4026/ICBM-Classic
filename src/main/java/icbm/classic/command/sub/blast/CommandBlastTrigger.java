@@ -150,7 +150,7 @@ public class CommandBlastTrigger extends SubCommand
     {
         final IActionStatus result = ExplosiveHandler.createExplosion(null,
                 world, x, y, z,
-                explosiveData.getRegistryID(), new ActionSource(), scale,
+                explosiveData, new ActionSource(), scale,
                 null);
 
         //Send translated message to user

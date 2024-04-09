@@ -12,6 +12,7 @@ import icbm.classic.command.ICBMCommands;
 import icbm.classic.command.system.CommandEntryPoint;
 import icbm.classic.config.ConfigItems;
 import icbm.classic.config.ConfigThread;
+import icbm.classic.content.actions.status.ActionResponses;
 import icbm.classic.content.blast.caps.CapabilityBlast;
 import icbm.classic.content.blast.caps.CapabilityBlastVelocity;
 import icbm.classic.content.blast.cluster.ClusterCustomization;
@@ -299,7 +300,7 @@ public class ICBMClassic
 
     void handleMissileCauseRegistry()
     {
-        ICBMClassicAPI.ACTION_CAUSE_REGISTRY =  new BuildableObjectRegistry<IActionCause>("CAUSE_DATA");;
+        ICBMClassicAPI.ACTION_CAUSE_REGISTRY =  new BuildableObjectRegistry<IActionCause>("ACTION_CAUSE", "action.cause");;
 
         // Register defaults
         ICBMClassicAPI.ACTION_CAUSE_REGISTRY.register(EntityCause.REG_NAME, EntityCause::new);
@@ -316,10 +317,11 @@ public class ICBMClassic
 
     void handleStatusRegistry()
     {
-        ICBMClassicAPI.ACTION_STATUS_REGISTRY =  new BuildableObjectRegistry<IActionStatus>("ACTION_STATUS");
+        ICBMClassicAPI.ACTION_STATUS_REGISTRY =  new BuildableObjectRegistry<IActionStatus>("ACTION_STATUS", "action.status");
 
         // Register defaults
         LauncherStatus.registerTypes();
+        ActionResponses.registerTypes();
 
         //Fire registry event
         MinecraftForge.EVENT_BUS.post(new ActionStatusRegistryEvent(ICBMClassicAPI.ACTION_STATUS_REGISTRY));

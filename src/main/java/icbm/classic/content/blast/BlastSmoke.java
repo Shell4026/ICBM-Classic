@@ -1,6 +1,7 @@
 package icbm.classic.content.blast;
 
 import icbm.classic.api.actions.status.IActionStatus;
+import icbm.classic.content.actions.status.ActionResponses;
 import icbm.classic.content.blast.imp.BlastBase;
 import icbm.classic.content.entity.EntitySmoke;
 
@@ -16,8 +17,8 @@ public class BlastSmoke extends BlastBase
         smoke.setPosition(x(), y(), z());
         if(world().spawnEntity(smoke))
         {
-            return BlastStatus.TRIGGERED;
+            return ActionResponses.COMPLETED;
         }
-        return BlastStatus.ENTITY_SPAWN_CANCELED;
+        return ActionResponses.ENTITY_SPAWN_FAILED;
     }
 }

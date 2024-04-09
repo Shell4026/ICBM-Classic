@@ -24,7 +24,7 @@ public class EntitySpawnProjectileData extends BuildableObject<EntitySpawnProjec
     private ResourceLocation entityKey;
 
     @Getter @Setter @Accessors(chain = true)
-    private String displayName;
+    private String entityDisplayTag;
     @Getter @Setter @Accessors(chain = true)
     private NBTTagCompound entityData;
 
@@ -48,8 +48,8 @@ public class EntitySpawnProjectileData extends BuildableObject<EntitySpawnProjec
             if(entry != null) {
                 final Entity entity = entry.newInstance(world);
                 if(entity != null) {
-                    if(displayName != null) {
-                        entity.setCustomNameTag(displayName);
+                    if(entityDisplayTag != null) {
+                        entity.setCustomNameTag(entityDisplayTag);
                     }
                     if(entityData != null) {
                         final NBTTagCompound entityExistingSave = entity.writeToNBT(new NBTTagCompound());
@@ -68,7 +68,7 @@ public class EntitySpawnProjectileData extends BuildableObject<EntitySpawnProjec
     private static final NbtSaveHandler<EntitySpawnProjectileData> SAVE_LOGIC = new NbtSaveHandler<EntitySpawnProjectileData>()
         .mainRoot()
         /* */.nodeResourceLocation("entity_id", (e) -> e.entityKey, (e, r) -> e.entityKey = r)
-        /* */.nodeString("custom_name", EntitySpawnProjectileData::getDisplayName, EntitySpawnProjectileData::setDisplayName)
+        /* */.nodeString("custom_name", EntitySpawnProjectileData::getEntityDisplayTag, EntitySpawnProjectileData::setEntityDisplayTag)
         /* */.nodeCompoundTag("entity_data", EntitySpawnProjectileData::getEntityData, EntitySpawnProjectileData::setEntityData)
         .base();
 }

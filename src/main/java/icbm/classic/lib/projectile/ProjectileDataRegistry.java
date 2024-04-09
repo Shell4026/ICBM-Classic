@@ -65,7 +65,7 @@ public class ProjectileDataRegistry extends BuildableObjectRegistry<IProjectileD
             registerItemStackConversation(new ItemStack(Items.SPAWN_EGG), (itemStack) -> {
                 final EntitySpawnProjectileData projectileData = new EntitySpawnProjectileData(ItemMonsterPlacer.getNamedIdFrom(itemStack));
                 if(itemStack.hasDisplayName()) {
-                    projectileData.setDisplayName(itemStack.getDisplayName());
+                    projectileData.setEntityDisplayTag(itemStack.getDisplayName());
                 }
                 if(itemStack.getTagCompound() != null && itemStack.getTagCompound().hasKey("EntityTag", 10)) {
                     projectileData.setEntityData(itemStack.getTagCompound().getCompoundTag("EntityTag"));

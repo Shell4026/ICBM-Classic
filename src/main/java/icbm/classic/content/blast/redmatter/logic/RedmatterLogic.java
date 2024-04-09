@@ -476,7 +476,7 @@ public class RedmatterLogic
             {
                 final IExplosive explosive = entity.getCapability(ICBMClassicAPI.EXPLOSIVE_CAPABILITY, null);
                 ActionSource actionSource = new ActionSource(entity.world, new Vec3d(entity.posX, entity.posY, entity.posZ), new EntityCause(this.host)); //TODO provide additional cause information related to what created the redmatter
-                ExplosiveHandler.createExplosion(host, entity.world, entity.posX, entity.posY, entity.posZ, explosive, actionSource);
+                ExplosiveHandler.createExplosion(host, entity.world, entity.posX, entity.posY, entity.posZ, explosive.getExplosiveData(), actionSource, 1, null);
                 entity.setDead();
             }
             else if (entity instanceof EntityLiving || entity instanceof EntityPlayer)

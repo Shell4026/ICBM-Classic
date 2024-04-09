@@ -5,6 +5,7 @@ import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.explosion.IBlast;
 import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.api.reg.IExplosiveData;
+import icbm.classic.content.actions.status.ActionResponses;
 import icbm.classic.content.blast.BlastStatus;
 import icbm.classic.content.blast.redmatter.EntityRedmatter;
 import icbm.classic.content.missile.logic.source.ActionSource;
@@ -36,7 +37,7 @@ public class BlastRedmatterWrapper implements IBlast
     @Override
     public IActionStatus doAction()
     {
-        return BlastStatus.TRIGGERED_DONE;
+        return ActionResponses.COMPLETED;
     }
 
     @Nonnull

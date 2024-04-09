@@ -16,6 +16,8 @@ import java.util.function.Consumer;
 /**
  * Used in capabilities to provide an explosive for usage
  * Created by Dark(DarkGuardsman, Robert) on 1/7/19.
+ *
+ * @deprecated will be replaced by a capacitity providing {@link icbm.classic.api.actions.IActionSolution}
  */
 public interface IExplosive
 {
@@ -25,7 +27,7 @@ public interface IExplosive
      *
      * @return explosive data
      */
-    @Nullable
+    @Nonnull
     IExplosiveData getExplosiveData();
 
     /**
@@ -68,7 +70,10 @@ public interface IExplosive
 
     /**
      * Called when the explosive is defused
+     *
+     * @deprecated will be moved to it's own capability down the road
      */
+    @Deprecated
     default void onDefuse() //TODO add args on who defused and how
     {
 

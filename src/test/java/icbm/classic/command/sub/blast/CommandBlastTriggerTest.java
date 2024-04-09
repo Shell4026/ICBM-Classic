@@ -9,6 +9,7 @@ import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.command.FakeBlast;
 import icbm.classic.command.ICBMCommands;
+import icbm.classic.content.actions.status.ActionResponses;
 import icbm.classic.content.blast.BlastStatus;
 import icbm.classic.lib.explosive.reg.ExplosiveRegistry;
 import net.minecraft.command.CommandException;
@@ -39,7 +40,7 @@ public class CommandBlastTriggerTest
 
     private final CommandBlastTrigger command = new CommandBlastTrigger();
     private IExplosiveData fakeExData;
-    private IActionStatus triggerState = BlastStatus.TRIGGERED;
+    private IActionStatus triggerState = ActionResponses.COMPLETED;
 
     private final Queue<FakeBlast> blastsCreated = new LinkedList();
 
@@ -134,11 +135,9 @@ public class CommandBlastTriggerTest
     private static Stream<Arguments> provideBlastOutputTypes()
     {
         return Stream.of(
-                Arguments.of(BlastStatus.TRIGGERED, CommandBlastTrigger.TRANSLATION_TRIGGERED),
-                Arguments.of(BlastStatus.TRIGGERED, CommandBlastTrigger.TRANSLATION_THREADING),
+                Arguments.of(ActionResponses.COMPLETED, CommandBlastTrigger.TRANSLATION_TRIGGERED),
                 Arguments.of(BlastStatus.SETUP_ERROR, CommandBlastTrigger.TRANSLATION_ERROR_BLOCKED),
-                Arguments.of(BlastStatus.UNKNOWN_ERROR, CommandBlastTrigger.TRANSLATION_ERROR),
-                Arguments.of(BlastStatus.TRIGGERED_DONE, CommandBlastTrigger.TRANSLATION_ERROR_TRIGGERED)
+                Arguments.of(ActionResponses.UNKNOWN_ERROR, CommandBlastTrigger.TRANSLATION_ERROR)
         );
     }
 

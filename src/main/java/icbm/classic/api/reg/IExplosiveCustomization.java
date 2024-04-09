@@ -7,6 +7,8 @@ import java.util.function.Consumer;
 
 /**
  * Way to customize how a blast is built before it is spawned into the world
+ *
+ * @deprecated being replaced by {@link icbm.classic.api.actions.IActionSolution}
  */
 public interface IExplosiveCustomization extends IBuildableObject {
 

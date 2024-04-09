@@ -31,6 +31,7 @@ public interface IActionStatus extends IBuildableObject {
      * Is the status an error state
      *
      * @return true if error
+     * @deprecated will be replaced with {@link icbm.classic.api.data.meta.MetaTag}
      */
     boolean isError();
 
@@ -46,6 +47,7 @@ public interface IActionStatus extends IBuildableObject {
      * prevent blasts from trigger, etc.
      *
      * @return true to block triggering of action
+     * @deprecated will be replaced with {@link icbm.classic.api.data.meta.MetaTag}
      */
     default boolean isBlocking() {
         return isError();
@@ -60,4 +62,8 @@ public interface IActionStatus extends IBuildableObject {
     ITextComponent message();
 
     // TODO add a status callback for when 'status=aiming` or 'status=delay'
+
+    default void registerStatic() {
+        ICBMClassicAPI.ACTION_STATUS_REGISTRY.register(this.getRegistryKey(), () -> this);
+    }
 }

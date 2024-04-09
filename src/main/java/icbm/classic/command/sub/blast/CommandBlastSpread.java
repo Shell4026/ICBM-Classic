@@ -1,5 +1,6 @@
 package icbm.classic.command.sub.blast;
 
+import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.command.CommandUtils;
@@ -89,7 +90,7 @@ public class CommandBlastSpread extends SubCommand
                 //Trigger blast
                 final IActionStatus result = ExplosiveHandler.createExplosion(null,
                         world, x, yInput, z,
-                        explosiveData.getRegistryID(), new ActionSource(), scale,
+                   explosiveData, new ActionSource(), scale,
                         null);
 
                 //Send translated message to user

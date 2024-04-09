@@ -10,14 +10,16 @@ import icbm.classic.api.explosion.IBlast;
 import icbm.classic.api.explosion.IBlastInit;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.content.blast.Blast;
-import icbm.classic.lib.data.status.MissingFieldStatus;
+import icbm.classic.content.actions.status.MissingFieldStatus;
 import icbm.classic.lib.transform.vector.Pos;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -83,33 +85,8 @@ public class ExplosiveHandler
         return toRemove.size();
     }
 
-    public static IActionStatus createExplosion(Entity cause, World world, double x, double y, double z, IExplosive capabilityExplosive, IActionSource source)
+    public static IActionStatus createExplosion(Entity cause, World world, double x, double y, double z, @Nonnull IExplosiveData explosiveData, IActionSource source, float scale, Consumer<IBlast> customizer)
     {
-        if (capabilityExplosive == null)
-        {
-            return logEventThenRespond(cause, world, x, y, z, null, 1, MissingFieldStatus.get("explosive.create.capability", "explosive.capability"));
-        }
-        return createExplosion(cause, world, x, y, z, capabilityExplosive.getExplosiveData(), source, 1, capabilityExplosive::applyCustomizations);
-    }
-
-    public static IActionStatus createExplosion(Entity cause, World world, double x, double y, double z, int blastID, IActionSource source, float scale, Consumer<IBlast> customizer)
-    {
-        final IExplosiveData explosiveData = ICBMClassicAPI.EXPLOSIVE_REGISTRY.getExplosiveData(blastID);
-        if (explosiveData == null)
-        {
-            return logEventThenRespond(cause, world, x, y, z, null, 1, MissingFieldStatus.get("explosive.create.id", "explosive.data"));
-        }
-        return createExplosion(cause, world, x, y, z, explosiveData, source, scale, customizer);
-    }
-
-    public static IActionStatus createExplosion(Entity cause, World world, double x, double y, double z, IExplosiveData explosiveData, IActionSource source, float scale, Consumer<IBlast> customizer)
-    {
-        if (explosiveData == null)
-        {
-            return logEventThenRespond(cause, world, x, y, z, null, scale, MissingFieldStatus.get("explosive.create.data", "explosive.data"));
-        }
-
-        //TODO add way to hook blast builder to add custom blasts
         final IBlastInit blast = explosiveData.create(world, x, y, z, source).scaleBlast(scale).setBlastSource(cause).setExplosiveData(explosiveData).setActionSource(source);
         if(customizer != null) {
             customizer.accept(blast);

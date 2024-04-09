@@ -9,6 +9,7 @@ import icbm.classic.api.explosion.IBlast;
 import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.api.reg.IExplosiveCustomization;
 import icbm.classic.api.reg.IExplosiveData;
+import icbm.classic.content.actions.status.ActionResponses;
 import icbm.classic.content.blast.BlastStatus;
 import icbm.classic.lib.explosive.ExplosiveHandler;
 import net.minecraft.entity.Entity;
@@ -55,7 +56,7 @@ public class CapabilityExplosiveEntity implements IExplosive
     public IActionStatus doExplosion(double x, double y, double z, IActionSource source)
     {
         if (this.isExploding) {
-            return BlastStatus.TRIGGERED_DONE;
+            return ActionResponses.COMPLETED;
         }
 
         //Make sure to note we are currently exploding
@@ -63,14 +64,12 @@ public class CapabilityExplosiveEntity implements IExplosive
 
         if (!this.entity.world.isRemote)
         {
-            return ExplosiveHandler.createExplosion(this.entity, this.entity.world, x, y, z, this, source);
+            return this.getExplosiveData().create(this.entity.world, x, y, z, source).doAction();
         }
-        return BlastStatus.TRIGGERED_CLIENT;
-
-
+        return ActionResponses.COMPLETED;
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public IExplosiveData getExplosiveData()
     {
@@ -78,7 +77,7 @@ public class CapabilityExplosiveEntity implements IExplosive
         if (stack.hasCapability(ICBMClassicAPI.EXPLOSIVE_CAPABILITY, null))
         {
             final IExplosive explosive = stack.getCapability(ICBMClassicAPI.EXPLOSIVE_CAPABILITY, null);
-            if (explosive != null && explosive.getExplosiveData() != null)
+            if (explosive != null)
             {
                 return explosive.getExplosiveData();
             }

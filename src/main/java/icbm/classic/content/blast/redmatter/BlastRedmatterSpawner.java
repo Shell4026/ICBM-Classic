@@ -2,6 +2,7 @@ package icbm.classic.content.blast.redmatter;
 
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.config.blast.ConfigBlast;
+import icbm.classic.content.actions.status.ActionResponses;
 import icbm.classic.content.blast.BlastStatus;
 import icbm.classic.content.blast.imp.BlastBase;
 
@@ -27,8 +28,8 @@ public class BlastRedmatterSpawner extends BlastBase
         //Attempt to spawn
         if (world().spawnEntity(entityRedmatter))
         {
-            return BlastStatus.TRIGGERED;
+            return ActionResponses.COMPLETED;
         }
-        return BlastStatus.ENTITY_SPAWN_CANCELED;
+        return ActionResponses.ENTITY_SPAWN_FAILED;
     }
 }

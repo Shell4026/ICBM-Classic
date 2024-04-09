@@ -1,7 +1,6 @@
 package icbm.classic.content.blast;
 
 import icbm.classic.ICBMClassic;
-import icbm.classic.api.actions.IActionData;
 import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.events.BlastBuildEvent;
@@ -10,6 +9,7 @@ import icbm.classic.api.explosion.IBlastRestore;
 import icbm.classic.api.explosion.IBlastTickable;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.config.ConfigDebug;
+import icbm.classic.content.actions.status.ActionResponses;
 import icbm.classic.content.blast.thread.ThreadExplosion;
 import icbm.classic.content.entity.EntityExplosion;
 import icbm.classic.lib.NBTConstants;
@@ -114,7 +114,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
                 //Forge event, allows for interaction and canceling the explosion
                 if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(world, this))
                 {
-                    return BlastStatus.EXPLOSIVE_EVENT_CANCELED;
+                    return ActionResponses.EXPLOSION_CANCELED;
                 }
 
                 //Play audio to confirm explosion triggered
@@ -126,9 +126,9 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
                     if (!this.world().spawnEntity(new EntityExplosion(this)))
                     {
                         isAlive = false;
-                        return BlastStatus.ENTITY_SPAWN_CANCELED;
+                        return ActionResponses.ENTITY_SPAWN_FAILED;
                     }
-                    return BlastStatus.TRIGGERED;
+                    return ActionResponses.COMPLETED;
                 }
                 else
                 {
@@ -149,12 +149,12 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
             {
                 clientRunBlast();
             }
-            return BlastStatus.TRIGGERED_CLIENT;
+            return ActionResponses.COMPLETED;
         }
         catch (Exception e)
         {
             ICBMClassic.logger().error(this + ": Unexpected error running blast", e);
-            return BlastStatus.UNKNOWN_ERROR; //TODO provide dynamic data
+            return ActionResponses.UNKNOWN_ERROR; //TODO provide dynamic data
         }
     }
 

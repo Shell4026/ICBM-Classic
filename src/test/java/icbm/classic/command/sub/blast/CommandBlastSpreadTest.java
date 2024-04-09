@@ -7,6 +7,7 @@ import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.command.FakeBlast;
 import icbm.classic.command.ICBMCommands;
+import icbm.classic.content.actions.status.ActionResponses;
 import icbm.classic.content.blast.BlastStatus;
 import icbm.classic.lib.explosive.reg.ExplosiveRegistry;
 import net.minecraft.command.CommandException;
@@ -50,7 +51,7 @@ public class CommandBlastSpreadTest
         ICBMClassicAPI.EXPLOSIVE_REGISTRY = new ExplosiveRegistry();
         fakeExData = ICBMClassicAPI.EXPLOSIVE_REGISTRY.register(new ResourceLocation("tree", "small"), EnumTier.ONE, (w, x, y, z, a) ->
         {
-            FakeBlast fakeBlast = (FakeBlast) new FakeBlast(BlastStatus.TRIGGERED).setBlastWorld(w).setBlastPosition(x, y, z).setActionSource(a);
+            FakeBlast fakeBlast = (FakeBlast) new FakeBlast(ActionResponses.COMPLETED).setBlastWorld(w).setBlastPosition(x, y, z).setActionSource(a);
             blastsCreated.add(fakeBlast);
             return fakeBlast;
         });

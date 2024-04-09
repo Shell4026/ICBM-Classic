@@ -105,7 +105,7 @@ public class EntityExplosive extends Entity implements IRotatable, IEntityAdditi
 
     public void explode()
     {
-        ExplosiveHandler.createExplosion(this, this.world, this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, getExplosiveCap(), new ActionSource(world, new Vec3d(posX, posY, posZ), new EntityCause(this)));
+        getExplosiveCap().getExplosiveData().create(this.world, this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, new ActionSource(world, new Vec3d(posX, posY, posZ), new EntityCause(this)));
         this.setDead();
     }
 

@@ -10,7 +10,10 @@ import java.util.Set;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 1/4/19.
+ *
+ * @deprecated being replaced by {@link icbm.classic.api.ICBMClassicAPI#ACTION_REGISTRY}
  */
+@Deprecated
 public interface IExplosiveRegistry
 {
 

@@ -4,8 +4,9 @@ import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.explosion.IBlastInit;
 import icbm.classic.api.reg.IExplosiveData;
+import icbm.classic.content.actions.status.ActionResponses;
 import icbm.classic.content.blast.BlastStatus;
-import icbm.classic.lib.data.status.MissingFieldStatus;
+import icbm.classic.content.actions.status.MissingFieldStatus;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -46,9 +47,9 @@ public abstract class BlastBase implements IBlastInit
             {
                 return triggerBlast();
             }
-            return BlastStatus.TRIGGERED;
+            return ActionResponses.COMPLETED;
         }
-        return MissingFieldStatus.get("blast.run","blast.world");
+        return ActionResponses.MISSING_WORLD;
     }
 
     @Override

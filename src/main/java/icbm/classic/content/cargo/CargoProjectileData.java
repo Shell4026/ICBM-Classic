@@ -2,10 +2,12 @@ package icbm.classic.content.cargo;
 
 import icbm.classic.ICBMClassic;
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.actions.ActionTypes;
+import icbm.classic.api.data.meta.MetaTag;
 import icbm.classic.api.reg.obj.IBuildableObject;
 import icbm.classic.api.missiles.projectile.IProjectileData;
 import icbm.classic.api.missiles.projectile.IProjectileDataRegistry;
-import icbm.classic.api.missiles.projectile.ProjectileType;
+import icbm.classic.api.missiles.projectile.ProjectileTypes;
 import icbm.classic.content.entity.flyingblock.BlockCaptureData;
 import icbm.classic.content.entity.flyingblock.FlyingBlock;
 import icbm.classic.lib.saving.NbtSaveHandler;
@@ -33,7 +35,7 @@ import javax.annotation.Nullable;
 
 public abstract class CargoProjectileData<T extends IBuildableObject, ENTITY extends Entity> implements IBuildableObject, IProjectileData<ENTITY>, INBTSerializable<NBTTagCompound> {
 
-    private final static ProjectileType[] TYPE = new ProjectileType[]{ProjectileType.TYPE_ENTITY, ProjectileType.TYPE_HOLDER, ProjectileType.TYPE_THROWABLE};
+    private final static MetaTag[] TYPE = new MetaTag[]{ActionTypes.ENTITY_CREATION, ProjectileTypes.TYPE_HOLDER, ProjectileTypes.TYPE_THROWABLE};
 
     /**
      * ItemStack to use to spawn as a passenger of this parachute
@@ -59,8 +61,9 @@ public abstract class CargoProjectileData<T extends IBuildableObject, ENTITY ext
         return ICBMClassicAPI.PROJECTILE_DATA_REGISTRY;
     }
 
+    @Nonnull
     @Override
-    public ProjectileType[] getTypes() {
+    public MetaTag[] getTypes() {
         return TYPE;
     }
 

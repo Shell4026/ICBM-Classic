@@ -1,5 +1,7 @@
 package icbm.classic.api.missiles.projectile;
 
+import icbm.classic.api.data.meta.ITypeTaggable;
+import icbm.classic.api.data.meta.MetaTag;
 import icbm.classic.api.reg.obj.IBuildableObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumHand;
@@ -12,46 +14,15 @@ import javax.annotation.Nullable;
  * Information about a projectile, usually wrapper for an entity or entity spawn system. Provides
  * the type of projectile, what systems it can work with, and how to place the projectile into the world.
  *
- * @param <E> created
+ * Projectile system exists as a way to abstract entity from system. Allowing content, such as cluster, to
+ * list supported projectiles and store them in a safe data structure. Where the entity can be spawned when
+ * needed without knowing what it is or how it works.
+ *
+ * @param <E> created from the projectile data
  */
-public interface IProjectileData<E extends Entity>  extends IBuildableObject {
-
-
-    /** Default type to return */
-    ProjectileType[] TYPE_DEFAULT = new ProjectileType[]{ProjectileType.TYPE_PROJECTILE};
+public interface IProjectileData<E extends Entity>  extends IBuildableObject, ITypeTaggable {
 
     //TODO add a way to check size, this way we can limit weapon systems from using extremely large projectiles if too small... share size data with radar
-
-    /**
-     * Type(s) of projectile, used to check if a projectile can work
-     * with other systems.
-     *
-     * A projectile can be valid for more than 1 type. Good example
-     * is things like missiles which are both {@link ProjectileType#TYPE_MISSILE}
-     * and {@link ProjectileType#TYPE_BOMB} if they contain an explosive.
-     *
-     * @return type(s)
-     */
-    default ProjectileType[] getTypes() {
-        return TYPE_DEFAULT;
-    }
-
-    /**
-     * Checks if the projectile is of matching type. Some types
-     * are consider to be sub-types of others. Such as missiles
-     * being a type of projectile.
-     *
-     * @param type to check
-     * @return true if is valid
-     */
-    default boolean isType(ProjectileType type) {
-        for(ProjectileType projectileType : getTypes()) {
-            if(projectileType.isValidType(type)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     /**
      * Called to generate a new projectile entity
@@ -60,7 +31,7 @@ public interface IProjectileData<E extends Entity>  extends IBuildableObject {
      * @param allowItemPickup true to allow entity to be collected, such as picking up arrows
      * @return entity to spawn
      */
-    E newEntity(World world, boolean allowItemPickup); //TODO consider moving to a spawnAction recycling blastAction logic
+    E newEntity(World world, boolean allowItemPickup); //TODO replace with IActionSolution
 
     /**
      * Called after the entity has been added to the world. Useful
@@ -73,7 +44,7 @@ public interface IProjectileData<E extends Entity>  extends IBuildableObject {
      * @param source that created the entity, may not always be present
      * @param hand used to spawn entity, for non-humanoid this will always be main hand
      */
-    default void onEntitySpawned(@Nonnull E entity, @Nullable Entity source, @Nullable EnumHand hand) { //TODO consider moving to a spawnAction
+    default void onEntitySpawned(@Nonnull E entity, @Nullable Entity source, @Nullable EnumHand hand) { //TODO consider moving to a IAction
 
     }
 

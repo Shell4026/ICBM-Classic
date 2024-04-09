@@ -2,6 +2,7 @@ package icbm.classic.api.actions;
 
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.actions.cause.IActionSource;
+import icbm.classic.api.data.meta.ITypeTaggable;
 import icbm.classic.api.reg.obj.IBuildableObject;
 import icbm.classic.api.reg.obj.IBuilderRegistry;
 import net.minecraft.world.World;
@@ -11,7 +12,7 @@ import javax.annotation.Nonnull;
 /**
  * Registry data used to create actions in a world position
  */
-public interface IActionData extends IBuildableObject {
+public interface IActionData extends IBuildableObject, ITypeTaggable {
 
     /**
      * Creates a new action

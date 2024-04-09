@@ -4,6 +4,7 @@ import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.explosion.IBlastInit;
 import icbm.classic.api.missiles.projectile.IProjectileData;
+import icbm.classic.content.actions.status.ActionResponses;
 import icbm.classic.content.blast.BlastStatus;
 import icbm.classic.content.blast.cluster.bomblet.EntityBombDroplet;
 import icbm.classic.content.blast.imp.BlastBase;
@@ -165,9 +166,9 @@ public class BlastCluster extends BlastBase {
                 discIndex += 1;
             }
 
-            return spawnedSomething ? BlastStatus.TRIGGERED : BlastStatus.ENTITY_SPAWN_CANCELED;
+            return spawnedSomething ? ActionResponses.COMPLETED : ActionResponses.ENTITY_SPAWN_FAILED;
         }
-        return BlastStatus.TRIGGERED_CLIENT;
+        return ActionResponses.COMPLETED;
     }
 
     private boolean spawnProjectile(int index, double x, double y, double z, double mx, double my, double mz) {
