@@ -10,8 +10,11 @@ import javax.annotation.Nonnull;
  * A potential action to triggered once conditions are met. Included
  * everything that is needed to validate and trigger an action. Short of
  * the location and caused by source.
+ *
+ * Potential actions are designed to be cached on source. Such as having a field
+ * at the top of a TileEntity called warheadAction.
  */
-public interface IPotentialAction {
+public interface IPotentialAction<Action extends IAction> {
 
     /**
      * Action data used to spawn the action into the world
@@ -19,7 +22,7 @@ public interface IPotentialAction {
      * @return action data
      */
     @Nonnull
-    IActionData getActionData();
+    IActionData<Action> getActionData();
 
     /**
      * Checks the current status of the solution. Validating if requirements are met and nothing

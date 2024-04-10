@@ -8,11 +8,13 @@ import icbm.classic.api.reg.obj.IBuilderRegistry;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.function.Consumer;
 
 /**
  * Registry data used to create actions in a world position
  */
-public interface IActionData extends IBuildableObject, ITypeTaggable {
+public interface IActionData<Action extends IAction> extends IBuildableObject, ITypeTaggable {
 
     /**
      * Creates a new action
@@ -26,7 +28,7 @@ public interface IActionData extends IBuildableObject, ITypeTaggable {
      * @return action
      */
     @Nonnull
-    IAction create(World world, double x, double y, double z, @Nonnull IActionSource source);
+    Action create(World world, double x, double y, double z, @Nonnull IActionSource source); //TODO figure out how to pass dynamic data to creation (blockState, itemStack, scale, etc)
 
     @Nonnull
     @Override

@@ -18,8 +18,16 @@ public class ActionResponses {
     /** Canceled due to {@link net.minecraftforge.event.ForgeEventFactory#onExplosionStart(World, Explosion)} */
     public static IActionStatus EXPLOSION_CANCELED = ImmutableStatus.blocking(new ResourceLocation(ICBMConstants.DOMAIN, "action.explosion.canceled"));
 
-    /** Dev code error with world not being provided */
+    /** Generic validation issue with action state */
+    public static IActionStatus VALIDATION_ERROR = ImmutableStatus.blocking(new ResourceLocation(ICBMConstants.DOMAIN, "action.validation.failed"));
+
+    public static IActionStatus BLOCK_PLACEMENT_FAILED = ImmutableStatus.blocking(new ResourceLocation(ICBMConstants.DOMAIN, "action.block.placement.failed"));
+
     public static IActionStatus MISSING_WORLD = new MissingFieldStatus(new ResourceLocation(ICBMConstants.DOMAIN, "action.error.field.world.missing"), "action", "world");
+    public static IActionStatus MISSING_BLOCK_POS = new MissingFieldStatus(new ResourceLocation(ICBMConstants.DOMAIN, "action.error.field.block.pos.missing"), "action", "blockPos");
+    public static IActionStatus MISSING_BLOCK_STATE = new MissingFieldStatus(new ResourceLocation(ICBMConstants.DOMAIN, "action.error.field.block.state.missing"), "action", "blockState");
+    public static IActionStatus MISSING_VALIDATION = new MissingFieldStatus(new ResourceLocation(ICBMConstants.DOMAIN, "action.error.field.validation.missing"), "action", "validation");
+
     // </editor-fold>
 
     // <editor-fold description="good status">
@@ -33,5 +41,6 @@ public class ActionResponses {
         EXPLOSION_CANCELED.registerStatic();
         MISSING_WORLD.registerStatic();
         COMPLETED.registerStatic();
+        VALIDATION_ERROR.registerStatic();
     }
 }
