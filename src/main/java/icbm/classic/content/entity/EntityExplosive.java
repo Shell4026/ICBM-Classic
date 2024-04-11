@@ -11,7 +11,6 @@ import icbm.classic.lib.NBTConstants;
 import icbm.classic.lib.capability.emp.CapabilityEMP;
 import icbm.classic.lib.capability.emp.CapabilityEmpKill;
 import icbm.classic.lib.capability.ex.CapabilityExplosiveEntity;
-import icbm.classic.lib.explosive.ExplosiveHandler;
 import icbm.classic.lib.transform.vector.Pos;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;

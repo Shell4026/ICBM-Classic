@@ -21,5 +21,5 @@ public interface IBlastFactory
      * @return new blast
      */
     @Nonnull
-    IBlastInit create(World world, double x, double y, double z, IActionSource source);
+    IBlastInit create(World world, double x, double y, double z);
 }

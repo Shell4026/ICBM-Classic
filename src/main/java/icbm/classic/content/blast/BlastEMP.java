@@ -9,6 +9,7 @@ import icbm.classic.lib.capability.emp.CapabilityEMP;
 import icbm.classic.lib.capability.emp.CapabilityEmpInventory;
 import icbm.classic.lib.energy.system.EnergySystem;
 import icbm.classic.lib.energy.system.IEnergySystem;
+import lombok.NoArgsConstructor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
@@ -16,41 +17,24 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import java.util.List;
 
+@NoArgsConstructor
 public class BlastEMP extends Blast
 {
-    private boolean effectEntities = false;
-    private boolean effectBlocks = false;
-
-    public BlastEMP setEffectBlocks()
-    {
-        this.effectBlocks = true;
-        return this;
+    public BlastEMP(World world, double x, double y, double z) {
+        super(world, x, y, z);
     }
-
-    public BlastEMP setEffectEntities()
-    {
-        this.effectEntities = true;
-        return this;
-    }
-
-    public BlastEMP clearSetEffectBlocksAndEntities()
-    {
-        this.effectBlocks = false;
-        this.effectEntities = false;
-        return this;
-    }
-
     @Override
     public boolean doExplode(int callCount)
     {
         if (!world().isRemote)
         {
-            if (this.effectBlocks && ConfigEMP.ALLOW_TILES)
+            if (ConfigEMP.ALLOW_TILES)
             {
                 //Loop through cube to effect blocks TODO replace with ray trace system
                 for (int x = (int) -this.getBlastRadius(); x < (int) this.getBlastRadius(); x++)
@@ -131,7 +115,7 @@ public class BlastEMP extends Blast
                 }
             }
 
-            if (this.effectEntities && ConfigEMP.ALLOW_ENTITY)
+            if (ConfigEMP.ALLOW_ENTITY)
             {
                 //Calculate bounds
                 AxisAlignedBB bounds = new AxisAlignedBB(

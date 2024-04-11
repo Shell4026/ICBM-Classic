@@ -2,14 +2,15 @@ package icbm.classic.api.reg;
 
 import icbm.classic.api.EnumTier;
 import icbm.classic.api.actions.IActionData;
+import icbm.classic.api.actions.data.IActionFieldProvider;
 import icbm.classic.api.actions.cause.IActionSource;
-import icbm.classic.api.explosion.IBlastFactory;
 import icbm.classic.api.explosion.IBlastInit;
 import icbm.classic.api.reg.content.IExplosiveContentRegistry;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Stores data about an explosive
@@ -30,10 +31,6 @@ public interface IExplosiveData extends Comparable<IExplosiveData>, IActionData
      * @deprecated will be removed in MC 1.13 and replaced with {@link #getRegistryKey()}
      */
     int getRegistryID();
-
-    @Nonnull
-    @Override
-    IBlastInit create(World world, double x, double y, double z, @Nonnull IActionSource source);
 
     /**
      * Tier of the explosive.

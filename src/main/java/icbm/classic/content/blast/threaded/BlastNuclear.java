@@ -32,13 +32,6 @@ public class BlastNuclear extends BlastThreaded {
     }
 
     @Override
-    public BlastNuclear scaleBlast(double scale) {
-        super.scaleBlast(scale);
-        this.energy *= scale;
-        return this;
-    }
-
-    @Override
     public boolean doRun(int loops, Consumer<BlockPos> edits) {
         //How many steps to go per rotation
         final int steps = (int) Math.ceil(Math.PI * this.getBlastRadius());

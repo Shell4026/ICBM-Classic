@@ -1,13 +1,14 @@
 package icbm.classic.command.sub.blast;
 
 import icbm.classic.api.ICBMClassicHelpers;
+import icbm.classic.api.actions.data.ActionFields;
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.command.CommandUtils;
 import icbm.classic.command.ICBMCommands;
 import icbm.classic.command.system.SubCommand;
+import icbm.classic.content.actions.fields.ActionFieldProvider;
 import icbm.classic.content.missile.logic.source.ActionSource;
-import icbm.classic.lib.explosive.ExplosiveHandler;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.SyntaxErrorException;
@@ -46,13 +47,13 @@ public class CommandBlastTrigger extends SubCommand
     @Override
     protected void collectHelpForAll(Consumer<String> consumer)
     {
-        consumer.accept("<id> <dim> <x> <y> <z> <scale>");
+        consumer.accept("<id> <dim> <x> <y> <z> <size>");
     }
 
     @Override
     protected void collectHelpWorldOnly(Consumer<String> consumer)
     {
-        consumer.accept("<id> <scale>");
+        consumer.accept("<id> <size>");
     }
 
     @Override
@@ -102,8 +103,8 @@ public class CommandBlastTrigger extends SubCommand
 
     private void longVersion(ICommandSender sender, IExplosiveData explosiveData, String[] args) throws SyntaxErrorException
     {
-        final float scale = Float.parseFloat(args[5]);
-        if (scale <= 0)
+        final float size = Float.parseFloat(args[5]);
+        if (size <= 0)
         {
             throw new SyntaxErrorException(TRANSLATION_ERROR_SCALE_ZERO);
         }
@@ -115,7 +116,7 @@ public class CommandBlastTrigger extends SubCommand
         final double z = CommandUtils.getNumber(sender, args[4], sender.getPositionVector().z);
 
         //Trigger blast
-        trigger(sender, world, x, y, z, explosiveData, scale);
+        trigger(sender, world, x, y, z, explosiveData, size);
     }
 
     /**
@@ -144,14 +145,11 @@ public class CommandBlastTrigger extends SubCommand
      * @param y             - position data
      * @param z             - position data
      * @param explosiveData - explosive to run
-     * @param scale         - scale to apply, keep this small as its scale and not size (size defaults to 25 * scale of 2 = 50 size)
+     * @param size          - size to set
      */
-    private void trigger(ICommandSender sender, World world, double x, double y, double z, IExplosiveData explosiveData, float scale)
+    private void trigger(ICommandSender sender, World world, double x, double y, double z, IExplosiveData explosiveData, float size)
     {
-        final IActionStatus result = ExplosiveHandler.createExplosion(null,
-                world, x, y, z,
-                explosiveData, new ActionSource(), scale,
-                null);
+        final IActionStatus result = explosiveData.create(world, x, y, z,  new ActionSource(),new ActionFieldProvider().field(ActionFields.BLAST_SIZE, () -> size)).doAction();
 
         //Send translated message to user
         sender.sendMessage(result.getTooltip());

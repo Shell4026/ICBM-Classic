@@ -2,6 +2,7 @@ package icbm.classic.content.entity;
 
 import icbm.classic.ICBMClassic;
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.actions.IAction;
 import icbm.classic.api.explosion.*;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.config.ConfigDebug;
@@ -10,6 +11,7 @@ import icbm.classic.content.missile.logic.source.ActionSource;
 import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.lib.NBTConstants;
 import io.netty.buffer.ByteBuf;
+import lombok.Getter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,7 +32,8 @@ import java.lang.reflect.Constructor;
 @Deprecated //TODO replace all usage with more focused entities per explosive
 public class EntityExplosion extends Entity implements IEntityAdditionalSpawnData
 {
-    private IBlast blast;
+    @Getter
+    private IAction blast;
     private double blastYOffset = 0;
 
     public EntityExplosion(World world)
@@ -98,7 +101,7 @@ public class EntityExplosion extends Entity implements IEntityAdditionalSpawnDat
     @Override
     public void onUpdate()
     {
-        if (this.getBlast() == null || this.getBlast().getEntity() != this || this.getBlast().isCompleted())
+        if (!(this.getBlast() instanceof IBlastTickable) || ((IBlastTickable)this.getBlast()).getEntity() != this || ((IBlastTickable)this.getBlast()).isCompleted())
         {
             this.setDead();
             return;
@@ -135,12 +138,9 @@ public class EntityExplosion extends Entity implements IEntityAdditionalSpawnDat
             ((IBlastMovable) getBlast()).onPositionUpdate(posX, posY + blastYOffset, posZ);
         }
 
-        if (blast instanceof IBlastTickable)
+        if (blast instanceof IBlastTickable && ((IBlastTickable) blast).onBlastTick(ticksExisted))
         {
-            if (((IBlastTickable) blast).onBlastTick(ticksExisted))
-            {
-                setDead();
-            }
+            setDead();
         }
     }
 
@@ -203,11 +203,6 @@ public class EntityExplosion extends Entity implements IEntityAdditionalSpawnDat
         }
     }
 
-    public IBlast getBlast()
-    {
-        return blast;
-    }
-
     public void setBlast(Blast blast)
     {
         this.blast = blast;
@@ -231,10 +226,12 @@ public class EntityExplosion extends Entity implements IEntityAdditionalSpawnDat
         IExplosiveData exData = ICBMClassicAPI.EXPLOSIVE_REGISTRY.getExplosiveData(id);
 
         ActionSource actionSource = new ActionSource(world, new Vec3d(posX, posY + yOffset, posZ), new EntityCause(this)); //TODO provide additional cause information such as fire, lighter, player, etc
-        blast = exData.create(world, posX, posY + yOffset, posZ, actionSource)
-            .setEntityController(this)
-            .setExplosiveData(exData)
-            .buildBlast();
+        blast = exData.create(world, posX, posY + yOffset, posZ, actionSource, null);
+
+        if(blast instanceof IBlastInit) {
+            ((IBlastInit) blast).setEntityController(this);
+            blast = ((IBlastInit) blast).buildBlast();
+        }
 
         ICBMClassic.logger().error("EntityExplosion: Failed to locate explosive with id '" + id + "'!");
     }

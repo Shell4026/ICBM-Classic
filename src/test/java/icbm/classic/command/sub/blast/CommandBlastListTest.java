@@ -47,9 +47,9 @@ public class CommandBlastListTest
     {
         //Setup blast registry
         ICBMClassicAPI.EXPLOSIVE_REGISTRY = new ExplosiveRegistry();
-        ICBMClassicAPI.EXPLOSIVE_REGISTRY.register(new ResourceLocation("tree", "bat"), EnumTier.FOUR, (w, x, y, z, a) -> null);
-        ICBMClassicAPI.EXPLOSIVE_REGISTRY.register(new ResourceLocation("tree", "cat"), EnumTier.FOUR, (w, x, y, z, a) -> null);
-        ICBMClassicAPI.EXPLOSIVE_REGISTRY.register(new ResourceLocation("bo", "fat"), EnumTier.FOUR, (w, x, y, z, a) -> null);
+        ICBMClassicAPI.EXPLOSIVE_REGISTRY.register(new ResourceLocation("tree", "bat"), EnumTier.FOUR, (w, x, y, z) -> null);
+        ICBMClassicAPI.EXPLOSIVE_REGISTRY.register(new ResourceLocation("tree", "cat"), EnumTier.FOUR, (w, x, y, z) -> null);
+        ICBMClassicAPI.EXPLOSIVE_REGISTRY.register(new ResourceLocation("bo", "fat"), EnumTier.FOUR, (w, x, y, z) -> null);
         ((ExplosiveRegistry)ICBMClassicAPI.EXPLOSIVE_REGISTRY).lockNewExplosives();
 
         final DummyCommandSender dummyCommandSender = new DummyCommandSender(testManager);

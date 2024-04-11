@@ -10,16 +10,12 @@ import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.api.reg.IExplosiveCustomization;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.content.actions.status.ActionResponses;
-import icbm.classic.content.blast.BlastStatus;
-import icbm.classic.lib.explosive.ExplosiveHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 1/7/19.
@@ -64,7 +60,7 @@ public class CapabilityExplosiveEntity implements IExplosive
 
         if (!this.entity.world.isRemote)
         {
-            return this.getExplosiveData().create(this.entity.world, x, y, z, source).doAction();
+            return this.getExplosiveData().create(this.entity.world, x, y, z, source, null).doAction();
         }
         return ActionResponses.COMPLETED;
     }

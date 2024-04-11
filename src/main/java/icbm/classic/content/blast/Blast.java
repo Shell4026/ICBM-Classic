@@ -13,7 +13,7 @@ import icbm.classic.content.actions.status.ActionResponses;
 import icbm.classic.content.blast.thread.ThreadExplosion;
 import icbm.classic.content.entity.EntityExplosion;
 import icbm.classic.lib.NBTConstants;
-import icbm.classic.lib.explosive.ExplosiveHandler;
+import icbm.classic.content.actions.WorkTickingActionHandler;
 import icbm.classic.lib.transform.vector.Location;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -78,6 +78,12 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
     public Blast()
     {
         super(null, null, 0, 0, 0, 0, false, false);
+    }
+
+    public Blast(World world, double x, double y, double z) {
+        this();
+        setBlastWorld(world);
+        setBlastPosition(x, y, z);
     }
 
     @Override
@@ -204,7 +210,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
         if (isAlive && !hasSetupBlast)
         {
             hasSetupBlast = true;
-            ExplosiveHandler.add(this);
+            WorkTickingActionHandler.add(this);
             return this.setupBlast();
         }
 
@@ -241,7 +247,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
             isAlive = false;
 
             //Remove from tracker
-            ExplosiveHandler.remove(this);
+            WorkTickingActionHandler.remove(this);
 
             //Run post code
             this.onBlastCompleted();

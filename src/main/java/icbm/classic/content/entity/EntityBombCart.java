@@ -1,7 +1,6 @@
 package icbm.classic.content.entity;
 
 import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.ICBMClassicHelpers;
 import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.content.blocks.explosive.BlockExplosive;
 import icbm.classic.content.missile.logic.source.ActionSource;
@@ -10,7 +9,6 @@ import icbm.classic.content.reg.BlockReg;
 import icbm.classic.content.reg.ItemReg;
 import icbm.classic.lib.NBTConstants;
 import icbm.classic.lib.capability.ex.CapabilityExplosiveEntity;
-import icbm.classic.lib.explosive.ExplosiveHandler;
 import icbm.classic.prefab.tile.BlockICBM;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
@@ -24,7 +22,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;

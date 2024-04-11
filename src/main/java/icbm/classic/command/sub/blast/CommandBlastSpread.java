@@ -1,13 +1,13 @@
 package icbm.classic.command.sub.blast;
 
-import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.actions.data.ActionFields;
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.command.CommandUtils;
 import icbm.classic.command.ICBMCommands;
 import icbm.classic.command.system.SubCommand;
+import icbm.classic.content.actions.fields.ActionFieldProvider;
 import icbm.classic.content.missile.logic.source.ActionSource;
-import icbm.classic.lib.explosive.ExplosiveHandler;
 import net.minecraft.command.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -88,10 +88,7 @@ public class CommandBlastSpread extends SubCommand
                 final double z = zInput + zi * distance;
 
                 //Trigger blast
-                final IActionStatus result = ExplosiveHandler.createExplosion(null,
-                        world, x, yInput, z,
-                   explosiveData, new ActionSource(), scale,
-                        null);
+                final IActionStatus result = explosiveData.create(world, x, yInput, z, new ActionSource(),new ActionFieldProvider().field(ActionFields.BLAST_SIZE, () -> scale)).doAction();
 
                 //Send translated message to user
                 sender.sendMessage(result.getTooltip());

@@ -1,10 +1,12 @@
 package icbm.classic.api.actions;
 
+import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.actions.status.IActionStatus;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * A potential action to triggered once conditions are met. Included
@@ -26,32 +28,32 @@ public interface IPotentialAction<Action extends IAction> {
 
     /**
      * Checks the current status of the solution. Validating if requirements are met and nothing
-     * is going to fail when {@link #doAction(World, double, double, double, IActionSource)} is called.
+     * is going to fail when action is triggered is called.
      *
-     * This is normally called as part of {@link #doAction(World, double, double, double, IActionSource)} and
+     * This is normally called as part of action trigger and
      * only exists as a way to show predicted result. Useful for user feedback related to potential actions.
      *
      * @param world to create action
      * @param x location
      * @param y location
      * @param z location
-     * @param source triggering the action
+     * @param cause of the action, not recommended to leave null
      * @return response
      */
     @Nonnull
-    IActionStatus checkAction(World world, double x, double y, double z, @Nonnull IActionSource source) ;
+    IActionStatus checkAction(World world, double x, double y, double z, @Nullable IActionCause cause) ;
 
     /**
-     * Wraps to {@link IActionData#create(World, double, double, double, IActionSource)} after validating
+     * Wraps to {@link IActionData} after validating
      * solution state and if conditions are met to trigger.
      *
      * @param world to create action
      * @param x location
      * @param y location
      * @param z location
-     * @param source triggering the action
+     * @param cause of the action, not recommended to leave null
      * @return response
      */
     @Nonnull
-    IActionStatus doAction(World world, double x, double y, double z, @Nonnull IActionSource source);
+    IActionStatus doAction(World world, double x, double y, double z, @Nullable IActionCause cause);
 }

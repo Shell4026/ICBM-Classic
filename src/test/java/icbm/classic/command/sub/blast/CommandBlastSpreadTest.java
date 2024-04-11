@@ -49,9 +49,9 @@ public class CommandBlastSpreadTest
     public void setupBeforeTest()
     {
         ICBMClassicAPI.EXPLOSIVE_REGISTRY = new ExplosiveRegistry();
-        fakeExData = ICBMClassicAPI.EXPLOSIVE_REGISTRY.register(new ResourceLocation("tree", "small"), EnumTier.ONE, (w, x, y, z, a) ->
+        fakeExData = ICBMClassicAPI.EXPLOSIVE_REGISTRY.register(new ResourceLocation("tree", "small"), EnumTier.ONE, (w, x, y, z) ->
         {
-            FakeBlast fakeBlast = (FakeBlast) new FakeBlast(ActionResponses.COMPLETED).setBlastWorld(w).setBlastPosition(x, y, z).setActionSource(a);
+            FakeBlast fakeBlast = (FakeBlast) new FakeBlast(ActionResponses.COMPLETED).setBlastWorld(w).setBlastPosition(x, y, z);
             blastsCreated.add(fakeBlast);
             return fakeBlast;
         });

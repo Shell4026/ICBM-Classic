@@ -3,12 +3,17 @@ package icbm.classic.content.blocks.emptower;
 import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.actions.IAction;
+import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.api.actions.cause.IActionSource;
+import icbm.classic.api.actions.data.ActionFields;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.explosion.IBlast;
 import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.client.ICBMSounds;
 import icbm.classic.config.ConfigMain;
 import icbm.classic.config.machines.ConfigEmpTower;
+import icbm.classic.content.actions.fields.ActionFieldProvider;
 import icbm.classic.content.blast.BlastEMP;
 import icbm.classic.content.blocks.emptower.gui.ContainerEMPTower;
 import icbm.classic.content.blocks.emptower.gui.GuiEMPTower;
@@ -83,6 +88,8 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
         .withSlot(new InventorySlot(0, EnergySystem::isEnergyItem).withTick(this.energyStorage::dischargeItem));
 
     public final RadioEmpTower radioCap = new RadioEmpTower(this);
+
+    public final EmpTowerAction empAction = new EmpTowerAction(this);
 
     private final List<TileEmpTowerFake> subBlocks = new ArrayList<>();
 
@@ -175,9 +182,9 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
                 world.playSound(null, getPos(), SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 0.5F, world.rand.nextFloat() * 0.15F + 0.6F);
             }
 
-            if (isReady() && world.getStrongPower(getPos()) > 0) //TODO convert to a state handler
+            if (isReady() && world.getStrongPower(getPos()) > 0) //TODO convert to action conditional
             {
-                fire();
+                fire(null); // TODO provide redstone cause by
             }
         }
 
@@ -272,26 +279,13 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
         this.range = Math.min(range, getMaxRadius());
     }
 
-    protected IBlast buildBlast()
-    {
-        final BlockCause selfCause = new BlockCause(world, getPos(), getBlockState()); // TODO add caused by such as redstone, remote, etc
-
-        final ActionSource source = new ActionSource(world, new Vec3d(getPos().getX() + 0.5, getPos().getY() + 1.2, getPos().getZ() + 0.5), selfCause);
-
-        return ((BlastEMP)ICBMExplosives.EMP.create(world, getPos().getX() + 0.5, getPos().getY() + 1.2, getPos().getZ() + 0.5, source)
-                .setBlastSize(range))
-                .clearSetEffectBlocksAndEntities()
-                .setEffectBlocks().setEffectEntities()
-                .buildBlast();
-    }
-
-    //@Callback(limit = 1) TODO add CC support
-    public boolean fire()
+    public boolean fire(IActionCause cause)
     {
         if (this.isReady())
         {
+            final IActionStatus response = empAction.doAction(world, getPos().getX() + 0.5, getPos().getY() + 1.2, getPos().getZ() + 0.5, cause);
             //Finish and trigger
-            if (!buildBlast().doAction().isBlocking())
+            if (!response.isBlocking())
             {
                 //Consume energy
                 this.energyStorage.consumePower(getFiringCost(), false);
@@ -435,7 +429,7 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
     public static final PacketCodex<TileEMPTower, TileEMPTower> PACKET_FIRE = new PacketCodexTile<TileEMPTower, TileEMPTower>(REGISTRY_NAME, "fire")
         .fromClient()
         .onFinished((tile, target, player) -> {
-            tile.fire();
+            tile.fire(null); //TODO add GUI cause using player
             tile.markDirty();
         });
 

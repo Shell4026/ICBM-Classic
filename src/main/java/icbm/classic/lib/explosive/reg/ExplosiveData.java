@@ -1,6 +1,8 @@
 package icbm.classic.lib.explosive.reg;
 
 import icbm.classic.api.EnumTier;
+import icbm.classic.api.actions.data.ActionFields;
+import icbm.classic.api.actions.data.IActionFieldProvider;
 import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.explosion.IBlastFactory;
 import icbm.classic.api.explosion.IBlastInit;
@@ -13,6 +15,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -55,8 +58,16 @@ public class ExplosiveData implements IExplosiveData
 
     @Override
     @Nonnull
-    public IBlastInit create(World world, double x, double y, double z, @Nonnull IActionSource source) {
-        return blastCreationFactory.create(world, x, y, z, source).setExplosiveData(this);
+    public IBlastInit create(World world, double x, double y, double z, @Nonnull IActionSource source, @Nullable IActionFieldProvider fieldAccessors) {
+        final IBlastInit blast = blastCreationFactory.create(world, x, y, z)
+            .setExplosiveData(this)
+            .setActionSource(source);
+
+        if(fieldAccessors != null && fieldAccessors.hasField(ActionFields.BLAST_SIZE)) {
+            blast.setBlastSize(fieldAccessors.getValue(ActionFields.BLAST_SIZE));
+        }
+
+        return blast;
     }
 
     @Override
