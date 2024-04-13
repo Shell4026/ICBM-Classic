@@ -1,5 +1,6 @@
 package icbm.classic.content.missile.entity;
 
+import icbm.classic.api.actions.IAction;
 import icbm.classic.api.caps.IEMPReceiver;
 import icbm.classic.api.explosion.IBlast;
 import icbm.classic.api.missiles.IMissile;
@@ -20,7 +21,7 @@ public class CapabilityEmpMissile implements IEMPReceiver
     }
 
     @Override
-    public float applyEmpAction(World world, double x, double y, double z, IBlast emp_blast, float power, boolean doAction)
+    public float applyEmpAction(World world, double x, double y, double z, IAction emp_blast, float power, boolean doAction)
     {
         if(ConfigEMP.ALLOW_MISSILES && missile.getMissileEntity() != null && missile.getMissileEntity().isEntityAlive())
         {

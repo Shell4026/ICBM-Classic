@@ -37,7 +37,7 @@ public class ActionUpdateBlockState extends ActionBase implements IAction {
             return ActionResponses.MISSING_VALIDATION;
         }
 
-        final BlockPos pos = this.getPos();
+        final BlockPos pos = this.getBlockPos();
         final IBlockState currentState = getWorld().getBlockState(pos);
         // Ensure we are still the target block, this may be checking exact state or single property
         if(validation.apply(currentState)) {

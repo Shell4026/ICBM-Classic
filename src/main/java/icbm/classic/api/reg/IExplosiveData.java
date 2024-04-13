@@ -43,31 +43,4 @@ public interface IExplosiveData extends Comparable<IExplosiveData>, IActionData
         // Only for legacy explosives, moving forward tier is visual only and has no functionality
         return EnumTier.NONE;
     }
-
-    /**
-     * Checks if the explosive is enabled. Users
-     * can disable explosives in the configs. As
-     * well other mods can disable explosives
-     * to allow items to still exist but functionality
-     * to be switched to a new version.
-     *
-     * @return true if enabled
-     */
-    boolean isEnabled();
-
-    /**
-     * Sets the enable status of
-     *
-     * @param b
-     */
-    void setEnabled(boolean b);
-
-    /**
-     * Called when this explosive is register to a content handler
-     *
-     * @param contentID - id of the registry
-     * @param registry  - the registry itself
-     * @return true to allow, false to block
-     */
-    boolean onEnableContent(ResourceLocation contentID, IExplosiveContentRegistry registry);
 }

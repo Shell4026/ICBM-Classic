@@ -1,26 +1,20 @@
 package icbm.classic.content.blocks.emptower;
 
 import icbm.classic.api.EnumTier;
-import icbm.classic.api.actions.IAction;
-import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.refs.ICBMExplosives;
-import icbm.classic.api.explosion.IBlast;
 import icbm.classic.api.explosion.IBlastFactory;
 import icbm.classic.content.actions.status.ActionResponses;
-import icbm.classic.content.blast.Blast;
-import icbm.classic.content.blast.BlastEMP;
-import icbm.classic.content.blast.BlastStatus;
+import icbm.classic.content.blast.emp.ActionEmpArea;
 import icbm.classic.lib.explosive.reg.ExplosiveData;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
-import javax.annotation.Nonnull;
 
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -42,7 +36,7 @@ public class TestTileEMPTower
     @BeforeAll
     public static void setupForAllTests() {
         final ResourceLocation name = new ResourceLocation("ICBM:EMP");
-        final IBlastFactory factory = (w, x, y, z) -> new BlastEMP().setBlastSize(50);
+        final IBlastFactory factory = (w, x, y, z, s) -> new ActionEmpArea(w, new Vec3d(x, y, z), s, null).setSize(50);
         ICBMExplosives.EMP = new ExplosiveData(name,16, EnumTier.THREE, factory);
     }
 

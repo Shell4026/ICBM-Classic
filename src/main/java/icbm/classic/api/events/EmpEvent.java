@@ -1,5 +1,6 @@
 package icbm.classic.api.events;
 
+import icbm.classic.api.actions.IAction;
 import icbm.classic.api.explosion.IBlast;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -18,7 +19,7 @@ import net.minecraftforge.fml.common.eventhandler.Cancelable;
 @Deprecated
 public abstract class EmpEvent extends BlastEvent
 {
-    public EmpEvent(IBlast blast)
+    public EmpEvent(IAction blast)
     {
         super(blast);
     }
@@ -34,7 +35,7 @@ public abstract class EmpEvent extends BlastEvent
     {
         public final Entity target;
 
-        public EntityPre(IBlast emp, Entity target)
+        public EntityPre(IAction emp, Entity target)
         {
             super(emp);
             this.target = target;
@@ -49,7 +50,7 @@ public abstract class EmpEvent extends BlastEvent
     {
         public final Entity target;
 
-        public EntityPost(IBlast emp, Entity target)
+        public EntityPost(IAction emp, Entity target)
         {
             super(emp);
             this.target = target;
@@ -69,7 +70,7 @@ public abstract class EmpEvent extends BlastEvent
         public final BlockPos blockPos;
         public final IBlockState state;
 
-        public BlockPre(IBlast emp, World world, BlockPos pos, IBlockState state)
+        public BlockPre(IAction emp, World world, BlockPos pos, IBlockState state)
         {
             super(emp);
             this.world = world;
@@ -88,7 +89,7 @@ public abstract class EmpEvent extends BlastEvent
         public final BlockPos blockPos;
         public final IBlockState state;
 
-        public BlockPost(IBlast emp, World world, BlockPos pos, IBlockState state)
+        public BlockPost(IAction emp, World world, BlockPos pos, IBlockState state)
         {
             super(emp);
             this.world = world;

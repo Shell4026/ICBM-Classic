@@ -1,15 +1,24 @@
-package icbm.classic.content.blast;
+package icbm.classic.content.blast.emp;
 
 import icbm.classic.api.ICBMClassicHelpers;
+import icbm.classic.api.actions.IActionData;
+import icbm.classic.api.actions.cause.IActionSource;
+import icbm.classic.api.actions.data.ActionField;
+import icbm.classic.api.actions.data.ActionFields;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.caps.IEMPReceiver;
 import icbm.classic.api.events.EmpEvent;
 import icbm.classic.client.ICBMSounds;
 import icbm.classic.config.ConfigEMP;
+import icbm.classic.content.actions.ActionBase;
+import icbm.classic.content.actions.status.ActionResponses;
 import icbm.classic.lib.capability.emp.CapabilityEMP;
 import icbm.classic.lib.capability.emp.CapabilityEmpInventory;
 import icbm.classic.lib.energy.system.EnergySystem;
 import icbm.classic.lib.energy.system.IEnergySystem;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
@@ -17,55 +26,84 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.items.CapabilityItemHandler;
 
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-@NoArgsConstructor
-public class BlastEMP extends Blast
+
+@Getter @Setter
+public class ActionEmpArea extends ActionBase
 {
-    public BlastEMP(World world, double x, double y, double z) {
-        super(world, x, y, z);
+    static final List<ActionField> SUPPORTED_FIELDS = new ArrayList<>(Collections.singleton(ActionFields.BLAST_SIZE));
+    @Accessors(chain = true)
+    private int size = 1;
+    
+    public ActionEmpArea(World world, Vec3d vec3d, IActionSource source, IActionData actionData) {
+        super(world, vec3d, source, actionData);
     }
+
     @Override
-    public boolean doExplode(int callCount)
+    public <T> T getValue(ActionField<T> key) {
+        if(key == ActionFields.BLAST_SIZE) {
+            return (T)ActionFields.BLAST_SIZE.cast((float)size);
+        }
+        return null;
+    }
+    
+    @Override
+    public List<ActionField> getFields() {
+        return SUPPORTED_FIELDS;
+    }
+
+    @Override
+    public <T> boolean hasField(ActionField<T> key) {
+        return key == ActionFields.BLAST_SIZE;
+    }
+
+    @Nonnull
+    @Override
+    public IActionStatus doAction()
     {
-        if (!world().isRemote)
+        if (!getWorld().isRemote)
         {
             if (ConfigEMP.ALLOW_TILES)
             {
                 //Loop through cube to effect blocks TODO replace with ray trace system
-                for (int x = (int) -this.getBlastRadius(); x < (int) this.getBlastRadius(); x++)
+                for (int x = (int) -this.size; x < (int) this.size; x++)
                 {
-                    for (int y = (int) -this.getBlastRadius(); y < (int) this.getBlastRadius(); y++)
+                    for (int y = (int) -this.size; y < (int) this.size; y++)
                     {
-                        for (int z = (int) -this.getBlastRadius(); z < (int) this.getBlastRadius(); z++)
+                        for (int z = (int) -this.size; z < (int) this.size; z++)
                         {
-                            final BlockPos blockPos = new BlockPos(x + location.xi(), y + location.yi(), z + location.zi());
+                            final BlockPos blockPos = this.getBlockPos().add(x, y, z);
 
                             //Do distance check
                             double dist = MathHelper.sqrt(x * x + y * y + z * z);
-                            if (dist > this.getBlastRadius())
+                            if (dist > this.size)
                             {
                                 continue;
                             }
 
                             //Apply action on block if loaded
-                            if (world.isBlockLoaded(blockPos))
+                            if (getWorld().isBlockLoaded(blockPos))
                             {
                                 //Generate some effects
-                                if (Math.round(location.x() + y) == location.yi())
+                                if (blockPos.getY() == this.getBlockPos().getY())
                                 {
-                                    world().spawnParticle(EnumParticleTypes.SMOKE_LARGE, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5, 0, 0, 0);
+                                    getWorld().spawnParticle(EnumParticleTypes.SMOKE_LARGE, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5, 0, 0, 0);
                                 }
 
-                                IBlockState iBlockState = world.getBlockState(blockPos);
+                                IBlockState iBlockState = getWorld().getBlockState(blockPos);
                                 float powerEntity = 1f;
 
                                 //Fire event to allow canceling action on entity
-                                if (!MinecraftForge.EVENT_BUS.post(new EmpEvent.BlockPre(this, world, blockPos, iBlockState)))
+                                if (!MinecraftForge.EVENT_BUS.post(new EmpEvent.BlockPre(this, getWorld(), blockPos, iBlockState)))
                                 {
                                     if (ICBMClassicHelpers.hasEmpHandler(iBlockState))
                                     {
@@ -73,7 +111,7 @@ public class BlastEMP extends Blast
                                     }
                                     else
                                     {
-                                        TileEntity tileEntity = world.getTileEntity(blockPos);
+                                        TileEntity tileEntity = getWorld().getTileEntity(blockPos);
                                         if (tileEntity != null)
                                         {
                                             boolean doInventory = true;
@@ -83,7 +121,7 @@ public class BlastEMP extends Blast
                                                 if (receiver != null)
                                                 {
                                                     powerEntity = empEntity(tileEntity, powerEntity, receiver);
-                                                    doInventory = receiver.shouldEmpSubObjects(world, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ());
+                                                    doInventory = receiver.shouldEmpSubObjects(getWorld(), tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ());
                                                 }
                                             }
                                             else if (ConfigEMP.DRAIN_ENERGY_TILES)
@@ -108,7 +146,7 @@ public class BlastEMP extends Blast
                                 }
 
                                 //Fire post event to allow hooking EMP action
-                                MinecraftForge.EVENT_BUS.post(new EmpEvent.BlockPost(this, world, blockPos, iBlockState));
+                                MinecraftForge.EVENT_BUS.post(new EmpEvent.BlockPost(this, getWorld(), blockPos, iBlockState));
                             }
                         }
                     }
@@ -119,11 +157,11 @@ public class BlastEMP extends Blast
             {
                 //Calculate bounds
                 AxisAlignedBB bounds = new AxisAlignedBB(
-                        location.x() - this.getBlastRadius(), location.y() - this.getBlastRadius(), location.z() - this.getBlastRadius(),
-                        location.x() + this.getBlastRadius(), location.y() + this.getBlastRadius(), location.z() + this.getBlastRadius());
+                        getPos().getX() - this.size, getPos().getY() - this.size, getPos().getZ() - this.size,
+                    getPos().getX() + this.size, getPos().getY() + this.size, getPos().getZ() + this.size);
 
                 //Get entities in bounds
-                List<Entity> entities = world().getEntitiesWithinAABB(Entity.class, bounds);
+                List<Entity> entities = getWorld().getEntitiesWithinAABB(Entity.class, bounds);
 
                 //Loop entities to apply effects
                 for (Entity entity : entities)
@@ -139,7 +177,7 @@ public class BlastEMP extends Blast
                             if (receiver != null)
                             {
                                 powerEntity = empEntity(entity, powerEntity, receiver);
-                                doInventory = receiver.shouldEmpSubObjects(world, entity.posX, entity.posY, entity.posZ);
+                                doInventory = receiver.shouldEmpSubObjects(getWorld(), entity.posX, entity.posY, entity.posZ);
                             }
                         }
                         else if (ConfigEMP.DRAIN_ENERGY_ENTITY)
@@ -169,16 +207,16 @@ public class BlastEMP extends Blast
             //TODO VEProviderShockWave.spawnEffect(world(), position.x(), position.y(), position.z(), 0, 0, 0, 0, 0, 255, 1, 3);
             //TODO VEProviderShockWave.spawnEffect(world(), position.x(), position.y(), position.z(), 0, 0, 0, 0, 0, 255, 3, 3);
             //TODO VEProviderShockWave.spawnEffect(world(), position.x(), position.y(), position.z(), 0, 0, 0, 0, 0, 255, 5, 3);
-            ICBMSounds.EMP.play(world, location.x(), location.y(), location.z(), 4.0F, (1.0F + (world().rand.nextFloat() - world().rand.nextFloat()) * 0.2F) * 0.7F, true);
+            ICBMSounds.EMP.play(getWorld(), getPosition().x, getPosition().y, getPosition().z, 4.0F, (1.0F + (getWorld().rand.nextFloat() - getWorld().rand.nextFloat()) * 0.2F) * 0.7F, true);
         }
-        return true;
+        return ActionResponses.COMPLETED;
     }
 
     protected float empEntity(Entity entity, float powerEntity, IEMPReceiver receiver)
     {
         if (receiver != null)
         {
-            powerEntity = receiver.applyEmpAction(world, entity.posX, entity.posY, entity.posZ, this, powerEntity, true);
+            powerEntity = receiver.applyEmpAction(getWorld(), entity.posX, entity.posY, entity.posZ, this, powerEntity, true);
             //TODO spawn effects on entity if items were effected
             //TODO ICBMClassic.proxy.spawnShock(this.oldWorld(), this.position, new Pos(entity), 20);
         }
@@ -189,7 +227,7 @@ public class BlastEMP extends Blast
     {
         if (receiver != null)
         {
-            powerEntity = receiver.applyEmpAction(world, entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), this, powerEntity, true);
+            powerEntity = receiver.applyEmpAction(getWorld(), entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), this, powerEntity, true);
             //TODO spawn effects on entity if items were effected
             //TODO ICBMClassic.proxy.spawnShock(this.oldWorld(), this.position, new Pos(entity), 20);
         }

@@ -7,6 +7,8 @@ import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.data.IWorldPosition;
 import icbm.classic.api.reg.IExplosiveData;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -88,4 +90,12 @@ public interface IBlast extends IWorldPosition, IAction
      * should only be used by server utilities and commands.
      */
     void clearBlast();
+
+    default World getWorld() {
+        return world();
+    }
+
+    default Vec3d getPosition() {
+        return getVec3d();
+    }
 }

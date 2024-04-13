@@ -48,7 +48,7 @@ public class CommandBlastTriggerTest
     public void setupBeforeTest()
     {
         ICBMClassicAPI.EXPLOSIVE_REGISTRY = new ExplosiveRegistry();
-        fakeExData = ICBMClassicAPI.EXPLOSIVE_REGISTRY.register(new ResourceLocation("tree", "small"), EnumTier.ONE, (w, x, y, z) ->
+        fakeExData = ICBMClassicAPI.EXPLOSIVE_REGISTRY.register(new ResourceLocation("tree", "small"), EnumTier.ONE, (w, x, y, z, s) ->
         {
             FakeBlast fakeBlast = new FakeBlast(triggerState);
             blastsCreated.add(fakeBlast);

@@ -7,6 +7,7 @@ import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.content.actions.status.ActionResponses;
 import icbm.classic.content.blast.BlastStatus;
 import icbm.classic.content.actions.status.MissingFieldStatus;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -84,6 +85,11 @@ public abstract class BlastBase implements IBlastInit
     }
 
     @Override
+    public World getWorld() {
+        return world;
+    }
+
+    @Override
     public double z()
     {
         return z;
@@ -99,6 +105,11 @@ public abstract class BlastBase implements IBlastInit
     public double y()
     {
         return y;
+    }
+
+    @Override
+    public Vec3d getPosition() {
+        return new Vec3d(x, y, z);
     }
     //</editor-fold>
 

@@ -1,5 +1,7 @@
 package icbm.classic.api.explosion;
 
+import icbm.classic.api.actions.IAction;
+import icbm.classic.api.actions.IActionData;
 import icbm.classic.api.actions.cause.IActionSource;
 import net.minecraft.world.World;
 
@@ -21,5 +23,5 @@ public interface IBlastFactory
      * @return new blast
      */
     @Nonnull
-    IBlastInit create(World world, double x, double y, double z);
+    IAction create(World world, double x, double y, double z, IActionSource source);
 }

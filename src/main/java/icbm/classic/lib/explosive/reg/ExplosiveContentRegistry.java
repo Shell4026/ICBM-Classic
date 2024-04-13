@@ -52,16 +52,8 @@ public abstract class ExplosiveContentRegistry implements IExplosiveContentRegis
             throw new RuntimeException(this + ": No content can be registered after registry phase");
         }
         final IExplosiveData data = ICBMClassicAPI.EXPLOSIVE_REGISTRY.getExplosiveData(regName);
-        if (data != null)
+        if (!nameCache.contains(data))
         {
-            //Add to enable list on object itself
-            if (!data.onEnableContent(name, this))
-            {
-                //Explosive rejected the handler
-                return;
-            }
-
-            //Add ID to set of ids
             nameCache.add(regName);
         }
     }

@@ -1,5 +1,6 @@
 package icbm.classic.api.events;
 
+import icbm.classic.api.actions.IAction;
 import icbm.classic.api.explosion.IBlast;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
@@ -14,9 +15,9 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 public abstract class BlastEvent<B extends IBlast> extends Event
 {
     /** Source of the event */
-    public final IBlast blast;
+    public final IAction blast;
 
-    public BlastEvent(IBlast blast)
+    public BlastEvent(IAction blast)
     {
         this.blast = blast;
     }
@@ -26,7 +27,7 @@ public abstract class BlastEvent<B extends IBlast> extends Event
      */
     public World world()
     {
-        return blast.world();
+        return blast.getWorld();
     }
 
     /**
@@ -34,7 +35,7 @@ public abstract class BlastEvent<B extends IBlast> extends Event
      */
     public double x()
     {
-        return blast.x();
+        return blast.getPosition().x;
     }
 
     /**
@@ -42,7 +43,7 @@ public abstract class BlastEvent<B extends IBlast> extends Event
      */
     public double y()
     {
-        return blast.y();
+        return blast.getPosition().y;
     }
 
     /**
@@ -50,7 +51,7 @@ public abstract class BlastEvent<B extends IBlast> extends Event
      */
     public double z()
     {
-        return blast.z();
+        return blast.getPosition().z;
     }
 
     /**
@@ -62,6 +63,9 @@ public abstract class BlastEvent<B extends IBlast> extends Event
      */
     public Entity getSourceEntity()
     {
-        return blast.getBlastSource();
+        if(blast instanceof IBlast) {
+            return ((IBlast) blast).getBlastSource();
+        }
+        return null;
     }
 }

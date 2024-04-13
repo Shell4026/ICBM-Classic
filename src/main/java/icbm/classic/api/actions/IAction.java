@@ -4,6 +4,8 @@ import icbm.classic.api.actions.data.IActionFieldProvider;
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.data.IWorldPosition;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
@@ -14,7 +16,7 @@ import javax.annotation.Nonnull;
  * Avoid caching actions outside a source. As the action may be recycled or cached by the source itself. This will
  * especially be the case for blasts that may fire 1000s of actions for event purposes.
  */
-public interface IAction extends IWorldPosition, IActionFieldProvider {
+public interface IAction extends IActionFieldProvider {
 
     /**
      * Executes the action and returns the status of the action.
@@ -54,4 +56,18 @@ public interface IAction extends IWorldPosition, IActionFieldProvider {
      */
     @Nonnull
     IActionData getActionData();
+
+    /**
+     * World the action was triggered
+     *
+     * @return world
+     */
+    World getWorld();
+
+    /**
+     * Position the action was triggered
+     *
+     * @return position
+     */
+    Vec3d getPosition();
 }
