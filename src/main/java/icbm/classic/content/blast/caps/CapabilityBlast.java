@@ -16,6 +16,7 @@ import javax.annotation.Nullable;
 
 /**
  * Created by Robin Seifert on 5/22/2021.
+ * @deprecated
  */
 public class CapabilityBlast implements IBlast
 {
