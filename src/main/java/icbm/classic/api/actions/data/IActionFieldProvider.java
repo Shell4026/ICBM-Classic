@@ -40,10 +40,22 @@ public interface IActionFieldProvider {
         return getFields().stream().filter(field -> field.getKey().equals(key) && (type == null || field.getType() == type)).findFirst().orElse(null);
     }
 
+    /**
+     * List of fields provided or supported
+     *
+     * @return fields, defaults to empty
+     */
     default List<ActionField> getFields() {
         return Collections.EMPTY_LIST;
     }
 
+    /**
+     * Has values for the given field
+     *
+     * @param key to use for lookups
+     * @return true if has the field
+     * @param <T>
+     */
     default <T> boolean hasField(ActionField<T> key) {
         return false;
     }
