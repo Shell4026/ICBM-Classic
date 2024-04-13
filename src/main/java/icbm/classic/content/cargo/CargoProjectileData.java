@@ -2,7 +2,7 @@ package icbm.classic.content.cargo;
 
 import icbm.classic.ICBMClassic;
 import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.actions.ActionTypes;
+import icbm.classic.api.actions.data.ActionTypes;
 import icbm.classic.api.data.meta.MetaTag;
 import icbm.classic.api.reg.obj.IBuildableObject;
 import icbm.classic.api.missiles.projectile.IProjectileData;

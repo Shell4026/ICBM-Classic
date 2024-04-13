@@ -1,4 +1,4 @@
-package icbm.classic.api.actions;
+package icbm.classic.api.actions.data;
 
 import icbm.classic.api.data.meta.MetaTag;
 import lombok.Data;
