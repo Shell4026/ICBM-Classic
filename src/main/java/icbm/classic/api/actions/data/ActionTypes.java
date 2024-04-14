@@ -12,6 +12,9 @@ public final class ActionTypes {
     /** Action type involving an {@link net.minecraft.entity.Entity} */
     public static final MetaTag ENTITY = MetaTag.create(ROOT, "entity");
 
+    /** Action type involving an {@link net.minecraft.entity.Entity} */
+    public static final MetaTag ENTITY_AREA = MetaTag.create(ENTITY, "area");
+
     /** Action type involving an {@link net.minecraft.entity.Entity} being modified/mutated. This includes healing, doing damage, changing properties, and replacement. Anything that would change entities stored in world/chunk */
     public static final MetaTag ENTITY_EDIT = MetaTag.create(ENTITY, "edit");
 
@@ -29,6 +32,9 @@ public final class ActionTypes {
 
     /** Action type involving a {@link net.minecraft.world.World}. Specific to blocks/tiles with {@link net.minecraft.entity.Entity} being covered by {@link #ENTITY} */
     public static final MetaTag WORLD = MetaTag.create(ROOT, "world");
+
+    /** Action type covering an area of effect */
+    public static final MetaTag WORLD_AREA = MetaTag.create(WORLD, "area");
 
     /** Action type involving a {@link net.minecraft.world.World} being modified/mutated. This can be placing blocks, removing blocks, changing biomes, properties on blocks, etc. Anything that updated what is stored in a world/chunk, excluding entities. */
     public static final MetaTag WORLD_EDIT = MetaTag.create(WORLD, "edit");
