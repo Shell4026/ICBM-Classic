@@ -27,23 +27,33 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 /**
- * Pre-built action for general purpose implementation where action is known
+ * General purpose action for loading into entities, capabilities, and tiles. In which
+ * the action triggered and condition are customizable.
  */
-public final class PotentialActionKnown extends PotentialActionImp {
+public final class PotentialAction extends PotentialActionImp {
 
-    private final LazyBuilder<IActionData> actionData;
+    @Setter() @Getter @Accessors(chain = true)
+    private IActionData actionData;
 
-    public PotentialActionKnown(ResourceLocation key) {
-        this.actionData = new LazyBuilder<>(() -> ICBMClassicAPI.ACTION_REGISTRY.getOrBuild(key));
-    }
-
-    @Nonnull
     @Override
-    public IActionData getActionData() {
-        return actionData.get();
+    public NBTTagCompound serializeNBT() {
+        return SAVE_LOGIC.save(this, super.serializeNBT());
     }
+
+    @Override
+    public void deserializeNBT(NBTTagCompound nbt) {
+        super.deserializeNBT(nbt);
+        SAVE_LOGIC.load(this, nbt);
+    }
+
+    private static final NbtSaveHandler<PotentialAction> SAVE_LOGIC = new NbtSaveHandler<PotentialAction>()
+        .mainRoot()
+        /* */.nodeBuildableObject("action_data", () -> ICBMClassicAPI.ACTION_REGISTRY, PotentialAction::getActionData, PotentialAction::setActionData)
+        .base();
 }

@@ -21,9 +21,9 @@ public interface IPotentialAction {
     /**
      * Action data used to spawn the action into the world
      *
-     * @return action data
+     * @return action data, null if it failed to load or get by key
      */
-    @Nonnull
+    @Nullable
     IActionData getActionData();
 
     /**
