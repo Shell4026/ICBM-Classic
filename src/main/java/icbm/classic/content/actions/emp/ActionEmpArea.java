@@ -1,4 +1,4 @@
-package icbm.classic.content.blast.emp;
+package icbm.classic.content.actions.emp;
 
 import icbm.classic.api.ICBMClassicHelpers;
 import icbm.classic.api.actions.IActionData;

@@ -4,7 +4,7 @@ import icbm.classic.api.EnumTier;
 import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.api.explosion.IBlastFactory;
 import icbm.classic.lib.actions.status.ActionResponses;
-import icbm.classic.content.blast.emp.ActionEmpArea;
+import icbm.classic.content.actions.emp.ActionEmpArea;
 import icbm.classic.lib.explosive.reg.ExplosiveData;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;

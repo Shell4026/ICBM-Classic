@@ -4,7 +4,7 @@ import icbm.classic.ICBMClassic;
 import icbm.classic.api.actions.IAction;
 import icbm.classic.api.caps.IEMPReceiver;
 import icbm.classic.config.ConfigEMP;
-import icbm.classic.content.blast.emp.ActionEmpArea;
+import icbm.classic.content.actions.emp.ActionEmpArea;
 import icbm.classic.lib.InventoryUtility;
 import icbm.classic.lib.energy.system.EnergySystem;
 import net.minecraft.entity.Entity;
