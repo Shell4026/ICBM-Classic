@@ -1,10 +1,11 @@
-package icbm.classic.lib.actions;
+package icbm.classic.content.actions;
 
 import icbm.classic.api.actions.IAction;
 import icbm.classic.api.actions.IActionData;
 import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.actions.data.ActionField;
 import icbm.classic.api.actions.status.IActionStatus;
+import icbm.classic.lib.actions.ActionBase;
 import icbm.classic.lib.actions.status.ActionResponses;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
