@@ -65,7 +65,7 @@ public interface ICondition extends IBuildableObject {
     /**
      * Checks if the requirements are met for the condition to be considered passable.
      *
-     * This call must be read-only and not mutate each time it is called withing the same logic block. This means
+     * This call must be read-only and not mutate each time it is called in the same logic block. This means
      * any random should be done in {@link #onTick()} or outside by the host of this condition.
      *
      * Do not assume result can be checked only once. As conditions may change between ticks or dependent variables
@@ -76,4 +76,11 @@ public interface ICondition extends IBuildableObject {
      * as yes. Anything else will be viewed as no condition and displayed to downstream systems/users.
      */
     IActionStatus getCondition();
+
+    /**
+     * Called to reset the condition
+     */
+    default void reset() {
+
+    }
 }

@@ -383,6 +383,7 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
 
     private static final NbtSaveHandler<TileEMPTower> SAVE_LOGIC = new NbtSaveHandler<TileEMPTower>()
         .mainRoot()
+        /* */.nodeINBTSerializable("emp_action", tile -> tile.empAction)
         /* */.nodeINBTSerializable("inventory", tile -> tile.inventory)
         /* */.nodeINBTSerializable("radio", tile -> tile.radioCap)
         /* */.nodeInteger("range", tile -> tile.range, (tile, i) -> tile.range = i)

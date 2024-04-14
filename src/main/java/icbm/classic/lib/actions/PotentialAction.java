@@ -36,7 +36,7 @@ import java.util.function.Supplier;
  * General purpose action for loading into entities, capabilities, and tiles. In which
  * the action triggered and condition are customizable.
  */
-public final class PotentialAction extends PotentialActionImp {
+public final class PotentialAction extends PotentialActionImp<PotentialAction> {
 
     @Setter() @Getter @Accessors(chain = true)
     private IActionData actionData;

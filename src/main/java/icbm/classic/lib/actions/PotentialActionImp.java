@@ -35,18 +35,23 @@ import java.util.function.Supplier;
 /**
  * Pre-built action for general purpose implementation where all components are known.
  */
-public abstract class PotentialActionImp implements IPotentialAction, IActionFieldProvider, ITick, INBTSerializable<NBTTagCompound> {
+public abstract class PotentialActionImp<SELF extends PotentialActionImp<SELF>> implements IPotentialAction, IActionFieldProvider, ITick, INBTSerializable<NBTTagCompound> {
 
     private final Map<ActionField, Supplier> fieldAccessors = new HashMap();
 
-    @Setter() @Getter @Accessors(chain = true)
+    @Getter
     private ICondition preCheck;
 
-    public <T> PotentialActionImp field(ActionField<T> field, Supplier<T> supplier) {
+    public SELF withCondition(ICondition check) {
+        this.preCheck = check;
+        return (SELF) this;
+    }
+
+    public <T> SELF field(ActionField<T> field, Supplier<T> supplier) {
         if(!fieldAccessors.containsKey(field)) {
             fieldAccessors.put(field, supplier);
         }
-        return this;
+        return (SELF)this;
     }
 
     @Nonnull
@@ -66,9 +71,12 @@ public abstract class PotentialActionImp implements IPotentialAction, IActionFie
     @Nonnull
     @Override
     public IActionStatus doAction(World world, double x, double y, double z, @Nullable IActionCause cause) {
-        final IActionStatus preCheckStatus = checkAction(world, x, y, z, cause);
+        final IActionStatus preCheckStatus = checkAction(world, x, y, z, cause); //TODO if preCheck is a special type use in cause-by chain. Example: timer
         if(preCheckStatus.isType(ActionStatusTypes.BLOCKING)) {
             return preCheckStatus;
+        }
+        if(preCheck != null) {
+            preCheck.reset();
         }
         final IActionSource actionSource = new ActionSource(world, new Vec3d(x, y, z), cause);
         return ICBMClassicAPI.ACTION_LISTENER.runAction(getActionData().create(world, x, y, z, actionSource, this));

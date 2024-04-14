@@ -1,5 +1,7 @@
 package icbm.classic.api.actions.conditions;
 
+import com.google.common.collect.TreeTraverser;
+
 import java.util.List;
 
 /**
@@ -18,11 +20,4 @@ public interface IConditionLayer extends ICondition {
      * @return triggers on this layer
      */
     List<ICondition> getConditions();
-
-    default void addTrigger(ICondition trigger) {
-        getConditions().add(trigger);
-    }
-    default void removeTrigger(ICondition trigger) {
-        getConditions().remove(trigger);
-    }
 }
