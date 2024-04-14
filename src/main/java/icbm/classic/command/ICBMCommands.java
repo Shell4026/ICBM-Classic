@@ -8,7 +8,7 @@ import icbm.classic.command.sub.blast.CommandBlastTrigger;
 import icbm.classic.command.system.CommandGroup;
 
 /**
- * Created by Robert Seifert on 1/6/20.
+ * Created by Robin Seifert on 1/6/20.
  */
 public class ICBMCommands
 {

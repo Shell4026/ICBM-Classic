@@ -99,7 +99,7 @@ import java.util.List;
 /**
  * Mod class for ICBM Classic, contains all loading code and references to objects crated by the mod.
  *
- * @author Dark(DarkGuardsman, Robert).
+ * @author Dark(DarkGuardsman, Robin).
  * <p>
  * Orginal author and creator of the mod: Calclavia
  */

@@ -12,7 +12,7 @@ import java.util.List;
  * Handles wrapping power system support for internal checks and calls
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 3/13/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 3/13/2018.
  */
 public final class EnergySystem
 {

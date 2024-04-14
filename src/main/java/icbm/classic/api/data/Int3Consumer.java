@@ -1,7 +1,7 @@
 package icbm.classic.api.data;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-08-27.
+ * Created by Dark(DarkGuardsman, Robin) on 2019-08-27.
  */
 public interface Int3Consumer
 {

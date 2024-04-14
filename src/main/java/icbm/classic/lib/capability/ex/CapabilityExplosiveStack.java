@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 
 /**
  * Used by any item that has an explosive capability
- * Created by Dark(DarkGuardsman, Robert) on 1/7/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/7/19.
  */
 public class CapabilityExplosiveStack implements IExplosive, ICapabilitySerializable<NBTTagCompound>
 {

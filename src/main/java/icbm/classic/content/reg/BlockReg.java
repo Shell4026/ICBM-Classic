@@ -30,7 +30,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 1/7/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/7/19.
  */
 @Mod.EventBusSubscriber(modid = ICBMConstants.DOMAIN)
 public class BlockReg

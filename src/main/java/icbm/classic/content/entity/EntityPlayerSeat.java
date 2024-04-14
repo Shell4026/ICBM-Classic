@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * Used a placeholder to move riding entities around
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 10/31/2017.
+ * Created by Dark(DarkGuardsman, Robin) on 10/31/2017.
  */
 public class EntityPlayerSeat extends Entity implements IEntityAdditionalSpawnData
 {

@@ -22,7 +22,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
  * for the target of the EMP.
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 3/12/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 3/12/2018.
  */
 public abstract class CapabilityEmpInventory<H extends Object> implements IEMPReceiver
 {

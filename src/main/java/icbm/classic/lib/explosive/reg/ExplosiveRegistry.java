@@ -22,7 +22,7 @@ import java.io.FileWriter;
 import java.util.*;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 1/4/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/4/19.
  */
 public class ExplosiveRegistry implements IExplosiveRegistry
 {

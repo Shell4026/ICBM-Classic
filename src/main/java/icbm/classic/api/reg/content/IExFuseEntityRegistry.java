@@ -7,7 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 9/7/2019.
+ * Created by Dark(DarkGuardsman, Robin) on 9/7/2019.
  */
 @Deprecated //Will replace at some point with settings reference from IExplosiveData or IExplosive
 public interface IExFuseEntityRegistry

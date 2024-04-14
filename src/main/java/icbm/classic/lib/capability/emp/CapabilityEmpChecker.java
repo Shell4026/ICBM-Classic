@@ -9,7 +9,7 @@ import net.minecraft.world.World;
  * Basic version of the capability that acts as a placeholder
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 3/12/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 3/12/2018.
  */
 public class CapabilityEmpChecker implements IEMPReceiver
 {

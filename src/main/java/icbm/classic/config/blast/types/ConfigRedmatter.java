@@ -3,7 +3,7 @@ package icbm.classic.config.blast.types;
 import net.minecraftforge.common.config.Config;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2/9/2020.
+ * Created by Dark(DarkGuardsman, Robin) on 2/9/2020.
  */
 public class ConfigRedmatter
 {

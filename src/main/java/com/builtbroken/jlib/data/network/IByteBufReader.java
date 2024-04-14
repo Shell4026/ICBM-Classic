@@ -4,8 +4,6 @@ import io.netty.buffer.ByteBuf;
 
 /** Applied to objects that can read data from a byte buf to
  * update their own contents.
- *
- * Created by robin on 1/11/2015.
  */
 @Deprecated
 public interface IByteBufReader

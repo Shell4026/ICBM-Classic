@@ -18,7 +18,7 @@ import java.util.HashMap;
  * Handles tracking and simulating the missiles outside of the game world
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 8/4/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 8/4/2018.
  */
 @Mod.EventBusSubscriber(modid = ICBMConstants.DOMAIN)
 public class MissileTrackerHandler

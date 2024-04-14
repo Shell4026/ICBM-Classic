@@ -20,7 +20,7 @@ import java.util.function.Supplier;
 
 /**
  * Used by any item that has an explosive capability
- * Created by Dark(DarkGuardsman, Robert) on 1/7/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/7/19.
  */
 public class CapabilityExplosiveStatic implements IExplosive, INBTSerializable<NBTTagCompound>
 {

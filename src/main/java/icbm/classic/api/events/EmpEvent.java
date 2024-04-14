@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.Cancelable;
  * Base class for any event fired by the EMP system
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 3/12/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 3/12/2018.
  *
  * @deprecated will be replaced by an event providing {@link icbm.classic.api.actions.IAction}
  */

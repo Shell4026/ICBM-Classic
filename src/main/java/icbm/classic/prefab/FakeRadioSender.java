@@ -20,7 +20,7 @@ import java.util.Optional;
  * Wrapper used by items to act as a radio wave sender
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 4/24/2016.
+ * Created by Dark(DarkGuardsman, Robin) on 4/24/2016.
  */
 public class FakeRadioSender implements IRadioSender
 {

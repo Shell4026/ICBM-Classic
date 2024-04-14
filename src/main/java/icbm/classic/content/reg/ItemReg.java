@@ -22,7 +22,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.oredict.OreDictionary;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 1/7/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/7/19.
  */
 @Mod.EventBusSubscriber(modid = ICBMConstants.DOMAIN)
 public class ItemReg

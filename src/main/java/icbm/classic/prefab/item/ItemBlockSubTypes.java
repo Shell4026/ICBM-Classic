@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
  * Implementation of a block with subtypes that extends the base ItemBlock class used by VoltzEngine
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 2/14/2017.
+ * Created by Dark(DarkGuardsman, Robin) on 2/14/2017.
  */
 public class ItemBlockSubTypes extends ItemBlockAbstract
 {

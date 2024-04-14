@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 1/7/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/7/19.
  */
 @Mod.EventBusSubscriber(modid = ICBMConstants.DOMAIN)
 public final class EntityReg

@@ -15,7 +15,7 @@ import net.minecraft.util.EnumFacing;
  * also be setup to allow adjustments to rotation.
  * <p>
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 3/8/2016.
+ * Created by Dark(DarkGuardsman, Robin) on 3/8/2016.
  * <p>
  * Original version by Calclavia
  */

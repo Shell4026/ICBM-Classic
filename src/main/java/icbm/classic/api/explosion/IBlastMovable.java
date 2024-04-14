@@ -1,7 +1,7 @@
 package icbm.classic.api.explosion;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2/10/2019.
+ * Created by Dark(DarkGuardsman, Robin) on 2/10/2019.
  *
  * @deprecated entity that spawns the blast will now control this
  */

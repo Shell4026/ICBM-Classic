@@ -6,7 +6,7 @@ import net.minecraft.util.EnumFacing;
  * Wrapper for energy systems
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 3/13/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 3/13/2018.
  */
 public interface IEnergySystem
 {

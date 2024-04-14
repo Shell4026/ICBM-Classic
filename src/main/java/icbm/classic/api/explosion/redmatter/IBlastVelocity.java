@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
  * This is used by any blast that applies motion to an entity. This includes the
  * redmatter gravity effect and push effect of blasts going off.
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 1/26/2020.
+ * Created by Dark(DarkGuardsman, Robin) on 1/26/2020.
  *
  * @deprecated being replaced with {@link icbm.classic.api.actions.IAction} that will provide a movement
  * action for adjustment or blocking. This avoids needing to add a capability to entity directly.

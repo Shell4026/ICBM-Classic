@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 10/8/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 10/8/2018.
  */
 public abstract class BlastThreaded extends Blast
 {

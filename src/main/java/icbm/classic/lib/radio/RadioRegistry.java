@@ -17,7 +17,7 @@ import java.util.HashMap;
  * Map based system for radio waves being transmitted in an area
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 4/20/2016.
+ * Created by Dark(DarkGuardsman, Robin) on 4/20/2016.
  */
 public final class RadioRegistry
 {

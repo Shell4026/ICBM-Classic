@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
  * Wrapper to trigger EMP calls on ItemStack contained inside of {@link EntityItem}
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 3/12/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 3/12/2018.
  */
 public class CapabilityEmpEntityItem implements IEMPReceiver, ICapabilityProvider
 {

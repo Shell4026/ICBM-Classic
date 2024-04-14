@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
- * Created by Robert Seifert on 1/6/20.
+ * Created by Robin Seifert on 1/6/20.
  */
 public class CommandBlastSpread extends SubCommand
 {

@@ -20,7 +20,7 @@ import net.minecraftforge.common.DimensionManager;
 
 /**
  * Prefab for location data that doesn't implement IWorldPosition
- * Created by robert on 1/13/2015.
+ * Created by Robin on 1/13/2015.
  */
 public abstract class AbstractLocation<R extends AbstractLocation> extends AbstractPos<R> implements ILocation
 {

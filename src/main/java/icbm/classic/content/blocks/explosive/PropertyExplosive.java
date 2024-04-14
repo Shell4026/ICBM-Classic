@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import java.util.Collection;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 1/6/2019.
+ * Created by Dark(DarkGuardsman, Robin) on 1/6/2019.
  */
 public class PropertyExplosive implements IProperty<IExplosiveData>
 {

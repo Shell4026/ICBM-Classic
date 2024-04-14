@@ -18,7 +18,7 @@ import java.util.List;
  * Map based system for tracking objects using a radar devices. Only works server side to prevent unwanted data from stacking up.
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 3/5/2016.
+ * Created by Dark(DarkGuardsman, Robin) on 3/5/2016.
  */
 public final class RadarRegistry
 {

@@ -10,7 +10,7 @@ import net.minecraft.world.World;
  * references that should be unloaded from the map.
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 3/5/2016.
+ * Created by Dark(DarkGuardsman, Robin) on 3/5/2016.
  */
 public class RadarEntity implements IWorldPosition
 {

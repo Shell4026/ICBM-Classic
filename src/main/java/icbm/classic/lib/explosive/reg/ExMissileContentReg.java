@@ -18,7 +18,7 @@ import net.minecraftforge.common.MinecraftForge;
 import java.util.function.Consumer;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 1/7/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/7/19.
  */
 public class ExMissileContentReg extends ExplosiveContentRegistry implements IExMissileRegistry
 {

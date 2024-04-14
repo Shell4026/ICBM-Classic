@@ -10,7 +10,7 @@ import net.minecraftforge.client.model.ModelLoader;
 
 /**
  *
- * Created by Dark(DarkGuardsman, Robert) on 6/19/2017.
+ * Created by Dark(DarkGuardsman, Robin) on 6/19/2017.
  */
 public class SpikeMeshDefinition implements ItemMeshDefinition
 {

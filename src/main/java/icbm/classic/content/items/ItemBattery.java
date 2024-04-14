@@ -21,7 +21,7 @@ import java.util.List;
  * Simple battery to move energy around between devices
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 3/21/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 3/21/2018.
  */
 public class ItemBattery extends ItemICBMBase
 {

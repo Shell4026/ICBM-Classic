@@ -4,7 +4,7 @@ import icbm.classic.api.reg.IExplosiveData;
 
 /**
  *
- * Created by Dark(DarkGuardsman, Robert) on 1/7/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/7/19.
  * @deprecated will be migrated to IActionData with tags
  */
 @Deprecated

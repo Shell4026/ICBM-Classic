@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 
 /**
  * Base entity class to be shared by most entities
- * Created by robert on 1/24/2015.
+ * Created by Robin on 1/24/2015.
  */
 public abstract class EntityICBM extends Entity implements IWorldPosition
 {

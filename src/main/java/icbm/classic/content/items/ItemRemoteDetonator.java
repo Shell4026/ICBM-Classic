@@ -20,7 +20,7 @@ import net.minecraftforge.common.MinecraftForge;
  * data points is missing.
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 3/26/2016.
+ * Created by Dark(DarkGuardsman, Robin) on 3/26/2016.
  */
 public class ItemRemoteDetonator extends ItemRadio
 {

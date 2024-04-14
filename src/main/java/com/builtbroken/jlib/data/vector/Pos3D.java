@@ -6,7 +6,8 @@ import icbm.classic.lib.CalculationHelpers;
 import java.util.Random;
 
 /**
- * Created by robert on 1/11/2015.
+ * Abstracted positional data
+ * @deprecated just use vec3d with helpers
  */
 public abstract class Pos3D<R extends Pos3D> extends Pos2D<R>
 {

@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 /**
  * Wrapper for exposing the {@link EntityRedmatter} as a Blast
  *
- * Created by Dark(DarkGuardsman, Robert) on 4/19/2020.
+ * Created by Dark(DarkGuardsman, Robin) on 4/19/2020.
  */
 @Deprecated //TODO rework so we don't need a blast wrapper as this is an entity that should be spawned using IAction not IBlast
 public class BlastRedmatterWrapper implements IBlast

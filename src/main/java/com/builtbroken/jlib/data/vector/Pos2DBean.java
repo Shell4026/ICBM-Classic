@@ -11,7 +11,6 @@ package com.builtbroken.jlib.data.vector;
  * that use the interface for math operators. As the wrapper would treat IPos3D as the
  * same data as IPos2D.
  *
- * Created by robert on 1/11/2015.
  */
 public class Pos2DBean implements Cloneable
 {

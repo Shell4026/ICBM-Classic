@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 
 /**
  * Used in capabilities to provide an explosive for usage
- * Created by Dark(DarkGuardsman, Robert) on 1/7/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/7/19.
  *
  * @deprecated will be replaced by a capacitity providing {@link IPotentialAction}
  */

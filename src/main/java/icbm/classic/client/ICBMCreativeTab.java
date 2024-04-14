@@ -22,7 +22,7 @@ import java.util.Optional;
 /**
  * Prefab creative tab to either create a fast creative tab or reduce code
  * need to make a more complex tab
- * Created by robert on 11/25/2014.
+ * Created by Robin on 11/25/2014.
  */
 public class ICBMCreativeTab extends CreativeTabs
 {

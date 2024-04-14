@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 /**
  * Blast that exists purely to spawn the redmatter entity into the world
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 4/19/2020.
+ * Created by Dark(DarkGuardsman, Robin) on 4/19/2020.
  */
 public class BlastRedmatterSpawner extends BlastBase
 {

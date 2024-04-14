@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
  * Stores data about an explosive
  * <p>
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 1/4/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/4/19.
  *
  * @deprecated will be replaced by {@link IActionData}
  */

@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 4/19/2020.
+ * Created by Dark(DarkGuardsman, Robin) on 4/19/2020.
  */
 public abstract class BlastBase implements IBlastInit
 {

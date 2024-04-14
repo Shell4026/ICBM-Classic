@@ -6,7 +6,7 @@ import net.minecraft.util.EnumFacing;
  * Empty version of the energy system to be used for null returns
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 3/13/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 3/13/2018.
  */
 final class EnergySystemNull implements IEnergySystem
 {

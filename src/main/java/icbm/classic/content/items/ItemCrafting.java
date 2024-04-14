@@ -10,7 +10,7 @@ import net.minecraftforge.oredict.OreDictionary;
  * Prefab for use in generating new sets of crafting items
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 3/20/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 3/20/2018.
  */
 public class ItemCrafting extends ItemICBMBase
 {

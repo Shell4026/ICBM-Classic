@@ -6,7 +6,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.Vec3d;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 5/23/2020.
+ * Created by Dark(DarkGuardsman, Robin) on 5/23/2020.
  */
 public class DamageSourceRedmatter extends DamageSource
 {

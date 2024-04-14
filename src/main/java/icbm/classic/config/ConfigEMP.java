@@ -5,7 +5,7 @@ import net.minecraftforge.common.config.Config;
 
 /**
  *
- * Created by Dark(DarkGuardsman, Robert) on 3/12/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 3/12/2018.
  */
 @Config(modid = ICBMConstants.DOMAIN, name = "icbmclassic/emp")
 @Config.LangKey("config.icbmclassic:emp.title")

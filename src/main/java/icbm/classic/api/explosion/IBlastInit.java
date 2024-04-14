@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
  * Separate interface for blasts that can be built from {@link IBlastFactory}
  * <p>
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 1/3/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/3/19.
  * @deprecated being replaced with {@link icbm.classic.api.actions.IActionData#create(World, double, double, double, IActionSource)} and likely a customization provider
  */
 public interface IBlastInit extends IBlast

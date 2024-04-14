@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 6/13/2016.
+ * Created by Dark(DarkGuardsman, Robin) on 6/13/2016.
  */
 public class ItemRadarGun extends ItemBase implements IPacketIDReceiver
 {

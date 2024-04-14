@@ -10,7 +10,7 @@ import net.minecraft.world.World;
  * Capability that destroys the host
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 3/12/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 3/12/2018.
  */
 public class CapabilityEmpKill<E extends Entity> implements IEMPReceiver
 {

@@ -6,7 +6,7 @@ import net.minecraftforge.common.config.Config;
 /**
  * Configs for Missiles
  *
- * Created by Dark(DarkGuardsman, Robert) on 2/28/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 2/28/2018.
  */
 @Config(modid = ICBMConstants.DOMAIN, name = "icbmclassic/missile")
 @Config.LangKey("config.icbmclassic:missile.title")

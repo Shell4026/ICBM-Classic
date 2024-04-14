@@ -34,7 +34,7 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
  * API reference class for ICBM-Classic mod
  * <p>
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 3/12/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 3/12/2018.
  */
 public final class ICBMClassicAPI
 {

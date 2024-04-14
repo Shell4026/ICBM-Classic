@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Series of helper classes for dealing with any kind of inventory
  *
- * @author Calclavia, DarkCow(aka Darkguardsman, Robert)
+ * @author Calclavia, DarkCow(aka Darkguardsman, Robin)
  */
 public class InventoryUtility
 {

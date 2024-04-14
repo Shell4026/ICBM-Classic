@@ -5,7 +5,7 @@ import java.util.Random;
 /**
  * Helpers for running common calculations
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 3/1/2020.
+ * Created by Dark(DarkGuardsman, Robin) on 3/1/2020.
  */
 public final class CalculationHelpers
 {

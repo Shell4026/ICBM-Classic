@@ -31,7 +31,7 @@ import net.minecraftforge.common.MinecraftForge;
  * Extended version of {@link ItemRemoteDetonator} that can target blocks in a line of sight.
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 3/26/2016.
+ * Created by Dark(DarkGuardsman, Robin) on 3/26/2016.
  */
 public class ItemLaserDetonator extends ItemRadio implements IPacketIDReceiver
 {

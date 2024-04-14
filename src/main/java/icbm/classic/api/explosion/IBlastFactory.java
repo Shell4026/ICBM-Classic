@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
  * Simple interface for use in creating blasts
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 1/3/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/3/19.
  * @deprecated will be moved internal
  */
 @Deprecated

@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * Simple handler to track blasts in order to disable or remove
  * <p>
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 4/9/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 4/9/2018.
  */
 @Mod.EventBusSubscriber(modid = ICBMConstants.DOMAIN)
 public class WorkTickingActionHandler //TODO create interface that is related to actions but isn't an action to replace this (IWorldTicking)

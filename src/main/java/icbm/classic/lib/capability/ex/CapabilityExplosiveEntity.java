@@ -18,7 +18,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import javax.annotation.Nonnull;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 1/7/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/7/19.
  */
 public class CapabilityExplosiveEntity implements IExplosive
 {

@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 /**
  * Fired to allow registering new explosive types
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 1/4/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/4/19.
  * @deprecated being removed in 1.13
  */
 @Deprecated

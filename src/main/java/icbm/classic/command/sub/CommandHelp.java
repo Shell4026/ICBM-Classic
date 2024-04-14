@@ -7,7 +7,7 @@ import net.minecraft.server.MinecraftServer;
 import javax.annotation.Nonnull;
 
 /**
- * Created by Robert Seifert on 1/6/20.
+ * Created by Robin Seifert on 1/6/20.
  */
 public class CommandHelp extends SubCommand
 {

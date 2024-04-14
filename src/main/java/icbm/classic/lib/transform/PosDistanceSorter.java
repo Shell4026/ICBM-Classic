@@ -7,7 +7,7 @@ import java.util.Comparator;
 
 /**
  *
- * Created by Dark(DarkGuardsman, Robert) on 10/8/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 10/8/2018.
  */
 public class PosDistanceSorter implements Comparator<BlockPos>
 {

@@ -1,7 +1,7 @@
 package icbm.classic;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 12/25/2019.
+ * Created by Dark(DarkGuardsman, Robin) on 12/25/2019.
  */
 public final class ICBMConstants
 {
