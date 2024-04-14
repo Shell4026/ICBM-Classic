@@ -12,6 +12,8 @@ import icbm.classic.command.ICBMCommands;
 import icbm.classic.command.system.CommandEntryPoint;
 import icbm.classic.config.ConfigItems;
 import icbm.classic.config.ConfigThread;
+import icbm.classic.lib.actions.ActionSystem;
+import icbm.classic.lib.actions.listners.ActionListenerHandler;
 import icbm.classic.lib.actions.status.ActionResponses;
 import icbm.classic.content.blast.caps.CapabilityBlast;
 import icbm.classic.content.blast.caps.CapabilityBlastVelocity;
@@ -30,7 +32,7 @@ import icbm.classic.content.missile.entity.anti.SAMTargetData;
 import icbm.classic.content.missile.logic.flight.*;
 import icbm.classic.content.missile.logic.flight.move.MoveByFacingLogic;
 import icbm.classic.content.missile.logic.flight.move.MoveForTicksLogic;
-import icbm.classic.content.missile.logic.source.cause.BlockCause;
+import icbm.classic.content.missile.logic.source.cause.CausedByBlock;
 import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.content.missile.logic.source.cause.RedstoneCause;
 import icbm.classic.content.missile.logic.targeting.BallisticTargetingData;
@@ -238,8 +240,7 @@ public class ICBMClassic
 
         handleMissileTargetRegistry();
         handleMissileFlightRegistry();
-        handleMissileCauseRegistry();
-        handleStatusRegistry();
+        ActionSystem.setup();
         handleExplosiveCustomizationRegistry();
         handleExRegistry(event.getModConfigurationDirectory());
         handleProjectileDataRegistry();
@@ -296,38 +297,6 @@ public class ICBMClassic
 
         //Lock to prevent late registry
         ((BuildableObjectRegistry)ICBMClassicAPI.MISSILE_FLIGHT_LOGIC_REGISTRY).lock();
-    }
-
-    void handleMissileCauseRegistry()
-    {
-        ICBMClassicAPI.ACTION_CAUSE_REGISTRY =  new BuildableObjectRegistry<IActionCause>("ACTION_CAUSE", "action.cause");;
-
-        // Register defaults
-        ICBMClassicAPI.ACTION_CAUSE_REGISTRY.register(EntityCause.REG_NAME, EntityCause::new);
-        ICBMClassicAPI.ACTION_CAUSE_REGISTRY.register(BlockCause.REG_NAME, BlockCause::new);
-        ICBMClassicAPI.ACTION_CAUSE_REGISTRY.register(BlockScreenCause.REG_NAME, BlockScreenCause::new);
-        ICBMClassicAPI.ACTION_CAUSE_REGISTRY.register(RedstoneCause.REG_NAME, RedstoneCause::new);
-
-        //Fire registry event
-        MinecraftForge.EVENT_BUS.post(new MissileCauseRegistryEvent(ICBMClassicAPI.ACTION_CAUSE_REGISTRY));
-
-        //Lock to prevent late registry
-        ((BuildableObjectRegistry)ICBMClassicAPI.ACTION_CAUSE_REGISTRY).lock();
-    }
-
-    void handleStatusRegistry()
-    {
-        ICBMClassicAPI.ACTION_STATUS_REGISTRY =  new BuildableObjectRegistry<IActionStatus>("ACTION_STATUS", "action.status");
-
-        // Register defaults
-        LauncherStatus.registerTypes();
-        ActionResponses.registerTypes();
-
-        //Fire registry event
-        MinecraftForge.EVENT_BUS.post(new ActionStatusRegistryEvent(ICBMClassicAPI.ACTION_STATUS_REGISTRY));
-
-        //Lock to prevent late registry
-        ((BuildableObjectRegistry)ICBMClassicAPI.ACTION_STATUS_REGISTRY).lock();
     }
 
     void handleExplosiveCustomizationRegistry()

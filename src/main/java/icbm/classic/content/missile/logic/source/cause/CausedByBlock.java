@@ -3,6 +3,7 @@ package icbm.classic.content.missile.logic.source.cause;
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.actions.cause.IActionCause;
+import icbm.classic.api.actions.cause.ICausedByBlock;
 import icbm.classic.api.reg.obj.IBuilderRegistry;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.Data;
@@ -23,7 +24,7 @@ import javax.annotation.Nonnull;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class BlockCause extends ActionCause implements IActionCause.IBlockCause {
+public class CausedByBlock extends ActionCause implements ICausedByBlock {
 
     public static final ResourceLocation REG_NAME = new ResourceLocation(ICBMConstants.DOMAIN, "block");
 
@@ -33,7 +34,7 @@ public class BlockCause extends ActionCause implements IActionCause.IBlockCause 
 
     private int worldId;
 
-    public BlockCause(World world, BlockPos pos, IBlockState state) {
+    public CausedByBlock(World world, BlockPos pos, IBlockState state) {
         this.world = world;
         this.worldId = world.provider.getDimension();
         this.blockPos = pos;
@@ -70,10 +71,10 @@ public class BlockCause extends ActionCause implements IActionCause.IBlockCause 
         SAVE_LOGIC.load(this, nbt);
     }
 
-    private static final NbtSaveHandler<BlockCause> SAVE_LOGIC = new NbtSaveHandler<BlockCause>()
+    private static final NbtSaveHandler<CausedByBlock> SAVE_LOGIC = new NbtSaveHandler<CausedByBlock>()
         .mainRoot()
-        /* */.nodeInteger("level", BlockCause::getWorldId, BlockCause::setWorldId)
-        /* */.nodeBlockPos("pos", BlockCause::getBlockPos, BlockCause::setBlockPos)
-        /* */.nodeBlockState("state", BlockCause::getBlockState, BlockCause::setBlockState)
+        /* */.nodeInteger("level", CausedByBlock::getWorldId, CausedByBlock::setWorldId)
+        /* */.nodeBlockPos("pos", CausedByBlock::getBlockPos, CausedByBlock::setBlockPos)
+        /* */.nodeBlockState("state", CausedByBlock::getBlockState, CausedByBlock::setBlockState)
         .base();
 }

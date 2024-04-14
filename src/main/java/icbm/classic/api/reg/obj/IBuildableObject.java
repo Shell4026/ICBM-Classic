@@ -1,5 +1,6 @@
 package icbm.classic.api.reg.obj;
 
+import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.reg.obj.IBuilderRegistry;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -38,6 +39,13 @@ public interface IBuildableObject {
      */
     @Nonnull
     IBuilderRegistry getRegistry();
+
+    /**
+     * Helper to quickly register the buildable.
+     */
+    default void register() {
+        getRegistry().register(this.getRegistryKey(), () -> this);
+    }
 
     /**
      * Gets the translation key for display in tooltips and

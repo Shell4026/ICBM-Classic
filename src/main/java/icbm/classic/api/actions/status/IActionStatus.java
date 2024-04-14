@@ -32,9 +32,11 @@ public interface IActionStatus extends IBuildableObject, ITypeTaggable {
      * Is the status an error state
      *
      * @return true if error
-     * @deprecated will be replaced with {@link icbm.classic.api.data.meta.MetaTag}
+     * @deprecated replaced with {@link #getTypeTags()} and {@link ActionStatusTypes#ERROR}
      */
-    boolean isError();
+    default boolean isError() {
+        return this.getTypeTags().contains(ActionStatusTypes.ERROR);
+    }
 
     /**
      * Is the status considered blocking to complete the action. This may be a result of
@@ -48,23 +50,17 @@ public interface IActionStatus extends IBuildableObject, ITypeTaggable {
      * prevent blasts from trigger, etc.
      *
      * @return true to block triggering of action
-     * @deprecated will be replaced with {@link icbm.classic.api.data.meta.MetaTag}
+     * @deprecated replaced with {@link #getTypeTags()} and {@link ActionStatusTypes#BLOCKING}
      */
     default boolean isBlocking() {
-        return isError();
+        return this.getTypeTags().contains(ActionStatusTypes.BLOCKING);
     }
 
     /**
-     * Localization for error output. Assume this
-     * will be displayed to a user.
+     * Localization for output to users or other systems. Keep it short to better fit in
+     * GUIs and not to flood console logs.
      *
      * @return message
      */
     ITextComponent message();
-
-    // TODO add a status callback for when 'status=aiming` or 'status=delay'
-
-    default void registerStatic() {
-        ICBMClassicAPI.ACTION_STATUS_REGISTRY.register(this.getRegistryKey(), () -> this);
-    }
 }

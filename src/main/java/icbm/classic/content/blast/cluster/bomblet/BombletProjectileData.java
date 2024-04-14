@@ -1,5 +1,6 @@
 package icbm.classic.content.blast.cluster.bomblet;
 
+import com.google.common.collect.ImmutableList;
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.data.meta.MetaTag;
@@ -17,18 +18,19 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 
 @NoArgsConstructor
 public class BombletProjectileData implements IProjectileData<EntityBombDroplet>, INBTSerializable<NBTTagCompound> {
 
     public static final ResourceLocation NAME = new ResourceLocation(ICBMConstants.DOMAIN, "bomblet");
-    public static final MetaTag[] TYPES = new MetaTag[]{ProjectileTypes.TYPE_EXPLOSIVE};
+    public static final ImmutableList<MetaTag> TYPES = ImmutableList.of(ProjectileTypes.TYPE_EXPLOSIVE);
 
     @Setter @Getter @Accessors(chain = true)
     private ItemStack explosiveStack = ItemStack.EMPTY;
 
     @Nonnull
-    public MetaTag[] getTypes() {
+    public Collection<MetaTag> getTypeTags() {
         return TYPES;
     }
 

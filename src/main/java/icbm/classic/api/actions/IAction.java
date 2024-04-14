@@ -1,6 +1,7 @@
 package icbm.classic.api.actions;
 
 import icbm.classic.api.actions.data.IActionFieldProvider;
+import icbm.classic.api.actions.data.IActionFieldReceiver;
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.data.IWorldPosition;
@@ -16,7 +17,7 @@ import javax.annotation.Nonnull;
  * Avoid caching actions outside a source. As the action may be recycled or cached by the source itself. This will
  * especially be the case for blasts that may fire 1000s of actions for event purposes.
  */
-public interface IAction extends IActionFieldProvider {
+public interface IAction extends IActionFieldProvider, IActionFieldReceiver {
 
     /**
      * Executes the action and returns the status of the action.
@@ -42,7 +43,8 @@ public interface IAction extends IActionFieldProvider {
     IActionStatus doAction();
 
     /**
-     * Source of the action
+     * Source of the action and any cause by information
+     * collected.
      *
      * @return source
      */

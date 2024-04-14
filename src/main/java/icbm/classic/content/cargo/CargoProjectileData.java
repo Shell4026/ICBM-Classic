@@ -1,5 +1,6 @@
 package icbm.classic.content.cargo;
 
+import com.google.common.collect.ImmutableList;
 import icbm.classic.ICBMClassic;
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.actions.data.ActionTypes;
@@ -32,10 +33,11 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 
 public abstract class CargoProjectileData<T extends IBuildableObject, ENTITY extends Entity> implements IBuildableObject, IProjectileData<ENTITY>, INBTSerializable<NBTTagCompound> {
 
-    private final static MetaTag[] TYPE = new MetaTag[]{ActionTypes.ENTITY_CREATION, ProjectileTypes.TYPE_HOLDER, ProjectileTypes.TYPE_THROWABLE};
+    private final static ImmutableList<MetaTag> TYPE = ImmutableList.of(ActionTypes.ENTITY_CREATION, ProjectileTypes.TYPE_HOLDER, ProjectileTypes.TYPE_THROWABLE);
 
     /**
      * ItemStack to use to spawn as a passenger of this parachute
@@ -63,7 +65,7 @@ public abstract class CargoProjectileData<T extends IBuildableObject, ENTITY ext
 
     @Nonnull
     @Override
-    public MetaTag[] getTypes() {
+    public Collection<MetaTag> getTypeTags() {
         return TYPE;
     }
 

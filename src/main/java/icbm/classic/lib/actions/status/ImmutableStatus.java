@@ -1,6 +1,10 @@
 package icbm.classic.lib.actions.status;
 
+import com.google.common.collect.ImmutableList;
+import icbm.classic.api.actions.status.ActionStatusTypes;
 import icbm.classic.api.actions.status.IActionStatus;
+import icbm.classic.api.data.meta.MetaTag;
+import lombok.Getter;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -13,39 +17,28 @@ import javax.annotation.Nonnull;
 public class ImmutableStatus implements IActionStatus {
 
     private final ResourceLocation regName;
+    @Getter
+    private final ImmutableList<MetaTag> typeTags;
     protected final String translationKey;
-    private final boolean isError;
-    private final boolean isBlocking;
 
     protected ITextComponent textComponent;
 
-    protected ImmutableStatus(ResourceLocation regName, boolean isError, boolean isBlocking) {
+    protected ImmutableStatus(ResourceLocation regName, MetaTag... tags) {
         this.regName = regName;
+        this.typeTags = ImmutableList.copyOf(tags);
         this.translationKey = "info." + regName.toString();
-        this.isError = isError;
-        this.isBlocking = isBlocking;
     }
 
     public static ImmutableStatus blocking(ResourceLocation regName) {
-        return new ImmutableStatus(regName, false, true);
+        return new ImmutableStatus(regName, ActionStatusTypes.BLOCKING);
     }
 
     public static ImmutableStatus error(ResourceLocation regName) {
-        return new ImmutableStatus(regName, true, false);
+        return new ImmutableStatus(regName, ActionStatusTypes.BLOCKING, ActionStatusTypes.ERROR);
     }
 
-    public static ImmutableStatus create(ResourceLocation regName) {
-        return new ImmutableStatus(regName, false, false);
-    }
-
-    @Override
-    public boolean isError() {
-        return isError;
-    }
-
-    @Override
-    public boolean isBlocking() {
-        return isError() || isBlocking;
+    public static ImmutableStatus create(ResourceLocation regName, MetaTag... tags) {
+        return new ImmutableStatus(regName, tags);
     }
 
     @Override

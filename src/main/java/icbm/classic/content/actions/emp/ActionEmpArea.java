@@ -40,7 +40,7 @@ import java.util.List;
 @Getter @Setter
 public class ActionEmpArea extends ActionBase
 {
-    static final List<ActionField> SUPPORTED_FIELDS = new ArrayList<>(Collections.singleton(ActionFields.BLAST_SIZE));
+    static final List<ActionField> SUPPORTED_FIELDS = new ArrayList<>(Collections.singleton(ActionFields.AREA_SIZE));
     @Accessors(chain = true)
     private int size = 1;
     
@@ -50,8 +50,8 @@ public class ActionEmpArea extends ActionBase
 
     @Override
     public <T> T getValue(ActionField<T> key) {
-        if(key == ActionFields.BLAST_SIZE) {
-            return (T)ActionFields.BLAST_SIZE.cast((float)size);
+        if(key == ActionFields.AREA_SIZE) {
+            return (T)ActionFields.AREA_SIZE.cast((float)size);
         }
         return null;
     }
@@ -63,7 +63,7 @@ public class ActionEmpArea extends ActionBase
 
     @Override
     public <T> boolean hasField(ActionField<T> key) {
-        return key == ActionFields.BLAST_SIZE;
+        return key == ActionFields.AREA_SIZE;
     }
 
     @Nonnull

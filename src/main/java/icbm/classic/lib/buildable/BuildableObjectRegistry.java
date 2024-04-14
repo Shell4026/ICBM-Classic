@@ -62,7 +62,7 @@ public class BuildableObjectRegistry<Part extends IBuildableObject> implements I
     }
 
     @Override
-    public Part build(@Nonnull ResourceLocation name) {
+    public Part getOrBuild(@Nonnull ResourceLocation name) {
         return Optional.ofNullable(builders.get(name)).map(Supplier::get).orElse(null);
     }
 

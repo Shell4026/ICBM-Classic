@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
 public final class MetaTag {
 
     /**
-     * Unique id of the tag
+     * Unique id of the tag, is not a translation key
      */
     @Nonnull
     private final ResourceLocation id;

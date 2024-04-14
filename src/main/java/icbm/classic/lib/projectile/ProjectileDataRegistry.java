@@ -100,7 +100,7 @@ public class ProjectileDataRegistry extends BuildableObjectRegistry<IProjectileD
     @Override
     public Entity spawnProjectile(ResourceLocation key, World world, double x, double y, double z, @Nullable Entity source,
                                   boolean allowItemPickup, @Nullable Consumer<Entity> preSpawnCallback) {
-        return spawnProjectile(this.build(key), world, x, y, z, source, allowItemPickup, preSpawnCallback);
+        return spawnProjectile(this.getOrBuild(key), world, x, y, z, source, allowItemPickup, preSpawnCallback);
     }
 
     @Override

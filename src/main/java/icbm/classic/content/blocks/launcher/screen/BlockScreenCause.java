@@ -1,7 +1,7 @@
 package icbm.classic.content.blocks.launcher.screen;
 
 import icbm.classic.ICBMConstants;
-import icbm.classic.content.missile.logic.source.cause.BlockCause;
+import icbm.classic.content.missile.logic.source.cause.CausedByBlock;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class BlockScreenCause extends BlockCause {
+public class BlockScreenCause extends CausedByBlock {
 
     public static final ResourceLocation REG_NAME = new ResourceLocation(ICBMConstants.DOMAIN, "block.screen");
 

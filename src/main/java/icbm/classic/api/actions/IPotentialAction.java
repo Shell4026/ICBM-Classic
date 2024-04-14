@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
  * Potential actions are designed to be cached on source. Such as having a field
  * at the top of a TileEntity called warheadAction.
  */
-public interface IPotentialAction<Action extends IAction> {
+public interface IPotentialAction {
 
     /**
      * Action data used to spawn the action into the world
@@ -24,7 +24,7 @@ public interface IPotentialAction<Action extends IAction> {
      * @return action data
      */
     @Nonnull
-    IActionData<Action> getActionData();
+    IActionData getActionData();
 
     /**
      * Checks the current status of the solution. Validating if requirements are met and nothing

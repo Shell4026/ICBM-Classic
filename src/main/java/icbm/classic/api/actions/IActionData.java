@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Registry data used to create actions in a world position
  */
-public interface IActionData<Action extends IAction> extends IBuildableObject, ITypeTaggable {
+public interface IActionData extends IBuildableObject, ITypeTaggable {
 
     /**
      * Creates a new action
@@ -32,12 +32,12 @@ public interface IActionData<Action extends IAction> extends IBuildableObject, I
      * @return action
      */
     @Nonnull
-    Action create(World world, double x, double y, double z, @Nonnull IActionSource source, @Nullable IActionFieldProvider fieldAccessor);
+    IAction create(World world, double x, double y, double z, @Nonnull IActionSource source, @Nullable IActionFieldProvider fieldAccessor);
 
     /**
      * List of supported fields for use in {@link IActionFieldProvider}
      *
-     * @return list, defaults to empty
+     * @return immutable list, defaults to empty
      */
     @Nullable
     default List<ActionField> getSupportedFields() {
@@ -46,7 +46,7 @@ public interface IActionData<Action extends IAction> extends IBuildableObject, I
 
     @Nonnull
     @Override
-    default IBuilderRegistry<IActionData> getRegistry() {
+    default IBuilderRegistry getRegistry() {
         return ICBMClassicAPI.ACTION_REGISTRY;
     }
 }

@@ -1,6 +1,7 @@
 package icbm.classic.lib.actions.status;
 
 import icbm.classic.ICBMConstants;
+import icbm.classic.api.actions.status.ActionStatusTypes;
 import icbm.classic.api.actions.status.IActionStatus;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -28,19 +29,31 @@ public class ActionResponses {
     public static IActionStatus MISSING_BLOCK_STATE = new MissingFieldStatus(new ResourceLocation(ICBMConstants.DOMAIN, "action.error.field.block.state.missing"), "action", "blockState");
     public static IActionStatus MISSING_VALIDATION = new MissingFieldStatus(new ResourceLocation(ICBMConstants.DOMAIN, "action.error.field.validation.missing"), "action", "validation");
 
+    public static IActionStatus MISSING_ACTION_DATA = new MissingFieldStatus(new ResourceLocation(ICBMConstants.DOMAIN, "action.error.field.action.data"), "runner", "actionData");
+
     // </editor-fold>
 
     // <editor-fold description="good status">
-    public static IActionStatus COMPLETED = ImmutableStatus.create(new ResourceLocation(ICBMConstants.DOMAIN, "action.completed"));
+    public static IActionStatus COMPLETED = ImmutableStatus.create(new ResourceLocation(ICBMConstants.DOMAIN, "action.completed"), ActionStatusTypes.DONE);
+    public static IActionStatus READY = ImmutableStatus.create(new ResourceLocation(ICBMConstants.DOMAIN, "action.ready"), ActionStatusTypes.READY);
+    public static IActionStatus WORKING = ImmutableStatus.create(new ResourceLocation(ICBMConstants.DOMAIN, "action.working"), ActionStatusTypes.BLOCKING, ActionStatusTypes.WAITING);
+    public static IActionStatus WAITING = ImmutableStatus.create(new ResourceLocation(ICBMConstants.DOMAIN, "action.waiting"), ActionStatusTypes.BLOCKING, ActionStatusTypes.WAITING);
     // </editor-fold>
 
     public static void registerTypes() {
 
-        UNKNOWN_ERROR.registerStatic();
-        ENTITY_SPAWN_FAILED.registerStatic();
-        EXPLOSION_CANCELED.registerStatic();
-        MISSING_WORLD.registerStatic();
-        COMPLETED.registerStatic();
-        VALIDATION_ERROR.registerStatic();
+        UNKNOWN_ERROR.register();
+        ENTITY_SPAWN_FAILED.register();
+        EXPLOSION_CANCELED.register();
+        VALIDATION_ERROR.register();
+        BLOCK_PLACEMENT_FAILED.register();
+        MISSING_WORLD.register();
+        MISSING_BLOCK_POS.register();
+        MISSING_BLOCK_STATE.register();
+        MISSING_VALIDATION.register();
+        COMPLETED.register();
+        READY.register();
+        WORKING.register();
+        WAITING.register();
     }
 }

@@ -2,7 +2,6 @@ package icbm.classic.api.missiles.projectile;
 
 import icbm.classic.api.reg.obj.IBuilderRegistry;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -10,9 +9,8 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
-public interface IProjectileDataRegistry extends IBuilderRegistry<IProjectileData> {
+public interface  IProjectileDataRegistry extends IBuilderRegistry<IProjectileData> {
 
     /**
      * Registers a conversion for the given item and matching state. Meant for vanilla conversions
@@ -27,7 +25,7 @@ public interface IProjectileDataRegistry extends IBuilderRegistry<IProjectileDat
      * @param projectileDataKey to use for projectile building
      */
     default void registerItemStackConversation(ItemStack itemStack, Function<ItemStack, Boolean> matcher, ResourceLocation projectileDataKey) {
-        registerItemStackConversation(itemStack, (stack) ->  matcher.apply(stack) ? this.build(projectileDataKey) : null);
+        registerItemStackConversation(itemStack, (stack) ->  matcher.apply(stack) ? this.getOrBuild(projectileDataKey) : null);
     }
 
     /**

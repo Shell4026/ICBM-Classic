@@ -20,25 +20,29 @@ import net.minecraftforge.common.util.INBTSerializable;
 public interface IActionSource extends INBTSerializable<NBTTagCompound>
 {
     /**
-     * World the missile was launched from
+     * World source of the action
      *
      * @return world
      */
     World getWorld();
 
     /**
-     * Get cause of the missile launch.
+     * Source position of the action. May not align
+     * with center point of the action or outcome of
+     * the action.
+     *
+     * Example, blocks source will often be above the block. Such
+     * as launchers using position above the block.
+     *
+     * @return position
+     */
+    Vec3d getPosition();
+
+
+    /**
+     * Get cause of the action.
      *
      * @return cause of the launch
      */
     IActionCause getCause();
-
-    /**
-     * Exact position source fired the missile
-     *
-     * If the source is a block this could be above the block.
-     *
-     * @retur position
-     */
-    Vec3d getPosition();
 }

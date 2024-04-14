@@ -1,6 +1,7 @@
 package icbm.classic.lib.actions.listners;
 
 import icbm.classic.ICBMClassic;
+import icbm.classic.api.actions.listener.IActionListener;
 import icbm.classic.api.data.meta.MetaTag;
 import lombok.AllArgsConstructor;
 

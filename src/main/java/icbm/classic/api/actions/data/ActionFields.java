@@ -5,5 +5,5 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.NONE)
 public final class ActionFields {
-    public static final ActionField<Float> BLAST_SIZE = new ActionField<Float>("blast.size", Float.class);
+    public static final ActionField<Float> AREA_SIZE = new ActionField<Float>("area.size", Float.class);
 }

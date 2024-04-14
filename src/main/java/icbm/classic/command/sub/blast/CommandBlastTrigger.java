@@ -149,7 +149,7 @@ public class CommandBlastTrigger extends SubCommand
      */
     private void trigger(ICommandSender sender, World world, double x, double y, double z, IExplosiveData explosiveData, float size)
     {
-        final IActionStatus result = explosiveData.create(world, x, y, z,  new ActionSource(),new ActionFieldProvider().field(ActionFields.BLAST_SIZE, () -> size)).doAction();
+        final IActionStatus result = explosiveData.create(world, x, y, z,  new ActionSource(),new ActionFieldProvider().field(ActionFields.AREA_SIZE, () -> size)).doAction();
 
         //Send translated message to user
         sender.sendMessage(result.getTooltip());

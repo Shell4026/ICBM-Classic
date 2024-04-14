@@ -26,13 +26,14 @@ public interface IBuilderRegistry<Part extends IBuildableObject> {
     void register(@Nonnull ResourceLocation name, @Nonnull Supplier<Part> builder);
 
     /**
-     * Builds a new target data instance
+     * Builds/Get the object. Often for data sources this is
+     * a global static version that is never rebuilt.
      *
      * @param name matching registry
-     * @return new instance or null if not registered
+     * @return instance or null if not registered
      */
     @Nullable
-    Part build(@Nonnull ResourceLocation name);
+    Part getOrBuild(@Nonnull ResourceLocation name);
 
     /**
      * Unique name for this registry. Mostly used for translations
@@ -90,7 +91,7 @@ public interface IBuilderRegistry<Part extends IBuildableObject> {
     default Part load(@Nullable NBTTagCompound save) {
         if(save != null && !save.hasNoTags() && save.hasKey("id")) {
             final ResourceLocation id = new ResourceLocation(save.getString("id"));
-            final Part part = build(id);
+            final Part part = getOrBuild(id);
             if(part instanceof INBTSerializable && save.hasKey("data")) {
                 final NBTBase additionalData = save.getTag("data");
                 ((INBTSerializable<NBTBase>)part).deserializeNBT(additionalData);

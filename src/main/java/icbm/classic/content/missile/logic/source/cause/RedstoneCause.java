@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class RedstoneCause extends BlockCause {
+public class RedstoneCause extends CausedByBlock {
 
     public static final ResourceLocation REG_NAME = new ResourceLocation(ICBMConstants.DOMAIN, "block.redstone");
 

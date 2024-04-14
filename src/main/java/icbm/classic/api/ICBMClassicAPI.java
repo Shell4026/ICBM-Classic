@@ -2,6 +2,7 @@ package icbm.classic.api;
 
 import icbm.classic.api.actions.IAction;
 import icbm.classic.api.actions.IActionData;
+import icbm.classic.api.actions.listener.IActionListenerHandler;
 import icbm.classic.api.caps.IEMPReceiver;
 import icbm.classic.api.caps.IExplosive;
 import icbm.classic.api.caps.IGPSData;
@@ -46,20 +47,20 @@ public final class ICBMClassicAPI
     /** Registry for flight logic save/load in missiles */
     public static IBuilderRegistry<IMissileFlightLogic> MISSILE_FLIGHT_LOGIC_REGISTRY;
 
+    /** Registry for conditional logic, often used for actions */
+    public static IBuilderRegistry<ICondition> CONDITION_REGISTRY;
+
     /** Registry for actions that can be run */
     public static IBuilderRegistry<IActionData> ACTION_REGISTRY;
     /** Registry for status messages produced by machines, items, and entities in the mod */
     public static IBuilderRegistry<IActionStatus> ACTION_STATUS_REGISTRY;
     /** Registry for missile cause save/load in missiles */
     public static IBuilderRegistry<IActionCause> ACTION_CAUSE_REGISTRY;
-    /** Registry for conditional logic, often used for actions */
-    public static IBuilderRegistry<ICondition> CONDITION_REGISTRY;
+    /** Event system for actions */
+    public static IActionListenerHandler ACTION_LISTENER;
 
     /** Registry for projectile information */
     public static IProjectileDataRegistry PROJECTILE_DATA_REGISTRY;
-
-    //TODO create missile builder handler that will allow API driven calls to create and spawn missiles in world
-
 
     //=========================
     //=== References ==========

@@ -27,7 +27,7 @@ public class CapabilityProjectileStack implements IProjectileStack<Entity>
 
     @Override
     public IProjectileData<Entity> getProjectileData() {
-        return ICBMClassicAPI.PROJECTILE_DATA_REGISTRY.build(projectileDataKey);
+        return ICBMClassicAPI.PROJECTILE_DATA_REGISTRY.getOrBuild(projectileDataKey);
     }
 
     public static void register()

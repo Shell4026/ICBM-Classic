@@ -8,7 +8,6 @@ import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.explosion.IBlastFactory;
 import icbm.classic.api.explosion.IBlastInit;
 import icbm.classic.api.reg.IExplosiveData;
-import icbm.classic.api.reg.content.IExplosiveContentRegistry;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -17,8 +16,6 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Handles storing data about an explosive in the {@link ExplosiveRegistry}
@@ -63,8 +60,8 @@ public class ExplosiveData implements IExplosiveData
             ((IBlastInit)blast).setExplosiveData(this);
             ((IBlastInit)blast).setActionSource(source);
 
-            if (fieldAccessors != null && fieldAccessors.hasField(ActionFields.BLAST_SIZE)) {
-                ((IBlastInit)blast).setBlastSize(fieldAccessors.getValue(ActionFields.BLAST_SIZE));
+            if (fieldAccessors != null && fieldAccessors.hasField(ActionFields.AREA_SIZE)) {
+                ((IBlastInit)blast).setBlastSize(fieldAccessors.getValue(ActionFields.AREA_SIZE));
             }
         }
 

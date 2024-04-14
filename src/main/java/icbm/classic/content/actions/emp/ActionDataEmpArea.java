@@ -1,5 +1,6 @@
 package icbm.classic.content.actions.emp;
 
+import com.google.common.collect.ImmutableList;
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.actions.IActionData;
 import icbm.classic.api.actions.cause.IActionSource;
@@ -15,16 +16,17 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.List;
 
-public class ActionDataEmpArea implements IActionData<ActionEmpArea> {
-    public static final MetaTag[] ACTION_TAGS = new MetaTag[]{ActionTypes.BLOCK_EDIT, ActionTypes.ENTITY_EDIT, ActionTypes.DESTRUCTIVE, ActionTypes.WORLD_AREA, ActionTypes.ENTITY_AREA};
+public class ActionDataEmpArea implements IActionData {
+    public static final ImmutableList<MetaTag> ACTION_TAGS = ImmutableList.of(ActionTypes.BLOCK_EDIT, ActionTypes.ENTITY_EDIT, ActionTypes.DESTRUCTIVE, ActionTypes.WORLD_AREA, ActionTypes.ENTITY_AREA);
     public static final ResourceLocation REG_NAME = new ResourceLocation(ICBMConstants.DOMAIN, "emp.area");
     /** @deprecated This is temp until registered */
     public static IActionData INSTANCE = new ActionDataEmpArea();
 
     @Nonnull
-    public MetaTag[] getTypes() {
+    public Collection<MetaTag> getTypeTags() {
         return ACTION_TAGS;
     }
 
@@ -32,8 +34,8 @@ public class ActionDataEmpArea implements IActionData<ActionEmpArea> {
     @Override
     public ActionEmpArea create(World world, double x, double y, double z, @Nonnull IActionSource source, @Nullable IActionFieldProvider fieldAccessor) {
         final ActionEmpArea actionEmpArea = new ActionEmpArea(world, new Vec3d(x, y, z), source, this);
-        if(fieldAccessor != null && fieldAccessor.hasField(ActionFields.BLAST_SIZE)) {
-            actionEmpArea.setSize((int)Math.floor(fieldAccessor.getValue(ActionFields.BLAST_SIZE))); //TODO allow changing x, y, z size
+        if(fieldAccessor != null && fieldAccessor.hasField(ActionFields.AREA_SIZE)) {
+            actionEmpArea.setSize((int)Math.floor(fieldAccessor.getValue(ActionFields.AREA_SIZE))); //TODO allow changing x, y, z size
         }
         else {
             actionEmpArea.setSize((int)Math.floor(ConfigBlast.emp.scale));

@@ -2,6 +2,8 @@ package icbm.classic.lib.actions.conditionals;
 
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.actions.conditions.ICondition;
+import icbm.classic.api.actions.status.IActionStatus;
+import icbm.classic.lib.actions.status.ActionResponses;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.minecraft.nbt.NBTTagInt;
@@ -24,8 +26,8 @@ public class TimerCondition implements ICondition, INBTSerializable<NBTTagInt> {
     }
 
     @Override
-    public boolean isMet() {
-        return tick <= 0;
+    public IActionStatus getCondition() {
+        return tick <= 0 ? ActionResponses.READY : ActionResponses.WAITING; //TODO replace waiting with status on time left
     }
 
     @Nonnull

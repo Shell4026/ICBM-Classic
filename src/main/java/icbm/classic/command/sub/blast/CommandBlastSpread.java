@@ -88,7 +88,7 @@ public class CommandBlastSpread extends SubCommand
                 final double z = zInput + zi * distance;
 
                 //Trigger blast
-                final IActionStatus result = explosiveData.create(world, x, yInput, z, new ActionSource(),new ActionFieldProvider().field(ActionFields.BLAST_SIZE, () -> scale)).doAction();
+                final IActionStatus result = explosiveData.create(world, x, yInput, z, new ActionSource(),new ActionFieldProvider().field(ActionFields.AREA_SIZE, () -> scale)).doAction();
 
                 //Send translated message to user
                 sender.sendMessage(result.getTooltip());

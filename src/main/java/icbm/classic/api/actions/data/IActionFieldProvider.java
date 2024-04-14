@@ -2,6 +2,7 @@ package icbm.classic.api.actions.data;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -43,9 +44,9 @@ public interface IActionFieldProvider {
     /**
      * List of fields provided or supported
      *
-     * @return fields, defaults to empty
+     * @return immutable fields, defaults to empty
      */
-    default List<ActionField> getFields() {
+    default Collection<ActionField> getFields() {
         return Collections.EMPTY_LIST;
     }
 

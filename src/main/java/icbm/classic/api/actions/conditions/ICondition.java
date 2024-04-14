@@ -1,6 +1,7 @@
 package icbm.classic.api.actions.conditions;
 
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.reg.obj.IBuildableObject;
 import icbm.classic.api.reg.obj.IBuilderRegistry;
 
@@ -71,7 +72,8 @@ public interface ICondition extends IBuildableObject {
      * may modify validation. It is up to the condition to decide cached or continuous. This
      * behavior is abstracted to avoid assumings behavior. So make sure to call each time before triggering logic.
      *
-     * @return true if requirements are met
+     * @return status of the condition, return a condition with {@link icbm.classic.api.actions.status.ActionStatusTypes#GREEN} to be considered
+     * as yes. Anything else will be viewed as no condition and displayed to downstream systems/users.
      */
-    boolean isMet();
+    IActionStatus getCondition();
 }

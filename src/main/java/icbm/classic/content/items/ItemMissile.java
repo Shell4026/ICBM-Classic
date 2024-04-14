@@ -93,7 +93,7 @@ public class ItemMissile extends ItemBase
                 e.addCustomization(new ClusterCustomization()
                     .setProjectilesToSpawn(200)
                     .setProjectilesPerLayer(20)
-                    .setProjectileData(ICBMClassicAPI.PROJECTILE_DATA_REGISTRY.build(ArrowProjectileData.NAME))
+                    .setProjectileData(ICBMClassicAPI.PROJECTILE_DATA_REGISTRY.getOrBuild(ArrowProjectileData.NAME))
                     .setAllowPickupItems(false)
                 );
             });

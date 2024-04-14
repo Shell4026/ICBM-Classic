@@ -1,10 +1,8 @@
 package icbm.classic.api.actions.cause;
 
 import icbm.classic.api.reg.obj.IBuildableObject;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 /**
  * Cause of an action. Stored as part of {@link IActionSource}
@@ -20,6 +18,7 @@ public interface IActionCause extends IBuildableObject {
      *
      * @return first entry
      */
+    @Nullable
     default IActionCause getRootCause() {
         final IActionCause cause = getPreviousCause();
         if(cause != null) { //TODO add logic to prevent infinite loop
@@ -33,28 +32,14 @@ public interface IActionCause extends IBuildableObject {
      *
      * @return cause
      */
+    @Nullable
     IActionCause getPreviousCause();
 
     /**
-     * Sets the missile cause
+     * Sets cause before this cause. Current should always be end of chain.
+     *
      * @param parent to use
      * @return self
      */
-    IActionCause setPreviousCause(IActionCause parent);
-
-    /**
-     * Cause containing entity information
-     */
-    interface IEntityCause extends IActionCause {
-        Entity getEntity();
-    }
-
-    /**
-     * Cause containing block information
-     */
-    interface IBlockCause extends IActionCause {
-        World getWorld();
-        BlockPos getBlockPos();
-        IBlockState getBlockState();
-    }
+    IActionCause setPreviousCause(@Nullable IActionCause parent);
 }

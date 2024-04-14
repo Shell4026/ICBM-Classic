@@ -13,7 +13,7 @@ import icbm.classic.content.blocks.launcher.FiringPackage;
 import icbm.classic.content.blocks.launcher.LauncherBaseCapability;
 import icbm.classic.content.missile.logic.flight.DirectFlightLogic;
 import icbm.classic.content.missile.logic.source.ActionSource;
-import icbm.classic.content.missile.logic.source.cause.BlockCause;
+import icbm.classic.content.missile.logic.source.cause.CausedByBlock;
 import icbm.classic.content.blocks.launcher.status.FiringWithDelay;
 import icbm.classic.content.blocks.launcher.status.LauncherStatus;
 import lombok.AllArgsConstructor;
@@ -79,7 +79,7 @@ public class CLauncherCapability extends LauncherBaseCapability {
             return LauncherStatus.FIRING_AIMING; // TODO return aiming status, with callback to check if did fire
         }
 
-        final BlockCause selfCause = new BlockCause(host.getWorld(), host.getPos(), host.getBlockState());
+        final CausedByBlock selfCause = new CausedByBlock(host.getWorld(), host.getPos(), host.getBlockState());
         selfCause.setPreviousCause(cause);
         final IActionSource missileSource = new ActionSource(getHost().getWorld(), new Vec3d(host.getPos().getX() + 0.5, host.getPos().getY() + TileCruiseLauncher.MISSILE__HOLDER_Y, host.getPos().getZ() + 0.5), selfCause);
 
