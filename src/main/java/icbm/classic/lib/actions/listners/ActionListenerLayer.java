@@ -1,7 +1,9 @@
 package icbm.classic.lib.actions.listners;
 
 import icbm.classic.ICBMClassic;
+import icbm.classic.api.actions.IAction;
 import icbm.classic.api.actions.listener.IActionListener;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.data.meta.MetaTag;
 import lombok.AllArgsConstructor;
 
@@ -17,6 +19,24 @@ public class ActionListenerLayer {
 
     private final Map<MetaTag, ActionListenerLayer> layers = new HashMap<>();
     private final List<IActionListener> listeners = new ArrayList();
+
+    public IActionStatus onAction(IAction action) {
+        for(IActionListener listener : listeners) {
+            final IActionStatus status = listener.onAction(action);
+            if(status != null) {
+                return status;
+            }
+        }
+        for(ActionListenerLayer layer: layers.values()) {
+            if(action.getActionData().isType(layer.layerTag)) {
+                final IActionStatus status = layer.onAction(action);
+                if(status != null) {
+                    return status;
+                }
+            }
+        }
+        return null;
+    }
 
     public void add(final IActionListener listener) {
         if(listeners.contains(listener)) {

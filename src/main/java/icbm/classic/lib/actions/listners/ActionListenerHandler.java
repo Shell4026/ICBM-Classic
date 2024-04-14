@@ -25,7 +25,10 @@ public class ActionListenerHandler implements IActionListenerHandler {
     }
 
     public IActionStatus runAction(IAction action) {
-        // TODO feed through listeners using the action data tags
+        final IActionStatus status = root.onAction(action);
+        if(status != null) {
+            return status;
+        }
         return action.doAction();
     }
 }

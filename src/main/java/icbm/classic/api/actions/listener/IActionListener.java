@@ -12,12 +12,12 @@ public interface IActionListener {
      * Called when action is created but not yet run. This allows for
      * blocking the action, modifying the action, or replacing the action.
      *
-     * To block an action return a status with a non-complete status. Such as
-     * error to indicate the action can't be run, or blocking to say it doesn't
-     * meet some condition but could eventually run.
+     * To block an action return any status, even if {@link icbm.classic.api.actions.status.ActionStatusTypes#GREEN}.
+     * This will be returned in place of invoking the action. As it is assumed any status
+     * means the listener acted on the action.
      *
      * Modifying is not recommended due to lack of visibility into the edit. As well
-     * chance that something upstream needed that data. If desired action can be
+     * something upstream may need the data included. If desired action can be
      * instanceof checked or updated via the field provider system.
      *
      * Better option is to replace the action. This can be done by returning a status
