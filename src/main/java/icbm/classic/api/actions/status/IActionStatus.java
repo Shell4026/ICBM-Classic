@@ -1,6 +1,7 @@
 package icbm.classic.api.actions.status;
 
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.data.meta.ITypeTaggable;
 import icbm.classic.api.reg.obj.IBuildableObject;
 import icbm.classic.api.reg.obj.IBuilderRegistry;
 import net.minecraft.util.text.ITextComponent;
@@ -19,7 +20,7 @@ import javax.annotation.Nonnull;
  *
  * If more data is needed additional methods and interfaces may be provided.
  */
-public interface IActionStatus extends IBuildableObject {
+public interface IActionStatus extends IBuildableObject, ITypeTaggable {
 
     @Nonnull
     @Override
