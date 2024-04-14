@@ -16,6 +16,7 @@ import icbm.classic.content.blocks.launcher.status.LauncherStatus;
 import icbm.classic.content.missile.logic.source.cause.CausedByBlock;
 import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.content.missile.logic.source.cause.RedstoneCause;
+import icbm.classic.lib.actions.conditionals.TimerCondition;
 import icbm.classic.lib.actions.listners.ActionListenerHandler;
 import icbm.classic.lib.actions.status.ActionResponses;
 import icbm.classic.lib.buildable.BuildableObjectRegistry;
@@ -36,6 +37,8 @@ public final class ActionSystem {
 
     private static void setupConditionalRegistry() {
         ICBMClassicAPI.CONDITION_REGISTRY =  new BuildableObjectRegistry<ICondition>("CONDITIONALS", "conditionals");
+
+        ICBMClassicAPI.CONDITION_REGISTRY.register(TimerCondition.REG_NAME, TimerCondition::new);
 
         //Fire registry event
         MinecraftForge.EVENT_BUS.post(new ConditionalRegistryEvent(ICBMClassicAPI.CONDITION_REGISTRY));
