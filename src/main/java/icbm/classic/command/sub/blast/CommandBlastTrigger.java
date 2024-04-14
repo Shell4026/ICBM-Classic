@@ -7,7 +7,7 @@ import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.command.CommandUtils;
 import icbm.classic.command.ICBMCommands;
 import icbm.classic.command.system.SubCommand;
-import icbm.classic.content.actions.fields.ActionFieldProvider;
+import icbm.classic.lib.actions.fields.ActionFieldProvider;
 import icbm.classic.content.missile.logic.source.ActionSource;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;

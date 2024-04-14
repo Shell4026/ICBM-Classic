@@ -1,4 +1,4 @@
-package icbm.classic.content.actions.listners;
+package icbm.classic.lib.actions.listners;
 
 import icbm.classic.api.actions.IAction;
 import icbm.classic.api.actions.IActionData;

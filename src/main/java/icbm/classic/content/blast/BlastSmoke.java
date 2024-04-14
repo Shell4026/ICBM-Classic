@@ -1,7 +1,7 @@
 package icbm.classic.content.blast;
 
 import icbm.classic.api.actions.status.IActionStatus;
-import icbm.classic.content.actions.status.ActionResponses;
+import icbm.classic.lib.actions.status.ActionResponses;
 import icbm.classic.content.blast.imp.BlastBase;
 import icbm.classic.content.entity.EntitySmoke;
 

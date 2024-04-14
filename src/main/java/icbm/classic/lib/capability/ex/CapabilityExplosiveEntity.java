@@ -9,7 +9,7 @@ import icbm.classic.api.explosion.IBlast;
 import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.api.reg.IExplosiveCustomization;
 import icbm.classic.api.reg.IExplosiveData;
-import icbm.classic.content.actions.status.ActionResponses;
+import icbm.classic.lib.actions.status.ActionResponses;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;

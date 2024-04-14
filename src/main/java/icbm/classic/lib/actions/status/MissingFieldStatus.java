@@ -1,4 +1,4 @@
-package icbm.classic.content.actions.status;
+package icbm.classic.lib.actions.status;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;

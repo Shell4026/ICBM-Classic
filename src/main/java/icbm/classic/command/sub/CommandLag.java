@@ -2,7 +2,7 @@ package icbm.classic.command.sub;
 
 import icbm.classic.command.CommandUtils;
 import icbm.classic.command.system.SubCommand;
-import icbm.classic.content.actions.WorkTickingActionHandler;
+import icbm.classic.lib.actions.WorkTickingActionHandler;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;

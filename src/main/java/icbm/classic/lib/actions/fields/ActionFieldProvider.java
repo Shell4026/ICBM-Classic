@@ -1,4 +1,4 @@
-package icbm.classic.content.actions.fields;
+package icbm.classic.lib.actions.fields;
 
 import icbm.classic.api.actions.data.ActionField;
 import icbm.classic.api.actions.data.IActionFieldProvider;

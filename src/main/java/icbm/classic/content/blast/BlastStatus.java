@@ -1,8 +1,7 @@
 package icbm.classic.content.blast;
 
 import icbm.classic.ICBMConstants;
-import icbm.classic.content.actions.status.ActionResponses;
-import icbm.classic.content.actions.status.ImmutableStatus;
+import icbm.classic.lib.actions.status.ImmutableStatus;
 import net.minecraft.util.ResourceLocation;
 
 @Deprecated

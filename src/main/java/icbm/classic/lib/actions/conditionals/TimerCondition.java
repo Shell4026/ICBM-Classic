@@ -1,4 +1,4 @@
-package icbm.classic.content.actions.conditionals;
+package icbm.classic.lib.actions.conditionals;
 
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.actions.conditions.ICondition;

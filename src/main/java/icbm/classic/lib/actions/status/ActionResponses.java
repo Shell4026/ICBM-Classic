@@ -1,4 +1,4 @@
-package icbm.classic.content.actions.status;
+package icbm.classic.lib.actions.status;
 
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.actions.status.IActionStatus;

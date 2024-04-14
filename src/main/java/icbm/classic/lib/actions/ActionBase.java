@@ -1,4 +1,4 @@
-package icbm.classic.content.actions;
+package icbm.classic.lib.actions;
 
 import icbm.classic.api.actions.IAction;
 import icbm.classic.api.actions.IActionData;

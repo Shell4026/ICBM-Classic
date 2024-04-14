@@ -2,8 +2,7 @@ package icbm.classic.content.blast.redmatter;
 
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.config.blast.ConfigBlast;
-import icbm.classic.content.actions.status.ActionResponses;
-import icbm.classic.content.blast.BlastStatus;
+import icbm.classic.lib.actions.status.ActionResponses;
 import icbm.classic.content.blast.imp.BlastBase;
 
 import javax.annotation.Nonnull;

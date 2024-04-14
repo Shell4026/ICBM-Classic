@@ -1,8 +1,6 @@
-package icbm.classic.content.actions.status;
+package icbm.classic.lib.actions.status;
 
-import icbm.classic.ICBMConstants;
 import icbm.classic.api.actions.status.IActionStatus;
-import lombok.NoArgsConstructor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -12,47 +10,42 @@ import javax.annotation.Nonnull;
 /**
  * Generic status messages that provide no details and are cached as static immutable versions
  */
-@NoArgsConstructor
-public class ActionStatus implements IActionStatus {
+public class ImmutableStatus implements IActionStatus {
 
-    private boolean error = false;
-    private boolean block = false;
-    protected String translationKey;
+    private final ResourceLocation regName;
+    protected final String translationKey;
+    private final boolean isError;
+    private final boolean isBlocking;
+
     protected ITextComponent textComponent;
-    private ResourceLocation regName;
 
-    public ActionStatus asError() {
-        this.error = true;
-        return this;
+    protected ImmutableStatus(ResourceLocation regName, boolean isError, boolean isBlocking) {
+        this.regName = regName;
+        this.translationKey = "info." + regName.toString();
+        this.isError = isError;
+        this.isBlocking = isBlocking;
     }
 
-    public ActionStatus asBlocking() {
-        this.block = true;
-        return this;
+    public static ImmutableStatus blocking(ResourceLocation regName) {
+        return new ImmutableStatus(regName, false, true);
     }
 
-    public ActionStatus withTranslation(String key) {
-        this.translationKey = key;
-        return this;
+    public static ImmutableStatus error(ResourceLocation regName) {
+        return new ImmutableStatus(regName, true, false);
     }
 
-    public ActionStatus withRegName(String key) {
-        return withRegName(ICBMConstants.DOMAIN, key);
-    }
-
-    public ActionStatus withRegName(String domain, String key) {
-        this.regName = new ResourceLocation(domain, key);
-        return this;
+    public static ImmutableStatus create(ResourceLocation regName) {
+        return new ImmutableStatus(regName, false, false);
     }
 
     @Override
     public boolean isError() {
-        return error;
+        return isError;
     }
 
     @Override
     public boolean isBlocking() {
-        return isError() || block;
+        return isError() || isBlocking;
     }
 
     @Override

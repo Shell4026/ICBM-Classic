@@ -5,7 +5,7 @@ import com.builtbroken.mc.testing.junit.testers.DummyCommandSender;
 import icbm.classic.TestUtils;
 import icbm.classic.command.FakeBlast;
 import icbm.classic.content.missile.entity.explosive.EntityExplosiveMissile;
-import icbm.classic.content.actions.WorkTickingActionHandler;
+import icbm.classic.lib.actions.WorkTickingActionHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.util.math.Vec3d;

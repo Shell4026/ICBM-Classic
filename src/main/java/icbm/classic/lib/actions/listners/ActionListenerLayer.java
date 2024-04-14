@@ -1,4 +1,4 @@
-package icbm.classic.content.actions.listners;
+package icbm.classic.lib.actions.listners;
 
 import icbm.classic.ICBMClassic;
 import icbm.classic.api.data.meta.MetaTag;

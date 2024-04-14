@@ -12,7 +12,7 @@ import icbm.classic.command.ICBMCommands;
 import icbm.classic.command.system.CommandEntryPoint;
 import icbm.classic.config.ConfigItems;
 import icbm.classic.config.ConfigThread;
-import icbm.classic.content.actions.status.ActionResponses;
+import icbm.classic.lib.actions.status.ActionResponses;
 import icbm.classic.content.blast.caps.CapabilityBlast;
 import icbm.classic.content.blast.caps.CapabilityBlastVelocity;
 import icbm.classic.content.blast.cluster.ClusterCustomization;
