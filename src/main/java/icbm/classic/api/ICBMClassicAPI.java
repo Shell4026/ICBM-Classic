@@ -1,5 +1,6 @@
 package icbm.classic.api;
 
+import icbm.classic.api.actions.IAction;
 import icbm.classic.api.actions.IActionData;
 import icbm.classic.api.caps.IEMPReceiver;
 import icbm.classic.api.caps.IExplosive;
@@ -32,9 +33,6 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 
 /**
  * API reference class for ICBM-Classic mod
- * <p>
- * <p>
- * Created by Dark(DarkGuardsman, Robin) on 3/12/2018.
  */
 public final class ICBMClassicAPI
 {
@@ -42,15 +40,6 @@ public final class ICBMClassicAPI
     //=========================
     //=== Registry ============
     //=========================
-    /**
-     * Main handler for explosives, do not override as this will break the mod
-     */
-    public static IExplosiveRegistry EXPLOSIVE_REGISTRY;
-
-    public static IExMissileRegistry EX_MISSILE_REGISTRY;
-    public static IExGrenadeRegistry EX_GRENADE_REGISTRY;
-    public static IExBlockRegistry EX_BLOCK_REGISTRY;
-    public static IExMinecartRegistry EX_MINECART_REGISTRY;
 
     /** Registry for target data save/load in missiles */
     public static IBuilderRegistry<IMissileTarget> MISSILE_TARGET_DATA_REGISTRY;
@@ -66,9 +55,6 @@ public final class ICBMClassicAPI
     /** Registry for conditional logic, often used for actions */
     public static IBuilderRegistry<ICondition> CONDITION_REGISTRY;
 
-    /** Registry for explosive customizations */
-    public static IBuilderRegistry<IExplosiveCustomization> EXPLOSIVE_CUSTOMIZATION_REGISTRY;
-
     /** Registry for projectile information */
     public static IProjectileDataRegistry PROJECTILE_DATA_REGISTRY;
 
@@ -82,65 +68,96 @@ public final class ICBMClassicAPI
 
 
     //=========================
-    //=== Content keys ========
-    //=========================
-    public static final ResourceLocation EX_MISSILE = new ResourceLocation(ID, "missile");
-    public static final ResourceLocation EX_GRENADE = new ResourceLocation(ID, "grenade");
-    public static final ResourceLocation EX_BLOCK = new ResourceLocation(ID, "block");
-    public static final ResourceLocation EX_MINECART = new ResourceLocation(ID, "minecart");
-
-    //=========================
     //=== Capabilities ========
     //=========================
+
+    /** @deprecated used the injector */
+    @Deprecated
     @CapabilityInject(IEMPReceiver.class)
     public static Capability<IEMPReceiver> EMP_CAPABILITY = null;
 
-    @CapabilityInject(IExplosive.class)
-    public static Capability<IExplosive> EXPLOSIVE_CAPABILITY = null;
 
     /** Only applies to entities */
     @CapabilityInject(IMissile.class)
     public static Capability<IMissile> MISSILE_CAPABILITY = null;
+
+
+    /** @deprecated used the injector */
+    @Deprecated
+    @CapabilityInject(IMissileHolder.class)
+    public static Capability<IMissileHolder> MISSILE_HOLDER_CAPABILITY = null;
+
+    /** @deprecated used the injector */
+    @Deprecated
+    @CapabilityInject(IMissileLauncher.class)
+    public static Capability<IMissileLauncher> MISSILE_LAUNCHER_CAPABILITY = null;
+
+    /** @deprecated used the injector */
+    @Deprecated
+    @CapabilityInject(IRadio.class)
+    public static Capability<IRadio> RADIO_CAPABILITY = null;
+
+    /** @deprecated used the injector */
+    @Deprecated
+    @CapabilityInject(IGPSData.class)
+    public static Capability<IGPSData> GPS_CAPABILITY = null;
+
+    /** @deprecated used the injector */
+    @Deprecated
+    @CapabilityInject(IProjectileStack.class)
+    public static Capability<IProjectileStack> PROJECTILE_STACK_CAPABILITY = null;
+
+
+    //=========================
+    //=== Will be removed =====
+    //=========================
+    /**
+     * Main handler for explosives, do not override as this will break the mod
+     * @deprecated replaced with {@link #ACTION_REGISTRY}
+     */
+    @Deprecated
+    public static IExplosiveRegistry EXPLOSIVE_REGISTRY;
+
+    @Deprecated
+    public static IExMissileRegistry EX_MISSILE_REGISTRY;
+    @Deprecated
+    public static IExGrenadeRegistry EX_GRENADE_REGISTRY;
+    @Deprecated
+    public static IExBlockRegistry EX_BLOCK_REGISTRY;
+    @Deprecated
+    public static IExMinecartRegistry EX_MINECART_REGISTRY;
+
+    /** Registry for explosive customizations
+     * @deprecated replaced with {@link icbm.classic.api.actions.data.IActionFieldProvider}
+     * */
+    @Deprecated
+    public static IBuilderRegistry<IExplosiveCustomization> EXPLOSIVE_CUSTOMIZATION_REGISTRY;
+
+    @Deprecated
+    public static final ResourceLocation EX_MISSILE = new ResourceLocation(ID, "missile");
+    @Deprecated
+    public static final ResourceLocation EX_GRENADE = new ResourceLocation(ID, "grenade");
+    @Deprecated
+    public static final ResourceLocation EX_BLOCK = new ResourceLocation(ID, "block");
+    @Deprecated
+    public static final ResourceLocation EX_MINECART = new ResourceLocation(ID, "minecart");
+
+
+    @Deprecated
+    @CapabilityInject(IExplosive.class)
+    public static Capability<IExplosive> EXPLOSIVE_CAPABILITY = null;
 
     /** Only applies to ItemStack */
     @Deprecated
     @CapabilityInject(ICapabilityMissileStack.class)
     public static Capability<ICapabilityMissileStack> MISSILE_STACK_CAPABILITY = null;
 
-    @CapabilityInject(IMissileHolder.class)
-    public static Capability<IMissileHolder> MISSILE_HOLDER_CAPABILITY = null;
-
-    @CapabilityInject(IMissileLauncher.class)
-    public static Capability<IMissileLauncher> MISSILE_LAUNCHER_CAPABILITY = null;
-
-    @CapabilityInject(IRadio.class)
-    public static Capability<IRadio> RADIO_CAPABILITY = null;
-
+    @Deprecated
     @CapabilityInject(IBlastVelocity.class)
     public static Capability<IBlastVelocity> BLAST_VELOCITY_CAPABILITY = null;
 
+    @Deprecated
     @CapabilityInject(IBlast.class)
     public static Capability<IBlast> BLAST_CAPABILITY = null;
-
-    @CapabilityInject(IGPSData.class)
-    public static Capability<IGPSData> GPS_CAPABILITY = null;
-
-    @CapabilityInject(IProjectileStack.class)
-    public static Capability<IProjectileStack> PROJECTILE_STACK_CAPABILITY = null;
-
-    /**
-     * Called to register an EMP handler for the {@link Block}
-     * and related {@link net.minecraft.block.state.IBlockState}
-     * <p>
-     * Allows several receiver to be registered per block.
-     *
-     * @param block    - block
-     * @param receiver - receiver
-     */
-    @Deprecated //Will be placed in a registry/handler
-    public void registerBlockEmpHandler(Block block, IEMPReceiver receiver)
-    {
-        //TODO implement
-    }
 
 }

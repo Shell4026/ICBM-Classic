@@ -165,6 +165,7 @@ public class BlastCluster extends BlastBase {
                 discIndex += 1;
             }
 
+            // Fire a spawn action for each bomblet
             return spawnedSomething ? ActionResponses.COMPLETED : ActionResponses.ENTITY_SPAWN_FAILED;
         }
         return ActionResponses.COMPLETED;
