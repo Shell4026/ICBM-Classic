@@ -1,8 +1,6 @@
 package icbm.classic.lib.actions;
 
 import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.actions.IAction;
-import icbm.classic.api.actions.IActionData;
 import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.api.actions.conditions.ICondition;
 import icbm.classic.api.actions.status.IActionStatus;
@@ -16,7 +14,8 @@ import icbm.classic.content.blocks.launcher.status.LauncherStatus;
 import icbm.classic.content.missile.logic.source.cause.CausedByBlock;
 import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.content.missile.logic.source.cause.RedstoneCause;
-import icbm.classic.lib.actions.conditionals.TimerCondition;
+import icbm.classic.lib.actions.conditionals.timer.TimerCondition;
+import icbm.classic.lib.actions.conditionals.timer.TimerTickingStatus;
 import icbm.classic.lib.actions.listners.ActionListenerHandler;
 import icbm.classic.lib.actions.status.ActionResponses;
 import icbm.classic.lib.buildable.BuildableObjectRegistry;
@@ -53,6 +52,7 @@ public final class ActionSystem {
         // Register defaults
         LauncherStatus.registerTypes();
         ActionResponses.registerTypes();
+        ICBMClassicAPI.ACTION_STATUS_REGISTRY.register(TimerTickingStatus.REG_NAME, TimerTickingStatus::new);
 
         //Fire registry event
         MinecraftForge.EVENT_BUS.post(new ActionStatusRegistryEvent(ICBMClassicAPI.ACTION_STATUS_REGISTRY));

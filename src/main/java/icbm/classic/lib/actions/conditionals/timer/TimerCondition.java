@@ -1,9 +1,10 @@
-package icbm.classic.lib.actions.conditionals;
+package icbm.classic.lib.actions.conditionals.timer;
 
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.api.actions.conditions.IConditionCause;
 import icbm.classic.api.actions.status.IActionStatus;
+import icbm.classic.lib.actions.conditionals.Condition;
 import icbm.classic.lib.actions.status.ActionResponses;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.*;
@@ -23,11 +24,14 @@ public class TimerCondition extends Condition implements IConditionCause {
     @Getter @Setter(AccessLevel.PRIVATE)
     private int current = 0;
 
+    private IActionStatus statusCache; //TODO cache on action status for reduce churn
+
     @Override
     public void onTick()
     {
         if(current < target) {
             current++;
+            statusCache = null;
         }
     }
 
@@ -38,7 +42,13 @@ public class TimerCondition extends Condition implements IConditionCause {
 
     @Override
     public IActionStatus getCondition() {
-        return target <= 0 ? ActionResponses.READY : ActionResponses.WAITING; //TODO replace waiting with status on time left
+        if(current <= 0) {
+            return ActionResponses.READY;
+        }
+        else if(statusCache == null) {
+           statusCache = new TimerTickingStatus(current, target);
+        }
+        return statusCache;
     }
 
     @Nonnull
