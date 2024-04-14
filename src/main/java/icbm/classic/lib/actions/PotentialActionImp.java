@@ -6,11 +6,13 @@ import icbm.classic.api.actions.IPotentialAction;
 import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.actions.conditions.ICondition;
+import icbm.classic.api.actions.conditions.IConditionCause;
 import icbm.classic.api.actions.data.ActionField;
 import icbm.classic.api.actions.data.IActionFieldProvider;
 import icbm.classic.api.actions.status.ActionStatusTypes;
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.content.missile.logic.source.ActionSource;
+import icbm.classic.content.missile.logic.source.cause.CausedByBlock;
 import icbm.classic.lib.actions.status.ActionResponses;
 import icbm.classic.lib.data.LazyBuilder;
 import icbm.classic.lib.saving.NbtSaveHandler;
@@ -19,6 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -64,6 +67,11 @@ public abstract class PotentialActionImp<SELF extends PotentialActionImp<SELF>> 
         return preCheck == null ? ActionResponses.READY : preCheck.getCondition();
     }
 
+    public IActionStatus doAction(TileEntity tile, @Nullable IActionCause cause) {
+        final IActionCause selfCause = new CausedByBlock(tile.getWorld(), tile.getPos(), tile.getWorld().getBlockState(tile.getPos())).setPreviousCause(cause);
+        return doAction(tile.getWorld(), tile.getPos(), selfCause);
+    }
+
     public IActionStatus doAction(World world, BlockPos pos, @Nullable IActionCause cause) {
         return doAction(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, cause);
     }
@@ -71,15 +79,31 @@ public abstract class PotentialActionImp<SELF extends PotentialActionImp<SELF>> 
     @Nonnull
     @Override
     public IActionStatus doAction(World world, double x, double y, double z, @Nullable IActionCause cause) {
+        final IActionData actionData = this.getActionData();
+
+        // Edge case: lazy init failed to get action data
+        if(actionData == null) {
+            return ActionResponses.MISSING_ACTION_DATA;
+        }
+
         final IActionStatus preCheckStatus = checkAction(world, x, y, z, cause); //TODO if preCheck is a special type use in cause-by chain. Example: timer
         if(preCheckStatus.isType(ActionStatusTypes.BLOCKING)) {
             return preCheckStatus;
         }
+
+        IActionCause causeToUse = cause;
         if(preCheck != null) {
+            if(preCheck instanceof IConditionCause) {
+                final IActionCause preCheckCause = ((IConditionCause) preCheck).getCause();
+                if(preCheckCause != null) {
+                    causeToUse = preCheckCause.setPreviousCause(cause);
+                }
+            }
             preCheck.reset();
         }
-        final IActionSource actionSource = new ActionSource(world, new Vec3d(x, y, z), cause);
-        return ICBMClassicAPI.ACTION_LISTENER.runAction(getActionData().create(world, x, y, z, actionSource, this));
+
+        final IActionSource actionSource = new ActionSource(world, new Vec3d(x, y, z), causeToUse);
+        return ICBMClassicAPI.ACTION_LISTENER.runAction(actionData.create(world, x, y, z, actionSource, this));
     }
 
     @Override
