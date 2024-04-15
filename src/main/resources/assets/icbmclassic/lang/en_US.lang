@@ -17,6 +17,7 @@ config.icbmclassic:item.title=Item
 config.icbmclassic:ic2.title=Industrial Craft 2
 config.icbmclassic:debug.title=Debug
 config.icbmclassic:missile.sam.title=Surface to Air Missile
+config.icbmclassic:missile.cluster.title=Cluster Missile
 
 ## Chat commands
 
@@ -318,7 +319,7 @@ explosive.icbmclassic:redMatter.info.10=Oh baby come back
 
 ## Cluster Missile
 item.icbmclassic:cluster_missile.name=Cluster Missile
-item.icbmclassic:cluster_missile.info=Releases contained projectiles in a cluster pattern
+item.icbmclassic:cluster_missile.info=Releases contained projectiles in order of insert
 item.icbmclassic:cluster_missile.contents=Contents: %1$s
 
 missile.icbmclassic:cluster.name=Cluster Missile
