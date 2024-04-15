@@ -1,6 +1,7 @@
 package icbm.classic.content.cluster.missile;
 
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.missiles.ICapabilityMissileStack;
 import icbm.classic.api.missiles.projectile.IProjectileStack;
 import icbm.classic.content.cargo.CargoProjectileData;
 import icbm.classic.lib.projectile.ProjectileStack;
@@ -14,6 +15,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 
@@ -26,17 +29,14 @@ import java.util.function.Supplier;
 public class RecipeCluster extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
 
     private final ItemStack recipeOutput;
-    private final Supplier<CargoProjectileData> dataBuilder;
 
     @Override
-    public boolean isDynamic()
-    {
+    public boolean isDynamic() {
         return true;
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)
-    {
+    public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
         // Don't leave container items, since we store the entire item
         return NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
     }
@@ -44,38 +44,64 @@ public class RecipeCluster extends IForgeRegistryEntry.Impl<IRecipe> implements 
     @Override
     public boolean matches(InventoryCrafting inv, World worldIn) {
         ItemStack cluster = ItemStack.EMPTY;
-        int itemCount = 0;
+        int newItemSize = 0;
 
-        for(int slot = 0; slot < inv.getSizeInventory(); slot++) {
+        for (int slot = 0; slot < inv.getSizeInventory(); slot++) {
             final ItemStack slotStack = inv.getStackInSlot(slot);
-            if(slotStack.isItemEqual(recipeOutput)) {
-                if(!cluster.isEmpty()) {
+            if (slotStack.isItemEqual(recipeOutput)) {
+                if (!cluster.isEmpty()) {
                     return false; // Can't nest clusters
                 }
                 cluster = slotStack;
-            }
-            else if(!slotStack.isEmpty()) {
-                itemCount++;
+            } else if (!slotStack.isEmpty()) {
+                newItemSize += ClusterMissileHandler.sizeOf(slotStack);
             }
         }
 
-        //TODO get currently stored items in cluster
-        //TODO count value size of stored
-        //TODO count value size of new
-        //TODO if value count + new > config max... refuse to craft
+        final CapabilityClusterMissileStack cap = getCap(cluster);
+        if(cap == null) {
+            return false;
+        }
 
+        int currentSize = cap.getActionDataCluster().getClusterSpawnEntries().stream().mapToInt(ClusterMissileHandler::sizeOf).sum();
+        return newItemSize >= 1 && (currentSize + newItemSize) <= ClusterMissileHandler.MAX_SIZE && !cluster.isEmpty();
+    }
 
-        return itemCount > 1 && !cluster.isEmpty();
+    private CapabilityClusterMissileStack getCap(ItemStack itemStack) {
+        if (!itemStack.hasCapability(ICBMClassicAPI.MISSILE_STACK_CAPABILITY, null)) {
+            return null;
+        }
+        ICapabilityMissileStack cap = itemStack.getCapability(ICBMClassicAPI.MISSILE_STACK_CAPABILITY, null);
+        return cap instanceof CapabilityClusterMissileStack ? (CapabilityClusterMissileStack) cap : null;
     }
 
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inv) {
-        final ItemStack output = null;
+        ItemStack cluster = ItemStack.EMPTY;
+        List<ItemStack> newItems = new ArrayList<>();
 
-        // TODO get current cluster item
-        // TODO add items
+        for (int slot = 0; slot < inv.getSizeInventory(); slot++) {
+            final ItemStack slotStack = inv.getStackInSlot(slot);
+            if (slotStack.isItemEqual(recipeOutput)) {
+                if (!cluster.isEmpty()) {
+                    return null; // Can't nest clusters
+                }
+                cluster = slotStack.copy();
+                cluster.setCount(1);
+            } else if (!slotStack.isEmpty()) {
+                ItemStack s = slotStack.copy();
+                s.setCount(1);
+                newItems.add(s);
+            }
+        }
 
-        return output;
+        CapabilityClusterMissileStack cap = getCap(cluster);
+        if (cap == null) {
+            return null;
+        }
+        cap.getActionDataCluster().getClusterSpawnEntries().addAll(newItems);
+
+        return cluster;
     }
 
     @Override
