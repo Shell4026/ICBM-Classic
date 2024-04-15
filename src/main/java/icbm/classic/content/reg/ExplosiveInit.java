@@ -205,9 +205,6 @@ public class ExplosiveInit
         ICBMExplosives.COLOR = newEx(-1, "colors", EnumTier.ONE, (w, x, y, z, s) -> new BlastColor().setBlastSize(ConfigBlast.colorful.scale).setBlastWorld(w).setBlastPosition(x, y, z));
         ICBMExplosives.SMOKE = newEx(-1, "smoke", EnumTier.ONE, (w, x, y, z, s) -> new BlastSmoke().setBlastWorld(w).setBlastPosition(x, y, z)); //TODO add scale for smoke count, and ticks alive as NBT var
 
-        ICBMExplosives.CLUSTER = newEx(-1, "cluster", EnumTier.NONE, (w, x, y, z, s) -> new ActionCluster(w, new Vec3d(x, y, z), s, ICBMExplosives.CLUSTER));
-        ICBMClassicAPI.EX_MISSILE_REGISTRY.enableContent(ICBMExplosives.CLUSTER.getRegistryKey());
-
 
         ((ExplosiveRegistry) ICBMClassicAPI.EXPLOSIVE_REGISTRY).lockForce();
 

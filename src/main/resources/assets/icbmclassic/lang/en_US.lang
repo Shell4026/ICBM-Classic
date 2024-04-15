@@ -316,12 +316,13 @@ explosive.icbmclassic:redMatter.info.8=Into the void
 explosive.icbmclassic:redMatter.info.9=Oh? You think you can escape
 explosive.icbmclassic:redMatter.info.10=Oh baby come back
 
-## Cluster Explosive
+## Cluster Missile
+item.icbmclassic:cluster_missile.name=Cluster Missile
+item.icbmclassic:cluster_missile.info=Releases contained projectiles in a cluster pattern
+item.icbmclassic:cluster_missile.contents=Contents: %1$s
+
 missile.icbmclassic:cluster.name=Cluster Missile
-explosive.icbmclassic:cluster.name=Cluster Explosives
-explosive.icbmclassic:cluster.projectile.name=Projectile: %1$s
-explosive.icbmclassic:cluster.projectile.count=Count: %1$s
-explosive.icbmclassic:cluster.projectile.layer=Per Layer: %1$s
+
 
 
 ## Special Missiles
