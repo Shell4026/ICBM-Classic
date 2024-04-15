@@ -52,6 +52,7 @@ public class ItemClusterMissile extends ItemBase {
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
         if (tab == getCreativeTab() || tab == CreativeTabs.SEARCH) {
+            items.add(new ItemStack(this));
             items.add(createStack(new ItemStack(Items.ARROW), 200));
             items.add(createStack(new ItemStack(ItemReg.itemBomblet), 100));
         }

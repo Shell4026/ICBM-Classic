@@ -1,7 +1,10 @@
 package icbm.classic.prefab.entity;
 
 import icbm.classic.api.data.IWorldPosition;
+import icbm.classic.config.missile.ConfigMissile;
+import icbm.classic.content.missile.entity.explosive.EntityMissileActionable;
 import icbm.classic.lib.NBTConstants;
+import icbm.classic.lib.saving.NbtSaveHandler;
 import icbm.classic.lib.transform.vector.Pos;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -24,6 +27,7 @@ public abstract class EntityICBM extends Entity implements IWorldPosition
     protected boolean hasHealth = false;
 
     private static final DataParameter<Float> HEALTH = EntityDataManager.<Float>createKey(EntityICBM.class, DataSerializers.FLOAT);
+    private static final DataParameter<Float> MAX_HEALTH = EntityDataManager.<Float>createKey(EntityICBM.class, DataSerializers.FLOAT);
 
     public EntityICBM(World world)
     {
@@ -33,7 +37,8 @@ public abstract class EntityICBM extends Entity implements IWorldPosition
     @Override
     protected void entityInit()
     {
-        this.dataManager.register(HEALTH, (float) this.getMaxHealth());
+        this.dataManager.register(HEALTH, 1f);
+        this.dataManager.register(MAX_HEALTH, 1f);
     }
 
     public float getHealth()
@@ -41,14 +46,26 @@ public abstract class EntityICBM extends Entity implements IWorldPosition
         return this.dataManager.get(HEALTH);
     }
 
-    public void setHealth(float health)
+    public <T> T setHealth(float health)
     {
         this.dataManager.set(HEALTH, MathHelper.clamp(health, 0.0F, this.getMaxHealth()));
+        return (T) this;
     }
 
     public float getMaxHealth()
     {
-        return 5;
+        return this.dataManager.get(MAX_HEALTH);
+    }
+
+    public <T> T  setMaxHealth(float hp) {
+        this.dataManager.set(MAX_HEALTH, hp);
+        return (T) this;
+    }
+
+    public <T> T  initHealth(float hp) {
+        this.setMaxHealth(hp);
+        this.setHealth(hp);
+        return (T) this;
     }
 
     @Override
@@ -131,14 +148,20 @@ public abstract class EntityICBM extends Entity implements IWorldPosition
     @Override
     protected void readEntityFromNBT(NBTTagCompound nbt)
     {
-        setHealth(nbt.getFloat(NBTConstants.HEALTH));
+        SAVE_LOGIC.load(this, nbt);
     }
 
     @Override
     protected void writeEntityToNBT(NBTTagCompound nbt)
     {
-        nbt.setFloat(NBTConstants.HEALTH, this.getHealth());
+        SAVE_LOGIC.save(this, nbt);
     }
+
+    private static final NbtSaveHandler<EntityICBM> SAVE_LOGIC = new NbtSaveHandler<EntityICBM>()
+        .mainRoot()
+        /* */.nodeFloat("health", EntityICBM::getHealth, EntityICBM::setHealth)
+        /* */.nodeFloat("health_max", EntityICBM::getMaxHealth, EntityICBM::setMaxHealth)
+        .base();
 
     @Override
     public World world()

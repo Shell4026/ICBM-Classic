@@ -3,6 +3,7 @@ package icbm.classic.content.cluster.missile;
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.missiles.ICapabilityMissileStack;
 import icbm.classic.api.missiles.IMissile;
+import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.content.cluster.action.ActionDataCluster;
 import icbm.classic.content.missile.entity.explosive.EntityMissileActionable;
 import icbm.classic.lib.saving.NbtSaveHandler;
@@ -30,10 +31,10 @@ public class CapabilityClusterMissileStack implements ICapabilityMissileStack, I
     @Override
     public IMissile newMissile(World world)
     {
-        final EntityMissileActionable missile = new EntityMissileActionable(world);
-        missile.setOriginalStack(stack);
-        missile.getMainAction().setActionData(actionDataCluster);
-        return missile.getMissileCapability();
+        return new EntityMissileActionable(world)
+            .setOriginalStack(stack)
+            .setActionData(actionDataCluster)
+            .initHealth(ConfigMissile.CLUSTER_MISSILE.MAX_HEALTH);
     }
 
     @Override

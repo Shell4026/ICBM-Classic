@@ -10,6 +10,8 @@ import icbm.classic.command.ICBMCommands;
 import icbm.classic.command.system.CommandEntryPoint;
 import icbm.classic.config.ConfigItems;
 import icbm.classic.config.ConfigThread;
+import icbm.classic.content.cluster.missile.ClusterMissileHandler;
+import icbm.classic.content.cluster.missile.RecipeCluster;
 import icbm.classic.lib.actions.ActionSystem;
 import icbm.classic.content.blast.caps.CapabilityBlast;
 import icbm.classic.content.blast.caps.CapabilityBlastVelocity;
@@ -152,9 +154,10 @@ public class ICBMClassic
 
         GameRegistry.addSmelting(new ItemStack(ItemReg.itemSaltpeterBall, 1, 0), new ItemStack(ItemReg.itemSaltpeterDust, 1, 0), 0.1f);
 
-        // Dynamic * item recipes
+        // Dynamic item recipes
         event.getRegistry().register(new RecipeCargoData(new ItemStack(ItemReg.itemBalloon), BalloonProjectileData::new).setRegistryName(new ResourceLocation(ICBMConstants.DOMAIN, "balloon_cargo")));
         event.getRegistry().register(new RecipeCargoData(new ItemStack(ItemReg.itemParachute), ParachuteProjectileData::new).setRegistryName(new ResourceLocation(ICBMConstants.DOMAIN, "parachute_cargo")));
+        event.getRegistry().register(new RecipeCluster(new ItemStack(ItemReg.itemClusterMissile)).setRegistryName(new ResourceLocation(ICBMConstants.DOMAIN, "cluster_missile")));
     }
 
     @SubscribeEvent
@@ -364,6 +367,7 @@ public class ICBMClassic
         packetHandler.init();
         CREATIVE_TAB.init();
         ProjectileBlockInteraction.register();
+        ClusterMissileHandler.setup();
 
 
         // Needs to lock late as we need content to register some types

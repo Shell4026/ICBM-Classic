@@ -16,6 +16,7 @@ import icbm.classic.prefab.entity.EntityICBM;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -43,10 +44,9 @@ public class EntityMissileActionable extends EntityMissile<EntityMissileActionab
     /** Explosive data and settings */
     @Getter
     private final PotentialAction mainAction = new PotentialAction();
-    @Getter @Setter
+    @Getter @Setter @Accessors(chain = true)
     private ItemStack originalStack = ItemStack.EMPTY;
 
-    private static final DataParameter<Float> MAX_HEALTH = EntityDataManager.<Float>createKey(EntityMissileActionable.class, DataSerializers.FLOAT);
 
     public EntityMissileActionable(World w)
     {
@@ -55,15 +55,11 @@ public class EntityMissileActionable extends EntityMissile<EntityMissileActionab
         this.inAirKillTime = 144000 /* 2 hours */;
         this.isImmuneToFire = true;
         this.ignoreFrustumCheck = true;
-
-        // Init health as explosive field is not set at time of health registration
-        setHealth(getMaxHealth());
     }
 
-    @Override
-    protected void entityInit()
-    {
-        this.dataManager.register(MAX_HEALTH, (float) ConfigMissile.TIER_1_HEALTH);
+    public EntityMissileActionable setActionData(IActionData actionData) {
+        mainAction.setActionData(actionData);
+        return this;
     }
 
     @Override
