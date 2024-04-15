@@ -1,4 +1,4 @@
-package icbm.classic.content.blast.cluster.bomblet;
+package icbm.classic.content.cluster.bomblet;
 
 import com.google.common.collect.ImmutableList;
 import icbm.classic.ICBMConstants;

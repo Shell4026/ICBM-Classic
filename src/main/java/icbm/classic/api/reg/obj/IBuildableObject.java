@@ -44,6 +44,9 @@ public interface IBuildableObject {
      * Helper to quickly register the buildable.
      */
     default void register() {
+        if(getRegistry().isLocked()) {
+            return;
+        }
         getRegistry().register(this.getRegistryKey(), () -> this);
     }
 

@@ -1,4 +1,4 @@
-package icbm.classic.content.blast.cluster.bomblet;
+package icbm.classic.content.cluster.bomblet;
 
 import icbm.classic.api.missiles.projectile.IProjectileData;
 import icbm.classic.api.missiles.projectile.IProjectileStack;

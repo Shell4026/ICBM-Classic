@@ -6,8 +6,10 @@ import net.minecraft.item.ItemStack;
  * Version of capability to apply specific to ItemStacks for additional features
  * <p>
  * Items can either be the missile directly or a container of missile(s)
+ *
+ * @deprecated will be replaced with {@link icbm.classic.api.actions.IActionData}
  */
-@Deprecated // Will be replaced by IProjectileStack
+@Deprecated
 public interface ICapabilityMissileStack extends ICapabilityMissileBuilder
 {
 

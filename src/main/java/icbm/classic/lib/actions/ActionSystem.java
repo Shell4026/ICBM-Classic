@@ -11,6 +11,7 @@ import icbm.classic.api.reg.events.MissileCauseRegistryEvent;
 import icbm.classic.content.actions.emp.ActionDataEmpArea;
 import icbm.classic.content.blocks.launcher.screen.BlockScreenCause;
 import icbm.classic.content.blocks.launcher.status.LauncherStatus;
+import icbm.classic.content.cluster.action.ActionDataCluster;
 import icbm.classic.content.missile.logic.source.cause.CausedByBlock;
 import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.content.missile.logic.source.cause.RedstoneCause;
@@ -66,6 +67,7 @@ public final class ActionSystem {
 
         // Register defaults
         new ActionDataEmpArea().register();
+        ICBMClassicAPI.ACTION_REGISTRY.register(ActionDataCluster.REG_NAME, ActionDataCluster::new);
 
         //Fire registry event
         MinecraftForge.EVENT_BUS.post(new ActionRegistryEvent(ICBMClassicAPI.ACTION_REGISTRY));

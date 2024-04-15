@@ -1,19 +1,27 @@
 package icbm.classic.content.missile.entity.explosive;
 
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.actions.IActionData;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.content.missile.entity.EntityMissile;
 import icbm.classic.content.missile.logic.TargetRangeDet;
 import icbm.classic.content.missile.logic.source.ActionSource;
 import icbm.classic.content.missile.logic.source.cause.EntityCause;
+import icbm.classic.lib.actions.PotentialAction;
 import icbm.classic.lib.capability.ex.CapabilityExplosiveEntity;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import icbm.classic.lib.saving.NbtSaveNode;
+import icbm.classic.prefab.entity.EntityICBM;
 import io.netty.buffer.ByteBuf;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -28,18 +36,19 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Entity version of the missile
- * @deprecated replacing with {@link EntityMissileActionable}
+ * Missile with generic action handling
  */
-public class EntityExplosiveMissile extends EntityMissile<EntityExplosiveMissile>
+public class EntityMissileActionable extends EntityMissile<EntityMissileActionable>
 {
-    /** Targeting range handler and settings for triggering explosive before impact */
-    public final TargetRangeDet targetRangeDet = new TargetRangeDet(this);
-
     /** Explosive data and settings */
-    public final CapabilityExplosiveEntity explosive = new CapabilityExplosiveEntity(this);
+    @Getter
+    private final PotentialAction mainAction = new PotentialAction();
+    @Getter @Setter
+    private ItemStack originalStack = ItemStack.EMPTY;
 
-    public EntityExplosiveMissile(World w)
+    private static final DataParameter<Float> MAX_HEALTH = EntityDataManager.<Float>createKey(EntityMissileActionable.class, DataSerializers.FLOAT);
+
+    public EntityMissileActionable(World w)
     {
         super(w);
         this.setSize(.5F, .5F);
@@ -52,19 +61,9 @@ public class EntityExplosiveMissile extends EntityMissile<EntityExplosiveMissile
     }
 
     @Override
-    public float getMaxHealth()
+    protected void entityInit()
     {
-        if(explosive.getExplosiveData() != null ) {
-            switch (explosive.getExplosiveData().getTier()) {
-                case TWO:
-                    return ConfigMissile.TIER_2_HEALTH;
-                case THREE:
-                    return ConfigMissile.TIER_3_HEALTH;
-                case FOUR:
-                    return ConfigMissile.TIER_4_HEALTH;
-            }
-        }
-        return ConfigMissile.TIER_1_HEALTH;
+        this.dataManager.register(MAX_HEALTH, (float) ConfigMissile.TIER_1_HEALTH);
     }
 
     @Override
@@ -74,30 +73,14 @@ public class EntityExplosiveMissile extends EntityMissile<EntityExplosiveMissile
        // TODO add config
        // TODO add random chance modifier
        if(source.isExplosion() || source.isFireDamage()) {
-           explosive.doExplosion(posX, posY, posZ, new ActionSource(world, new Vec3d(posX, posY, posZ), new EntityCause(this)));
+           this.mainAction.doAction(getEntityWorld(), posX, posY, posZ, new EntityCause(this)); // Add damage source cause
        }
-    }
-
-    @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
-    {
-        if(capability == ICBMClassicAPI.EXPLOSIVE_CAPABILITY) {
-            return ICBMClassicAPI.EXPLOSIVE_CAPABILITY.cast(explosive);
-        }
-        return super.getCapability(capability, facing);
-    }
-
-    @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
-    {
-        return capability == ICBMClassicAPI.EXPLOSIVE_CAPABILITY
-            || super.hasCapability(capability, facing);
     }
 
     @Override
     public String getName()
     {
-        final IExplosiveData data = explosive.getExplosiveData();
+        final IActionData data = mainAction.getActionData();
         if (data != null)
         {
             return I18n.translateToLocal("missile." + data.getRegistryKey().toString() + ".name");
@@ -124,8 +107,8 @@ public class EntityExplosiveMissile extends EntityMissile<EntityExplosiveMissile
     @Override
     public void onUpdate()
     {
-        targetRangeDet.update();
         super.onUpdate();
+        this.mainAction.update(ticksExisted, !this.getEntityWorld().isRemote);
     }
 
     @Override
@@ -142,12 +125,13 @@ public class EntityExplosiveMissile extends EntityMissile<EntityExplosiveMissile
     @Override
     protected void onImpact(RayTraceResult impactLocation) {
         super.onImpact(impactLocation);
-        explosive.doExplosion(impactLocation.hitVec.x, impactLocation.hitVec.y, impactLocation.hitVec.z, new ActionSource(world, new Vec3d(posX, posY, posZ), new EntityCause(this)));
+        // TODO add impact cause
+        mainAction.doAction(getEntityWorld(), impactLocation.hitVec.x, impactLocation.hitVec.y, impactLocation.hitVec.z, new EntityCause(this));
     }
 
     @Override
     public ItemStack toStack() {
-        return explosive.toStack();
+        return originalStack;
     }
 
     @Override
@@ -164,11 +148,9 @@ public class EntityExplosiveMissile extends EntityMissile<EntityExplosiveMissile
         SAVE_LOGIC.save(this, nbt);
     }
 
-    private static final NbtSaveHandler<EntityExplosiveMissile> SAVE_LOGIC = new NbtSaveHandler<EntityExplosiveMissile>()
+    private static final NbtSaveHandler<EntityMissileActionable> SAVE_LOGIC = new NbtSaveHandler<EntityMissileActionable>()
         .mainRoot()
-        /* */.node(new NbtSaveNode<EntityExplosiveMissile, NBTTagCompound>("explosive",
-            (missile) -> missile.explosive.serializeNBT(),
-            (missile, data) -> missile.explosive.deserializeNBT(data))
-        )
+        /* */.nodeINBTSerializable("potential_action", EntityMissileActionable::getMainAction)
+        /* */.nodeItemStack("original_stack", EntityMissileActionable::getOriginalStack, EntityMissileActionable::setOriginalStack)
         .base();
 }

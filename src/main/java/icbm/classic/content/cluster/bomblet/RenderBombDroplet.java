@@ -1,8 +1,8 @@
-package icbm.classic.content.blast.cluster;
+package icbm.classic.content.cluster.bomblet;
 
 import icbm.classic.ICBMConstants;
 import icbm.classic.client.render.entity.RenderEntityItem2;
-import icbm.classic.content.blast.cluster.bomblet.EntityBombDroplet;
+import icbm.classic.content.cluster.bomblet.EntityBombDroplet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;

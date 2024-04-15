@@ -2,7 +2,7 @@ package icbm.classic.content.reg;
 
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.refs.ICBMEntities;
-import icbm.classic.content.blast.cluster.bomblet.EntityBombDroplet;
+import icbm.classic.content.cluster.bomblet.EntityBombDroplet;
 import icbm.classic.content.blast.redmatter.EntityRedmatter;
 import icbm.classic.content.cargo.balloon.EntityBalloon;
 import icbm.classic.content.entity.*;
@@ -10,6 +10,7 @@ import icbm.classic.content.entity.flyingblock.EntityFlyingBlock;
 import icbm.classic.content.missile.entity.anti.EntitySurfaceToAirMissile;
 import icbm.classic.content.missile.entity.explosive.EntityExplosiveMissile;
 import icbm.classic.content.cargo.parachute.EntityParachute;
+import icbm.classic.content.missile.entity.explosive.EntityMissileActionable;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
@@ -45,6 +46,7 @@ public final class EntityReg
         event.getRegistry().register(buildEntityEntry(EntityFragments.class, ICBMEntities.BLOCK_FRAGMENT, 40, 1));
         event.getRegistry().register(buildEntityEntry(EntityExplosive.class, ICBMEntities.BLOCK_EXPLOSIVE, 50, 5));
         event.getRegistry().register(buildEntityEntry(EntityExplosiveMissile.class, ICBMEntities.MISSILE_EXPLOSIVE, 500, 1));
+        event.getRegistry().register(buildEntityEntry(EntityMissileActionable.class, ICBMEntities.MISSILE_GENERIC, 500, 1));
         event.getRegistry().register(buildEntityEntry(EntityExplosion.class, ICBMEntities.EXPLOSION, 100, 5));
         event.getRegistry().register(buildEntityEntry(EntityLightBeam.class, ICBMEntities.BEAM, 80, 5));
         event.getRegistry().register(buildEntityEntry(EntityGrenade.class, ICBMEntities.GRENADE, 50, 5));

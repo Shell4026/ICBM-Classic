@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public interface  IProjectileDataRegistry extends IBuilderRegistry<IProjectileData> {
+public interface IProjectileDataRegistry extends IBuilderRegistry<IProjectileData> {
 
     /**
      * Registers a conversion for the given item and matching state. Meant for vanilla conversions
@@ -23,6 +23,8 @@ public interface  IProjectileDataRegistry extends IBuilderRegistry<IProjectileDa
      * @param itemStack to register with, only item is saved. Stack data is used for sorting
      * @param matcher to reduce down to a specific stack
      * @param projectileDataKey to use for projectile building
+     *
+     * @deprecated being replaced with ItemStack -> {@link icbm.classic.api.actions.IActionData}
      */
     default void registerItemStackConversation(ItemStack itemStack, Function<ItemStack, Boolean> matcher, ResourceLocation projectileDataKey) {
         registerItemStackConversation(itemStack, (stack) ->  matcher.apply(stack) ? this.getOrBuild(projectileDataKey) : null);
@@ -38,6 +40,8 @@ public interface  IProjectileDataRegistry extends IBuilderRegistry<IProjectileDa
      *
      * @param itemStack to register with, only item is saved. Stack data is used for sorting
      * @param builder to use, return null if the stack isn't supported
+     *
+     * @deprecated being replaced with ItemStack -> {@link icbm.classic.api.actions.IActionData}
      */
     void registerItemStackConversation(ItemStack itemStack, Function<ItemStack, IProjectileData> builder);
 
@@ -53,6 +57,8 @@ public interface  IProjectileDataRegistry extends IBuilderRegistry<IProjectileDa
      * @param source to optionally provide, may be used for damage origin or other data during spawning
      *
      * @return entity or null if failed to spawn or data was missing
+     *
+     * @deprecated being replaced with {@link icbm.classic.api.actions.IAction}
      */
     default Entity spawnProjectile(ResourceLocation key, World world, double x, double y, double z, boolean allowItemPickup, @Nullable Entity source) {
         //TODO return spawn event with more details
@@ -72,6 +78,8 @@ public interface  IProjectileDataRegistry extends IBuilderRegistry<IProjectileDa
      * @param preSpawnCallback optional callback to set additional details on the entity, such as velocity
      *
      * @return entity or null if failed to spawn or data was missing
+     *
+     * @deprecated being replaced with {@link icbm.classic.api.actions.IAction}
      */
     Entity spawnProjectile(ResourceLocation key, World world, double x, double y, double z,
                                    @Nullable Entity source, boolean allowItemPickup,
@@ -89,6 +97,8 @@ public interface  IProjectileDataRegistry extends IBuilderRegistry<IProjectileDa
      * @param preSpawnCallback optional callback to set additional details on the entity, such as velocity
      *
      * @return entity or null if failed to spawn or data was missing
+     *
+     * @deprecated being replaced with {@link icbm.classic.api.actions.IAction}
      */
     Entity spawnProjectile(ItemStack item, World world, double x, double y, double z, @Nullable Entity source,
                            boolean allowItemPickup, @Nullable Consumer<Entity> preSpawnCallback);
@@ -105,6 +115,8 @@ public interface  IProjectileDataRegistry extends IBuilderRegistry<IProjectileDa
      * @param preSpawnCallback optional callback to set additional details on the entity, such as velocity
      *
      * @return entity or null if failed to spawn or data was missing
+     *
+     * @deprecated being replaced with {@link icbm.classic.api.actions.IAction}
      */
     <E extends Entity> E spawnProjectile(IProjectileData<E> data, World world, double x, double y, double z, @Nullable Entity source,
                            boolean allowItemPickup, @Nullable Consumer<E> preSpawnCallback);

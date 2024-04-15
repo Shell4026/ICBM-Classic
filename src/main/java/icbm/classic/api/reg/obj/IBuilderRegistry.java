@@ -100,4 +100,6 @@ public interface IBuilderRegistry<Part extends IBuildableObject> {
         }
         return null;
     }
+
+    boolean isLocked();
 }

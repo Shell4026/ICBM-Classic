@@ -3,9 +3,10 @@ package icbm.classic.content.reg;
 import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
 import icbm.classic.config.ConfigItems;
-import icbm.classic.content.blast.cluster.bomblet.ItemBombDroplet;
+import icbm.classic.content.cluster.bomblet.ItemBombDroplet;
 import icbm.classic.content.blocks.emptower.ItemBlockEmpTower;
 import icbm.classic.content.blocks.explosive.ItemBlockExplosive;
+import icbm.classic.content.cluster.missile.ItemClusterMissile;
 import icbm.classic.content.items.*;
 import icbm.classic.content.missile.entity.anti.item.ItemSurfaceToAirMissile;
 import icbm.classic.content.cargo.ItemThrowableProjectile;
@@ -77,6 +78,9 @@ public class ItemReg
     @ObjectHolder(ICBMConstants.PREFIX + "surface_to_air_missile")
     public static ItemSurfaceToAirMissile itemSAM;
 
+    @ObjectHolder(ICBMConstants.PREFIX + "cluster_missile")
+    public static Item itemClusterMissile;
+
     @ObjectHolder(ICBMConstants.PREFIX + "parachute")
     public static ItemThrowableProjectile itemParachute;
 
@@ -121,6 +125,7 @@ public class ItemReg
         event.getRegistry().register(new ItemRocketLauncher());
         event.getRegistry().register(new ItemMissile().setName("explosive_missile").setCreativeTab(ICBMClassic.CREATIVE_TAB));
         event.getRegistry().register(new ItemSurfaceToAirMissile());
+        event.getRegistry().register(new ItemClusterMissile().setName("cluster_missile").setCreativeTab(ICBMClassic.CREATIVE_TAB));
 
         // TODO move to addon
         event.getRegistry().register(new ItemBombDroplet().setName("bomblet").setCreativeTab(ICBMClassic.CREATIVE_TAB));

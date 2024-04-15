@@ -1,7 +1,7 @@
 package icbm.classic.command;
 
 import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.content.blast.cluster.bomblet.EntityBombDroplet;
+import icbm.classic.content.cluster.bomblet.EntityBombDroplet;
 import icbm.classic.content.blast.redmatter.EntityRedmatter;
 import icbm.classic.content.entity.*;
 import icbm.classic.content.entity.flyingblock.EntityFlyingBlock;

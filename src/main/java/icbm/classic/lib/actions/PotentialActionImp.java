@@ -42,7 +42,7 @@ public abstract class PotentialActionImp<SELF extends PotentialActionImp<SELF>> 
 
     private final Map<ActionField, Supplier> fieldAccessors = new HashMap();
 
-    @Getter
+    @Getter @Setter
     private ICondition preCheck;
 
     public SELF withCondition(ICondition check) {

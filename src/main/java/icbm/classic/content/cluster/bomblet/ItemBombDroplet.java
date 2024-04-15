@@ -1,4 +1,4 @@
-package icbm.classic.content.blast.cluster.bomblet;
+package icbm.classic.content.cluster.bomblet;
 
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.lib.capability.ex.CapabilityExplosiveStatic;

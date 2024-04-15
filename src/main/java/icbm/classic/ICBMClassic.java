@@ -1,8 +1,6 @@
 package icbm.classic;
 
 import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.actions.status.IActionStatus;
-import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.api.missiles.parts.IMissileFlightLogic;
 import icbm.classic.api.missiles.parts.IMissileTarget;
 import icbm.classic.api.reg.IExplosiveCustomization;
@@ -13,14 +11,10 @@ import icbm.classic.command.system.CommandEntryPoint;
 import icbm.classic.config.ConfigItems;
 import icbm.classic.config.ConfigThread;
 import icbm.classic.lib.actions.ActionSystem;
-import icbm.classic.lib.actions.listners.ActionListenerHandler;
-import icbm.classic.lib.actions.status.ActionResponses;
 import icbm.classic.content.blast.caps.CapabilityBlast;
 import icbm.classic.content.blast.caps.CapabilityBlastVelocity;
-import icbm.classic.content.blast.cluster.ClusterCustomization;
-import icbm.classic.content.blast.cluster.bomblet.BombletProjectileData;
+import icbm.classic.content.cluster.bomblet.BombletProjectileData;
 import icbm.classic.content.blast.ender.EnderBlastCustomization;
-import icbm.classic.content.blocks.launcher.screen.BlockScreenCause;
 import icbm.classic.content.cargo.RecipeCargoData;
 import icbm.classic.content.cargo.balloon.BalloonProjectileData;
 import icbm.classic.content.entity.flyingblock.FlyingBlock;
@@ -32,9 +26,6 @@ import icbm.classic.content.missile.entity.anti.SAMTargetData;
 import icbm.classic.content.missile.logic.flight.*;
 import icbm.classic.content.missile.logic.flight.move.MoveByFacingLogic;
 import icbm.classic.content.missile.logic.flight.move.MoveForTicksLogic;
-import icbm.classic.content.missile.logic.source.cause.CausedByBlock;
-import icbm.classic.content.missile.logic.source.cause.EntityCause;
-import icbm.classic.content.missile.logic.source.cause.RedstoneCause;
 import icbm.classic.content.missile.logic.targeting.BallisticTargetingData;
 import icbm.classic.content.missile.logic.targeting.BasicTargetData;
 import icbm.classic.content.cargo.parachute.ParachuteProjectileData;
@@ -51,7 +42,6 @@ import icbm.classic.lib.capability.ex.CapabilityExplosive;
 import icbm.classic.lib.capability.gps.CapabilityGPSData;
 import icbm.classic.lib.capability.launcher.CapabilityMissileHolder;
 import icbm.classic.lib.capability.launcher.CapabilityMissileLauncher;
-import icbm.classic.content.blocks.launcher.status.LauncherStatus;
 import icbm.classic.lib.capability.missile.CapabilityMissileStack;
 import icbm.classic.lib.projectile.CapabilityProjectileStack;
 import icbm.classic.lib.energy.system.EnergySystem;
@@ -305,7 +295,6 @@ public class ICBMClassic
 
         // Register defaults
         ICBMClassicAPI.EXPLOSIVE_CUSTOMIZATION_REGISTRY.register(EnderBlastCustomization.NAME, EnderBlastCustomization::new);
-        ICBMClassicAPI.EXPLOSIVE_CUSTOMIZATION_REGISTRY.register(ClusterCustomization.NAME, ClusterCustomization::new);
 
         //Fire registry event
         MinecraftForge.EVENT_BUS.post(new ExplosiveCustomizationRegistryEvent(ICBMClassicAPI.EXPLOSIVE_CUSTOMIZATION_REGISTRY));

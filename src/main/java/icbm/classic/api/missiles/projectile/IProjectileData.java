@@ -19,6 +19,13 @@ import javax.annotation.Nullable;
  * needed without knowing what it is or how it works.
  *
  * @param <E> created from the projectile data
+ *
+ * @deprecated being replaced with {@link icbm.classic.api.actions.IActionData} and {@link icbm.classic.api.actions.data.ActionTypes#PROJECTILE}
+ * as current solution isn't flexible enough and results in odd spawning when {@link #onEntitySpawned(Entity, Entity, EnumHand)} is invoked. It
+ * also gives caller too much visibility into what is spawned. When it should just provide starting information via {@link icbm.classic.api.actions.data.IActionFieldProvider}
+ * then let the spawn entity use what it needs. Plus this makes it far easier for reuse of common actions and provide implemetation for other mods.
+ * As the majority of projects can be implemented as ActionSpawnEntity((world, pos, provider) -> new Entity(world, pos, provider)). Dropping
+ * need for a custom implementation.
  */
 public interface IProjectileData<E extends Entity>  extends IBuildableObject, ITypeTaggable {
 
@@ -31,7 +38,7 @@ public interface IProjectileData<E extends Entity>  extends IBuildableObject, IT
      * @param allowItemPickup true to allow entity to be collected, such as picking up arrows
      * @return entity to spawn
      */
-    E newEntity(World world, boolean allowItemPickup); //TODO replace with IActionSolution
+    E newEntity(World world, boolean allowItemPickup);
 
     /**
      * Called after the entity has been added to the world. Useful
@@ -44,7 +51,7 @@ public interface IProjectileData<E extends Entity>  extends IBuildableObject, IT
      * @param source that created the entity, may not always be present
      * @param hand used to spawn entity, for non-humanoid this will always be main hand
      */
-    default void onEntitySpawned(@Nonnull E entity, @Nullable Entity source, @Nullable EnumHand hand) { //TODO consider moving to a IAction
+    default void onEntitySpawned(@Nonnull E entity, @Nullable Entity source, @Nullable EnumHand hand) {
 
     }
 

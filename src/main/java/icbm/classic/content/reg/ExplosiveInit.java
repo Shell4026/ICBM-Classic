@@ -12,7 +12,7 @@ import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.config.blast.ConfigBlast;
 import icbm.classic.content.blast.*;
 import icbm.classic.content.blast.BlastTNT.PushType;
-import icbm.classic.content.blast.cluster.BlastCluster;
+import icbm.classic.content.cluster.action.ActionCluster;
 import icbm.classic.content.actions.emp.ActionDataEmpArea;
 import icbm.classic.content.blast.ender.BlastEnder;
 import icbm.classic.content.blast.ender.EnderBlastCustomization;
@@ -205,7 +205,7 @@ public class ExplosiveInit
         ICBMExplosives.COLOR = newEx(-1, "colors", EnumTier.ONE, (w, x, y, z, s) -> new BlastColor().setBlastSize(ConfigBlast.colorful.scale).setBlastWorld(w).setBlastPosition(x, y, z));
         ICBMExplosives.SMOKE = newEx(-1, "smoke", EnumTier.ONE, (w, x, y, z, s) -> new BlastSmoke().setBlastWorld(w).setBlastPosition(x, y, z)); //TODO add scale for smoke count, and ticks alive as NBT var
 
-        ICBMExplosives.CLUSTER = newEx(-1, "cluster", EnumTier.NONE, (w, x, y, z, s) -> new BlastCluster().setBlastWorld(w).setBlastPosition(x, y, z));
+        ICBMExplosives.CLUSTER = newEx(-1, "cluster", EnumTier.NONE, (w, x, y, z, s) -> new ActionCluster(w, new Vec3d(x, y, z), s, ICBMExplosives.CLUSTER));
         ICBMClassicAPI.EX_MISSILE_REGISTRY.enableContent(ICBMExplosives.CLUSTER.getRegistryKey());
 
 
