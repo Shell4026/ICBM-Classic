@@ -73,12 +73,6 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
     }
 
     @Override
-    public float getMaxHealth()
-    {
-        return ConfigMissile.TIER_1_HEALTH;
-    }
-
-    @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
     {
         if (capability == CapabilityEMP.EMP)

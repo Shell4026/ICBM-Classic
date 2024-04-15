@@ -2,17 +2,10 @@ package icbm.classic.content.missile.entity.explosive;
 
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.actions.IActionData;
-import icbm.classic.api.reg.IExplosiveData;
-import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.content.missile.entity.EntityMissile;
-import icbm.classic.content.missile.logic.TargetRangeDet;
-import icbm.classic.content.missile.logic.source.ActionSource;
 import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.lib.actions.PotentialAction;
-import icbm.classic.lib.capability.ex.CapabilityExplosiveEntity;
 import icbm.classic.lib.saving.NbtSaveHandler;
-import icbm.classic.lib.saving.NbtSaveNode;
-import icbm.classic.prefab.entity.EntityICBM;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,21 +13,14 @@ import lombok.experimental.Accessors;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Missile with generic action handling

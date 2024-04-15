@@ -26,12 +26,7 @@ public class EntitySurfaceToAirMissile extends EntityMissile<EntitySurfaceToAirM
     public EntitySurfaceToAirMissile(World world) {
         super(world);
         this.getMissileCapability().setTargetData(scanLogic); //TODO create custom missileCap to force getTarget()
-    }
-
-    @Override
-    public float getMaxHealth()
-    {
-        return ConfigMissile.TIER_2_HEALTH;
+        this.setMaxHealth(ConfigMissile.TIER_2_HEALTH);
     }
 
     @Override
