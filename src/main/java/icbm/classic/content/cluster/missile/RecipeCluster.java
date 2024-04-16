@@ -48,10 +48,7 @@ public class RecipeCluster extends IForgeRegistryEntry.Impl<IRecipe> implements 
 
         for (int slot = 0; slot < inv.getSizeInventory(); slot++) {
             final ItemStack slotStack = inv.getStackInSlot(slot);
-            if (slotStack.isItemEqual(recipeOutput)) {
-                if (!cluster.isEmpty()) {
-                    return false; // Can't nest clusters
-                }
+            if (cluster.isEmpty() && slotStack.isItemEqual(recipeOutput)) {
                 cluster = slotStack;
             }
             else if(!ClusterMissileHandler.isAllowed(slotStack)) {
