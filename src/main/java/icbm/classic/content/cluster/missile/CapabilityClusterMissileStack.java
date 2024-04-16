@@ -4,6 +4,8 @@ import icbm.classic.ICBMConstants;
 import icbm.classic.api.missiles.ICapabilityMissileStack;
 import icbm.classic.api.missiles.IMissile;
 import icbm.classic.config.missile.ConfigMissile;
+import icbm.classic.content.actions.conditionals.ConditionAnd;
+import icbm.classic.content.actions.conditionals.ConditionTargetDistance;
 import icbm.classic.content.cluster.action.ActionDataCluster;
 import icbm.classic.content.actions.conditionals.ConditionalImpact;
 import icbm.classic.content.missile.entity.explosive.EntityMissileActionable;
@@ -37,8 +39,15 @@ public class CapabilityClusterMissileStack implements ICapabilityMissileStack, I
             .setActionData(actionDataCluster)
             .initHealth(ConfigMissile.CLUSTER_MISSILE.MAX_HEALTH);
 
+        final ConditionAnd conditionAnd = new ConditionAnd();
+
         // Disable impact trigger
-        missile.getMainAction().withCondition(new ConditionalImpact().setImpactDesired(false));
+        conditionAnd.getConditions().add(new ConditionalImpact().setImpactDesired(false));
+
+        // Trigger when near target
+        conditionAnd.getConditions().add(new ConditionTargetDistance().setTriggerDistance(3)); //TODO pull from targetData?
+
+        missile.getMainAction().withCondition(conditionAnd);
 
         return missile.getMissileCapability();
     }
