@@ -17,6 +17,7 @@ import icbm.classic.lib.actions.status.ActionResponses;
 import icbm.classic.lib.data.LazyBuilder;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import icbm.classic.lib.tile.ITick;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -42,11 +43,14 @@ public abstract class PotentialActionImp<SELF extends PotentialActionImp<SELF>> 
 
     private final Map<ActionField, Supplier> fieldAccessors = new HashMap();
 
-    @Getter @Setter
+    @Getter @Setter(AccessLevel.PRIVATE)
     private ICondition preCheck;
 
     public SELF withCondition(ICondition check) {
         this.preCheck = check;
+        if(check != null) {
+            check.init(this);
+        }
         return (SELF) this;
     }
 

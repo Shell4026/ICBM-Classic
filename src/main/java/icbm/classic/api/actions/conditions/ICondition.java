@@ -1,6 +1,7 @@
 package icbm.classic.api.actions.conditions;
 
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.actions.data.IActionFieldProvider;
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.reg.obj.IBuildableObject;
 import icbm.classic.api.reg.obj.IBuilderRegistry;
@@ -11,6 +12,13 @@ import javax.annotation.Nonnull;
  * Generic system for applying conditionals for anything.
  */
 public interface ICondition extends IBuildableObject {
+
+    /**
+     * Called to load any data from host system
+     */
+    default void init(IActionFieldProvider provider) {
+
+    }
 
     @Nonnull
     default IBuilderRegistry<ICondition> getRegistry() {
