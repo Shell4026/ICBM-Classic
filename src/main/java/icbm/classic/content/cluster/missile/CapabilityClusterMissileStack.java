@@ -5,6 +5,7 @@ import icbm.classic.api.missiles.ICapabilityMissileStack;
 import icbm.classic.api.missiles.IMissile;
 import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.content.cluster.action.ActionDataCluster;
+import icbm.classic.content.missile.entity.explosive.ConditionalImpact;
 import icbm.classic.content.missile.entity.explosive.EntityMissileActionable;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.Getter;
@@ -35,6 +36,10 @@ public class CapabilityClusterMissileStack implements ICapabilityMissileStack, I
             .setOriginalStack(stack)
             .setActionData(actionDataCluster)
             .initHealth(ConfigMissile.CLUSTER_MISSILE.MAX_HEALTH);
+
+        // Disable impact trigger
+        missile.getMainAction().withCondition(new ConditionalImpact().setImpactDesired(false));
+
         return missile.getMissileCapability();
     }
 
