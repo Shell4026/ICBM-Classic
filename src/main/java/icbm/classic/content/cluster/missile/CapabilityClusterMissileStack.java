@@ -31,10 +31,11 @@ public class CapabilityClusterMissileStack implements ICapabilityMissileStack, I
     @Override
     public IMissile newMissile(World world)
     {
-        return new EntityMissileActionable(world)
+        final EntityMissileActionable missile = new EntityMissileActionable(world)
             .setOriginalStack(stack)
             .setActionData(actionDataCluster)
             .initHealth(ConfigMissile.CLUSTER_MISSILE.MAX_HEALTH);
+        return missile.getMissileCapability();
     }
 
     @Override
