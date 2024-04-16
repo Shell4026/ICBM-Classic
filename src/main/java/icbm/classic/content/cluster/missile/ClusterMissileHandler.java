@@ -6,9 +6,6 @@ import icbm.classic.content.reg.ItemReg;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-
-import java.util.HashMap;
 
 @NoArgsConstructor(access = AccessLevel.NONE)
 public final class ClusterMissileHandler {
@@ -19,11 +16,11 @@ public final class ClusterMissileHandler {
 
     public static final ItemStackConfigList.IntOut itemSizes = new ItemStackConfigList.IntOut("[Cluster Contents][Item Sizes]", (configList) -> {
 
-        configList.set(ItemReg.itemBalloon.getRegistryName(), 2);
-        configList.set(ItemReg.itemParachute.getRegistryName(), 2);
-        configList.set(ItemReg.itemClusterMissile.getRegistryName(), 20);
-        configList.set(ItemReg.itemExplosiveMissile.getRegistryName(), 20);
-        configList.set(ItemReg.itemSAM.getRegistryName(), 10);
+        configList.setDefault(ItemReg.itemBalloon.getRegistryName(), 2, 0);
+        configList.setDefault(ItemReg.itemParachute.getRegistryName(), 2, 0);
+        configList.setDefault(ItemReg.itemClusterMissile.getRegistryName(), 20, 0);
+        configList.setDefault(ItemReg.itemExplosiveMissile.getRegistryName(), 20, 0);
+        configList.setDefault(ItemReg.itemSAM.getRegistryName(), 10, 0);
 
         configList.load(ConfigMissile.CLUSTER_MISSILE.ITEM_SIZES.ITEMS);
     });
