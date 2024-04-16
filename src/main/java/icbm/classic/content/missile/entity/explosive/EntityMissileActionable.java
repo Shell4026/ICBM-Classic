@@ -35,7 +35,9 @@ public class EntityMissileActionable extends EntityMissile<EntityMissileActionab
     @Getter
     private final PotentialAction mainAction = new PotentialAction()
         .field(ActionFields.IMPACTED, () -> hasImpacted)
-        .field(ActionFields.HOST_ENTITY, () -> this);
+        .field(ActionFields.HOST_ENTITY, () -> this)
+        .field(ActionFields.HOST_POSITION, this::getPositionVector) //TODO may need to cache once conditionals get more common
+        .field(ActionFields.TARGET_POSITION, () -> this.getMissileCapability().getTargetData() != null ? this.getMissileCapability().getTargetData().getPosition(): null);
 
     @Getter @Setter @Accessors(chain = true)
     private ItemStack originalStack = ItemStack.EMPTY;

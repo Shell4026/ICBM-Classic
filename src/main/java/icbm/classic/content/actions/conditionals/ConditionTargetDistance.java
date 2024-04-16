@@ -49,6 +49,7 @@ public class ConditionTargetDistance implements ICondition, IConditionCause, INB
             final Vec3d host = provider.getValue(ActionFields.HOST_POSITION);
             if(value != null && host != null) {
                 currentDistance = host.distanceTo(value);
+                //TODO add a manhatten distance version for faster calculations
             }
         }
     }
