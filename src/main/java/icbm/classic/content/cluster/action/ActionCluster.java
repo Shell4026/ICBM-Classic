@@ -104,7 +104,9 @@ public class ActionCluster extends ActionBase {
             return ActionResponses.COMPLETED;
         }
 
-        boolean spawnedSomething = spawnEmptyMissile();
+        // TODO spawn cluster body parts and fragments
+
+        boolean spawnedSomething = false;
 
         final float yawAmount = 360.0f / projectilesPerLayer;
 
@@ -194,18 +196,5 @@ public class ActionCluster extends ActionBase {
             return getWorld().spawnEntity(entityItem);
         }
         return true;
-    }
-
-    private boolean spawnEmptyMissile() {
-        // Using bomblet for placeholder until we make an empty missile body
-        EntityBombDroplet bomblet = new EntityBombDroplet(getWorld());
-        bomblet.explosive.setStack(new ItemStack(ItemReg.itemBomblet));
-        bomblet.setPosition(getPosition().x, getPosition().y, getPosition().z);
-        bomblet.initAimingPosition(
-            getPosition().x, getPosition().y, getPosition().z,
-            (float) sourceYaw,
-            (float) sourcePitch,
-            0f, 0.03f);
-        return getWorld().spawnEntity(bomblet);
     }
 }
