@@ -7,7 +7,6 @@ import icbm.classic.api.caps.IEMPReceiver;
 import icbm.classic.api.events.MissileEvent;
 import icbm.classic.api.events.MissileRideEvent;
 import icbm.classic.client.ICBMSounds;
-import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.content.missile.logic.flight.BallisticFlightLogicOld;
 import icbm.classic.content.missile.logic.flight.DeadFlightLogic;
 import icbm.classic.lib.CalculationHelpers;
@@ -276,14 +275,16 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
     }
 
     @Override
-    protected void onImpact(RayTraceResult impactLocation) {
+    protected final void onImpact(RayTraceResult impactLocation) {
         if(!hasImpacted) {
-            this.hasImpacted = true;
+            this.hasImpacted = true; //TODO store impact information and move this to projectile
             logImpact(impactLocation.hitVec);
-            dismountRidingEntity();
-            removePassengers();
-            setDead();
+            actionOnImpact(impactLocation);
         }
+    }
+
+    protected void actionOnImpact(RayTraceResult impactLocation) {
+        this.destroy();
     }
 
     protected void logImpact(Vec3d impactLocation)

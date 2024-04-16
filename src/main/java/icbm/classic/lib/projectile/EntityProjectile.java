@@ -206,7 +206,7 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
             ++this.ticksInGround;
 
             if (shouldExpire()) {
-                this.onExpired();
+                this.destroy();
             }
         }
         // Handle in air logic
@@ -215,7 +215,7 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
             //Kills the projectile if it moves forever into space
             ++this.ticksInAir;
             if (shouldExpire()) {
-                this.onExpired();
+                this.destroy();
                 return;
             }
 
@@ -332,7 +332,7 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
 
     /**
      * Called to check if the projectile
-     * should invoke {@link #onExpired()}
+     * should invoke {@link #destroy()}
      *
      * @return true to expire
      */
@@ -340,14 +340,12 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
         return ticksInAir >= inAirKillTime || ticksInGround >= inGroundKillTime || this.posY < -100;
     }
 
-    /**
-     * Called when the projectile has expired
-     * either due to living too long or being
-     * outside its bounds
-     */
-    protected void onExpired() {
-        this.removePassengers();
-        this.setDead();
+
+    @Override
+    protected void destroy() {
+        dismountRidingEntity();
+        removePassengers();
+        super.destroy();
     }
 
     protected boolean ignoreImpact(RayTraceResult hit) {

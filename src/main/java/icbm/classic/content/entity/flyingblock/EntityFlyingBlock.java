@@ -127,7 +127,7 @@ public class EntityFlyingBlock extends EntityProjectile<EntityFlyingBlock> imple
     }
 
     @Override
-    protected void onExpired() {
+    protected void destroy() {
         this.placeBlockIntoWorld(this.getPos(), new RayTraceResult(this.getPositionVector(), EnumFacing.UP));
         this.setDead();
     }

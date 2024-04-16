@@ -157,7 +157,7 @@ public class EntityBalloon extends EntityProjectile<EntityBalloon> implements IE
     }
 
     @Override
-    protected void onExpired() {
+    protected void destroy() {
         this.releaseCargoAndDespawn();
     }
 

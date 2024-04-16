@@ -182,7 +182,7 @@ public class EntityParachute extends EntityProjectile<EntityParachute> implement
     }
 
     @Override
-    protected void onExpired() {
+    protected void destroy() {
         this.releaseParachute();
     }
 

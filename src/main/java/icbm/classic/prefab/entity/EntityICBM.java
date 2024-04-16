@@ -114,6 +114,14 @@ public abstract class EntityICBM extends Entity implements IWorldPosition
      */
     protected void onDestroyedBy(DamageSource source, float damage)
     {
+       this.destroy();
+    }
+
+    /**
+     * Called when the entity expires or
+     * is destroyed in some way.
+     */
+    protected void destroy() {
         this.setDead();
     }
 

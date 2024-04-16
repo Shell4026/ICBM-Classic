@@ -2,6 +2,10 @@ package icbm.classic.content.missile.entity.explosive;
 
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.actions.IActionData;
+import icbm.classic.api.actions.data.ActionFields;
+import icbm.classic.api.actions.data.IActionFieldProvider;
+import icbm.classic.api.actions.status.ActionStatusTypes;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.content.missile.entity.EntityMissile;
 import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.lib.actions.PotentialAction;
@@ -51,11 +55,13 @@ public class EntityMissileActionable extends EntityMissile<EntityMissileActionab
     @Override
     protected void onDestroyedBy(DamageSource source, float damage)
     {
-       super.onDestroyedBy(source, damage);
        // TODO add config
        // TODO add random chance modifier
        if(source.isExplosion() || source.isFireDamage()) {
-           this.mainAction.doAction(getEntityWorld(), posX, posY, posZ, new EntityCause(this)); // Add damage source cause
+           final IActionStatus status = this.mainAction.doAction(getEntityWorld(), posX, posY, posZ, new EntityCause(this)); // Add damage source cause
+           if(!status.isType(ActionStatusTypes.BLOCKING)) {
+               super.onDestroyedBy(source, damage);
+           }
        }
     }
 
@@ -105,10 +111,12 @@ public class EntityMissileActionable extends EntityMissile<EntityMissileActionab
     }
 
     @Override
-    protected void onImpact(RayTraceResult impactLocation) {
-        super.onImpact(impactLocation);
+    protected void actionOnImpact(RayTraceResult impactLocation) {
         // TODO add impact cause
-        mainAction.doAction(getEntityWorld(), impactLocation.hitVec.x, impactLocation.hitVec.y, impactLocation.hitVec.z, new EntityCause(this));
+        final IActionStatus status = mainAction.doAction(getEntityWorld(), impactLocation.hitVec.x, impactLocation.hitVec.y, impactLocation.hitVec.z, new EntityCause(this));
+        if(!status.isType(ActionStatusTypes.BLOCKING)) {
+            super.actionOnImpact(impactLocation);
+        }
     }
 
     @Override

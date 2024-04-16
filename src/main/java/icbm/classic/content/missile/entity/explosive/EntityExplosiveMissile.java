@@ -140,8 +140,8 @@ public class EntityExplosiveMissile extends EntityMissile<EntityExplosiveMissile
     }
 
     @Override
-    protected void onImpact(RayTraceResult impactLocation) {
-        super.onImpact(impactLocation);
+    protected void actionOnImpact(RayTraceResult impactLocation) {
+        super.actionOnImpact(impactLocation);
         explosive.doExplosion(impactLocation.hitVec.x, impactLocation.hitVec.y, impactLocation.hitVec.z, new ActionSource(world, new Vec3d(posX, posY, posZ), new EntityCause(this)));
     }
 
