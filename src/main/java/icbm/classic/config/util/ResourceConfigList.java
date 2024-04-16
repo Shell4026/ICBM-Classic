@@ -3,14 +3,15 @@ package icbm.classic.config.util;
 import icbm.classic.ICBMClassic;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Prefab for anything that allows blacklist based on {@link ResourceLocation}
@@ -23,9 +24,13 @@ import java.util.function.Supplier;
  * - lock
  */
 @RequiredArgsConstructor
-public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONTENT> {
+public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONTENT, VALUE> {
     // TODO once ContentBuilder Json system is published for MC replace this with JSON version to support programmatic and more complex entries
     //      entries to consider once JSON is allowed: time/date specific, conditional statements such as IF(MOD) IF(WORLD) IF(MATH) IF(GEO_AREA), block sets/lists
+
+    protected final Pattern KEY_VALUE_REGEX = Pattern.compile( "^(.*):([^=\\s]*)(=(.*))?");
+    protected final Pattern DOMAIN_VALE_REGEX = Pattern.compile("^@domain:(.*?)(=(.*))?$");
+
 
     // Constructor
     @Getter
@@ -33,8 +38,8 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
     private final Consumer<CONFIG> reloadCallback;
 
     // Block lists
-    protected final Map<ResourceLocation, List<Function<CONTENT, Boolean>>> contentMatchers = new HashMap();
-    protected final List<Function<CONTENT, Boolean>> generalMatchers = new ArrayList<>();
+    protected final Map<ResourceLocation, List<Function<CONTENT, VALUE>>> contentMatchers = new HashMap();
+    protected final List<Function<CONTENT, VALUE>> generalMatchers = new ArrayList<>();
 
     // States
     @Getter
@@ -65,38 +70,45 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
         this.isLocked = true;
     }
 
-    public boolean contains(CONTENT state) {
+    public void set(ResourceLocation key, VALUE value) {
+        contentMatchers
+                .computeIfAbsent(key, k -> new ArrayList<>())
+                .add(getSimpleValue(key, value));
+    }
+
+    public VALUE getValue(CONTENT state) {
         if (state == null) {
-            return false;
+            return null;
         }
         final ResourceLocation key = getContentKey(state);
-        final List<Function<CONTENT, Boolean>> matchers = contentMatchers.get(key);
+        final List<Function<CONTENT, VALUE>> matchers = contentMatchers.get(key);
         if(matchers != null) {
-            for(Function<CONTENT, Boolean> matcher: matchers) {
-                if(matcher.apply(state)) {
+            for(Function<CONTENT, VALUE> matcher: matchers) {
+                final VALUE result = matcher.apply(state);
+                if(result != null) {
                     matcherHit(state, matcher);
-                    return true;
+                    return result;
                 }
             }
         }
-        for(Function<CONTENT, Boolean> matcher: generalMatchers) {
-            if(matcher.apply(state)) {
+        for(Function<CONTENT, VALUE> matcher: generalMatchers) {
+            final VALUE result = matcher.apply(state);
+            if(result != null) {
                 matcherHit(state, matcher);
-                return true;
+                return result;
             }
         }
-        return false;
+        return null;
     }
 
-    protected void matcherHit(CONTENT content, Function<CONTENT, Boolean> matcher) {
+    protected void matcherHit(CONTENT content, Function<CONTENT, VALUE> matcher) {
 
     }
 
     protected abstract ResourceLocation getContentKey(CONTENT content);
 
     /**
-     * Loads block states from a collection of strings. Strings can contain nearly anything
-     * so long as it results in block(s) or block-state(s).
+     * Loads entries converting them into key:value functions
      *
      * @param entries to process
      */
@@ -112,8 +124,7 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
     }
 
     /**
-     * Loads block states from a collection of strings. Strings can contain nearly anything
-     * so long as it results in block(s) or block-state(s).
+     * Loads entries converting them into key:value functions
      *
      * @param entries to process
      */
@@ -123,7 +134,7 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
         }
 
         for (String str : entries) {
-            final String entry = str.trim();
+            final String entry = str.replaceAll("\\s", ""); //Kill spaces off -> "M I N E C R A F T" turns into "MINECRAFT"
             handleEntry(entry);
         }
     }
@@ -137,40 +148,39 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
     }
 
     boolean handleEntry(String entry) {
-        if(!entry.startsWith("@domain:")) {
-            final String domain = entry.split(":")[1];
-            this.generalMatchers.add((content -> getContentKey(content).getResourceDomain().equalsIgnoreCase(domain)));
+
+        final Matcher matcher = DOMAIN_VALE_REGEX.matcher(entry);
+        if (matcher.matches()) {
+            final String domain = matcher.group(1);
+            final String value = matcher.group(3);
+            this.generalMatchers.add(getDomainValue(domain, parseValue(value)));
             return true;
         }
-        return handleSimpleBlock(entry);
+        return handleSimple(entry);
     }
 
-    boolean handleSimpleBlock(String entry) {
-        final ResourceLocation blockKey = this.parseResourceLocation(entry);
-        if(blockKey == null) {
-            return false;
+    protected abstract Function<CONTENT, VALUE> getDomainValue(String domain, @Nullable VALUE value);
+
+    protected abstract Function<CONTENT, VALUE> getSimpleValue(ResourceLocation key, @Nullable VALUE value);
+
+    protected abstract VALUE parseValue(@Nullable String value);
+
+    boolean handleSimple(String entry) {
+        final Matcher matcher = KEY_VALUE_REGEX.matcher(entry);
+        if (matcher.matches()) {
+            final String domain = matcher.group(1);
+            final String resource = matcher.group(2);
+            if (matcher.groupCount() == 4) {
+                this.contentMatchers
+                    .computeIfAbsent(new ResourceLocation(domain, resource), (ResourceLocation k) -> new ArrayList<>())
+                    .add(getSimpleValue(new ResourceLocation(domain, resource), parseValue(matcher.group(4))));
+            } else {
+                this.contentMatchers
+                    .computeIfAbsent(new ResourceLocation(domain, resource), (ResourceLocation k) -> new ArrayList<>())
+                    .add(getSimpleValue(new ResourceLocation(domain, resource), null));
+            }
+            return true;
         }
-
-        if(!ForgeRegistries.BLOCKS.containsKey(blockKey)) {
-            ICBMClassic.logger().error(name + ": Failed to find block matching entry `" + entry + "`");
-            return false;
-        }
-
-        this.contentMatchers
-            .computeIfAbsent(blockKey, (k) -> new ArrayList<>())
-            .add((content) -> getContentKey(content) == blockKey);
-
-        return true;
-    }
-
-    ResourceLocation parseResourceLocation(String entry) {
-        // TODO convert to regex
-        final String[] keySplit = entry.split(":", -1);
-        final String domain = keySplit.length == 2 ? keySplit[0].trim() : null;
-        final String key = keySplit.length == 2 ? keySplit[1].trim() : null;
-        if (keySplit.length != 2 || domain.isEmpty() || key.isEmpty()) {
-            return null;
-        }
-        return new ResourceLocation(domain, key);
+        return false;
     }
 }

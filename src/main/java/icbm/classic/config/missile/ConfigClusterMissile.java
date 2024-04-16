@@ -1,6 +1,5 @@
 package icbm.classic.config.missile;
 
-import icbm.classic.config.ConfigFlyingBlocks;
 import net.minecraftforge.common.config.Config;
 
 /**
@@ -17,6 +16,27 @@ public class ConfigClusterMissile
     @Config.Comment("Items allowed for insertion into cluster missile as a projectile payload")
     public BanList BAN_ALLOW = new BanList();
 
+    @Config.Name("item_sizes")
+    @Config.Comment("Items volume size for insertion into cluster missiles")
+    public ItemSizes ITEM_SIZES = new ItemSizes();
+
+    public static class ItemSizes {
+
+        @Config.Name("max_size")
+        @Config.Comment("Volume of the cluster missile, most items default to size of 1. Keep it small to avoid lag")
+        @Config.RangeInt(min = 1)
+        public int MAX_SIZE = 200;
+
+        @Config.Name("default_size")
+        @Config.Comment("Default volume to use for items if no configuration exists")
+        @Config.RangeInt(min = 1)
+        public int DEFAULT_SIZE = 1;
+
+        @Config.Name("list")
+        @Config.Comment("Item/ItemStack sizes 'domain:resource=whole_number', ex: 'minecraft:stone=4'")
+        public String[] ITEMS = new String[]{"minecraft:fire=999"};
+    }
+
     public static class BanList {
 
         @Config.Name("ban")
@@ -24,8 +44,8 @@ public class ConfigClusterMissile
         public boolean BAN = true;
 
         @Config.Name("list")
-        @Config.Comment("Item/ItemStack names. Docs: https://github.com/BuiltBrokenModding/ICBM-Classic/wiki/config-itemstack")
-        public String[] ITEMS = new String[]{"minecraft:fire"};
+        @Config.Comment("Item/ItemStack names 'domain:resource=ignore' set 'ignore' to true to skip the entry during loading; ex: 'minecraft:stone' will be used while 'minecraft:fire=true' will be ignored")
+        public String[] ITEMS = new String[]{"minecraft:fire=true"};
     }
 
 }

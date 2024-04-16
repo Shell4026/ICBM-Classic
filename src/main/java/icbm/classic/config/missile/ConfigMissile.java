@@ -56,6 +56,8 @@ public class ConfigMissile
     @Config.LangKey("config.icbmclassic:missile.sam.title")
     public static ConfigSAMMissile SAM_MISSILE = new ConfigSAMMissile();
 
+    @Config.Name("cluster")
     @Config.LangKey("config.icbmclassic:missile.cluster.title")
+    @Config.Comment("https://github.com/BuiltBrokenModding/ICBM-Classic/wiki/config-cluster")
     public static ConfigClusterMissile CLUSTER_MISSILE = new ConfigClusterMissile();
 }

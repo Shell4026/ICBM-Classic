@@ -3,6 +3,7 @@ package icbm.classic.content.cluster.missile;
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.missiles.ICapabilityMissileStack;
 import icbm.classic.api.missiles.projectile.IProjectileStack;
+import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.content.cargo.CargoProjectileData;
 import icbm.classic.lib.projectile.ProjectileStack;
 import lombok.AllArgsConstructor;
@@ -48,15 +49,17 @@ public class RecipeCluster extends IForgeRegistryEntry.Impl<IRecipe> implements 
 
         for (int slot = 0; slot < inv.getSizeInventory(); slot++) {
             final ItemStack slotStack = inv.getStackInSlot(slot);
-            if (cluster.isEmpty() && slotStack.isItemEqual(recipeOutput)) {
+            if(slotStack.isEmpty()) {
+                continue;
+            }
+            else if (cluster.isEmpty() && slotStack.isItemEqual(recipeOutput)) {
                 cluster = slotStack;
             }
             else if(!ClusterMissileHandler.isAllowed(slotStack)) {
                 return false;
             }
-            else if (!slotStack.isEmpty()) {
-                newItemSize += ClusterMissileHandler.sizeOf(slotStack);
-            }
+
+            newItemSize += ClusterMissileHandler.sizeOf(slotStack);
         }
 
         final CapabilityClusterMissileStack cap = getCap(cluster);
@@ -65,7 +68,7 @@ public class RecipeCluster extends IForgeRegistryEntry.Impl<IRecipe> implements 
         }
 
         int currentSize = cap.getActionDataCluster().getClusterSpawnEntries().stream().mapToInt(ClusterMissileHandler::sizeOf).sum();
-        return newItemSize >= 1 && (currentSize + newItemSize) <= ClusterMissileHandler.MAX_SIZE && !cluster.isEmpty();
+        return newItemSize >= 1 && (currentSize + newItemSize) <= ConfigMissile.CLUSTER_MISSILE.ITEM_SIZES.MAX_SIZE && !cluster.isEmpty();
     }
 
     private CapabilityClusterMissileStack getCap(ItemStack itemStack) {
