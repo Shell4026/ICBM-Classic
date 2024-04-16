@@ -63,7 +63,7 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
 
     protected void sort(List<ResourceConfigEntry<CONTENT, VALUE>> list) {
         // Generate defaults
-        int highestUserSort = list.stream().mapToInt(ResourceConfigEntry::getOrder).max().orElse(0);
+        int highestUserSort = list.stream().map(ResourceConfigEntry::getOrder).mapToInt(i -> i == null ? 0 : i).max().orElse(0);
 
         int index = 0;
         for (ResourceConfigEntry<CONTENT, VALUE> func : list) {
@@ -214,7 +214,7 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
 
     protected abstract VALUE parseValue(@Nullable String value);
 
-    boolean handleSimple(String entry, int index) {
+    boolean handleSimple(String entry, Integer index) {
         final Matcher matcher = KEY_VALUE_REGEX.matcher(entry);
         if (matcher.matches()) {
             final String domain = matcher.group(1);

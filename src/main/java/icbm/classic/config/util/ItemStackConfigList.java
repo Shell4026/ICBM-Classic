@@ -41,6 +41,12 @@ public abstract class ItemStackConfigList<VALUE> extends ResourceConfigList<Item
             super(name, reloadCallback);
         }
 
+
+        public boolean isAllowed(ItemStack stack) {
+            Boolean value = super.getValue(stack);
+            return value == null || value;
+        }
+
         @Override
         protected Function<ItemStack, Boolean> getDomainValue(String domain, Boolean disable) {
             if(Boolean.TRUE.equals(disable)) {

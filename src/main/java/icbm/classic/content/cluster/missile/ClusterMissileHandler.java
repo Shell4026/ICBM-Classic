@@ -21,7 +21,6 @@ public final class ClusterMissileHandler {
         configList.setDefault(ItemReg.itemClusterMissile.getRegistryName(), 20, 0);
         configList.setDefault(ItemReg.itemExplosiveMissile.getRegistryName(), 20, 0);
         configList.setDefault(ItemReg.itemSAM.getRegistryName(), 10, 0);
-
         configList.load(ConfigMissile.CLUSTER_MISSILE.ITEM_SIZES.ITEMS);
     });
 
@@ -35,7 +34,7 @@ public final class ClusterMissileHandler {
     }
 
     public static boolean isAllowed(ItemStack itemStack) {
-        return ConfigMissile.CLUSTER_MISSILE.BAN_ALLOW.BAN != banAllowItems.getValue(itemStack);
+        return ConfigMissile.CLUSTER_MISSILE.BAN_ALLOW.BAN != banAllowItems.isAllowed(itemStack);
     }
 
     public static void loadFromConfig() {
