@@ -5,6 +5,7 @@ import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.missiles.parts.IMissileTarget;
 import icbm.classic.api.missiles.parts.IMissileTargetDelayed;
 import icbm.classic.api.reg.obj.IBuilderRegistry;
+import lombok.Getter;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -20,6 +21,7 @@ import java.util.Objects;
 public class BasicTargetData implements IMissileTarget, IMissileTargetDelayed, INBTSerializable<NBTTagCompound> {
 
     public static final ResourceLocation REG_NAME = new ResourceLocation(ICBMConstants.DOMAIN, "basic");
+    @Getter
     private Vec3d position;
     private int firingDelay = 0;
 
@@ -37,10 +39,6 @@ public class BasicTargetData implements IMissileTarget, IMissileTargetDelayed, I
 
     public BasicTargetData(BlockPos pos) {
         this.position = new Vec3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
-    }
-
-    public Vec3d getPosition() {
-        return position;
     }
 
     public BasicTargetData withFiringDelay(int ticks) {

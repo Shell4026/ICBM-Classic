@@ -9,6 +9,7 @@ import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.content.missile.logic.flight.DeadFlightLogic;
 import icbm.classic.content.missile.logic.source.ActionSource;
 import icbm.classic.content.missile.logic.source.cause.EntityCause;
+import icbm.classic.content.missile.logic.targeting.BasicTargetData;
 import icbm.classic.lib.LanguageUtility;
 import icbm.classic.prefab.item.ItemICBMElectrical;
 import net.minecraft.client.Minecraft;
@@ -26,6 +27,8 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
@@ -103,7 +106,7 @@ public class ItemRocketLauncher extends ItemICBMElectrical
                                 final IMissile missile = capabilityMissileStack.newMissile(world);
                                 final Entity missileEntity = missile.getMissileEntity();
 
-                                if (missileEntity instanceof IMissileAiming)
+                                if (missileEntity instanceof IMissileAiming) //TODO convert to actionData that will use causeBy to trigger init
                                 {
                                     //Setup aiming and offset from player
                                     ((IMissileAiming) missileEntity).initAimingPosition(player, 1, ConfigMissile.DIRECT_FLIGHT_SPEED);
@@ -111,6 +114,18 @@ public class ItemRocketLauncher extends ItemICBMElectrical
                                     //Init missile
                                     missile.setFlightLogic(new DeadFlightLogic(ConfigMissile.HANDHELD_FUEL));
                                     missile.setMissileSource(new ActionSource(world, missileEntity.getPositionVector(), new EntityCause(player)));
+
+                                    // Raytrace to set a default target for air-burst missiles
+                                    final double traceDistance = 150;
+                                    Vec3d vec3d = player.getPositionEyes(1.0F);
+                                    Vec3d vec3d1 = player.getLook(1.0F);
+                                    Vec3d vec3d2 = vec3d.addVector(vec3d1.x * traceDistance, vec3d1.y * traceDistance, vec3d1.z * traceDistance);
+                                    RayTraceResult rayTraceResult = world.rayTraceBlocks(vec3d, vec3d2, false, true, false);
+
+                                    if(rayTraceResult != null && rayTraceResult.hitVec != null) {
+                                        missile.setTargetData(new BasicTargetData(rayTraceResult.hitVec));
+                                    }
+
                                     missile.launch();
 
                                     //Spawn entity into world
