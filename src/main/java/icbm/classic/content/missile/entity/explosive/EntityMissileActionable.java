@@ -33,7 +33,10 @@ public class EntityMissileActionable extends EntityMissile<EntityMissileActionab
 {
     /** Explosive data and settings */
     @Getter
-    private final PotentialAction mainAction = new PotentialAction();
+    private final PotentialAction mainAction = new PotentialAction()
+        .field(ActionFields.IMPACTED, () -> hasImpacted)
+        .field(ActionFields.HOST_ENTITY, () -> this);
+
     @Getter @Setter @Accessors(chain = true)
     private ItemStack originalStack = ItemStack.EMPTY;
 

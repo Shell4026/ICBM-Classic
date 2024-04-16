@@ -25,12 +25,12 @@ public class ActionResponses {
     public static IActionStatus BLOCK_PLACEMENT_FAILED = ImmutableStatus.blocking(new ResourceLocation(ICBMConstants.DOMAIN, "action.block.placement.failed"));
 
     public static IActionStatus MISSING_WORLD = new MissingFieldStatus(new ResourceLocation(ICBMConstants.DOMAIN, "action.error.field.world.missing"), "action", "world");
+    public static IActionStatus MISSING_HOST = new MissingFieldStatus(new ResourceLocation(ICBMConstants.DOMAIN, "action.error.field.host.missing"), "action", "host");
     public static IActionStatus MISSING_BLOCK_POS = new MissingFieldStatus(new ResourceLocation(ICBMConstants.DOMAIN, "action.error.field.block.pos.missing"), "action", "blockPos");
     public static IActionStatus MISSING_BLOCK_STATE = new MissingFieldStatus(new ResourceLocation(ICBMConstants.DOMAIN, "action.error.field.block.state.missing"), "action", "blockState");
     public static IActionStatus MISSING_VALIDATION = new MissingFieldStatus(new ResourceLocation(ICBMConstants.DOMAIN, "action.error.field.validation.missing"), "action", "validation");
 
     public static IActionStatus MISSING_ACTION_DATA = new MissingFieldStatus(new ResourceLocation(ICBMConstants.DOMAIN, "action.error.field.action.data"), "runner", "actionData");
-
     // </editor-fold>
 
     // <editor-fold description="good status">
@@ -48,6 +48,7 @@ public class ActionResponses {
         VALIDATION_ERROR.register();
         BLOCK_PLACEMENT_FAILED.register();
         MISSING_WORLD.register();
+        MISSING_HOST.register();
         MISSING_BLOCK_POS.register();
         MISSING_BLOCK_STATE.register();
         MISSING_VALIDATION.register();

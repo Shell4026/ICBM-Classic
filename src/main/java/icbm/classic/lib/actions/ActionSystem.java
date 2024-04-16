@@ -12,6 +12,7 @@ import icbm.classic.content.actions.emp.ActionDataEmpArea;
 import icbm.classic.content.blocks.launcher.screen.BlockScreenCause;
 import icbm.classic.content.blocks.launcher.status.LauncherStatus;
 import icbm.classic.content.cluster.action.ActionDataCluster;
+import icbm.classic.content.missile.entity.explosive.ConditionalImpact;
 import icbm.classic.content.missile.logic.source.cause.CausedByBlock;
 import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.content.missile.logic.source.cause.RedstoneCause;
@@ -19,6 +20,7 @@ import icbm.classic.lib.actions.conditionals.timer.TimerCondition;
 import icbm.classic.lib.actions.conditionals.timer.TimerTickingStatus;
 import icbm.classic.lib.actions.listners.ActionListenerHandler;
 import icbm.classic.lib.actions.status.ActionResponses;
+import icbm.classic.lib.actions.status.MissingFieldStatus;
 import icbm.classic.lib.buildable.BuildableObjectRegistry;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -39,6 +41,7 @@ public final class ActionSystem {
         ICBMClassicAPI.CONDITION_REGISTRY =  new BuildableObjectRegistry<ICondition>("CONDITIONALS", "conditionals");
 
         ICBMClassicAPI.CONDITION_REGISTRY.register(TimerCondition.REG_NAME, TimerCondition::new);
+        ICBMClassicAPI.CONDITION_REGISTRY.register(ConditionalImpact.REG_NAME, ConditionalImpact::new);
 
         //Fire registry event
         MinecraftForge.EVENT_BUS.post(new ConditionalRegistryEvent(ICBMClassicAPI.CONDITION_REGISTRY));
@@ -54,6 +57,7 @@ public final class ActionSystem {
         LauncherStatus.registerTypes();
         ActionResponses.registerTypes();
         ICBMClassicAPI.ACTION_STATUS_REGISTRY.register(TimerTickingStatus.REG_NAME, TimerTickingStatus::new);
+        ICBMClassicAPI.ACTION_STATUS_REGISTRY.register(MissingFieldStatus.REG_NAME, MissingFieldStatus::new);
 
         //Fire registry event
         MinecraftForge.EVENT_BUS.post(new ActionStatusRegistryEvent(ICBMClassicAPI.ACTION_STATUS_REGISTRY));
