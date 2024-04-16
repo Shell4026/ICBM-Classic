@@ -1,6 +1,7 @@
 package icbm.classic.api.actions.conditions;
 
 import com.google.common.collect.TreeTraverser;
+import icbm.classic.api.actions.data.IActionFieldProvider;
 
 import java.util.List;
 
@@ -20,4 +21,19 @@ public interface IConditionLayer extends ICondition {
      * @return triggers on this layer
      */
     List<ICondition> getConditions();
+
+    @Override
+    default void onTick() {
+        getConditions().forEach(ICondition::onTick);
+    }
+
+    @Override
+    default void init(IActionFieldProvider provider) {
+        getConditions().forEach(c -> c.init(provider));
+    }
+
+    @Override
+    default void reset() {
+        getConditions().forEach(ICondition::reset);
+    }
 }
