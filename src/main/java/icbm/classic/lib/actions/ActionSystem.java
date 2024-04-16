@@ -8,6 +8,8 @@ import icbm.classic.api.reg.events.ActionRegistryEvent;
 import icbm.classic.api.reg.events.ActionStatusRegistryEvent;
 import icbm.classic.api.reg.events.ConditionalRegistryEvent;
 import icbm.classic.api.reg.events.MissileCauseRegistryEvent;
+import icbm.classic.content.actions.conditionals.ConditionAnd;
+import icbm.classic.content.actions.conditionals.ConditionOR;
 import icbm.classic.content.actions.conditionals.ConditionTargetDistance;
 import icbm.classic.content.actions.emp.ActionDataEmpArea;
 import icbm.classic.content.blocks.launcher.screen.BlockScreenCause;
@@ -44,6 +46,8 @@ public final class ActionSystem {
         ICBMClassicAPI.CONDITION_REGISTRY.register(TimerCondition.REG_NAME, TimerCondition::new);
         ICBMClassicAPI.CONDITION_REGISTRY.register(ConditionalImpact.REG_NAME, ConditionalImpact::new);
         ICBMClassicAPI.CONDITION_REGISTRY.register(ConditionTargetDistance.REG_NAME, ConditionTargetDistance::new);
+        ICBMClassicAPI.CONDITION_REGISTRY.register(ConditionAnd.REG_NAME, ConditionAnd::new);
+        ICBMClassicAPI.CONDITION_REGISTRY.register(ConditionOR.REG_NAME, ConditionOR::new);
 
         //Fire registry event
         MinecraftForge.EVENT_BUS.post(new ConditionalRegistryEvent(ICBMClassicAPI.CONDITION_REGISTRY));

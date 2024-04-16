@@ -18,10 +18,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.INBTSerializable;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -231,6 +228,14 @@ public class NbtSaveRoot<SaveObject> implements INbtSaveNode<SaveObject, NBTTagC
     {
         return node(new SaveBuildableObject<SaveObject, BuildableObject>(name, reg, getter, setter));
     }
+
+    public <BuildableObject extends IBuildableObject> NbtSaveRoot<SaveObject> nodeBuildableObjectList(final String name,
+                                                                                                  final Supplier<IBuilderRegistry<BuildableObject>> reg, Function<SaveObject, Collection<BuildableObject>> getter)
+    {
+        return node(new SaveBuildableObjectList<SaveObject, BuildableObject>(name, reg, getter));
+    }
+
+
 
     public <SerializableObject extends INBTSerializable<NBTTagCompound>> NbtSaveRoot<SaveObject> nodeINBTSerializable(final String name,
                                                                                                                       Function<SaveObject, SerializableObject> accessor) { //TODO recode to allow any NBTBase
