@@ -53,7 +53,11 @@ public class RecipeCluster extends IForgeRegistryEntry.Impl<IRecipe> implements 
                     return false; // Can't nest clusters
                 }
                 cluster = slotStack;
-            } else if (!slotStack.isEmpty()) {
+            }
+            else if(!ClusterMissileHandler.isAllowed(slotStack)) {
+                return false;
+            }
+            else if (!slotStack.isEmpty()) {
                 newItemSize += ClusterMissileHandler.sizeOf(slotStack);
             }
         }

@@ -393,6 +393,7 @@ public class ICBMClassic
 
         // Generate defaults
         FlyingBlock.loadFromConfig();
+
     }
 
     @Mod.EventHandler
