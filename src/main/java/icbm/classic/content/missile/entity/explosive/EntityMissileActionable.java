@@ -100,6 +100,12 @@ public class EntityMissileActionable extends EntityMissile<EntityMissileActionab
     {
         super.onUpdate();
         this.mainAction.update(ticksExisted, !this.getEntityWorld().isRemote);
+
+        // Ticking trigger
+        final IActionStatus status = mainAction.doAction(getEntityWorld(), posX, posY, posZ, new EntityCause(this));
+        if(!status.isType(ActionStatusTypes.BLOCKING)) {
+            this.destroy();
+        }
     }
 
     @Override

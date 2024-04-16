@@ -1,18 +1,16 @@
-package icbm.classic.content.missile.entity.explosive;
+package icbm.classic.content.actions.conditionals;
 
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.actions.conditions.ICondition;
 import icbm.classic.api.actions.data.ActionFields;
 import icbm.classic.api.actions.data.IActionFieldProvider;
 import icbm.classic.api.actions.status.IActionStatus;
-import icbm.classic.content.missile.entity.EntityMissile;
 import icbm.classic.lib.actions.status.ActionResponses;
 import icbm.classic.lib.actions.status.MissingFieldStatus;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.INBTSerializable;

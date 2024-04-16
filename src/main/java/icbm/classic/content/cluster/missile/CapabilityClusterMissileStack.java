@@ -5,7 +5,7 @@ import icbm.classic.api.missiles.ICapabilityMissileStack;
 import icbm.classic.api.missiles.IMissile;
 import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.content.cluster.action.ActionDataCluster;
-import icbm.classic.content.missile.entity.explosive.ConditionalImpact;
+import icbm.classic.content.actions.conditionals.ConditionalImpact;
 import icbm.classic.content.missile.entity.explosive.EntityMissileActionable;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.Getter;
