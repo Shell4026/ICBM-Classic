@@ -183,6 +183,7 @@ public class ActionCluster extends ActionBase {
             final EntityItem entityItem = new EntityItem(getWorld());
             entityItem.setPosition(getPosition().x + x, getPosition().y+ y, getPosition().z + z);
             entityItem.setItem(stackToSpawn.copy());
+            entityItem.setDefaultPickupDelay();
 
             entityItem.motionX = mx;
             entityItem.motionY = my;

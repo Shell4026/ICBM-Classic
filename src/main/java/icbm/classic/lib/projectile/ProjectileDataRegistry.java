@@ -1,7 +1,9 @@
 package icbm.classic.lib.projectile;
 
+import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.missiles.projectile.IProjectileData;
 import icbm.classic.api.missiles.projectile.IProjectileDataRegistry;
+import icbm.classic.api.missiles.projectile.IProjectileStack;
 import icbm.classic.lib.buildable.BuildableObjectRegistry;
 import icbm.classic.lib.projectile.vanilla.*;
 import net.minecraft.entity.Entity;
@@ -88,6 +90,12 @@ public class ProjectileDataRegistry extends BuildableObjectRegistry<IProjectileD
                 }
             }
         }
+        if(itemStack.hasCapability(ICBMClassicAPI.PROJECTILE_STACK_CAPABILITY, null)) {
+            final IProjectileStack data = itemStack.getCapability(ICBMClassicAPI.PROJECTILE_STACK_CAPABILITY, null);
+            if(data != null) {
+                return data.getProjectileData();
+            }
+        }
         return new ItemProjectileData().setItemStack(itemStack.copy());
     }
 
@@ -112,18 +120,21 @@ public class ProjectileDataRegistry extends BuildableObjectRegistry<IProjectileD
     @Override
     public <E extends Entity> E  spawnProjectile(IProjectileData<E> data, World world, double x, double y, double z, Entity source,
                                   boolean allowItemPickup, Consumer<E> preSpawnCallback) {
-        if(data != null) {
-            final E entity = data.newEntity(world, allowItemPickup);
-            if(entity != null) {
-                entity.setPosition(x, y, z);
-                if(preSpawnCallback != null) {
-                    preSpawnCallback.accept(entity);
-                }
-                if(world.spawnEntity(entity)) {
-                    data.onEntitySpawned(entity, source, EnumHand.MAIN_HAND);
-                    return entity;
-                }
-            }
+        if (data == null) {
+            return null;
+        }
+        final E entity = data.newEntity(world, allowItemPickup);
+        if (entity == null) {
+            return null;
+        }
+
+        entity.setPosition(x, y, z);
+        if (preSpawnCallback != null) {
+            preSpawnCallback.accept(entity);
+        }
+        if (world.spawnEntity(entity)) {
+            data.onEntitySpawned(entity, source, EnumHand.MAIN_HAND);
+            return entity;
         }
         return null;
     }
