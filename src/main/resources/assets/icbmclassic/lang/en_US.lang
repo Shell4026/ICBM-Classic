@@ -95,9 +95,11 @@ item.icbmclassic:laserDetonator.laser.missed=Laser Error; Nothing on path within
 item.icbmclassic:laserDetonator.target=Target set (%1$s, %2$s, %3$s)
 
 item.icbmclassic:rocketLauncher.name=Rocket Launcher: Direct
-item.icbmclassic:ballisticLauncher.name=Rocket Launcher: Ballistic
+item.icbmclassic:rocketLauncher.info=Fires missiles in a direct line
 
-item.icbmclassic:rocketLauncher.info=This rocket launcher can fire up to Tier %s rockets
+item.icbmclassic:ballisticLauncher.name=Rocket Launcher: Ballistic
+item.icbmclassic:ballisticLauncher.info=Fires missiles in an arc towards target. Has a 3m pre-kick and 20m y+ offset.
+
 item.icbmclassic:rocketLauncher.info.creative=Creative: Bypasses tier restriction
 item.icbmclassic:rocketLauncher.error.IMissileAiming=Missile %1 doesn't implement IMissileAiming to allow for use in handheld launchers
 item.icbmclassic:rocketLauncher.error.spawning=Missile spawning was canceled by world

@@ -257,21 +257,4 @@ public class ItemRocketLauncher extends ItemICBMElectrical
         player.setActiveHand(handIn);
         return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
     }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag flag)
-    {
-        final String key = "item.icbmclassic:rocketLauncher.info";
-        String translation = LanguageUtility.getLocal(key);
-
-        if (translation.contains("%s"))
-        {
-            String str = String.format(translation, String.valueOf(ConfigMain.ROCKET_LAUNCHER_TIER_FIRE_LIMIT));
-            splitAdd(str, list, false, false);
-        }
-
-        if (Minecraft.getMinecraft().player != null && Minecraft.getMinecraft().player.isCreative())
-            list.add(new TextComponentTranslation("item.icbmclassic:rocketLauncher.info.creative").setStyle(new Style().setColor(TextFormatting.LIGHT_PURPLE)).getFormattedText());
-    }
 }
