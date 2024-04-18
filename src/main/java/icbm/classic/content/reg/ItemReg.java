@@ -46,6 +46,8 @@ public class ItemReg
     public static Item itemLaserDetonator;
     @ObjectHolder(ICBMConstants.PREFIX + "rocketLauncher")
     public static Item itemRocketLauncher;
+    @ObjectHolder(ICBMConstants.PREFIX + "ballisticLauncher")
+    public static Item itemBallisticLauncher;
     @ObjectHolder(ICBMConstants.PREFIX + "grenade")
     public static Item itemGrenade;
     @ObjectHolder(ICBMConstants.PREFIX + "bombcart")
@@ -122,7 +124,8 @@ public class ItemReg
         event.getRegistry().register(new ItemRadarGun());
         event.getRegistry().register(new ItemRemoteDetonator());
         event.getRegistry().register(new ItemLaserDetonator());
-        event.getRegistry().register(new ItemRocketLauncher());
+        event.getRegistry().register(new ItemRocketLauncher(false));
+        event.getRegistry().register(new ItemRocketLauncher(true));
         event.getRegistry().register(new ItemMissile().setName("explosive_missile").setCreativeTab(ICBMClassic.CREATIVE_TAB));
         event.getRegistry().register(new ItemSurfaceToAirMissile());
         event.getRegistry().register(new ItemClusterMissile().setName("cluster_missile").setCreativeTab(ICBMClassic.CREATIVE_TAB));
