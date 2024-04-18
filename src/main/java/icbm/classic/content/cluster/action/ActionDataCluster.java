@@ -5,10 +5,12 @@ import icbm.classic.ICBMConstants;
 import icbm.classic.api.actions.IAction;
 import icbm.classic.api.actions.IActionData;
 import icbm.classic.api.actions.cause.IActionSource;
+import icbm.classic.api.actions.data.ActionFields;
 import icbm.classic.api.actions.data.ActionTypes;
 import icbm.classic.api.actions.data.IActionFieldProvider;
 import icbm.classic.api.data.meta.MetaTag;
 import lombok.Getter;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -35,6 +37,13 @@ public class ActionDataCluster implements IActionData, INBTSerializable<NBTTagCo
     public IAction create(World world, double x, double y, double z, @Nonnull IActionSource source, @Nullable IActionFieldProvider fieldAccessor) {
         final ActionCluster cluster = new ActionCluster(world, new Vec3d(x, y, z), source, this);
         cluster.setSpawnList(clusterSpawnEntries);
+        if(fieldAccessor != null && fieldAccessor.hasField(ActionFields.HOST_ENTITY)) {
+            final Entity host = fieldAccessor.getValue(ActionFields.HOST_ENTITY);
+            if(host != null) {
+                cluster.setSourcePitch(host.rotationPitch);
+                cluster.setSourceYaw(host.rotationYaw);
+            }
+        }
         return cluster;
     }
 
