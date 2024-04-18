@@ -4,6 +4,7 @@ import icbm.classic.ICBMClassic;
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.ICBMClassicHelpers;
 import icbm.classic.api.caps.IExplosive;
+import icbm.classic.api.missiles.projectile.IProjectileStack;
 import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.content.cluster.bomblet.BombletProjectileData;
@@ -14,6 +15,7 @@ import icbm.classic.content.reg.ItemReg;
 import icbm.classic.lib.LanguageUtility;
 import icbm.classic.lib.capability.ex.CapabilityExplosiveStack;
 import icbm.classic.lib.capability.missile.CapabilityMissileStack;
+import icbm.classic.lib.projectile.ProjectileStack;
 import icbm.classic.lib.projectile.vanilla.ArrowProjectileData;
 import icbm.classic.prefab.item.ItemBase;
 import icbm.classic.prefab.item.ItemStackCapProvider;
@@ -55,6 +57,17 @@ public class ItemClusterMissile extends ItemBase {
             items.add(new ItemStack(this));
             items.add(createStack(new ItemStack(Items.ARROW), 200));
             items.add(createStack(new ItemStack(ItemReg.itemBomblet), 100));
+
+            final ItemStack parachute = new ItemStack(ItemReg.itemParachute);
+            if(parachute.hasCapability(ICBMClassicAPI.PROJECTILE_STACK_CAPABILITY, null)) {
+                final IProjectileStack projectileStack = parachute.getCapability(ICBMClassicAPI.PROJECTILE_STACK_CAPABILITY, null);
+                if(projectileStack instanceof ProjectileStack) {
+                    final ParachuteProjectileData projectileData = new ParachuteProjectileData();
+                    projectileData.setHeldItem(new ItemStack(Items.COOKIE));
+                    ((ProjectileStack) projectileStack).setProjectileData(projectileData);
+                }
+            }
+            items.add(createStack(parachute, 50));
         }
     }
 
