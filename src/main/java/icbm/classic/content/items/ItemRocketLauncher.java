@@ -158,7 +158,7 @@ public class ItemRocketLauncher extends ItemICBMElectrical
 
                                     if(rayTraceResult != null && rayTraceResult.hitVec != null) {
 
-                                        if(rayTraceResult.hitVec.distanceTo(player.getPositionVector()) < minDistance) { //TODO customize
+                                        if(fireUpDown && rayTraceResult.hitVec.distanceTo(player.getPositionVector()) < minDistance) { //TODO customize
                                             player.sendStatusMessage(new TextComponentTranslation("item.icbmclassic:rocketLauncher.error.distance.min", minDistance), true);
                                             return;
                                         }
