@@ -1,7 +1,10 @@
 package icbm.classic.api.actions.cause;
 
+import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.reg.obj.IBuildableObject;
+import icbm.classic.api.reg.obj.IBuilderRegistry;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -42,4 +45,10 @@ public interface IActionCause extends IBuildableObject {
      * @return self
      */
     IActionCause setPreviousCause(@Nullable IActionCause parent);
+
+    @Nonnull
+    @Override
+    default IBuilderRegistry getRegistry() {
+        return ICBMClassicAPI.ACTION_CAUSE_REGISTRY;
+    }
 }

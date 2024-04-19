@@ -4,6 +4,7 @@ import icbm.classic.ICBMConstants;
 import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.api.actions.conditions.IConditionCause;
 import icbm.classic.api.actions.status.IActionStatus;
+import icbm.classic.content.actions.causeby.CauseByTimer;
 import icbm.classic.lib.actions.conditionals.Condition;
 import icbm.classic.lib.actions.status.ActionResponses;
 import icbm.classic.lib.saving.NbtSaveHandler;
@@ -76,6 +77,6 @@ public class TimerCondition extends Condition implements IConditionCause {
 
     @Override
     public IActionCause getCause() {
-        return null;
+        return new CauseByTimer(this.getName(), target);
     }
 }

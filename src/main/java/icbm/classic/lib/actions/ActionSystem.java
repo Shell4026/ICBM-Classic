@@ -8,6 +8,7 @@ import icbm.classic.api.reg.events.ActionRegistryEvent;
 import icbm.classic.api.reg.events.ActionStatusRegistryEvent;
 import icbm.classic.api.reg.events.ConditionalRegistryEvent;
 import icbm.classic.api.reg.events.MissileCauseRegistryEvent;
+import icbm.classic.content.actions.causeby.CauseByTimer;
 import icbm.classic.content.actions.conditionals.ConditionAnd;
 import icbm.classic.content.actions.conditionals.ConditionOR;
 import icbm.classic.content.actions.conditionals.ConditionTargetDistance;
@@ -95,6 +96,7 @@ public final class ActionSystem {
         ICBMClassicAPI.ACTION_CAUSE_REGISTRY.register(CausedByBlock.REG_NAME, CausedByBlock::new);
         ICBMClassicAPI.ACTION_CAUSE_REGISTRY.register(BlockScreenCause.REG_NAME, BlockScreenCause::new);
         ICBMClassicAPI.ACTION_CAUSE_REGISTRY.register(RedstoneCause.REG_NAME, RedstoneCause::new);
+        ICBMClassicAPI.ACTION_CAUSE_REGISTRY.register(CauseByTimer.REG_NAME, CauseByTimer::new);
 
         //Fire registry event
         MinecraftForge.EVENT_BUS.post(new MissileCauseRegistryEvent(ICBMClassicAPI.ACTION_CAUSE_REGISTRY));
