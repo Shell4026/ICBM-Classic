@@ -1,6 +1,7 @@
 package icbm.classic.content.items;
 
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.actions.IPotentialAction;
 import icbm.classic.api.actions.conditions.ICondition;
 import icbm.classic.api.actions.conditions.IConditionLayer;
 import icbm.classic.api.missiles.ICapabilityMissileStack;
@@ -172,7 +173,7 @@ public class ItemRocketLauncher extends ItemICBMElectrical
                                     // Move aim position up if cluster TODO expose this to a user so it can be set for any missile
                                     if(fireUpDown && missileEntity instanceof EntityMissileActionable && ((EntityMissileActionable) missileEntity).getMainAction() != null)
                                     {
-                                        final PotentialAction potentialAction = ((EntityMissileActionable) missileEntity).getMainAction();
+                                        final IPotentialAction potentialAction = ((EntityMissileActionable) missileEntity).getMainAction();
                                         if(potentialAction.getActionData() instanceof ActionDataCluster) {
                                             ((BasicTargetData)missile.getTargetData()).setPosition(missile.getTargetData().getPosition().addVector(0, ballisticBurstY, 0));
                                         }

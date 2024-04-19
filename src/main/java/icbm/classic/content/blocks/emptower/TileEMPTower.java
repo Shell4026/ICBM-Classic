@@ -10,10 +10,12 @@ import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.client.ICBMSounds;
 import icbm.classic.config.ConfigMain;
 import icbm.classic.config.machines.ConfigEmpTower;
+import icbm.classic.content.actions.ActionProvider;
 import icbm.classic.content.actions.emp.ActionDataEmpArea;
 import icbm.classic.content.blocks.emptower.gui.ContainerEMPTower;
 import icbm.classic.content.blocks.emptower.gui.GuiEMPTower;
 import icbm.classic.lib.actions.PotentialActionKnown;
+import icbm.classic.lib.actions.fields.ActionFieldProvider;
 import icbm.classic.lib.data.IMachineInfo;
 import icbm.classic.lib.energy.storage.EnergyBuffer;
 import icbm.classic.lib.energy.system.EnergySystem;
@@ -84,7 +86,10 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
     public final RadioEmpTower radioCap = new RadioEmpTower(this);
 
     public final PotentialActionKnown empAction = new PotentialActionKnown(ActionDataEmpArea.REG_NAME)
-        .field(ActionFields.AREA_SIZE, () -> (float)this.getRange()); //TODO implement conditional preCheck to replace current checks
+        //TODO implement conditional preCheck to replace current checks
+        .withProvider(new ActionFieldProvider()
+            .field(ActionFields.AREA_SIZE, () -> (float)this.getRange())
+        );
 
     private final List<TileEmpTowerFake> subBlocks = new ArrayList<>();
 

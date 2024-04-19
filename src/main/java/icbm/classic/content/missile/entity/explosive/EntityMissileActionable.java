@@ -9,6 +9,7 @@ import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.content.missile.entity.EntityMissile;
 import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.lib.actions.PotentialAction;
+import icbm.classic.lib.actions.fields.ActionFieldProvider;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
@@ -34,10 +35,13 @@ public class EntityMissileActionable extends EntityMissile<EntityMissileActionab
     /** Explosive data and settings */
     @Getter
     private final PotentialAction mainAction = new PotentialAction()
-        .field(ActionFields.IMPACTED, () -> hasImpacted)
-        .field(ActionFields.HOST_ENTITY, () -> this)
-        .field(ActionFields.HOST_POSITION, this::getPositionVector) //TODO may need to cache once conditionals get more common
-        .field(ActionFields.TARGET_POSITION, () -> this.getMissileCapability().getTargetData() != null ? this.getMissileCapability().getTargetData().getPosition(): null);
+        .withProvider(new ActionFieldProvider()
+            .field(ActionFields.IMPACTED, () -> hasImpacted)
+            .field(ActionFields.HOST_ENTITY, () -> this)
+            .field(ActionFields.HOST_POSITION, this::getPositionVector) //TODO may need to cache once conditionals get more common
+            .field(ActionFields.TARGET_POSITION, () -> this.getMissileCapability().getTargetData() != null ? this.getMissileCapability().getTargetData().getPosition(): null)
+        );
+
 
     @Getter @Setter @Accessors(chain = true)
     private ItemStack originalStack = ItemStack.EMPTY;

@@ -1,5 +1,7 @@
 package icbm.classic.lib.actions;
 
+import icbm.classic.ICBMClassic;
+import icbm.classic.ICBMConstants;
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.actions.IActionData;
 import icbm.classic.api.actions.IPotentialAction;
@@ -38,6 +40,8 @@ import java.util.function.Supplier;
  */
 public final class PotentialAction extends PotentialActionImp<PotentialAction> {
 
+    public static final ResourceLocation REG_NAME = new ResourceLocation(ICBMConstants.DOMAIN, "basic");
+
     @Setter() @Getter @Accessors(chain = true)
     private IActionData actionData;
 
@@ -56,4 +60,10 @@ public final class PotentialAction extends PotentialActionImp<PotentialAction> {
         .mainRoot()
         /* */.nodeBuildableObject("action_data", () -> ICBMClassicAPI.ACTION_REGISTRY, PotentialAction::getActionData, PotentialAction::setActionData)
         .base();
+
+    @Nonnull
+    @Override
+    public ResourceLocation getRegistryKey() {
+        return REG_NAME;
+    }
 }

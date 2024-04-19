@@ -1,9 +1,14 @@
 package icbm.classic.api.actions;
 
+import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.actions.status.IActionStatus;
+import icbm.classic.api.reg.obj.IBuildableObject;
+import icbm.classic.api.reg.obj.IBuilderRegistry;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -16,7 +21,7 @@ import javax.annotation.Nullable;
  * Potential actions are designed to be cached on source. Such as having a field
  * at the top of a TileEntity called warheadAction.
  */
-public interface IPotentialAction {
+public interface IPotentialAction extends IBuildableObject {
 
     /**
      * Action data used to spawn the action into the world
@@ -56,4 +61,9 @@ public interface IPotentialAction {
      */
     @Nonnull
     IActionStatus doAction(World world, double x, double y, double z, @Nullable IActionCause cause);
+
+    @Override
+    default IBuilderRegistry getRegistry() {
+        return ICBMClassicAPI.ACTION_POTENTIAL_REGISTRY;
+    }
 }

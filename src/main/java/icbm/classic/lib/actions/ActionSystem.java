@@ -1,13 +1,12 @@
 package icbm.classic.lib.actions;
 
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.actions.IPotentialAction;
 import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.api.actions.conditions.ICondition;
 import icbm.classic.api.actions.status.IActionStatus;
-import icbm.classic.api.reg.events.ActionRegistryEvent;
-import icbm.classic.api.reg.events.ActionStatusRegistryEvent;
-import icbm.classic.api.reg.events.ConditionalRegistryEvent;
-import icbm.classic.api.reg.events.MissileCauseRegistryEvent;
+import icbm.classic.api.reg.events.*;
+import icbm.classic.content.actions.ActionProvider;
 import icbm.classic.content.actions.causeby.CauseByTimer;
 import icbm.classic.content.actions.conditionals.ConditionAnd;
 import icbm.classic.content.actions.conditionals.ConditionOR;
@@ -39,6 +38,8 @@ public final class ActionSystem {
         setupCauseRegistry();
         setupStatusRegistry();
         setupActionRegistry();
+        setupActionPotentialRegistry();
+        ActionProvider.register();
     }
 
     private static void setupConditionalRegistry() {
@@ -89,7 +90,7 @@ public final class ActionSystem {
 
     private static void setupCauseRegistry()
     {
-        ICBMClassicAPI.ACTION_CAUSE_REGISTRY =  new BuildableObjectRegistry<IActionCause>("ACTION_CAUSE", "action.cause");;
+        ICBMClassicAPI.ACTION_CAUSE_REGISTRY =  new BuildableObjectRegistry<IActionCause>("ACTION_CAUSE", "action.cause");
 
         // Register defaults
         ICBMClassicAPI.ACTION_CAUSE_REGISTRY.register(EntityCause.REG_NAME, EntityCause::new);
@@ -99,9 +100,23 @@ public final class ActionSystem {
         ICBMClassicAPI.ACTION_CAUSE_REGISTRY.register(CauseByTimer.REG_NAME, CauseByTimer::new);
 
         //Fire registry event
-        MinecraftForge.EVENT_BUS.post(new MissileCauseRegistryEvent(ICBMClassicAPI.ACTION_CAUSE_REGISTRY));
+        MinecraftForge.EVENT_BUS.post(new ActionCauseRegistryEvent(ICBMClassicAPI.ACTION_CAUSE_REGISTRY));
 
         //Lock to prevent late registry
         ((BuildableObjectRegistry)ICBMClassicAPI.ACTION_CAUSE_REGISTRY).lock();
+    }
+
+    private static void setupActionPotentialRegistry()
+    {
+        ICBMClassicAPI.ACTION_POTENTIAL_REGISTRY =  new BuildableObjectRegistry<IPotentialAction>("ACTION_POTENTIAL", "action.potential");
+
+        // Register defaults
+        ICBMClassicAPI.ACTION_POTENTIAL_REGISTRY.register(PotentialAction.REG_NAME, PotentialAction::new);
+
+        //Fire registry event
+        MinecraftForge.EVENT_BUS.post(new ActionPotentialRegistryEvent(ICBMClassicAPI.ACTION_POTENTIAL_REGISTRY));
+
+        //Lock to prevent late registry
+        ((BuildableObjectRegistry)ICBMClassicAPI.ACTION_POTENTIAL_REGISTRY).lock();
     }
 }

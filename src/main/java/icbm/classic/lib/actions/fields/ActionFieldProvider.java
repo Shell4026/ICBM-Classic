@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class ActionFieldProvider implements IActionFieldProvider {
+public final class ActionFieldProvider implements IActionFieldProvider {
     private final Map<ActionField, Supplier> fieldAccessors = new HashMap<>();
 
     public <T> ActionFieldProvider field(ActionField<T> field, Supplier<T> accessor) {

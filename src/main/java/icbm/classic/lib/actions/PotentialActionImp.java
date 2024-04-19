@@ -39,26 +39,28 @@ import java.util.function.Supplier;
 /**
  * Pre-built action for general purpose implementation where all components are known.
  */
-public abstract class PotentialActionImp<SELF extends PotentialActionImp<SELF>> implements IPotentialAction, IActionFieldProvider, ITick, INBTSerializable<NBTTagCompound> {
-
-    private final Map<ActionField, Supplier> fieldAccessors = new HashMap();
+public abstract class PotentialActionImp<SELF extends PotentialActionImp<SELF>> implements IPotentialAction, ITick, INBTSerializable<NBTTagCompound> {
 
     @Getter @Setter(AccessLevel.PRIVATE)
     private ICondition preCheck;
 
+    @Getter @Setter
+    private IActionFieldProvider fieldProvider;
+
     public SELF withCondition(ICondition check) {
         this.preCheck = check;
         if(check != null) {
-            check.init(this);
+            check.init(fieldProvider);
         }
         return (SELF) this;
     }
 
-    public <T> SELF field(ActionField<T> field, Supplier<T> supplier) {
-        if(!fieldAccessors.containsKey(field)) {
-            fieldAccessors.put(field, supplier);
+    public SELF withProvider(IActionFieldProvider provider) {
+        this.fieldProvider = provider;
+        if(preCheck != null) {
+            preCheck.init(fieldProvider);
         }
-        return (SELF)this;
+        return (SELF) this;
     }
 
     @Nonnull
@@ -107,25 +109,7 @@ public abstract class PotentialActionImp<SELF extends PotentialActionImp<SELF>> 
         }
 
         final IActionSource actionSource = new ActionSource(world, new Vec3d(x, y, z), causeToUse);
-        return ICBMClassicAPI.ACTION_LISTENER.runAction(actionData.create(world, x, y, z, actionSource, this));
-    }
-
-    @Override
-    public <T> T getValue(ActionField<T> key) {
-        if(fieldAccessors.containsKey(key)) {
-            return key.cast(fieldAccessors.get(key).get());
-        }
-        return null;
-    }
-
-    @Override
-    public Collection<ActionField> getFields() {
-        return fieldAccessors.keySet();
-    }
-
-    @Override
-    public <T> boolean hasField(ActionField<T> key) {
-        return fieldAccessors.containsKey(key);
+        return ICBMClassicAPI.ACTION_LISTENER.runAction(actionData.create(world, x, y, z, actionSource, this.fieldProvider));
     }
 
     @Override

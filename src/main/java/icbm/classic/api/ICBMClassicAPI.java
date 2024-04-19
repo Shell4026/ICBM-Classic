@@ -1,7 +1,7 @@
 package icbm.classic.api;
 
-import icbm.classic.api.actions.IAction;
 import icbm.classic.api.actions.IActionData;
+import icbm.classic.api.actions.IPotentialAction;
 import icbm.classic.api.actions.listener.IActionListenerHandler;
 import icbm.classic.api.caps.IEMPReceiver;
 import icbm.classic.api.caps.IExplosive;
@@ -27,7 +27,6 @@ import icbm.classic.api.reg.content.IExMinecartRegistry;
 import icbm.classic.api.reg.content.IExMissileRegistry;
 import icbm.classic.api.reg.obj.IBuilderRegistry;
 import icbm.classic.api.actions.conditions.ICondition;
-import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -52,6 +51,8 @@ public final class ICBMClassicAPI
 
     /** Registry for actions that can be run */
     public static IBuilderRegistry<IActionData> ACTION_REGISTRY;
+    /** Registry for actions with conditionals that may be run */
+    public static IBuilderRegistry<IPotentialAction> ACTION_POTENTIAL_REGISTRY;
     /** Registry for status messages produced by machines, items, and entities in the mod */
     public static IBuilderRegistry<IActionStatus> ACTION_STATUS_REGISTRY;
     /** Registry for missile cause save/load in missiles */

@@ -5,6 +5,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * General purpose tags for use in specifying metadata about an object.
@@ -14,6 +16,7 @@ import javax.annotation.Nonnull;
  */
 @Data
 public final class MetaTag {
+    private static final Map<ResourceLocation, MetaTag> TAG_MAP = new HashMap<>();
 
     /**
      * Unique id of the tag, is not a translation key
@@ -30,6 +33,11 @@ public final class MetaTag {
     private MetaTag(@Nonnull ResourceLocation id, MetaTag parent) {
         this.id = id;
         this.parent = parent;
+        TAG_MAP.put(id, parent);
+    }
+
+    public static MetaTag find(ResourceLocation resourceLocation) {
+        return TAG_MAP.get(resourceLocation);
     }
 
     public static MetaTag create(ResourceLocation resourceLocation) {
