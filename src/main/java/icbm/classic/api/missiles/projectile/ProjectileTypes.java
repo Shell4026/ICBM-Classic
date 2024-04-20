@@ -8,15 +8,15 @@ import net.minecraft.util.ResourceLocation;
 public final class ProjectileTypes {
 
     /** All projectiles */
-    public static final MetaTag TYPE_PROJECTILE = MetaTag.create(new ResourceLocation("icbmclassic","projectile"));
+    public static final MetaTag TYPE_PROJECTILE = MetaTag.getOrCreate(new ResourceLocation("icbmclassic","projectile"));
 
     /** Applied to types that act as holders for other objects or entities... think landing rockets or parachutes */
-    public static final MetaTag TYPE_HOLDER = MetaTag.create(TYPE_PROJECTILE, "holder");
+    public static final MetaTag TYPE_HOLDER = MetaTag.getOrCreate(TYPE_PROJECTILE, "holder");
 
     /** Applied to projectiles that can be thrown or projected by a source */
-    public static final MetaTag TYPE_THROWABLE = MetaTag.create(TYPE_PROJECTILE, "throwable");
+    public static final MetaTag TYPE_THROWABLE = MetaTag.getOrCreate(TYPE_PROJECTILE, "throwable");
     /** Missiles that use the capability {@link icbm.classic.api.missiles.IMissile} */
-    public static final MetaTag TYPE_MISSILE = MetaTag.create(TYPE_PROJECTILE, "missile");
+    public static final MetaTag TYPE_MISSILE = MetaTag.getOrCreate(TYPE_PROJECTILE, "missile");
     /** Projectiles that are explosive and use the capability {@link icbm.classic.api.caps.IExplosive} */
-    public static final MetaTag TYPE_EXPLOSIVE = MetaTag.create(TYPE_PROJECTILE, "explosive");
+    public static final MetaTag TYPE_EXPLOSIVE = MetaTag.getOrCreate(TYPE_PROJECTILE, "explosive");
 }

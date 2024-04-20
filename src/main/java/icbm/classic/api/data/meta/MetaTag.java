@@ -9,7 +9,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * General purpose tags for use in specifying metadata about an object.
+ * General purpose tags for use in specifying metadata about an object. Each tag needs to be globally
+ * unique regardless of system used inside. This is to ensure the tag can be saved then loaded again. Otherwise,
+ * we would need a registry per system to handle tags. When tags already should have a root per system to
+ * act as a parent.
+ *
+ * Each system will use meta-tags differently. As well some tags may exist as a way to refine searching
+ * and provide additional information to players. Meaning not all tags are meant to be functional and
+ * will be documented on expected usage.
+ *
+ * Tags are also expected to work together. With parent acting as a grouping of related tags, or folder. Then
+ * each tag sub-tags as a way to refine representation. To avoid making 100s of sub-tags combinations can be created.
+ * Such that tagA + tagB being used as a fuzzy check to limit system interaction.
+ *
+ * Example of tags working together: an action creates an entity projectile that damages the player. The tags
+ * might be as followed (entity, creation, destructive, projectile). With the first tag describing the action
+ * as related to entities. Second tag saying it creates something, likely the entity. Third will say the
+ * action is destructive/harmful in some capacity. Final tag notes the action is related to projectiles.
+ *
+ * With the above example more detailed tags may be used. Such as entity_creation tag combing the creation
+ * and entity tag into one value. With another option being entity_projectile which could combine creation, entity,
+ * and projectile all into one. Reducing how many checks other logic blocks need to do to understand the results.
+ *
  * <p>
  * Used with {@link icbm.classic.api.actions.IActionData} to describe type of action and
  * {@link icbm.classic.api.missiles.projectile.IProjectileData} to describe type of projectile
@@ -33,23 +54,29 @@ public final class MetaTag {
     private MetaTag(@Nonnull ResourceLocation id, MetaTag parent) {
         this.id = id;
         this.parent = parent;
-        TAG_MAP.put(id, parent);
     }
 
     public static MetaTag find(ResourceLocation resourceLocation) {
         return TAG_MAP.get(resourceLocation);
     }
 
-    public static MetaTag create(ResourceLocation resourceLocation) {
-        return create(null, resourceLocation);
+    public static MetaTag getOrCreate(ResourceLocation resourceLocation) {
+        return getOrCreate(null, resourceLocation);
     }
 
-    public static MetaTag create(MetaTag parent, String subtype) {
-        return create(parent, new ResourceLocation(parent.id.getResourceDomain(), parent.id.getResourcePath() + "." + subtype));
+    public static MetaTag getOrCreate(MetaTag parent, String subtype) {
+        return getOrCreate(parent, new ResourceLocation(parent.id.getResourceDomain(), parent.id.getResourcePath() + "." + subtype));
     }
 
-    public static MetaTag create(MetaTag parent, ResourceLocation resourceLocation) {
+    public static MetaTag getOrCreate(MetaTag parent, ResourceLocation resourceLocation) {
+        final MetaTag exist = find(resourceLocation);
+        if(exist != null) {
+            return exist;
+        }
+
         final MetaTag metaTag = new MetaTag(resourceLocation, parent);
+        TAG_MAP.put(resourceLocation, metaTag);
+
         if (parent != null) {
             parent.add(metaTag);
         }

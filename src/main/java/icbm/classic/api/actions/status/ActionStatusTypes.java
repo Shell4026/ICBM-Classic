@@ -32,50 +32,50 @@ import net.minecraft.util.ResourceLocation;
 public final class ActionStatusTypes {
 
     /** Root for all actions */
-    public static final MetaTag ROOT = MetaTag.create(new ResourceLocation("icbmclassic","action.status"));
+    public static final MetaTag ROOT = MetaTag.getOrCreate(new ResourceLocation("icbmclassic","action.status"));
 
     /** Status that prevents interaction from continuing */
-    public static final MetaTag BLOCKING = MetaTag.create(ROOT, "blocking");
+    public static final MetaTag BLOCKING = MetaTag.getOrCreate(ROOT, "blocking");
 
     //<editor-folding description="Error/Stop Conditions">
 
     /** Root of all bad, error, stopping, or no answer conditions */
-    public static final MetaTag RED = MetaTag.create(ROOT, "red");
+    public static final MetaTag RED = MetaTag.getOrCreate(ROOT, "red");
 
     /** Status that is providing an error */
-    public static final MetaTag ERROR = MetaTag.create(RED, "error");
+    public static final MetaTag ERROR = MetaTag.getOrCreate(RED, "error");
 
     /** Error caused by user failed to enter data or not completing setup */
-    public static final MetaTag ERROR_USER = MetaTag.create(ERROR, "user");
+    public static final MetaTag ERROR_USER = MetaTag.getOrCreate(ERROR, "user");
 
     /** Error relating to code or something outside the user's control */
-    public static final MetaTag ERROR_DEV = MetaTag.create(ERROR, "dev");
+    public static final MetaTag ERROR_DEV = MetaTag.getOrCreate(ERROR, "dev");
 
     //</editor-folding>
 
     //<editor-folding description="Caution Conditions">
 
     /** Root of all warning, caution, or soft error conditions */
-    public static final MetaTag YELLOW = MetaTag.create(ROOT, "yellow");
+    public static final MetaTag YELLOW = MetaTag.getOrCreate(ROOT, "yellow");
 
     /** Status that is providing a warning */
-    public static final MetaTag CAUTION = MetaTag.create(YELLOW, "caution");
+    public static final MetaTag CAUTION = MetaTag.getOrCreate(YELLOW, "caution");
 
     /** Status note it is considered running some task (timer, charging, recipe, cooking, etc) */
-    public static final MetaTag WAITING = MetaTag.create(YELLOW, "waiting");
+    public static final MetaTag WAITING = MetaTag.getOrCreate(YELLOW, "waiting");
 
     //</editor-folding>
 
     //<editor-folding description="Good conditions">
 
     /** Root of all conditions that may be perceived as good, positive, continue, or yes condition */
-    public static final MetaTag GREEN = MetaTag.create(ROOT, "green");
+    public static final MetaTag GREEN = MetaTag.getOrCreate(ROOT, "green");
 
     /** Status note it is considered a ready and waiting to start */
-    public static final MetaTag READY = MetaTag.create(GREEN, "ready");
+    public static final MetaTag READY = MetaTag.getOrCreate(GREEN, "ready");
 
     /** Status note it is considered done with it's task */
-    public static final MetaTag DONE = MetaTag.create(GREEN, "done");
+    public static final MetaTag DONE = MetaTag.getOrCreate(GREEN, "done");
 
     //</editor-folding>
 }
