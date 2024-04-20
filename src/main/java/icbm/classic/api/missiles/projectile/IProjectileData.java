@@ -1,7 +1,7 @@
 package icbm.classic.api.missiles.projectile;
 
+import icbm.classic.api.actions.data.EntityActionTypes;
 import icbm.classic.api.data.meta.ITypeTaggable;
-import icbm.classic.api.data.meta.MetaTag;
 import icbm.classic.api.reg.obj.IBuildableObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumHand;
@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
  *
  * @param <E> created from the projectile data
  *
- * @deprecated being replaced with {@link icbm.classic.api.actions.IActionData} and {@link icbm.classic.api.actions.data.ActionTypes#PROJECTILE}
+ * @deprecated being replaced with {@link icbm.classic.api.actions.IActionData} and {@link EntityActionTypes#PROJECTILE}
  * as current solution isn't flexible enough and results in odd spawning when {@link #onEntitySpawned(Entity, Entity, EnumHand)} is invoked. It
  * also gives caller too much visibility into what is spawned. When it should just provide starting information via {@link icbm.classic.api.actions.data.IActionFieldProvider}
  * then let the spawn entity use what it needs. Plus this makes it far easier for reuse of common actions and provide implemetation for other mods.

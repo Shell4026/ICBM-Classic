@@ -3,7 +3,7 @@ package icbm.classic.content.cargo;
 import com.google.common.collect.ImmutableList;
 import icbm.classic.ICBMClassic;
 import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.actions.data.ActionTypes;
+import icbm.classic.api.actions.data.EntityActionTypes;
 import icbm.classic.api.data.meta.MetaTag;
 import icbm.classic.api.reg.obj.IBuildableObject;
 import icbm.classic.api.missiles.projectile.IProjectileData;
@@ -37,7 +37,7 @@ import java.util.Collection;
 
 public abstract class CargoProjectileData<T extends IBuildableObject, ENTITY extends Entity> implements IBuildableObject, IProjectileData<ENTITY>, INBTSerializable<NBTTagCompound> {
 
-    private final static ImmutableList<MetaTag> TYPE = ImmutableList.of(ActionTypes.ENTITY_CREATION, ProjectileTypes.TYPE_HOLDER, ProjectileTypes.TYPE_THROWABLE);
+    private final static ImmutableList<MetaTag> TYPE = ImmutableList.of(EntityActionTypes.ENTITY_CREATION, ProjectileTypes.TYPE_HOLDER, ProjectileTypes.TYPE_THROWABLE);
 
     /**
      * ItemStack to use to spawn as a passenger of this parachute

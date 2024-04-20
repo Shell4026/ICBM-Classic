@@ -4,10 +4,7 @@ import com.google.common.collect.ImmutableList;
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.actions.IActionData;
 import icbm.classic.api.actions.cause.IActionSource;
-import icbm.classic.api.actions.data.ActionField;
-import icbm.classic.api.actions.data.ActionFields;
-import icbm.classic.api.actions.data.ActionTypes;
-import icbm.classic.api.actions.data.IActionFieldProvider;
+import icbm.classic.api.actions.data.*;
 import icbm.classic.api.data.meta.MetaTag;
 import icbm.classic.config.blast.ConfigBlast;
 import net.minecraft.util.ResourceLocation;
@@ -20,7 +17,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class ActionDataEmpArea implements IActionData {
-    public static final ImmutableList<MetaTag> ACTION_TAGS = ImmutableList.of(ActionTypes.BLOCK_EDIT, ActionTypes.ENTITY_EDIT, ActionTypes.DESTRUCTIVE, ActionTypes.WORLD_AREA, ActionTypes.ENTITY_AREA);
+    public static final ImmutableList<MetaTag> ACTION_TAGS = ImmutableList.of(BlockActionTypes.BLOCK_EDIT, EntityActionTypes.ENTITY_EDIT, ActionTypes.DESTRUCTIVE, WorldActionTypes.WORLD_AREA, EntityActionTypes.ENTITY_AREA);
     public static final ResourceLocation REG_NAME = new ResourceLocation(ICBMConstants.DOMAIN, "emp.area");
     /** @deprecated This is temp until registered */
     public static IActionData INSTANCE = new ActionDataEmpArea();

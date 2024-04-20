@@ -2,7 +2,6 @@ package icbm.classic.api.data.meta;
 
 import lombok.Data;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -37,13 +36,14 @@ import java.util.Map;
  */
 @Data
 public final class MetaTag {
-    private static final Map<ResourceLocation, MetaTag> TAG_MAP = new HashMap<>();
+    private static final Map<String, MetaTag> TAG_MAP = new HashMap<>();
 
-    /**
-     * Unique id of the tag, is not a translation key
-     */
+    /** Unique id of the tag */
     @Nonnull
-    private final ResourceLocation id;
+    private final String key;
+    /** Mod who owns this meta-tag */
+    @Nonnull
+    private final String domain;
     /**
      * Parent of this tag
      */
@@ -51,31 +51,32 @@ public final class MetaTag {
 
     private NonNullList<MetaTag> children;
 
-    private MetaTag(@Nonnull ResourceLocation id, MetaTag parent) {
-        this.id = id;
+    private MetaTag(@Nonnull String key, @Nonnull String domain, MetaTag parent) {
+        this.key = key;
+        this.domain = domain;
         this.parent = parent;
     }
 
-    public static MetaTag find(ResourceLocation resourceLocation) {
-        return TAG_MAP.get(resourceLocation);
+    public static MetaTag find(String key) {
+        return TAG_MAP.get(key);
     }
 
-    public static MetaTag getOrCreate(ResourceLocation resourceLocation) {
-        return getOrCreate(null, resourceLocation);
+    public static MetaTag getOrCreateRoot(String key, String domain) {
+        return getOrCreate(null, key, domain);
     }
 
-    public static MetaTag getOrCreate(MetaTag parent, String subtype) {
-        return getOrCreate(parent, new ResourceLocation(parent.id.getResourceDomain(), parent.id.getResourcePath() + "." + subtype));
+    public static MetaTag getOrCreateSubTag(MetaTag parent, String subtype) {
+        return getOrCreate(parent, parent.domain, subtype);
     }
 
-    public static MetaTag getOrCreate(MetaTag parent, ResourceLocation resourceLocation) {
-        final MetaTag exist = find(resourceLocation);
+    public static MetaTag getOrCreate(MetaTag parent, String key, String domain) {
+        final MetaTag exist = find(key);
         if(exist != null) {
             return exist;
         }
 
-        final MetaTag metaTag = new MetaTag(resourceLocation, parent);
-        TAG_MAP.put(resourceLocation, metaTag);
+        final MetaTag metaTag = new MetaTag(key, domain, parent);
+        TAG_MAP.put(key, metaTag);
 
         if (parent != null) {
             parent.add(metaTag);

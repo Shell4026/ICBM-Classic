@@ -40,7 +40,7 @@ public final class ActionProvider implements IActionProvider, INBTSerializable<N
         NBTTagList list = new NBTTagList();
         actions.forEach((tag, action) -> {
             final NBTTagCompound entry = new NBTTagCompound();
-            entry.setString("key", tag.getId().toString());
+            entry.setString("key", tag.getKey());
             entry.setTag("value", ICBMClassicAPI.ACTION_POTENTIAL_REGISTRY.save(action));
             list.appendTag(entry);
         });
@@ -57,7 +57,7 @@ public final class ActionProvider implements IActionProvider, INBTSerializable<N
                 NBTTagCompound entry = list.getCompoundTagAt(i);
                 String keyString = entry.getString("key");
                 NBTTagCompound valueTag = entry.getCompoundTag("value");
-                MetaTag key = MetaTag.find(new ResourceLocation(keyString));
+                MetaTag key = MetaTag.find(keyString);
                 IPotentialAction value = ICBMClassicAPI.ACTION_POTENTIAL_REGISTRY.load(valueTag);
                 actions.put(key, value);
             }

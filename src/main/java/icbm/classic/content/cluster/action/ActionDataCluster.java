@@ -6,7 +6,7 @@ import icbm.classic.api.actions.IAction;
 import icbm.classic.api.actions.IActionData;
 import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.actions.data.ActionFields;
-import icbm.classic.api.actions.data.ActionTypes;
+import icbm.classic.api.actions.data.EntityActionTypes;
 import icbm.classic.api.actions.data.IActionFieldProvider;
 import icbm.classic.api.data.meta.MetaTag;
 import lombok.Getter;
@@ -27,7 +27,7 @@ import java.util.Collection;
 
 public class ActionDataCluster implements IActionData, INBTSerializable<NBTTagCompound> {
     public final static ResourceLocation REG_NAME = new ResourceLocation(ICBMConstants.DOMAIN, "entity.cluster.spawning");
-    private final static ImmutableList<MetaTag> TAGS = ImmutableList.of(ActionTypes.ENTITY_CREATION);
+    private final static ImmutableList<MetaTag> TAGS = ImmutableList.of(EntityActionTypes.ENTITY_CREATION);
 
     @Getter
     private final NonNullList<ItemStack> clusterSpawnEntries = NonNullList.create(); //TODO have cluster condense to stacks of 64 to save memory
