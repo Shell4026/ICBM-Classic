@@ -11,8 +11,16 @@ public class SaveNodeBoolean<E> extends NbtSaveNode<E, NBTTagByte>
     public SaveNodeBoolean(final String name, Function<E, Boolean> save, BiConsumer<E, Boolean> load)
     {
         super(name,
-            (obj) -> new NBTTagByte((byte) (save.apply(obj) ? 1 : 0)),
-            (obj, data) -> load.accept(obj, data.getByte() == 1)
+            (obj) -> save(save.apply(obj)),
+            (obj, data) -> load.accept(obj, load(data))
         );
+    }
+
+    public static NBTTagByte save(Boolean b) {
+        return new NBTTagByte((byte) (b ? 1 : 0));
+    }
+
+    public static boolean load(NBTTagByte tag) {
+        return tag.getByte() == 1;
     }
 }

@@ -21,6 +21,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -49,9 +50,9 @@ public class ActionEmpArea extends ActionBase
     }
 
     @Override
-    public <T> T getValue(ActionField<T> key) {
+    public <VALUE, TAG extends NBTBase> VALUE getValue(ActionField<VALUE, TAG> key) {
         if(key == ActionFields.AREA_SIZE) {
-            return (T)ActionFields.AREA_SIZE.cast((float)size);
+            return (VALUE) ActionFields.AREA_SIZE.cast((float)size);
         }
         return null;
     }
@@ -62,7 +63,7 @@ public class ActionEmpArea extends ActionBase
     }
 
     @Override
-    public <T> boolean hasField(ActionField<T> key) {
+    public <VALUE, TAG extends NBTBase> boolean hasField(ActionField<VALUE, TAG> key) {
         return key == ActionFields.AREA_SIZE;
     }
 

@@ -1,5 +1,7 @@
 package icbm.classic.api.actions.data;
 
+import net.minecraft.nbt.NBTBase;
+
 import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.Collections;
@@ -16,9 +18,17 @@ public interface IActionFieldReceiver {
      *
      * @param key to set
      * @param value to set
-     * @param <T> to allow generic assign, this isn't checked so have fun
      */
-    default <T> void setValue(ActionField<T> key, T value) {
+    default <VALUE, TAG extends NBTBase> void setValue(ActionField<VALUE, TAG> key, VALUE value) {
 
+    }
+
+    default <SELF extends IActionFieldReceiver> SELF applyFields(IActionFieldProvider fieldAccessor) {
+        if(fieldAccessor != null && !fieldAccessor.getFields().isEmpty()) {
+            for(ActionField field : fieldAccessor.getFields()) {
+                this.setValue(field, fieldAccessor.getValue(field));
+            }
+        }
+        return (SELF)this;
     }
 }

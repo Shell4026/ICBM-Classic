@@ -1,5 +1,8 @@
 package icbm.classic.api.actions.data;
 
+import net.minecraft.nbt.NBTBase;
+
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -24,9 +27,9 @@ public interface IActionFieldProvider {
      *
      * @param key to lookup
      * @return value
-     * @param <T> to allow generic assign, this isn't checked so have fun
+     * @param <VALUE> to allow generic assign, this isn't checked so have fun
      */
-    default <T> T getValue(ActionField<T> key) {
+    default <VALUE, TAG extends NBTBase> VALUE getValue(ActionField<VALUE, TAG> key) {
         return null;
     }
 
@@ -46,6 +49,7 @@ public interface IActionFieldProvider {
      *
      * @return immutable fields, defaults to empty
      */
+    @Nonnull
     default Collection<ActionField> getFields() {
         return Collections.EMPTY_LIST;
     }
@@ -55,9 +59,8 @@ public interface IActionFieldProvider {
      *
      * @param key to use for lookups
      * @return true if has the field
-     * @param <T>
      */
-    default <T> boolean hasField(ActionField<T> key) {
-        return false;
+    default <VALUE, TAG extends NBTBase> boolean hasField(ActionField<VALUE, TAG> key) {
+        return getFields().contains(key);
     }
 }

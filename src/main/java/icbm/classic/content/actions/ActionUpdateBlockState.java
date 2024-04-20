@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
 import java.util.function.Function;
 
 public class ActionUpdateBlockState extends ActionBase implements IAction {
-    private final Function<IBlockState, Boolean> validation;
+    private final Function<IBlockState, Boolean> validation; //TODO add ActionField
     private final Function<IBlockState, IBlockState> modifyBlock;
 
     public ActionUpdateBlockState(World world, BlockPos pos,
@@ -49,15 +49,5 @@ public class ActionUpdateBlockState extends ActionBase implements IAction {
             return ActionResponses.COMPLETED;
         }
         return ActionResponses.VALIDATION_ERROR;
-    }
-
-    @Override
-    public <T> T getValue(ActionField<T> key) {
-        return null;
-    }
-
-    @Override
-    public <T> boolean hasField(ActionField<T> key) {
-        return false;
     }
 }

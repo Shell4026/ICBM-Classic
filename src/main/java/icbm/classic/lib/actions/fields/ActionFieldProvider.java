@@ -2,6 +2,7 @@ package icbm.classic.lib.actions.fields;
 
 import icbm.classic.api.actions.data.ActionField;
 import icbm.classic.api.actions.data.IActionFieldProvider;
+import net.minecraft.nbt.NBTBase;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,18 +11,18 @@ import java.util.function.Supplier;
 public final class ActionFieldProvider implements IActionFieldProvider {
     private final Map<ActionField, Supplier> fieldAccessors = new HashMap<>();
 
-    public <T> ActionFieldProvider field(ActionField<T> field, Supplier<T> accessor) {
+    public <VALUE, TAG extends NBTBase> ActionFieldProvider field(ActionField<VALUE, TAG> field, Supplier<VALUE> accessor) {
         fieldAccessors.put(field, accessor);
         return this;
     }
 
     @Override
-    public <T> T getValue(ActionField<T> key) {
-        return (T) fieldAccessors.get(key);
+    public <VALUE, TAG extends NBTBase> VALUE getValue(ActionField<VALUE, TAG> key) {
+        return (VALUE) fieldAccessors.get(key);
     }
 
     @Override
-    public <T> boolean hasField(ActionField<T> key) {
+    public <VALUE, TAG extends NBTBase> boolean hasField(ActionField<VALUE, TAG> key) {
         return fieldAccessors.containsKey(key);
     }
 }

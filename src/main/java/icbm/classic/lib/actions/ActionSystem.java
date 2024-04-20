@@ -1,9 +1,12 @@
 package icbm.classic.lib.actions;
 
+import icbm.classic.ICBMConstants;
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.actions.IPotentialAction;
 import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.api.actions.conditions.ICondition;
+import icbm.classic.api.actions.data.ActionField;
+import icbm.classic.api.actions.data.ActionFields;
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.reg.events.*;
 import icbm.classic.content.actions.ActionProvider;
@@ -12,6 +15,7 @@ import icbm.classic.content.actions.conditionals.ConditionAnd;
 import icbm.classic.content.actions.conditionals.ConditionOR;
 import icbm.classic.content.actions.conditionals.ConditionTargetDistance;
 import icbm.classic.content.actions.emp.ActionDataEmpArea;
+import icbm.classic.content.actions.entity.ActionSpawnEntity;
 import icbm.classic.content.blocks.launcher.screen.BlockScreenCause;
 import icbm.classic.content.blocks.launcher.status.LauncherStatus;
 import icbm.classic.content.cluster.action.ActionDataCluster;
@@ -25,21 +29,46 @@ import icbm.classic.lib.actions.listners.ActionListenerHandler;
 import icbm.classic.lib.actions.status.ActionResponses;
 import icbm.classic.lib.actions.status.MissingFieldStatus;
 import icbm.classic.lib.buildable.BuildableObjectRegistry;
+import icbm.classic.lib.saving.nodes.SaveNodeBoolean;
+import icbm.classic.lib.saving.nodes.SaveNodeResourceLocation;
+import icbm.classic.lib.saving.nodes.SaveNodeVec3d;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTPrimitive;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagFloat;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.MinecraftForge;
 
 @NoArgsConstructor(access = AccessLevel.NONE)
 public final class ActionSystem {
+    public static final ResourceLocation ACTION_ENTITY_SPAWN = new ResourceLocation(ICBMConstants.DOMAIN, "entity.spawn");
+
     public static void setup()
     {
         ICBMClassicAPI.ACTION_LISTENER = new ActionListenerHandler();
+        setupActionFields();
         setupConditionalRegistry();
         setupCauseRegistry();
         setupStatusRegistry();
         setupActionRegistry();
         setupActionPotentialRegistry();
         ActionProvider.register();
+    }
+
+    private static void setupActionFields() {
+        ActionFields.AREA_SIZE = ActionField.getOrCreate("area.size", Float.class, NBTTagFloat::new, NBTTagFloat::getFloat);
+        ActionFields.HOST_ENTITY = ActionField.getOrCreate("host.entity", Entity.class, null, null);
+        ActionFields.HOST_POSITION = ActionField.getOrCreate("host.vec3d", Vec3d.class, SaveNodeVec3d::save, SaveNodeVec3d::load);
+        ActionFields.IMPACTED = ActionField.getOrCreate("impacted", Boolean.class, SaveNodeBoolean::save, SaveNodeBoolean::load);
+        ActionFields.TARGET_POSITION = ActionField.getOrCreate("target.vec3d", Vec3d.class, SaveNodeVec3d::save, SaveNodeVec3d::load);
+        ActionFields.MOTION_VECTOR = ActionField.getOrCreate("motion.vec3d", Vec3d.class, SaveNodeVec3d::save, SaveNodeVec3d::load);
+        ActionFields.YAW = ActionField.getOrCreate("yaw", Float.class, NBTTagFloat::new, NBTTagFloat::getFloat);
+        ActionFields.PITCH = ActionField.getOrCreate("pitch", Float.class, NBTTagFloat::new, NBTTagFloat::getFloat);
+        ActionFields.ENTITY_REG_NAME = ActionField.getOrCreate("entity.regName", ResourceLocation.class, SaveNodeResourceLocation::save, SaveNodeResourceLocation::load);
+        ActionFields.ENTITY_DATA = ActionField.getOrCreate("entity.data", NBTTagCompound.class, (v) -> v, (t) -> t);
     }
 
     private static void setupConditionalRegistry() {
@@ -80,6 +109,11 @@ public final class ActionSystem {
         // Register defaults
         new ActionDataEmpArea().register();
         ICBMClassicAPI.ACTION_REGISTRY.register(ActionDataCluster.REG_NAME, ActionDataCluster::new);
+        ICBMClassicAPI.ACTION_REGISTRY.register(ACTION_ENTITY_SPAWN,
+            () -> new ActionDataGeneric(ACTION_ENTITY_SPAWN,
+                (w, x, y, z, s, d) -> new ActionSpawnEntity(w, new Vec3d(x, y, z), s, d),
+                ActionSpawnEntity.FIELDS
+            ));
 
         //Fire registry event
         MinecraftForge.EVENT_BUS.post(new ActionRegistryEvent(ICBMClassicAPI.ACTION_REGISTRY));

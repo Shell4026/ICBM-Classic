@@ -12,16 +12,21 @@ public class SaveNodeResourceLocation<E> extends NbtSaveNode<E, NBTTagString>
     public SaveNodeResourceLocation(final String name, Function<E, ResourceLocation> save, BiConsumer<E, ResourceLocation> load)
     {
         super(name,
-            (obj) -> {
-                final ResourceLocation key = save.apply(obj);
-                if(key == null) {
-                    return null;
-                }
-                return new NBTTagString(key.toString());
-            },
+            (obj) -> SaveNodeResourceLocation.save(save.apply(obj)),
             (obj, data) -> {
-                load.accept(obj, new ResourceLocation(data.getString()));
+                load.accept(obj, SaveNodeResourceLocation.load(data));
             }
         );
+    }
+
+    public static NBTTagString save(ResourceLocation key) {
+        if(key == null) {
+            return null;
+        }
+        return new NBTTagString(key.toString());
+    }
+
+    public static ResourceLocation load(NBTTagString data) {
+        return new ResourceLocation(data.getString());
     }
 }
