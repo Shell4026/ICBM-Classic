@@ -15,7 +15,6 @@ import icbm.classic.config.blast.ConfigBlast;
 import icbm.classic.content.actions.entity.ActionSpawnEntity;
 import icbm.classic.content.blast.*;
 import icbm.classic.content.blast.BlastTNT.PushType;
-import icbm.classic.content.cluster.action.ActionCluster;
 import icbm.classic.content.actions.emp.ActionDataEmpArea;
 import icbm.classic.content.blast.ender.BlastEnder;
 import icbm.classic.content.blast.ender.EnderBlastCustomization;
@@ -23,7 +22,7 @@ import icbm.classic.content.blast.gas.BlastChemical;
 import icbm.classic.content.blast.gas.BlastColor;
 import icbm.classic.content.blast.gas.BlastConfusion;
 import icbm.classic.content.blast.gas.BlastContagious;
-import icbm.classic.content.blast.redmatter.BlastRedmatterSpawner;
+import icbm.classic.content.blast.redmatter.ActionSpawnRedmatter;
 import icbm.classic.content.blast.threaded.BlastAntimatter;
 import icbm.classic.content.blast.threaded.BlastNuclear;
 import icbm.classic.lib.LanguageUtility;
@@ -192,7 +191,7 @@ public class ExplosiveInit
 
         //TODO add config (disable by default) for alarm audio
 
-        ICBMExplosives.REDMATTER = newEx(23, "redMatter", EnumTier.FOUR, (w, x, y, z, s) -> new BlastRedmatterSpawner().setBlastSize(ConfigBlast.redmatter.DEFAULT_SIZE).setBlastWorld(w).setBlastPosition(x, y, z));
+        ICBMExplosives.REDMATTER = newEx(23, "redMatter", EnumTier.FOUR, (w, x, y, z, s) -> new ActionSpawnRedmatter(w, new Vec3d(x, y, z), s, ICBMExplosives.REDMATTER));
         ICBMClassicAPI.EX_BLOCK_REGISTRY.setFuseSupplier(ICBMExplosives.REDMATTER.getRegistryKey(), (world, x, y, z) -> ConfigBlast.FUSE_TIMES.EXPLOSIVES.REDMATTER);
         ICBMClassicAPI.EX_MINECART_REGISTRY.setFuseSupplier(ICBMExplosives.REDMATTER.getRegistryKey(), (entity) -> ConfigBlast.FUSE_TIMES.BOMB_CARTS.REDMATTER);
 

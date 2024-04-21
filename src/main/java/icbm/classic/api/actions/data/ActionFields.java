@@ -9,7 +9,7 @@ import net.minecraft.util.math.Vec3d;
 
 @NoArgsConstructor(access = AccessLevel.NONE)
 public final class ActionFields {
-    /** General area size factor */
+    /** Size of area from center of action. For a box with size 3, this means it will generate 7x7 area. As size will be 3 up + 1 center + 3 down */
     public static ActionField<Float, NBTTagFloat> AREA_SIZE;
 
     /** RUNTIME_ONLY: Way to access host entity, usually provided by the entity itself */

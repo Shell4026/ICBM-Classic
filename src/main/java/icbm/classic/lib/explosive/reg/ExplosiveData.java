@@ -8,6 +8,7 @@ import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.explosion.IBlastFactory;
 import icbm.classic.api.explosion.IBlastInit;
 import icbm.classic.api.reg.IExplosiveData;
+import icbm.classic.lib.actions.ActionDataBase;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -24,7 +25,7 @@ import javax.annotation.Nullable;
 @ToString(of={"regName", "id"})
 @RequiredArgsConstructor
 @Data
-public class ExplosiveData implements IExplosiveData
+public class ExplosiveData extends ActionDataBase implements IExplosiveData
 {
     @Nonnull
     public final ResourceLocation regName;
@@ -64,6 +65,9 @@ public class ExplosiveData implements IExplosiveData
                 ((IBlastInit)blast).setBlastSize(fieldAccessors.getValue(ActionFields.AREA_SIZE));
             }
         }
+
+        blast.applyFields(fieldAccessors);
+        blast.applyFields(this);
 
         return blast;
     }
