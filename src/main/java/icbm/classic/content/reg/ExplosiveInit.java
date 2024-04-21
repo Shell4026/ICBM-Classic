@@ -4,12 +4,15 @@ import icbm.classic.ICBMConstants;
 import icbm.classic.api.EnumTier;
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.ICBMClassicHelpers;
+import icbm.classic.api.actions.data.ActionFields;
 import icbm.classic.api.caps.IExplosive;
 import icbm.classic.api.caps.IGPSData;
 import icbm.classic.api.explosion.IBlastFactory;
+import icbm.classic.api.refs.ICBMEntities;
 import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.config.blast.ConfigBlast;
+import icbm.classic.content.actions.entity.ActionSpawnEntity;
 import icbm.classic.content.blast.*;
 import icbm.classic.content.blast.BlastTNT.PushType;
 import icbm.classic.content.cluster.action.ActionCluster;
@@ -203,7 +206,11 @@ public class ExplosiveInit
 
         //=================== New Explosives not part of classic original
         ICBMExplosives.COLOR = newEx(-1, "colors", EnumTier.ONE, (w, x, y, z, s) -> new BlastColor().setBlastSize(ConfigBlast.colorful.scale).setBlastWorld(w).setBlastPosition(x, y, z));
-        ICBMExplosives.SMOKE = newEx(-1, "smoke", EnumTier.ONE, (w, x, y, z, s) -> new BlastSmoke().setBlastWorld(w).setBlastPosition(x, y, z)); //TODO add scale for smoke count, and ticks alive as NBT var
+        ICBMExplosives.SMOKE = newEx(-1, "smoke", EnumTier.ONE, (w, x, y, z, s) -> {
+            final ActionSpawnEntity actionSpawnEntity = new ActionSpawnEntity(w, new Vec3d(x, y, z), s, ICBMExplosives.SMOKE);
+            actionSpawnEntity.setValue(ActionFields.ENTITY_REG_NAME, ICBMEntities.SMOKE);
+            return actionSpawnEntity;
+        });
 
 
         ((ExplosiveRegistry) ICBMClassicAPI.EXPLOSIVE_REGISTRY).lockForce();
