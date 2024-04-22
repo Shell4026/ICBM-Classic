@@ -22,6 +22,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
@@ -421,7 +422,7 @@ public class RedmatterLogic
         }
 
         final double distanceScale = Math.max(0, 1 - (distance / getEntityImpactRange())); //0.0 to 1.0
-        final double pullPower = Math.min(1, distanceScale * host.getBlastSize() * 0.01);
+        final double pullPower = Math.min(1, distanceScale * host.getBlastSize() * 0.01); //TODO need a max speed
 
         //Calculate velocity (delta / mag) * power
         final double velX = (xDifference / distance) * pullPower;
@@ -475,7 +476,7 @@ public class RedmatterLogic
                 explosive.getExplosiveData().create(entity.world, entity.posX, entity.posY, entity.posZ, actionSource, null).doAction();
                 entity.setDead();
             }
-            else if (entity instanceof EntityLiving || entity instanceof EntityPlayer)
+            else if (entity instanceof EntityLivingBase)
             {
                 entity.attackEntityFrom(new DamageSourceRedmatter(this), 2000);
             }
