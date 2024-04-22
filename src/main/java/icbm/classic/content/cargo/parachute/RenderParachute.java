@@ -12,7 +12,7 @@ public class RenderParachute extends RenderItemImp<EntityParachute> {
     }
 
     @Override
-    protected void rotate(EntityParachute entity, float entityYaw) {
+    protected void rotate(EntityParachute entity, float entityYaw, float entityPitch, float partialTicks) {
         GlStateManager.rotate(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
         // TODO add wiggle to simulate wind
     }
@@ -23,8 +23,10 @@ public class RenderParachute extends RenderItemImp<EntityParachute> {
     }
 
     @Override
-    protected void scale(EntityParachute e) {
-        final float scale = e.getRenderScale();
-        GlStateManager.scale(scale, scale, scale);
+    protected void scale(EntityParachute e, float partialTicks) {
+        if(e != null) {
+            final float scale = e.getRenderScale();
+            GlStateManager.scale(scale, scale, scale);
+        }
     }
 }

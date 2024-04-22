@@ -21,10 +21,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Random;
 import java.util.function.Supplier;
 
@@ -59,12 +61,12 @@ public abstract class RenderItemImp<E extends Entity> extends Render<E>
         return ItemCameraTransforms.TransformType.NONE;
     }
 
-    protected void translate(E entity, IBakedModel iBakedModel, double x, double y, double z) {
+    protected void translate(@Nullable E entity, IBakedModel iBakedModel, double x, double y, double z, float partialTicks) {
         float hoverStart = iBakedModel.getItemCameraTransforms().getTransform(ItemCameraTransforms.TransformType.GROUND).scale.y;
         GlStateManager.translate((float)x, (float)y + 0.25F * hoverStart, (float)z);
     }
 
-    protected void rotate(E entity, float entityYaw) {
+    protected void rotate(@Nullable E entity, float entityYaw, float entityPitch, float partialTicks) {
         // Rotate by entity yaw
         if(billboard) {
             GlStateManager.rotate(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F); //fish ><>
@@ -75,7 +77,7 @@ public abstract class RenderItemImp<E extends Entity> extends Render<E>
         }
     }
 
-    protected void scale(E e) {
+    protected void scale(@Nullable E e, float partialTicks) {
         //GlStateManager.scale(2, 2, 2);
     }
 
@@ -87,12 +89,34 @@ public abstract class RenderItemImp<E extends Entity> extends Render<E>
             itemstack = BACKUP_RENDER_STACK.get();
         }
 
-        this.renderItem(entity, itemstack, x, y, z, entityYaw, partialTicks);
+        final float yaw = getYaw(entity, entityYaw, partialTicks); // yaw is already lerped by render manager
+        final float entityPitch = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks;
+        final float pitch = getPitch(entity, entityPitch, partialTicks);
 
-        super.doRender(entity, x, y, z, entityYaw, partialTicks);
+        this.renderItem(entity, itemstack, entity.world, x, y, z, yaw, pitch, partialTicks);
+
+        super.doRender(entity, x, y, z, yaw, partialTicks);
     }
 
-    protected void renderItem(E entity, ItemStack itemstack, double x, double y, double z, float entityYaw, float partialTicks) {
+    protected float getYaw(@Nonnull E entity, float providedYaw, float partialTicks) {
+        return providedYaw;
+    }
+
+    protected float getPitch(@Nonnull E entity, float entityPitch, float partialTicks) {
+        return entity.rotationPitch;
+    }
+
+    protected IBakedModel getBakedModel(@Nullable E entity, World world, ItemStack stack) {
+        // TODO may need optimization, upcraft suggests caching model as doing the lookup per frame is slow.. could do per entity? or tree(item -> key -> model)
+        return this.itemRenderer.getItemModelWithOverrides(stack, world, (EntityLivingBase) null);
+    }
+
+    public void renderItem(ItemStack missileStack, World world, double x, double y, double z, float entityYaw, float entityPitch, float partialTicks)
+    {
+        this.renderItem(null, missileStack, world, x, y, z, entityYaw, entityPitch, partialTicks);
+    }
+
+    protected void renderItem(@Nullable E entity, ItemStack itemstack, World world, double x, double y, double z, float entityYaw, float entityPitch, float partialTicks) {
         this.random.setSeed(Item.getIdFromItem(itemstack.getItem()) + itemstack.getMetadata());
         boolean hasTexture = false;
 
@@ -110,11 +134,10 @@ public abstract class RenderItemImp<E extends Entity> extends Render<E>
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         GlStateManager.pushMatrix();
 
-        // TODO may need optimization, upcraft suggests caching model as doing the lookup per frame is slow.. could do per entity? or tree(item -> key -> model)
-        IBakedModel ibakedmodel = this.itemRenderer.getItemModelWithOverrides(itemstack, entity.world, (EntityLivingBase) null);
-        this.translate(entity, ibakedmodel, x, y, z);
-        this.rotate(entity, entityYaw);
-        this.scale(entity);
+        IBakedModel ibakedmodel = this.getBakedModel(entity, world, itemstack);
+        this.translate(entity, ibakedmodel, x, y, z, partialTicks);
+        this.rotate(entity, entityYaw, entityPitch, partialTicks);
+        this.scale(entity, partialTicks);
 
         if (this.renderOutlines)
         {
@@ -148,7 +171,7 @@ public abstract class RenderItemImp<E extends Entity> extends Render<E>
 
     @Override
     @Nonnull
-    protected ResourceLocation getEntityTexture(@Nonnull E entity)
+    protected ResourceLocation getEntityTexture(@Nullable E entity)
     {
         return TextureMap.LOCATION_BLOCKS_TEXTURE;
     }

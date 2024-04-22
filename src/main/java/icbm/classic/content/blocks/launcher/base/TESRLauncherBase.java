@@ -14,7 +14,7 @@ public class TESRLauncherBase extends TileEntitySpecialRenderer<TileLauncherBase
     public void render(TileLauncherBase launcher, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
     {
         final float blockCenter = 0.5f;
-        final float missileOffset = 2f;
+        final float missileOffset = 2f; //TODO add custom render type for missiles as static blocks
 
         //Render missile
         if (!launcher.getMissileStack().isEmpty())
@@ -28,7 +28,7 @@ public class TESRLauncherBase extends TileEntitySpecialRenderer<TileLauncherBase
             GlStateManager.rotate(launcher.getMissileYaw(true) , 0F, 1F, 0F);
             GlStateManager.rotate(launcher.getMissilePitch(true), 1F, 0F, 0F);
 
-            RenderMissile.INSTANCE.renderMissile(launcher.getMissileStack(), launcher, 0, 0, 0, 0, 0);
+            RenderMissile.INSTANCE.renderItem(launcher.getMissileStack(), launcher.getWorld(), 0, 0, 0, 0, 0, partialTicks);
             GlStateManager.popMatrix();
         }
     }

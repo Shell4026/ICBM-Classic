@@ -18,7 +18,11 @@ public final class ActionFieldProvider implements IActionFieldProvider {
 
     @Override
     public <VALUE, TAG extends NBTBase> VALUE getValue(ActionField<VALUE, TAG> key) {
-        return (VALUE) fieldAccessors.get(key);
+        Supplier<VALUE> supplier = fieldAccessors.get(key);
+        if(supplier == null) {
+            return null;
+        }
+        return supplier.get();
     }
 
     @Override
