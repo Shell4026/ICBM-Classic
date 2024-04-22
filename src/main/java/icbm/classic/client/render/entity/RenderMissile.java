@@ -69,8 +69,6 @@ public class RenderMissile extends RenderItemImp<EntityMissile>
     {
         super.doRender(entityMissile, x, y, z, entityYaw, partialTicks);
 
-        ICBMClassic.logger().info("Render: {} -> {},{},{}", entityMissile, x, y, z);
-
         if (renderManager.isDebugBoundingBox()) //TODO fix so we can see motion vector
         {
             Tessellator tessellator = Tessellator.getInstance();
