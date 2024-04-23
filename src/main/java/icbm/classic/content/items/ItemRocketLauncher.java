@@ -65,7 +65,7 @@ public class ItemRocketLauncher extends ItemICBMElectrical
     private static final int firingDelay = 1000;
     private final HashMap<String, Long> clickTimePlayer = new HashMap<String, Long>();
 
-    private static final double minDistance = 50;
+    private static final double minDistance = 20;
     private static final double ballisticBurstY = 20;
 
     private final boolean fireUpDown;
