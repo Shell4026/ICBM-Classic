@@ -325,7 +325,7 @@ explosive.icbmclassic:redMatter.info.10=Oh baby come back
 
 ## Cluster Missile
 item.icbmclassic:cluster_missile.name=Cluster Missile
-item.icbmclassic:cluster_missile.info=Deploys projectils above target\nWill not go off on block impacts
+item.icbmclassic:cluster_missile.info=Deploys a spread of projectiles in proximity to target. Lacks impact sensor.
 item.icbmclassic:cluster_missile.contents=Contents: %1$s
 
 missile.icbmclassic:cluster.name=Cluster Missile
