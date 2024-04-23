@@ -2,6 +2,7 @@ package icbm.classic.content.cargo;
 
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.missiles.projectile.IProjectileStack;
+import icbm.classic.content.reg.ItemReg;
 import icbm.classic.lib.projectile.ProjectileStack;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -47,8 +48,14 @@ public class RecipeCargoData extends net.minecraftforge.registries.IForgeRegistr
             final ItemStack slotStack = inv.getStackInSlot(slot);
             if(!slotStack.isEmpty()) {
                 itemCount++;
+
+
                 if(ItemStack.areItemsEqual(slotStack, recipeOutput)) {
                     hasCargoItem = isValidProjectileStack(getProjectileStack(slotStack));
+                }
+                // Cluster takes priority as it is before parachute/balloon
+                else if((slotStack.getItem() == ItemReg.itemClusterMissile) && !hasCargoItem) {
+                    return false;
                 }
             }
         }
