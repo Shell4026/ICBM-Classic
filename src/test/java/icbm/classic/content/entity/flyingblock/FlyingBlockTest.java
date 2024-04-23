@@ -61,9 +61,12 @@ class FlyingBlockTest {
     @DisplayName("Confirm we can spawn a flying block if allowed")
     void spawnFlyingBlock_allowedToSpawn() {
         final World world = testManager.getWorld(0);
-
         final BlockPos pos = new BlockPos(10, 10, 10);
-        final boolean result = FlyingBlock.spawnFlyingBlock(world, pos,  new BlockCaptureData(Blocks.STONE.getDefaultState(), null));
+
+        world.setBlockState(pos, Blocks.STONE.getDefaultState());
+
+
+        final boolean result = FlyingBlock.spawnFlyingBlock(world, pos,  null, null);
         Assertions.assertTrue(result);
 
         assertMobCountInChunk(world, pos, (entity) -> entity instanceof EntityFlyingBlock, 1);
@@ -79,7 +82,9 @@ class FlyingBlockTest {
         FlyingBlock.banAllowList.loadBlockStates("minecraft:dirt");
 
         final BlockPos pos = new BlockPos(10, 10, 10);
-        final boolean result = FlyingBlock.spawnFlyingBlock(world, pos, new BlockCaptureData(Blocks.DIRT.getDefaultState(), null));
+        world.setBlockState(pos, Blocks.DIRT.getDefaultState());
+
+        final boolean result = FlyingBlock.spawnFlyingBlock(world, pos, null, null);
         Assertions.assertFalse(result);
 
         assertMobCountInChunk(world, pos, Objects::nonNull, 0);

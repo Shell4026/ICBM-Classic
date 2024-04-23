@@ -44,7 +44,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
 {
     //Thread stuff
     private ThreadExplosion thread;
-    private ConcurrentLinkedQueue<BlockPos> threadResults;
+    protected ConcurrentLinkedQueue<BlockPos> threadResults;
     private boolean threadComplete = false;
 
     //TODO remove position as we are double storing location data

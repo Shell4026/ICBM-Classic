@@ -341,11 +341,11 @@ public class RedmatterLogic
 
     protected void spawnFlyingBlock(BlockPos blockPos, BlockCaptureData blockCaptureData) {
         // TODO get itemStack, do rng for if stack is complete version or broken version
-        FlyingBlock.spawnFlyingBlock(host.world, blockPos, blockCaptureData, (entity) -> {
+        FlyingBlock.spawnFlyingBlock(host.world, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5, blockCaptureData, (entity) -> {
             entity.yawChange = 50 * host.world.rand.nextFloat(); //TODO why 50?
             entity.pitchChange = 50 * host.world.rand.nextFloat();
             entity.noClip = true;
-        }, this::handleEntities);
+        }, this::handleEntities, null);
     }
 
     private float getEntityImpactRange()

@@ -186,9 +186,7 @@ public abstract class CargoProjectileData<T extends IBuildableObject, ENTITY ext
 
         // TODO add itemstack to flying block for better placement and handling of TE data
         final BlockCaptureData blockCaptureData = new BlockCaptureData(iblockstate, heldItem.copy());
-        if (!FlyingBlock.spawnFlyingBlock(entity.world, entity.getPosition(), blockCaptureData, (flyingBlock) -> {
-            flyingBlock.startRiding(entity);
-        }, null)) {
+        if (!FlyingBlock.spawnFlyingBlock(entity.world, entity.posX, entity.posY, entity.posZ, blockCaptureData, (flyingBlock) -> flyingBlock.startRiding(entity), null, null)) {
             spawnItemEntity(entity);
         }
     }

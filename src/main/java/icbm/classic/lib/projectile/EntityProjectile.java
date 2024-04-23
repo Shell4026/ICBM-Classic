@@ -253,14 +253,12 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
             Entity entity = null;
             final List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().offset(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
             double distanceToHit = 0.0D;
-            float hitBoxSizeScale;
 
             // TODO see if we can parallel stream this? As it might be thread safe assuming we .map first
             for (Entity checkEntity : list) {
                 if (shouldCollideWith(checkEntity) && (checkEntity != this.shootingEntity || this.ticksInAir >= 5)) { //TODO why 5 ticks specifically? Why not 'has collider left shooter'
-                    hitBoxSizeScale = 0.3F;
-                    AxisAlignedBB hitBox = checkEntity.getEntityBoundingBox().expand((double) hitBoxSizeScale, (double) hitBoxSizeScale, (double) hitBoxSizeScale);
-                    RayTraceResult entityRayHit = hitBox.calculateIntercept(rayStart, rayEnd);
+                    final AxisAlignedBB hitBox = checkEntity.getEntityBoundingBox().expand(0.3F, 0.3F, 0.3F);
+                    final RayTraceResult entityRayHit = hitBox.calculateIntercept(rayStart, rayEnd);
 
                     if (entityRayHit != null) {
                         double distance = rayStart.distanceTo(entityRayHit.hitVec);

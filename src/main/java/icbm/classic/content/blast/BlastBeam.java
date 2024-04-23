@@ -97,15 +97,9 @@ public abstract class BlastBeam extends Blast implements IBlastTickable
                 //Edit blocks and queue spawning
                 for (BlockPos blockPos : blocksToRemove)
                 {
-                    final BlockCaptureData blockCaptureData = new BlockCaptureData(world, blockPos);
-
-                    //Remove block
-                    if (world.setBlockToAir(blockPos))
-                    {
-                        FlyingBlock.spawnFlyingBlock(this.world, blockPos, blockCaptureData, (entity) -> {
-                            entity.setGravity(entity.getGravity() - 0.01f);
-                        }, null);
-                    }
+                    FlyingBlock.spawnFlyingBlock(this.world, blockPos,
+                        (entity) -> entity.setGravity(entity.getGravity() - 0.01f),
+                        (e) -> world.setBlockToAir(blockPos));
                 }
 
                 blocksToRemove.clear();

@@ -91,18 +91,10 @@ public class BlastSonic extends Blast implements IBlastTickable
                                     }
                                 }
 
-                                final BlockCaptureData blockCaptureData = new BlockCaptureData(world, targetPosition);
-
-                                //Destroy block
-                                if(this.world().setBlockToAir(targetPosition)) {
-
-                                    //Create floating block
-                                    if (!(block instanceof IFluidBlock) //TODO add ban list covered by a utility, but also try fixing fluids by causing a rain/slash effect
-                                        && this.world().rand.nextFloat() < 0.1) //TODO add config for chance, increase chance if we fail to spawn a block
-                                    {
-                                        FlyingBlock.spawnFlyingBlock(world, targetPosition, blockCaptureData);
-                                    }
+                                if(this.world().rand.nextFloat() < 0.1) {  //TODO add config for chance, increase chance if we fail to spawn a block
+                                    FlyingBlock.spawnFlyingBlock(world, targetPosition, null, null);
                                 }
+                                this.world().setBlockToAir(targetPosition);
                             }
                         }
                     }
