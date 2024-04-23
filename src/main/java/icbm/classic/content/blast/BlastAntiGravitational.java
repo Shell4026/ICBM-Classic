@@ -51,13 +51,12 @@ public class BlastAntiGravitational extends BlastThreaded implements IBlastTicka
     }
 
     @Override
-    public boolean doExplode(int callCount) //TODO rewrite entire method
+    public boolean doExplode(int callCount)
     {
         if (world() != null && !this.world().isRemote) {
-            if (this.thread != null) //TODO replace thread check with callback triggered by thread and delayed into main thread
+            if (this.thread != null)
             {
                 if (this.thread.isComplete) {
-                    /// Replace thread with real-time y-layer search that uses some bitmask to detect possible targets
                     if (results == null) {
                         results = new ArrayList(getThreadResults());
                         Collections.shuffle(results);
@@ -71,7 +70,7 @@ public class BlastAntiGravitational extends BlastThreaded implements IBlastTicka
 
                     // Search until we find a single block
                     for (; searchIndex < results.size(); searchIndex++) {
-                        final BlockPos targetPosition = results.get(searchIndex); //TODO calculate position instead of pulling from thread
+                        final BlockPos targetPosition = results.get(searchIndex);
 
                         if (FlyingBlock.spawnFlyingBlock(world, targetPosition, (entity) -> {
                             entity.yawChange = 50 * world().rand.nextFloat();
