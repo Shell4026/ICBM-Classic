@@ -1,5 +1,6 @@
 package icbm.classic.lib.projectile;
 
+import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.data.D3Consumer;
 import icbm.classic.api.missiles.IMissileAiming;
@@ -196,6 +197,7 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
     @Override
     public void onUpdate() {
         super.onUpdate();
+        //ICBMClassic.logger().info(String.format("Projectile: - Pos(%.5f,%.5f,%.5f), VEL(%.5f,%.5f,%.5f)", posX, posY, posZ, motionX, motionY, motionZ));
 
         this.checkInGround();
 
@@ -538,7 +540,7 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
     }
 
     protected void updateMotion() {
-        if (!freezeMotion) {
+        if (!freezeMotion && isServer()) {
             //Update motion
             this.posX += this.motionX;
             this.posY += this.motionY;
@@ -676,8 +678,10 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public void setVelocity(double xx, double yy, double zz) {
+        //ICBMClassic.logger().info("Projectile#setVelocity: {} {} {} from {}", xx, yy, zz, Thread.currentThread().getStackTrace()[2]);
+
+        // Client side only gets 5 decimal places due to packet storing as int
         this.motionX = xx;
         this.motionY = yy;
         this.motionZ = zz;

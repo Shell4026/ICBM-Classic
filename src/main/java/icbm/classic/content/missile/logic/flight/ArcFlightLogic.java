@@ -167,13 +167,12 @@ public class ArcFlightLogic extends BuildableObject<ArcFlightLogic, IBuilderRegi
         {
             // Apply gravity
             if(!flightUpAlways) {
-                entity.motionY -= this.acceleration;
+                entity.setVelocity(entity.motionX, entity.motionY - this.acceleration, entity.motionZ);
             }
 
             // Cut off x-z motion to prevent missing target
             if(Math.abs(entity.posX - endX) <= 0.1f && Math.abs(entity.posZ - endZ) <= 0.1f) {
-                entity.motionX = 0;
-                entity.motionZ = 0;
+                entity.setVelocity(0, entity.motionY, 0);
             }
 
             // Update animate rotations
