@@ -65,8 +65,6 @@ public class BlastAntiGravitational extends BlastThreaded implements IBlastTicka
                         this.threadResults.clear();
                     }
 
-                    long startTime = System.nanoTime();
-
                     if(searchIndex >= results.size()) {
                         searchIndex = 0;
                     }
@@ -95,15 +93,10 @@ public class BlastAntiGravitational extends BlastThreaded implements IBlastTicka
                             entity.setInAirKillTime(RUNNING_TICKS * 2);
                         }, entityFlyingBlock -> {
                             flyingBlocks.add(entityFlyingBlock);
-                            ICBMClassic.logger().info("Spawned flying block {}", entityFlyingBlock);
                         })) {
                            break;
                         }
                     }
-
-                    long endTime = System.nanoTime() - startTime;
-
-                    ICBMClassic.logger().info("{}({}, {}) - {}", this, callCount, this.results.size(), StringHelpers.formatNanoTime(endTime));
                 }
             } else {
                 String msg = String.format("BlastAntiGravitational#doPostExplode() -> Failed to run due to null thread" +
