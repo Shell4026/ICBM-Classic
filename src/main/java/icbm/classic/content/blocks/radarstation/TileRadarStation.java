@@ -27,6 +27,7 @@ import icbm.classic.lib.radio.messages.IncomingMissileMessage;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import icbm.classic.lib.tile.TickAction;
 import icbm.classic.lib.tile.TickDoOnce;
+import icbm.classic.lib.transform.PosDistanceSorter;
 import icbm.classic.lib.transform.vector.Pos;
 import icbm.classic.prefab.gui.IPlayerUsing;
 import icbm.classic.prefab.inventory.InventorySlot;
@@ -53,6 +54,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -231,31 +233,7 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
                 {
                     if (this.isMissileGoingToHit(newMissile))
                     {
-                        if (this.incomingThreats.size() > 0)
-                        {
-                            // Sort in order of distance
-                            double dist = new Pos((TileEntity) this).distance(newMissile);
-
-                            for (int i = 0; i < this.incomingThreats.size(); i++) //TODO switch to priority list
-                            {
-                                IMissile missile = this.incomingThreats.get(i);
-
-                                if (dist < new Pos((TileEntity) this).distance(missile))
-                                {
-                                    this.incomingThreats.add(i, missile);
-                                    break;
-                                }
-                                else if (i == this.incomingThreats.size() - 1)
-                                {
-                                    this.incomingThreats.add(missile);
-                                    break;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            this.incomingThreats.add(newMissile);
-                        }
+                        this.incomingThreats.add(newMissile);
                     }
                     else {
                         this.detectedThreats.add(entity);
@@ -264,10 +242,34 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
             }
         }
 
+        if(!this.incomingThreats.isEmpty()) {
+            this.incomingThreats.sort(this::compare);
+        }
+
+        if(!this.detectedThreats.isEmpty()) {
+            this.detectedThreats.sort(this::compare);
+        }
+
         // Only update render data if we have players viewing the UI
-        if(this.getPlayersUsing().size() > 0) {
+        if(!this.getPlayersUsing().isEmpty()) {
             radarRenderData.update();
         }
+    }
+
+    private int compare(IMissile a, IMissile b) {
+        return compare(a.getMissileEntity(), b.getMissileEntity());
+    }
+
+    private int compare(Entity a, Entity b) {
+        return Integer.compare(distance(a), distance(b));
+    }
+
+    private int distance(Entity entity) {
+        final int deltaX = (int)Math.floor(Math.abs(pos.getX() + 0.5) - entity.posX);
+        final int deltaY = (int)Math.floor(Math.abs(pos.getY() + 0.5) - entity.posY);
+        final int deltaZ = (int)Math.floor(Math.abs(pos.getZ() + 0.5) - entity.posZ);
+
+        return deltaX + deltaY + deltaZ;
     }
 
     public static boolean isThreat(Entity entity)
