@@ -166,9 +166,9 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
                 }
 
                 //Spam launch packets to nearby silos
-                if (this.ticks % 5 == 0 && !radio.getChannel().equals(RadioRegistry.EMPTY_HZ) && !this.incomingThreats.isEmpty())
+                if (this.ticks % 10 == 0 && !radio.getChannel().equals(RadioRegistry.EMPTY_HZ) && !this.incomingThreats.isEmpty())
                 {
-                    RadioRegistry.popMessage(world, radio, new IncomingMissileMessage(radio.getChannel(), this.incomingThreats.get(0), this.ticks % 20 == 0));
+                    RadioRegistry.popMessage(world, radio, new IncomingMissileMessage(radio.getChannel(), this.incomingThreats.get(0), true));
                 }
             }
             // No power, reset state
