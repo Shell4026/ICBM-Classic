@@ -11,6 +11,7 @@ import icbm.classic.api.missiles.parts.IMissileTarget;
 import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.content.blocks.launcher.FiringPackage;
 import icbm.classic.content.blocks.launcher.LauncherBaseCapability;
+import icbm.classic.content.blocks.launcher.status.LaunchedWithMissile;
 import icbm.classic.content.missile.logic.flight.DirectFlightLogic;
 import icbm.classic.content.missile.logic.source.ActionSource;
 import icbm.classic.content.missile.logic.source.cause.CausedByBlock;
@@ -116,6 +117,7 @@ public class CLauncherCapability extends LauncherBaseCapability {
                         if (!host.getWorld().spawnEntity(entity)) {
                             return LauncherStatus.ERROR_SPAWN;
                         }
+                        return new LaunchedWithMissile().setMissile(missile);
                     }
                     return LauncherStatus.LAUNCHED;
                 }

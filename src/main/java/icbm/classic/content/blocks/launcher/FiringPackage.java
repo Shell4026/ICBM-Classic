@@ -1,6 +1,7 @@
 package icbm.classic.content.blocks.launcher;
 
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.launcher.IMissileLauncher;
 import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.api.missiles.parts.IMissileTarget;
@@ -10,6 +11,9 @@ import icbm.classic.lib.tile.ITick;
 import lombok.Data;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Used to store firing information when working with countdowns/delays
@@ -27,6 +31,8 @@ public class FiringPackage implements INBTSerializable<NBTTagCompound>, ITick {
     private int countDown = -1;
 
     private boolean hasFired = false;
+
+    private Consumer<IActionStatus> onTriggerCallback;
 
     public FiringPackage(IMissileTarget targetData, IActionCause cause, int countDown) {
         this.targetData = targetData;
@@ -49,7 +55,10 @@ public class FiringPackage implements INBTSerializable<NBTTagCompound>, ITick {
             }
 
             // Invoke normal launch so we fire events and handle logic consistently
-            missileLauncher.launch((launcher) -> targetData, cause, false); //TODO add callback to firing source
+            final IActionStatus status = missileLauncher.launch((launcher) -> targetData, cause, false);
+            if(onTriggerCallback != null) {
+                onTriggerCallback.accept(status);
+            }
         }
     }
 

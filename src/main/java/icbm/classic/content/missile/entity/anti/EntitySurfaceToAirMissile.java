@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 public class EntitySurfaceToAirMissile extends EntityMissile<EntitySurfaceToAirMissile> {
 
     private ItemStack renderStackCache;
-    protected final SAMTargetData scanLogic = new SAMTargetData(this);
+    public final SAMTargetData scanLogic = new SAMTargetData(this);
 
     private boolean hasStartedFollowing = false;
 

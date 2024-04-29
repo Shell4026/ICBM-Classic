@@ -165,10 +165,10 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
                     this.doScan(); //TODO consider rewriting to not cache targets
                 }
 
-                //Check for incoming and launch anti-missiles if
-                if (this.ticks % 20 == 0 && !radio.getChannel().equals(RadioRegistry.EMPTY_HZ) && this.incomingThreats.size() > 0) //TODO track if a anti-missile is already in air to hit target
+                //Spam launch packets to nearby silos
+                if (this.ticks % 5 == 0 && !radio.getChannel().equals(RadioRegistry.EMPTY_HZ) && !this.incomingThreats.isEmpty())
                 {
-                    RadioRegistry.popMessage(world, radio, new IncomingMissileMessage(radio.getChannel(), this.incomingThreats.get(0))); //TODO use static var for event name
+                    RadioRegistry.popMessage(world, radio, new IncomingMissileMessage(radio.getChannel(), this.incomingThreats.get(0), this.ticks % 20 == 0));
                 }
             }
             // No power, reset state

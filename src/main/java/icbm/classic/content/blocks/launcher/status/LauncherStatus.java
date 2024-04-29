@@ -47,6 +47,7 @@ public final class LauncherStatus {
         register(FIRING_AIMING);
 
         ICBMClassicAPI.ACTION_STATUS_REGISTRY.register(FiringWithDelay.REG_NAME, FiringWithDelay::new);
+        ICBMClassicAPI.ACTION_STATUS_REGISTRY.register(LaunchedWithMissile.REG_NAME, LaunchedWithMissile::new);
     }
 
     private static void register(ActionStatus constantStatus) {

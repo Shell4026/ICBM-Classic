@@ -14,6 +14,7 @@ import icbm.classic.api.missiles.parts.IMissileTargetDelayed;
 import icbm.classic.config.machines.ConfigLauncher;
 import icbm.classic.content.blocks.launcher.FiringPackage;
 import icbm.classic.content.blocks.launcher.LauncherBaseCapability;
+import icbm.classic.content.blocks.launcher.status.LaunchedWithMissile;
 import icbm.classic.content.missile.logic.flight.ArcFlightLogic;
 import icbm.classic.content.missile.logic.flight.WarmupFlightLogic;
 import icbm.classic.content.missile.logic.flight.move.MoveByFacingLogic;
@@ -206,7 +207,7 @@ public class LauncherCapability extends LauncherBaseCapability {
             });
         }
 
-        return LauncherStatus.LAUNCHED;
+        return new LaunchedWithMissile().setMissile(missile);
     }
 
     public IMissileFlightLogic buildFLightPath() {

@@ -1,5 +1,6 @@
 package icbm.classic.content.blocks.launcher.cruise;
 
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.radio.IRadioMessage;
 import icbm.classic.api.radio.IRadioReceiver;
 import icbm.classic.api.radio.IRadioSender;
@@ -16,6 +17,9 @@ import icbm.classic.prefab.FakeRadioSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.INBTSerializable;
+
+import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 public class RadioCruise extends RadioTile<TileCruiseLauncher> implements IRadioReceiver, INBTSerializable<NBTTagCompound> {
 
@@ -44,24 +48,32 @@ public class RadioCruise extends RadioTile<TileCruiseLauncher> implements IRadio
             }
 
             // Fire missile packet
-            if(packet instanceof ITriggerActionMessage) {
+            if(packet instanceof ITriggerActionMessage && ((ITriggerActionMessage) packet).shouldTrigger()) {
                 if(host.getFiringPackage() != null) {
                     sender.onMessageCallback(this, new TextMessage(getChannel(), LauncherLangs.ERROR_MISSILE_QUEUED));
                     return;
                 }
-                if(sender instanceof FakeRadioSender) {
-                    //TODO add radio cause before player, pass in item used
-                    host.setFiringPackage(new FiringPackage(new BasicTargetData(host.getTarget()), new EntityCause(((FakeRadioSender) sender).player), 0));
-                }
-                else {
-                    // TODO set cause to radio
-                    host.setFiringPackage(new FiringPackage(new BasicTargetData(host.getTarget()), null, 0));
-                }
+                host.setFiringPackage(getFiringPackage(sender, (ITriggerActionMessage) packet));
 
                 // TODO if we are aiming give status feedback
                 // TODO if we are in error state, give feedback
                 sender.onMessageCallback(this, new TextMessage(getChannel(), RadioTranslations.RADIO_LAUNCH_TRIGGERED));
             }
         }
+    }
+
+    private @Nonnull FiringPackage getFiringPackage(IRadioSender sender, ITriggerActionMessage packet) {
+        FiringPackage firingPackage;
+        if(sender instanceof FakeRadioSender) {
+            //TODO add radio cause before player, pass in item used
+            firingPackage = new FiringPackage(new BasicTargetData(host.getTarget()), new EntityCause(((FakeRadioSender) sender).player), 0);
+        }
+        else {
+            // TODO set cause to radio
+            firingPackage = new FiringPackage(new BasicTargetData(host.getTarget()), null, 0);
+        }
+
+        firingPackage.setOnTriggerCallback(packet::onTriggerCallback);
+        return firingPackage;
     }
 }

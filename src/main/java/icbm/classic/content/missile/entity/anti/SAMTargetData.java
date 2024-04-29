@@ -6,6 +6,8 @@ import icbm.classic.api.missiles.parts.IMissileTarget;
 import icbm.classic.api.reg.obj.IBuilderRegistry;
 import icbm.classic.content.missile.entity.explosive.EntityExplosiveMissile;
 import icbm.classic.lib.buildable.BuildableObject;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -29,6 +31,7 @@ public class SAMTargetData extends BuildableObject<SAMTargetData, IBuilderRegist
 
     private final Queue<Entity> targets = new LinkedList();
 
+    @Setter
     private Entity currentTarget;
 
     private final EntitySurfaceToAirMissile host;
