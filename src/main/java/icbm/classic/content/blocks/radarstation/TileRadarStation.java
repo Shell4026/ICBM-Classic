@@ -184,7 +184,6 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
             {
                 final BlockPos selfPos = getPos();
 
-                ICBMClassic.logger().info("Updating redstone state " + shouldBeOn);
                 world.setBlockState(selfPos, getBlockState().withProperty(BlockRadarStation.REDSTONE_PROPERTY, shouldBeOn), 3);
                 for (EnumFacing facing : EnumFacing.values())
                 {
