@@ -12,6 +12,7 @@ import icbm.classic.api.missiles.parts.IMissileFlightLogicStep;
 import icbm.classic.api.missiles.parts.IMissileTarget;
 import icbm.classic.api.missiles.parts.IMissileTargetDelayed;
 import icbm.classic.config.machines.ConfigLauncher;
+import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.content.blocks.launcher.FiringPackage;
 import icbm.classic.content.blocks.launcher.LauncherBaseCapability;
 import icbm.classic.content.blocks.launcher.status.LaunchedWithMissile;
@@ -23,6 +24,7 @@ import icbm.classic.content.missile.logic.source.cause.CausedByBlock;
 import icbm.classic.content.missile.logic.targeting.BallisticTargetingData;
 import icbm.classic.content.blocks.launcher.status.FiringWithDelay;
 import icbm.classic.content.blocks.launcher.status.LauncherStatus;
+import icbm.classic.content.reg.ItemReg;
 import icbm.classic.lib.transform.rotation.EulerAngle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -310,5 +312,12 @@ public class LauncherCapability extends LauncherBaseCapability {
         final double deltaX = Math.abs(target.x - (host.getPos().getX() + 0.5));
         final double  deltaZ = Math.abs(target.z - (host.getPos().getZ() + 0.5));
         return deltaX > ConfigLauncher.RANGE || deltaZ > ConfigLauncher.RANGE;
+    }
+
+    @Override
+    public float getPayloadVelocity() {
+        // TODO find a way to get this from the missile stack
+        return host.missileHolder.getMissileStack().getItem() == ItemReg.itemSAM
+            ? ConfigMissile.SAM_MISSILE.FLIGHT_SPEED : ConfigMissile.DIRECT_FLIGHT_SPEED;
     }
 }

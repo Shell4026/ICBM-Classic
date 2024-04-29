@@ -4,6 +4,7 @@ import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.api.missiles.parts.IMissileTarget;
+import icbm.classic.config.missile.ConfigMissile;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -109,5 +110,15 @@ public interface IMissileLauncher
      */
     default float getInaccuracy(Vec3d predictedTarget, int launchers) {
         return 0;
+    }
+
+    /**
+     * Velocity of the current ready to go payload. Used for target prediction
+     * and intercept calculations.
+     *
+     * @return velocity in meters per tick
+     */
+    default float getPayloadVelocity() {
+        return ConfigMissile.DIRECT_FLIGHT_SPEED;
     }
 }

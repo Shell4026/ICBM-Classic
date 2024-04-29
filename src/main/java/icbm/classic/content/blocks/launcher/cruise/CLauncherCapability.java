@@ -17,6 +17,7 @@ import icbm.classic.content.missile.logic.source.ActionSource;
 import icbm.classic.content.missile.logic.source.cause.CausedByBlock;
 import icbm.classic.content.blocks.launcher.status.FiringWithDelay;
 import icbm.classic.content.blocks.launcher.status.LauncherStatus;
+import icbm.classic.content.reg.ItemReg;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -124,5 +125,12 @@ public class CLauncherCapability extends LauncherBaseCapability {
             }
         }
         return LauncherStatus.ERROR_GENERIC;
+    }
+
+    @Override
+    public float getPayloadVelocity() {
+        // TODO find a way to get this from the missile stack
+        return host.getMissileHolder().getMissileStack().getItem() == ItemReg.itemSAM
+            ? ConfigMissile.SAM_MISSILE.FLIGHT_SPEED : ConfigMissile.DIRECT_FLIGHT_SPEED;
     }
 }

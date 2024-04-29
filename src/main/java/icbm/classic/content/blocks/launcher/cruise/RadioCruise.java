@@ -36,7 +36,7 @@ public class RadioCruise extends RadioTile<TileCruiseLauncher> implements IRadio
 
             // Set target packet, run first as laser-det triggers both (set & fire) from the same packet
             if(packet instanceof ITargetMessage) {
-                final double vel = host.getMissileHolder().getMissileStack().getItem() == ItemReg.itemSAM ? ConfigMissile.SAM_MISSILE.FLIGHT_SPEED : ConfigMissile.DIRECT_FLIGHT_SPEED;
+                final double vel = host.launcher.getPayloadVelocity();
                 final Vec3d target = ((ITargetMessage) packet).getIntercept(host.getPos().getX() + 0.5, host.getPos().getY() + 0.5, host.getPos().getZ() + 0.5, vel);
                 if(target != null) {
                     host.setTarget(target);
