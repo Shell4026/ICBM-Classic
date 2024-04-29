@@ -6,10 +6,13 @@ import icbm.classic.api.radio.IRadioReceiver;
 import icbm.classic.api.radio.IRadioSender;
 import icbm.classic.api.radio.messages.ITargetMessage;
 import icbm.classic.api.radio.messages.ITriggerActionMessage;
+import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.content.blocks.launcher.FiringPackage;
 import icbm.classic.content.blocks.launcher.LauncherLangs;
+import icbm.classic.content.missile.entity.anti.EntitySurfaceToAirMissile;
 import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.content.missile.logic.targeting.BasicTargetData;
+import icbm.classic.content.reg.ItemReg;
 import icbm.classic.lib.radio.imp.RadioTile;
 import icbm.classic.lib.radio.messages.RadioTranslations;
 import icbm.classic.lib.radio.messages.TextMessage;
@@ -33,7 +36,8 @@ public class RadioCruise extends RadioTile<TileCruiseLauncher> implements IRadio
 
             // Set target packet, run first as laser-det triggers both (set & fire) from the same packet
             if(packet instanceof ITargetMessage) {
-                final Vec3d target = ((ITargetMessage) packet).getTarget();
+                final double vel = host.getMissileHolder().getMissileStack().getItem() == ItemReg.itemSAM ? ConfigMissile.SAM_MISSILE.FLIGHT_SPEED : ConfigMissile.DIRECT_FLIGHT_SPEED;
+                final Vec3d target = ((ITargetMessage) packet).getIntercept(host.getPos().getX() + 0.5, host.getPos().getY() + 0.5, host.getPos().getZ() + 0.5, vel);
                 if(target != null) {
                     host.setTarget(target);
 

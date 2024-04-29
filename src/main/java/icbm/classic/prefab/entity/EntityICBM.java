@@ -15,6 +15,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 /**
@@ -141,16 +142,9 @@ public abstract class EntityICBM extends Entity implements IWorldPosition
      * @param t - number of ticks to predicted
      * @return predicted position of the project
      */
-    public Pos getPredictedPosition(int t)
+    public Vec3d getPredictedPosition(int t)
     {
-        Pos newPos = new Pos((Entity) this);
-
-        for (int i = 0; i < t; i++)
-        {
-            newPos.add(motionX, motionY, motionZ);
-        }
-
-        return newPos;
+        return new Vec3d(posX + motionX * t, posY + motionY * t, posZ + motionZ * t);
     }
 
     @Override

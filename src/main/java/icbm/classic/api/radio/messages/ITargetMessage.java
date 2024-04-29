@@ -13,6 +13,23 @@ import javax.annotation.Nullable;
 public interface ITargetMessage extends IRadioMessage {
 
     /**
+     * Attempts to calculate an intercept. Not all
+     * systems provide this information and will return
+     * null if solution is not possible.
+     *
+     * @param x of shooter
+     * @param y of shooter
+     * @param z of shooter
+     * @param velocity of interceptor
+     *
+     * @return position of target for intercept
+     */
+    @Nullable
+    default Vec3d getIntercept(double x, double y, double z, double velocity) {
+        return getTarget();
+    }
+
+    /**
      * Target position, may be pull from other
      * data so cache when possible.
      *

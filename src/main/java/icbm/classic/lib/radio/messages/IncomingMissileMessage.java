@@ -4,8 +4,10 @@ import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.missiles.IMissile;
 import icbm.classic.api.radio.messages.IIncomingMissileMessage;
 import icbm.classic.content.blocks.launcher.status.LaunchedWithMissile;
+import icbm.classic.content.missile.entity.EntityMissile;
 import icbm.classic.content.missile.entity.anti.EntitySurfaceToAirMissile;
 import lombok.Data;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nonnull;
@@ -19,8 +21,32 @@ public class IncomingMissileMessage implements IIncomingMissileMessage {
     private final boolean trigger;
 
     @Override
+    public Vec3d getIntercept(double x, double y, double z, double velocity) {
+        if(missile != null && missile.getMissileEntity() != null) {
+            final Entity entity = missile.getMissileEntity();
+            final int maxTime = 20;
+            for(int time = 1; time <= maxTime; time++) { //TODO replace with alg equation that can calculate fn(t)
+                final double tX = entity.posX + entity.motionX * time;
+                final double tY = entity.posY + entity.motionY * time;
+                final double tZ = entity.posZ + entity.motionZ * time;
+
+                final double mag = Math.sqrt(tX * tX + tY * tY + tZ * tZ); //TODO remove need for sqrt
+
+                if(mag < velocity * time || time == maxTime) {
+                    return missile.getVec3d();
+                }
+            }
+            return missile.getVec3d();
+        }
+        return null;
+    }
+
+    @Override
     public Vec3d getTarget() {
-        return Optional.ofNullable(missile).map(IMissile::getVec3d).orElse(null);
+        if(missile != null) {
+            return missile.getVec3d();
+        }
+        return null;
     }
 
     @Override
