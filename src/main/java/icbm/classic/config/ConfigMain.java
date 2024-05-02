@@ -1,6 +1,5 @@
 package icbm.classic.config;
 
-import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
 import icbm.classic.content.cluster.missile.ClusterMissileHandler;
 import icbm.classic.content.entity.flyingblock.FlyingBlock;

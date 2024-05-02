@@ -1,12 +1,6 @@
 package icbm.classic.api.actions.conditions;
 
-import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.actions.cause.IActionCause;
-import icbm.classic.api.actions.status.IActionStatus;
-import icbm.classic.api.reg.obj.IBuildableObject;
-import icbm.classic.api.reg.obj.IBuilderRegistry;
-
-import javax.annotation.Nonnull;
 
 /**
  * Special conditional that acts as a cause-by reason.

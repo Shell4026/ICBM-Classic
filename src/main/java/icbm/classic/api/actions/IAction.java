@@ -1,10 +1,9 @@
 package icbm.classic.api.actions;
 
+import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.actions.data.IActionFieldProvider;
 import icbm.classic.api.actions.data.IActionFieldReceiver;
 import icbm.classic.api.actions.status.IActionStatus;
-import icbm.classic.api.actions.cause.IActionSource;
-import icbm.classic.api.data.IWorldPosition;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 

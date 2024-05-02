@@ -3,8 +3,6 @@ package icbm.classic.api.radio.messages;
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.radio.IRadioMessage;
 
-import java.util.List;
-
 /**
  * Packet used to trigger an action
  * @deprecated replace with {@link icbm.classic.api.actions.data.IActionFieldProvider} to avoid

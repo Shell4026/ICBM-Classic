@@ -1,7 +1,5 @@
 package icbm.classic.lib.tracker;
 
-import com.builtbroken.jlib.lang.StringHelpers;
-import icbm.classic.lib.LanguageUtility;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraft.entity.Entity;

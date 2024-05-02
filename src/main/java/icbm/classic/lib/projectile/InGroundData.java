@@ -1,13 +1,9 @@
 package icbm.classic.lib.projectile;
 
 import icbm.classic.lib.saving.NbtSaveHandler;
-import icbm.classic.lib.saving.nodes.SaveNodeBlockPos;
-import icbm.classic.lib.saving.nodes.SaveNodeBlockState;
-import icbm.classic.lib.saving.nodes.SaveNodeFacing;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Value;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;

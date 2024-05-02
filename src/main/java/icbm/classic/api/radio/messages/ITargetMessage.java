@@ -4,7 +4,6 @@ import icbm.classic.api.radio.IRadioMessage;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**

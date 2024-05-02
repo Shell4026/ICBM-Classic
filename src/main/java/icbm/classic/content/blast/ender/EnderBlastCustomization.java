@@ -3,7 +3,6 @@ package icbm.classic.content.blast.ender;
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.explosion.IBlast;
-import icbm.classic.api.missiles.projectile.IProjectileDataRegistry;
 import icbm.classic.api.reg.IExplosiveCustomization;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.api.reg.obj.IBuilderRegistry;

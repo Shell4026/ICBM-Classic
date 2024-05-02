@@ -1,9 +1,6 @@
 package icbm.classic.prefab.entity;
 
 import icbm.classic.api.data.IWorldPosition;
-import icbm.classic.config.missile.ConfigMissile;
-import icbm.classic.content.missile.entity.explosive.EntityMissileActionable;
-import icbm.classic.lib.NBTConstants;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import icbm.classic.lib.transform.vector.Pos;
 import net.minecraft.entity.Entity;

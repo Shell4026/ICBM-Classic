@@ -8,7 +8,6 @@ import icbm.classic.api.data.WorldTickFunction;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.api.reg.content.IExBlockRegistry;
 import icbm.classic.content.reg.BlockReg;
-import icbm.classic.content.reg.ItemReg;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IntHashMap;
 import net.minecraft.util.ResourceLocation;

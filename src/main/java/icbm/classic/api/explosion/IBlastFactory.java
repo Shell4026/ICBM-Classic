@@ -1,7 +1,6 @@
 package icbm.classic.api.explosion;
 
 import icbm.classic.api.actions.IAction;
-import icbm.classic.api.actions.IActionData;
 import icbm.classic.api.actions.cause.IActionSource;
 import net.minecraft.world.World;
 

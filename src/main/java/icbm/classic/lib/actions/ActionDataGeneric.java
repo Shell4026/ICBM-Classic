@@ -5,9 +5,6 @@ import icbm.classic.api.actions.IActionData;
 import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.actions.data.ActionField;
 import icbm.classic.api.actions.data.IActionFieldProvider;
-import icbm.classic.api.actions.data.IActionFieldReceiver;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -16,8 +13,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public final class ActionDataGeneric extends ActionDataBase {

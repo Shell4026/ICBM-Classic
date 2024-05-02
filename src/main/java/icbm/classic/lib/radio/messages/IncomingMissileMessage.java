@@ -4,15 +4,10 @@ import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.missiles.IMissile;
 import icbm.classic.api.radio.messages.IIncomingMissileMessage;
 import icbm.classic.content.blocks.launcher.status.LaunchedWithMissile;
-import icbm.classic.content.missile.entity.EntityMissile;
 import icbm.classic.content.missile.entity.anti.EntitySurfaceToAirMissile;
 import lombok.Data;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
-
-import javax.annotation.Nonnull;
-import java.util.List;
-import java.util.Optional;
 
 @Data
 public class IncomingMissileMessage implements IIncomingMissileMessage {

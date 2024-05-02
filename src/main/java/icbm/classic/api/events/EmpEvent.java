@@ -1,7 +1,6 @@
 package icbm.classic.api.events;
 
 import icbm.classic.api.actions.IAction;
-import icbm.classic.api.explosion.IBlast;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;

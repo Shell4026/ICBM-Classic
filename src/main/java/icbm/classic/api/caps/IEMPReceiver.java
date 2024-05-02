@@ -1,7 +1,6 @@
 package icbm.classic.api.caps;
 
 import icbm.classic.api.actions.IAction;
-import icbm.classic.api.explosion.IBlast;
 import net.minecraft.world.World;
 
 /**

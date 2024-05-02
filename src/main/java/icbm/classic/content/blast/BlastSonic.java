@@ -6,8 +6,6 @@ import icbm.classic.client.ICBMSounds;
 import icbm.classic.config.ConfigDebug;
 import icbm.classic.content.blast.thread.ThreadLargeExplosion;
 import icbm.classic.content.blocks.explosive.TileEntityExplosive;
-import icbm.classic.content.entity.flyingblock.BlockCaptureData;
-import icbm.classic.content.entity.flyingblock.EntityFlyingBlock;
 import icbm.classic.content.entity.flyingblock.FlyingBlock;
 import icbm.classic.content.reg.BlockReg;
 import net.minecraft.block.Block;
@@ -18,7 +16,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fluids.IFluidBlock;
 
 import java.util.Iterator;
 import java.util.List;

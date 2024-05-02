@@ -2,9 +2,8 @@ package icbm.classic.content.blast;
 
 import icbm.classic.api.explosion.IBlastTickable;
 import icbm.classic.client.ICBMSounds;
-import icbm.classic.content.entity.flyingblock.BlockCaptureData;
-import icbm.classic.content.entity.flyingblock.EntityFlyingBlock;
 import icbm.classic.content.entity.EntityLightBeam;
+import icbm.classic.content.entity.flyingblock.EntityFlyingBlock;
 import icbm.classic.content.entity.flyingblock.FlyingBlock;
 import icbm.classic.lib.explosive.ThreadWorkBlast;
 import icbm.classic.lib.thread.IThreadWork;

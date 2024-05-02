@@ -1,8 +1,5 @@
 package icbm.classic.api.reg.obj;
 
-import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.reg.obj.IBuilderRegistry;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;

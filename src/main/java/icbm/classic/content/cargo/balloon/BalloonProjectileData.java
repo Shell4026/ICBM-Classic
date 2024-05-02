@@ -2,7 +2,6 @@ package icbm.classic.content.cargo.balloon;
 
 import icbm.classic.ICBMConstants;
 import icbm.classic.content.cargo.CargoProjectileData;
-import icbm.classic.content.cargo.parachute.EntityParachute;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import net.minecraft.util.ResourceLocation;

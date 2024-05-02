@@ -1,10 +1,9 @@
 package icbm.classic.content.cargo.parachute;
 
 import icbm.classic.content.entity.flyingblock.EntityFlyingBlock;
-import icbm.classic.content.entity.flyingblock.FlyingBlock;
 import icbm.classic.content.reg.ItemReg;
-import icbm.classic.lib.saving.NbtSaveHandler;
 import icbm.classic.lib.projectile.EntityProjectile;
+import icbm.classic.lib.saving.NbtSaveHandler;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,9 +14,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 

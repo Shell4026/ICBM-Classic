@@ -3,7 +3,8 @@ package icbm.classic.lib.tracker;
 import icbm.classic.ICBMClassic;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 /**

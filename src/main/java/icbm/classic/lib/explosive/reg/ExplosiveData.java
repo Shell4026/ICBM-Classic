@@ -2,9 +2,9 @@ package icbm.classic.lib.explosive.reg;
 
 import icbm.classic.api.EnumTier;
 import icbm.classic.api.actions.IAction;
+import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.actions.data.ActionFields;
 import icbm.classic.api.actions.data.IActionFieldProvider;
-import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.explosion.IBlastFactory;
 import icbm.classic.api.explosion.IBlastInit;
 import icbm.classic.api.reg.IExplosiveData;

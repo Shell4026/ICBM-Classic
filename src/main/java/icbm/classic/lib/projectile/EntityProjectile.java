@@ -1,10 +1,9 @@
 package icbm.classic.lib.projectile;
 
-import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
+import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.data.D3Consumer;
 import icbm.classic.api.missiles.IMissileAiming;
-import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.missiles.projectile.IProjectileThrowable;
 import icbm.classic.content.entity.EntityPlayerSeat;
 import icbm.classic.lib.saving.NbtSaveHandler;

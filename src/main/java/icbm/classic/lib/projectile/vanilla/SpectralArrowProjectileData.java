@@ -6,11 +6,8 @@ import icbm.classic.api.missiles.projectile.IProjectileDataRegistry;
 import icbm.classic.lib.buildable.BuildableObject;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityTippedArrow;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-
-import javax.annotation.Nonnull;
 
 public class SpectralArrowProjectileData extends BuildableObject<SpectralArrowProjectileData, IProjectileDataRegistry> implements IProjectileData<EntityArrow> {
 

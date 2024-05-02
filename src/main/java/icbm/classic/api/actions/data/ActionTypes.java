@@ -2,7 +2,6 @@ package icbm.classic.api.actions.data;
 
 import icbm.classic.api.data.meta.MetaTag;
 import lombok.Data;
-import net.minecraft.util.ResourceLocation;
 
 @Data
 public final class ActionTypes {

@@ -5,7 +5,6 @@ import icbm.classic.api.ICBMClassicHelpers;
 import icbm.classic.api.data.EntityInteractionFunction;
 import icbm.classic.api.events.MissileEvent;
 import icbm.classic.api.missiles.IMissile;
-import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.api.reg.content.IExMissileRegistry;
 import icbm.classic.content.reg.ItemReg;
 import net.minecraft.entity.Entity;

@@ -2,11 +2,9 @@ package icbm.classic.lib.network.lambda.entity;
 
 import icbm.classic.ICBMConstants;
 import icbm.classic.lib.network.lambda.PacketCodex;
-import icbm.classic.lib.network.lambda.tile.PacketLambdaTile;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.PlayerList;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.NetworkRegistry;

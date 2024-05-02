@@ -1,7 +1,6 @@
 package icbm.classic.content.blast.ender;
 
 import icbm.classic.ICBMClassic;
-import icbm.classic.api.explosion.IBlastInit;
 import icbm.classic.api.explosion.IBlastTickable;
 import icbm.classic.content.blast.Blast;
 import icbm.classic.lib.transform.vector.Location;
@@ -12,14 +11,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 public class BlastEnder extends Blast implements IBlastTickable //TODO handle save/load

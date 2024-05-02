@@ -1,7 +1,6 @@
 package icbm.classic.lib.saving.nodes;
 
 import icbm.classic.lib.saving.NbtSaveNode;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.function.BiConsumer;

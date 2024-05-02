@@ -2,7 +2,6 @@ package icbm.classic.api.missiles.projectile;
 
 import icbm.classic.api.data.meta.MetaTag;
 import lombok.Data;
-import net.minecraft.util.ResourceLocation;
 
 @Data
 public final class ProjectileTypes {

@@ -1,23 +1,15 @@
 package icbm.classic.content.blast;
 
-import com.builtbroken.jlib.lang.StringHelpers;
 import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.explosion.IBlastTickable;
 import icbm.classic.content.blast.thread.ThreadSmallExplosion;
 import icbm.classic.content.blast.threaded.BlastThreaded;
-import icbm.classic.content.entity.flyingblock.BlockCaptureData;
 import icbm.classic.content.entity.flyingblock.EntityFlyingBlock;
 import icbm.classic.content.entity.flyingblock.FlyingBlock;
-import icbm.classic.lib.transform.PosDistanceSorter;
-import net.minecraft.block.BlockLiquid;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
-import net.minecraftforge.fluids.IFluidBlock;
 
 import java.util.*;
 import java.util.function.Consumer;

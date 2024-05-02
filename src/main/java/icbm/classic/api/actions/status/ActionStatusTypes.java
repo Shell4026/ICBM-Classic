@@ -3,7 +3,6 @@ package icbm.classic.api.actions.status;
 import icbm.classic.api.data.meta.MetaTag;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import net.minecraft.util.ResourceLocation;
 
 /**<pre>
  * List of types to better describe actions. Different conditions can be combined to create outcomes downstream.

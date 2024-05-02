@@ -2,7 +2,6 @@ package icbm.classic.lib.capability.emp;
 
 import icbm.classic.api.actions.IAction;
 import icbm.classic.api.caps.IEMPReceiver;
-import icbm.classic.api.explosion.IBlast;
 import icbm.classic.config.ConfigEMP;
 import icbm.classic.lib.InventoryUtility;
 import net.minecraft.entity.item.EntityItem;

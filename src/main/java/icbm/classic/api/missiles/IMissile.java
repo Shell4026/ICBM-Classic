@@ -1,8 +1,8 @@
 package icbm.classic.api.missiles;
 
 
-import icbm.classic.api.data.IWorldPosition;
 import icbm.classic.api.actions.cause.IActionSource;
+import icbm.classic.api.data.IWorldPosition;
 import icbm.classic.api.missiles.parts.IMissileFlightLogic;
 import icbm.classic.api.missiles.parts.IMissileTarget;
 import net.minecraft.entity.Entity;

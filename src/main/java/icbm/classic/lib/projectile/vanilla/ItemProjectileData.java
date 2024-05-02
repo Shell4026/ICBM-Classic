@@ -13,8 +13,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-import javax.annotation.Nonnull;
-
 public class ItemProjectileData extends BuildableObject<ItemProjectileData, IProjectileDataRegistry> implements IProjectileData<EntityItem> {
 
     public static final ResourceLocation NAME = new ResourceLocation("minecraft", "item");

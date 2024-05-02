@@ -1,6 +1,5 @@
 package icbm.classic.api.reg;
 
-import icbm.classic.api.actions.IPotentialAction;
 import icbm.classic.api.explosion.IBlast;
 import icbm.classic.api.reg.obj.IBuildableObject;
 

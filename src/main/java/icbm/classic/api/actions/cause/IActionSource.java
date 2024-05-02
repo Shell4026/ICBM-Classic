@@ -1,6 +1,5 @@
 package icbm.classic.api.actions.cause;
 
-import icbm.classic.api.actions.cause.IActionCause;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;

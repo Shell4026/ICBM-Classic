@@ -7,15 +7,12 @@ import icbm.classic.config.blast.ConfigBlast;
 import icbm.classic.content.blast.BlastHelpers;
 import icbm.classic.content.blast.redmatter.EntityRedmatter;
 import icbm.classic.lib.transform.BlockEditHandler;
-import icbm.classic.lib.transform.vector.Location;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
 
 import java.util.List;

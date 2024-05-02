@@ -3,11 +3,9 @@ package icbm.classic.lib.saving.nodes;
 import icbm.classic.api.reg.obj.IBuildableObject;
 import icbm.classic.api.reg.obj.IBuilderRegistry;
 import icbm.classic.lib.saving.NbtSaveNode;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 

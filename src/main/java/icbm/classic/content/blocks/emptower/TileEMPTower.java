@@ -10,7 +10,6 @@ import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.client.ICBMSounds;
 import icbm.classic.config.ConfigMain;
 import icbm.classic.config.machines.ConfigEmpTower;
-import icbm.classic.content.actions.ActionProvider;
 import icbm.classic.content.actions.emp.ActionDataEmpArea;
 import icbm.classic.content.blocks.emptower.gui.ContainerEMPTower;
 import icbm.classic.content.blocks.emptower.gui.GuiEMPTower;

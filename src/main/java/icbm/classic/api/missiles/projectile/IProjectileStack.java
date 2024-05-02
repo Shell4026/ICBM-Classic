@@ -2,7 +2,6 @@ package icbm.classic.api.missiles.projectile;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 

@@ -1,7 +1,6 @@
 package icbm.classic.lib.actions.conditionals;
 
 import icbm.classic.api.actions.conditions.ICondition;
-import icbm.classic.content.blocks.emptower.TileEMPTower;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.Getter;
 import lombok.Setter;

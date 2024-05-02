@@ -1,7 +1,6 @@
 package icbm.classic.lib.projectile;
 
 import icbm.classic.api.missiles.projectile.IProjectileData;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.item.ItemStack;
 

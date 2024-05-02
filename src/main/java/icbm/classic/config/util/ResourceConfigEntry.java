@@ -2,7 +2,6 @@ package icbm.classic.config.util;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Value;
 
 import java.util.function.Function;
 

@@ -2,11 +2,6 @@ package icbm.classic.api.actions.data;
 
 import net.minecraft.nbt.NBTBase;
 
-import javax.annotation.Nullable;
-import java.lang.reflect.Type;
-import java.util.Collections;
-import java.util.List;
-
 /**
  * Wrapper to provide fields
  *

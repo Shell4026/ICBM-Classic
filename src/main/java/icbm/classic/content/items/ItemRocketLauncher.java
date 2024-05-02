@@ -2,30 +2,20 @@ package icbm.classic.content.items;
 
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.actions.IPotentialAction;
-import icbm.classic.api.actions.conditions.ICondition;
-import icbm.classic.api.actions.conditions.IConditionLayer;
 import icbm.classic.api.missiles.ICapabilityMissileStack;
 import icbm.classic.api.missiles.IMissile;
 import icbm.classic.api.missiles.IMissileAiming;
 import icbm.classic.api.missiles.parts.IMissileFlightLogicStep;
-import icbm.classic.config.ConfigMain;
 import icbm.classic.config.missile.ConfigMissile;
-import icbm.classic.content.actions.conditionals.ConditionTargetDistance;
-import icbm.classic.content.cluster.action.ActionCluster;
 import icbm.classic.content.cluster.action.ActionDataCluster;
 import icbm.classic.content.missile.entity.explosive.EntityMissileActionable;
 import icbm.classic.content.missile.logic.flight.ArcFlightLogic;
 import icbm.classic.content.missile.logic.flight.DeadFlightLogic;
-import icbm.classic.content.missile.logic.flight.move.MoveByFacingLogic;
 import icbm.classic.content.missile.logic.flight.move.MoveByVec3Logic;
 import icbm.classic.content.missile.logic.source.ActionSource;
 import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.content.missile.logic.targeting.BasicTargetData;
-import icbm.classic.lib.LanguageUtility;
-import icbm.classic.lib.actions.PotentialAction;
 import icbm.classic.prefab.item.ItemICBMElectrical;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -34,7 +24,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -42,16 +31,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Rocket Launcher
