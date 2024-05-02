@@ -4,6 +4,8 @@ import icbm.classic.ICBMConstants;
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.missiles.parts.IMissileTarget;
 import icbm.classic.api.reg.obj.IBuilderRegistry;
+import icbm.classic.config.missile.ConfigMissile;
+import icbm.classic.config.missile.ConfigSAMMissile;
 import icbm.classic.content.missile.entity.explosive.EntityExplosiveMissile;
 import icbm.classic.lib.buildable.BuildableObject;
 import lombok.Getter;
@@ -27,7 +29,6 @@ public class SAMTargetData extends BuildableObject<SAMTargetData, IBuilderRegist
 
     private static final int MAX_TARGETS = 5;
     private static final int SCAN_DELAY = 10;
-    private static final int MAX_RANGE = 30;
 
     private final Queue<Entity> targets = new LinkedList();
 
@@ -77,12 +78,12 @@ public class SAMTargetData extends BuildableObject<SAMTargetData, IBuilderRegist
 
     private AxisAlignedBB targetArea() {
         return new AxisAlignedBB(
-            host.x() - MAX_RANGE,
-            host.y() - MAX_RANGE,
-            host.z() - MAX_RANGE,
-            host.x() + MAX_RANGE,
-            host.y() + MAX_RANGE,
-            host.z() + MAX_RANGE
+            host.x() - ConfigMissile.SAM_MISSILE.TARGET_RANGE,
+            host.y() - ConfigMissile.SAM_MISSILE.TARGET_RANGE,
+            host.z() - ConfigMissile.SAM_MISSILE.TARGET_RANGE,
+            host.x() + ConfigMissile.SAM_MISSILE.TARGET_RANGE,
+            host.y() + ConfigMissile.SAM_MISSILE.TARGET_RANGE,
+            host.z() + ConfigMissile.SAM_MISSILE.TARGET_RANGE
         );
     }
 

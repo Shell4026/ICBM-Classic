@@ -12,6 +12,11 @@ public class ConfigSAMMissile
     @Config.RangeDouble(min = 0.0001, max = 10)
     public float FLIGHT_SPEED = 4;
 
+    @Config.Name("target_range")
+    @Config.Comment("Range (meters) to limit scanning for new targets. Higher values will cause lag.")
+    @Config.RangeDouble(min = 1)
+    public int TARGET_RANGE = 30;
+
     @Config.Name("fuel")
     @Config.Comment("Fuel (ticks) before a missile starts to fall out of the air")
     @Config.RangeInt(min = 0)
