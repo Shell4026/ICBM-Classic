@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -25,6 +26,13 @@ public abstract class ItemStackConfigList<VALUE> extends ResourceConfigList<Item
         }
         //TODO find a way to cache ItemStack for faster performance
         return super.getValue(state);
+    }
+
+    public void setDefaultMeta(ItemStack content, VALUE value, int order) {
+        final ResourceLocation key = content.getItem().getRegistryName();
+        defaultMatchers
+            .computeIfAbsent(key, k -> new ArrayList<>())
+            .add(new ResourceConfigEntry<>(order, (itemStack) -> ItemStack.areItemsEqual(itemStack, content) ? value : null));
     }
 
     //TODO add support for metadata

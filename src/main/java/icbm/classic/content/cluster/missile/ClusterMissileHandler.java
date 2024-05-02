@@ -1,5 +1,7 @@
 package icbm.classic.content.cluster.missile;
 
+import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.config.util.ItemStackConfigList;
 import icbm.classic.content.reg.ItemReg;
@@ -18,9 +20,23 @@ public final class ClusterMissileHandler {
 
         configList.setDefault(ItemReg.itemBalloon.getRegistryName(), 2, 0);
         configList.setDefault(ItemReg.itemParachute.getRegistryName(), 2, 0);
+
         configList.setDefault(ItemReg.itemClusterMissile.getRegistryName(), 20, 0);
         configList.setDefault(ItemReg.itemExplosiveMissile.getRegistryName(), 20, 0);
         configList.setDefault(ItemReg.itemSAM.getRegistryName(), 10, 0);
+
+        configList.setDefault(ItemReg.itemBombletExplosive.getRegistryName(), 2, 0);
+        for(IExplosiveData data : ICBMClassicAPI.EXPLOSIVE_REGISTRY.getExplosives()) {
+            int size = 2;
+            switch(data.getTier()) {
+                case TWO: size = 5; break;
+                case THREE: size = 10; break;
+                case FOUR: size = 20; break;
+            }
+            configList.setDefaultMeta(new ItemStack(ItemReg.itemBombletExplosive, 1, data.getRegistryID()), size, 1);
+        }
+
+
         configList.load(ConfigMissile.CLUSTER_MISSILE.ITEM_SIZES.ITEMS);
     });
 
