@@ -12,8 +12,12 @@ public class ConfigSAMMissile
     @Config.RangeDouble(min = 0.0001, max = 10)
     public float FLIGHT_SPEED = 4;
 
+    @Config.Name("use_radar_only")
+    @Config.Comment("Forces seeker to only use radar data for better performance. See wiki for supported radar entities. Default is AABB scanning using world entity data.")
+    public boolean RADAR_MAP_ONLY = false;
+
     @Config.Name("target_range")
-    @Config.Comment("Range (meters) to limit scanning for new targets. Higher values will cause lag.")
+    @Config.Comment("Range (meters) to limit scanning for new targets. Higher values will cause lag if using AABB scanning. Set use_radar_only=true to disable AABB scanning.")
     @Config.RangeDouble(min = 1)
     public int TARGET_RANGE = 30;
 

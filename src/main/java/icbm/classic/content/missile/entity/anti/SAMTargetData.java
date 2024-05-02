@@ -6,8 +6,11 @@ import icbm.classic.api.missiles.parts.IMissileTarget;
 import icbm.classic.api.reg.obj.IBuilderRegistry;
 import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.config.missile.ConfigSAMMissile;
+import icbm.classic.content.missile.entity.EntityMissile;
 import icbm.classic.content.missile.entity.explosive.EntityExplosiveMissile;
 import icbm.classic.lib.buildable.BuildableObject;
+import icbm.classic.lib.radar.RadarEntity;
+import icbm.classic.lib.radar.RadarRegistry;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.entity.Entity;
@@ -19,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.stream.Collectors;
 
 /**
  * Handles scanning for targets
@@ -54,8 +58,37 @@ public class SAMTargetData extends BuildableObject<SAMTargetData, IBuilderRegist
     }
 
     public void refreshTargets() {
+
+        if(ConfigMissile.SAM_MISSILE.RADAR_MAP_ONLY) {
+            seekByRadar();
+        }
+        else {
+            seekByAABB();
+        }
+
+    }
+
+    private void seekByRadar() {
+        final List<RadarEntity> entries = RadarRegistry.getRadarMapForWorld(host.world).getRadarObjects(host.x(), host.y(), ConfigMissile.SAM_MISSILE.TARGET_RANGE);
+        final List<Entity> valid = entries.stream().filter(RadarEntity::isValid).map(e -> e.entity).filter(this::isValid).collect(Collectors.toList());
+
+        //Sort so we get more priority targets
+         entries.sort((a, b) -> {
+            // we want to avoid comparing on tier as this can create balance issues
+
+            //Compare with distance from self TODO add radar priority settings
+            final double distanceA = host.getDistanceSq(a.entity);
+            final double distanceB = host.getDistanceSq(b.entity);
+            return Double.compare(distanceA, distanceB);
+        });
+
+        //Only track a few targets at a time
+        targets.addAll(valid.subList(0, Math.min(MAX_TARGETS, valid.size())));
+    }
+
+    private void seekByAABB() {
         //FInd new targets
-        List<EntityExplosiveMissile> missiles = getValidTargets();
+        final List<Entity> missiles = getValidTargets();
 
         //Sort so we get more priority targets
         missiles.sort((a, b) -> {
@@ -71,9 +104,9 @@ public class SAMTargetData extends BuildableObject<SAMTargetData, IBuilderRegist
         targets.addAll(missiles.subList(0, Math.min(MAX_TARGETS, missiles.size())));
     }
 
-    private List<EntityExplosiveMissile> getValidTargets() {
+    private List<Entity> getValidTargets() {
         return host.world()
-            .getEntitiesWithinAABB(EntityExplosiveMissile.class, targetArea(), this::isValid);
+            .getEntitiesWithinAABB(EntityMissile.class, targetArea(), this::isValid);
     }
 
     private AxisAlignedBB targetArea() {
@@ -88,7 +121,8 @@ public class SAMTargetData extends BuildableObject<SAMTargetData, IBuilderRegist
     }
 
     private boolean isValid(Entity entity) {
-        return entity instanceof EntityExplosiveMissile
+        return entity instanceof EntityMissile
+            && !(entity instanceof EntitySurfaceToAirMissile)
             && entity.isEntityAlive();
         //TODO setup a FoF system to prevent targeting friendly missiles
         //TODO link to radar system so we can prioritize targets
