@@ -12,6 +12,7 @@ import icbm.classic.content.missile.entity.EntityMissile;
 import icbm.classic.content.missile.entity.explosive.EntityExplosiveMissile;
 import icbm.classic.content.missile.tracker.MissileTrackerHandler;
 import icbm.classic.lib.buildable.BuildableObject;
+import icbm.classic.lib.projectile.EntityProjectile;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
@@ -167,12 +168,23 @@ public class ArcFlightLogic extends BuildableObject<ArcFlightLogic, IBuilderRegi
         {
             // Apply gravity
             if(!flightUpAlways) {
-                entity.setVelocity(entity.motionX, entity.motionY - this.acceleration, entity.motionZ);
+                if(entity instanceof EntityProjectile) {
+                    ((EntityProjectile<?>) entity).setMotionVector(entity.motionX, entity.motionY - this.acceleration, entity.motionZ);
+                }
+                else {
+                    entity.motionY -= this.acceleration;
+                }
             }
 
             // Cut off x-z motion to prevent missing target
             if(Math.abs(entity.posX - endX) <= 0.1f && Math.abs(entity.posZ - endZ) <= 0.1f) {
-                entity.setVelocity(0, entity.motionY, 0);
+                if(entity instanceof EntityProjectile) {
+                    ((EntityProjectile<?>) entity).setMotionVector(0, entity.motionY, 0);
+                }
+                else {
+                   entity.motionX = 0;
+                   entity.motionZ = 0;
+                }
             }
 
             // Update animate rotations

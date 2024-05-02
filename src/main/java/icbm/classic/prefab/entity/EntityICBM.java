@@ -17,6 +17,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Base entity class to be shared by most entities
@@ -192,5 +194,20 @@ public abstract class EntityICBM extends Entity implements IWorldPosition
     public Pos getVelocity()
     {
         return new Pos(motionX, motionY, motionZ); //TODO make wrapper object
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void setVelocity(double xx, double yy, double zz) {
+        //ICBMClassic.logger().info("Projectile#setVelocity: {} {} {} from {}", xx, yy, zz, Thread.currentThread().getStackTrace()[2]);
+
+        // Client side only gets 5 decimal places due to packet storing as int then converting back to double using divide by 8000... effectively a float
+        setMotionVector(xx, yy, zz);
+    }
+
+    public void setMotionVector(double xx, double yy, double zz) {
+        this.motionX = xx;
+        this.motionY = yy;
+        this.motionZ = zz;
     }
 }

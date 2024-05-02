@@ -676,16 +676,6 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
     }
 
     @Override
-    public void setVelocity(double xx, double yy, double zz) {
-        //ICBMClassic.logger().info("Projectile#setVelocity: {} {} {} from {}", xx, yy, zz, Thread.currentThread().getStackTrace()[2]);
-
-        // Client side only gets 5 decimal places due to packet storing as int
-        this.motionX = xx;
-        this.motionY = yy;
-        this.motionZ = zz;
-    }
-
-    @Override
     protected boolean canTriggerWalking() {
         return false;
     }

@@ -9,6 +9,7 @@ import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.lib.actions.ActionBase;
 import icbm.classic.lib.actions.status.ActionResponses;
 import icbm.classic.lib.actions.status.MissingFieldStatus;
+import icbm.classic.lib.projectile.EntityProjectile;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -53,7 +54,14 @@ public class ActionSpawnEntity extends ActionBase {
 
         entity.setPosition(getPosition().x, getPosition().y, getPosition().z);
         if (motion != null) {
-            entity.setVelocity(motion.x, motion.y, motion.z);
+            if(entity instanceof EntityProjectile) {
+                ((EntityProjectile<?>) entity).setMotionVector(motion.x, motion.y, motion.z);
+            }
+            else {
+                entity.motionX = motion.x;
+                entity.motionY = motion.y;
+                entity.motionZ = motion.z;
+            }
         }
 
         // Apply yaw
