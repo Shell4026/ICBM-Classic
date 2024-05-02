@@ -63,6 +63,7 @@ public class ClientReg
     private final static Map<IExplosiveData, Map<EnumFacing,ModelResourceLocation>> blockModelMap = new HashMap();
     private final static Map<IExplosiveData, ModelResourceLocation> itemBlockModelMap = new HashMap();
     private final static Map<IExplosiveData, ModelResourceLocation> cartModelMap = new HashMap();
+    private final static Map<IExplosiveData, ModelResourceLocation> bombletModelMap = new HashMap();
 
     private static void clearModelCache()
     {
@@ -121,6 +122,7 @@ public class ClientReg
         registerGrenadeRenders();
         registerCartRenders();
         registerMissileRenders();
+        registerBombletRenders();
 
         //Machines
         newBlockModel(BlockReg.blockEmpTower, 0, "inventory_0", "");
@@ -147,7 +149,9 @@ public class ClientReg
         newItemModel(ItemReg.itemRocketLauncher, 0, "inventory", "");
         newItemModel(ItemReg.itemBallisticLauncher, 0, "inventory", "");
         newItemModel(ItemReg.itemBattery, 0, "inventory", "");
-        newItemModel(ItemReg.itemBomblet, 0, "inventory", "");
+
+        newItemModel(ItemReg.itemBombletEmpty, 0, "inventory", "");
+
         newItemModel(ItemReg.itemParachute, 0, "inventory", "");
         newItemModel(ItemReg.itemBalloon, 0, "render=2d", "");
         newItemModel(ItemReg.itemBalloon, 1, "render=3d", ""); // Fake meta version purely for entity renderer
@@ -243,6 +247,19 @@ public class ClientReg
         ModelLoader.registerItemVariants(ItemReg.itemGrenade, grenadeModelMap.values()
                 .stream().map(model -> new ResourceLocation(model.getResourceDomain() + ":" + model.getResourcePath())).toArray(ResourceLocation[]::new));
         ModelLoader.setCustomMeshDefinition(ItemReg.itemGrenade, new ItemModelMapperExplosive(grenadeModelMap, grenadeModelMap.get(ICBMExplosives.CONDENSED)));
+    }
+
+    protected static void registerBombletRenders()
+    {
+        for (IExplosiveData data : ICBMClassicAPI.EX_GRENADE_REGISTRY.getExplosives()) //TODO run loop once for all 4 content types
+        {
+            final String resourcePath = "icbmclassic:explosive_bomblet"; //TODO add per version models
+            bombletModelMap.put(data, new ModelResourceLocation(resourcePath, "inventory"));
+        }
+
+        ModelLoader.registerItemVariants(ItemReg.itemBombletExplosive, bombletModelMap.values()
+            .stream().map(model -> new ResourceLocation(model.getResourceDomain() + ":" + model.getResourcePath())).toArray(ResourceLocation[]::new));
+        ModelLoader.setCustomMeshDefinition(ItemReg.itemBombletExplosive, new ItemModelMapperExplosive(bombletModelMap, bombletModelMap.get(ICBMExplosives.CONDENSED)));
     }
 
     protected static void registerCartRenders()

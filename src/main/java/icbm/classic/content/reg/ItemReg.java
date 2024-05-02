@@ -52,8 +52,11 @@ public class ItemReg
     public static Item itemGrenade;
     @ObjectHolder(ICBMConstants.PREFIX + "bombcart")
     public static Item itemBombCart;
-    @ObjectHolder(ICBMConstants.PREFIX + "bomblet")
-    public static Item itemBomblet;
+
+    @ObjectHolder(ICBMConstants.PREFIX + "explosive_bomblet")
+    public static Item itemBombletExplosive;
+    @ObjectHolder(ICBMConstants.PREFIX + "empty_bomblet")
+    public static Item itemBombletEmpty;
 
     @ObjectHolder(ICBMConstants.PREFIX + "sulfurDust")
     public static Item itemSulfurDust;
@@ -130,8 +133,8 @@ public class ItemReg
         event.getRegistry().register(new ItemSurfaceToAirMissile());
         event.getRegistry().register(new ItemClusterMissile().setName("cluster_missile").setCreativeTab(ICBMClassic.CREATIVE_TAB));
 
-        // TODO move to addon
-        event.getRegistry().register(new ItemBombDroplet().setName("bomblet").setCreativeTab(ICBMClassic.CREATIVE_TAB));
+        event.getRegistry().register(new ItemBase().setName("empty_bomblet").setCreativeTab(ICBMClassic.CREATIVE_TAB));
+        event.getRegistry().register(new ItemBombDroplet().setName("explosive_bomblet").setCreativeTab(ICBMClassic.CREATIVE_TAB));
         event.getRegistry().register(new ItemThrowableProjectile().setName("parachute").setCreativeTab(ICBMClassic.CREATIVE_TAB));
         event.getRegistry().register(new ItemThrowableProjectile().setName("balloon").setCreativeTab(ICBMClassic.CREATIVE_TAB));
 

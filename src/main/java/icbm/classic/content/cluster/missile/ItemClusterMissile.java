@@ -2,21 +2,13 @@ package icbm.classic.content.cluster.missile;
 
 import icbm.classic.ICBMClassic;
 import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.ICBMClassicHelpers;
-import icbm.classic.api.caps.IExplosive;
 import icbm.classic.api.missiles.projectile.IProjectileStack;
 import icbm.classic.api.refs.ICBMExplosives;
-import icbm.classic.api.reg.IExplosiveData;
-import icbm.classic.content.cluster.bomblet.BombletProjectileData;
-import icbm.classic.content.blocks.explosive.ItemBlockExplosive;
 import icbm.classic.content.cargo.parachute.ParachuteProjectileData;
-import icbm.classic.content.reg.BlockReg;
 import icbm.classic.content.reg.ItemReg;
 import icbm.classic.lib.LanguageUtility;
-import icbm.classic.lib.capability.ex.CapabilityExplosiveStack;
-import icbm.classic.lib.capability.missile.CapabilityMissileStack;
+import icbm.classic.lib.explosive.reg.ExplosiveRegistry;
 import icbm.classic.lib.projectile.ProjectileStack;
-import icbm.classic.lib.projectile.vanilla.ArrowProjectileData;
 import icbm.classic.prefab.item.ItemBase;
 import icbm.classic.prefab.item.ItemStackCapProvider;
 import net.minecraft.creativetab.CreativeTabs;
@@ -56,7 +48,7 @@ public class ItemClusterMissile extends ItemBase {
         if (tab == getCreativeTab() || tab == CreativeTabs.SEARCH) {
             items.add(new ItemStack(this));
             items.add(createStack(new ItemStack(Items.ARROW), 200));
-            items.add(createStack(new ItemStack(ItemReg.itemBomblet), 100));
+            items.add(createStack(new ItemStack(ItemReg.itemBombletExplosive, 1, ICBMExplosives.CONDENSED.getRegistryID()), 100));
 
             final ItemStack parachute = new ItemStack(ItemReg.itemParachute);
             if(parachute.hasCapability(ICBMClassicAPI.PROJECTILE_STACK_CAPABILITY, null)) {

@@ -126,9 +126,39 @@ item.icbmclassic:circuit.basic.name=Basic Circuit
 item.icbmclassic:circuit.advanced.name=Advanced Circuit
 item.icbmclassic:circuit.elite.name=Elite Circuit
 
-## Bomblet
-item.icbmclassic:bomblet.name=Bomblet
-item.icbmclassic:bomblet.info=Unguided explosive projectile
+## Bomblet/Droplet
+item.icbmclassic:empty_bomblet.name=Droplet
+item.icbmclassic:empty_bomblet.info=Empty unguided projectile
+
+item.icbmclassic:explosive_bomblet.name=Bomblet
+
+bomblet.icbmclassic:condensed.name=Conventional Bomblet
+bomblet.icbmclassic:shrapnel.name=Shrapnel Bomblet
+bomblet.icbmclassic:incendiary.name=Incendiary Bomblet
+bomblet.icbmclassic:debilitation.name=Debilitation Bomblet
+bomblet.icbmclassic:chemical.name=Chemical Bomblet
+bomblet.icbmclassic:anvil.name=Anvil Bomblet
+bomblet.icbmclassic:repulsive.name=Repulsive Bomblet
+bomblet.icbmclassic:attractive.name=Attractive Bomblet
+bomblet.icbmclassic:colors.name=Colorful Bomblet
+bomblet.icbmclassic:smoke.name=Smoke Marking Bomblet
+
+bomblet.icbmclassic:fragmentation.name=Fragmentation Bomblet
+bomblet.icbmclassic:contagious.name=Contagious Bomblet
+bomblet.icbmclassic:sonic.name=Sonic Bomblet
+bomblet.icbmclassic:breaching.name=Breaching Bomblet
+bomblet.icbmclassic:thermobaric.name=Thermobaric Bomblet
+
+bomblet.icbmclassic:nuclear.name=Nuclear Bomblet
+bomblet.icbmclassic:emp.name=EMP Bomblet
+bomblet.icbmclassic:exothermic.name=Exothermic Bomblet
+bomblet.icbmclassic:endothermic.name=Endothermic Bomblet
+bomblet.icbmclassic:antigravitational.name=Anti-Gravitational Bomblet
+
+bomblet.icbmclassic:hypersonic.name=Hypersonic Bomblet
+
+bomblet.icbmclassic:antimatter.name=Antimatter Bomblet
+bomblet.icbmclassic:redmatter.name=Red Matter Bomblet
 
 ## Parchute Projectile
 item.icbmclassic:parachute.name=Payload Parachute
