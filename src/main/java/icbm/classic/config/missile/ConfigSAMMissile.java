@@ -27,7 +27,7 @@ public class ConfigSAMMissile
     public int FUEL = 200;
 
     @Config.Name("attack_damage")
-    @Config.Comment("Damage (hearts) to apply to the target when impacting")
+    @Config.Comment("Damage (hearts) to apply to the target on intercept")
     @Config.RangeInt(min = 0)
     public float ATTACK_DAMAGE = 100;
 }

@@ -49,7 +49,10 @@ public class ExplosiveInit
     public static void init()
     {
         //=================== Tier 1
-        ICBMExplosives.CONDENSED = newEx(0, "condensed", EnumTier.ONE, (w, x, y, z, s) -> new BlastTNT().setBlastWorld(w).setBlastPosition(x, y, z).setBlastSize(ConfigBlast.condensed.scale));
+        ICBMExplosives.CONDENSED = newEx(0, "condensed", EnumTier.ONE, (w, x, y, z, s) -> new BlastTNT()
+            .setDamageToEntities(ConfigBlast.condensed.damage)
+            .setBlastWorld(w).setBlastPosition(x, y, z)
+            .setBlastSize(ConfigBlast.condensed.energyScale));
         ICBMClassicAPI.EX_BLOCK_REGISTRY.setFuseSupplier(ICBMExplosives.CONDENSED.getRegistryKey(), (world, x, y, z) -> ConfigBlast.FUSE_TIMES.EXPLOSIVES.CONDENSED);
         ICBMClassicAPI.EX_GRENADE_REGISTRY.setFuseSupplier(ICBMExplosives.CONDENSED.getRegistryKey(), (entity) -> ConfigBlast.FUSE_TIMES.GRENADES.CONVENTIONAL);
         ICBMClassicAPI.EX_MINECART_REGISTRY.setFuseSupplier(ICBMExplosives.CONDENSED.getRegistryKey(), (entity) -> ConfigBlast.FUSE_TIMES.BOMB_CARTS.CONDENSED);

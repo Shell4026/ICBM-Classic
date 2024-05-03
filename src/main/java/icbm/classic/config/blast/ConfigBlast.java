@@ -1,6 +1,7 @@
 package icbm.classic.config.blast;
 
 import icbm.classic.ICBMConstants;
+import icbm.classic.config.blast.types.ConfigCondensed;
 import icbm.classic.config.blast.types.ConfigExBasics;
 import icbm.classic.config.blast.types.ConfigNuclear;
 import icbm.classic.config.blast.types.ConfigRedmatter;
@@ -16,7 +17,7 @@ public class ConfigBlast
 {
     @Config.LangKey("config.icbmclassic:blast.condensed.title")
     @Config.Comment("Settings for condensed explosive")
-    public static ConfigExBasics condensed = new ConfigExBasics(6);
+    public static ConfigCondensed condensed = new ConfigCondensed();
 
     @Config.LangKey("config.icbmclassic:blast.shrapnel.title")
     @Config.Comment("Settings for shrapnel explosive")
