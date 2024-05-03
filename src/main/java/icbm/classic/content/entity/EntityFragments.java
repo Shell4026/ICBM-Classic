@@ -4,6 +4,8 @@ import icbm.classic.lib.NBTConstants;
 import icbm.classic.lib.world.IProjectileBlockInteraction;
 import icbm.classic.lib.world.ProjectileBlockInteraction;
 import io.netty.buffer.ByteBuf;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -32,7 +34,9 @@ public class EntityFragments extends Entity implements IEntityAdditionalSpawnDat
     public EntityLivingBase shootingEntity;
 
     //Type settings
+    @Setter @Accessors(chain = true)
     public boolean isExplosive; //TODO replace with ENUM
+    @Setter @Accessors(chain = true)
     public boolean isAnvil; //TODO replace with ENUM
 
     //Triggers
