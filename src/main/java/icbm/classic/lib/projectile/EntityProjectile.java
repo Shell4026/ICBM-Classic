@@ -1,5 +1,6 @@
 package icbm.classic.lib.projectile;
 
+import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.data.D3Consumer;
@@ -464,6 +465,9 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
         if (!world.isRemote) {
             final float damage = getImpactDamage(entityHit, velocity, hit);
             final DamageSource damageSource = getImpactDamageSource(entityHit, velocity, hit);
+
+            ICBMClassic.logger().info("vel={}, damage={}", velocity, damage);
+
             if (damageSource != null && entityHit.attackEntityFrom(damageSource, damage)
                 && entityHit instanceof EntityLivingBase) {
                 applyKnockBack(entityHit);

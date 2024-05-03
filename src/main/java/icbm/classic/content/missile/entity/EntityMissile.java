@@ -7,6 +7,7 @@ import icbm.classic.api.caps.IEMPReceiver;
 import icbm.classic.api.events.MissileEvent;
 import icbm.classic.api.events.MissileRideEvent;
 import icbm.classic.client.ICBMSounds;
+import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.content.missile.logic.flight.BallisticFlightLogicOld;
 import icbm.classic.content.missile.logic.flight.DeadFlightLogic;
 import icbm.classic.lib.CalculationHelpers;
@@ -31,6 +32,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -304,6 +306,14 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
             impactLocation.z
         );
         ICBMClassic.logger().info(formattedMessage);
+    }
+
+    @Override
+    protected float getImpactDamage(Entity entityHit, float velocity, RayTraceResult hit) {
+        if(ConfigMissile.DAMAGE_LIMIT >= 0) {
+            return Math.min(MathHelper.ceil(velocity * ConfigMissile.DAMAGE_SCALE), ConfigMissile.DAMAGE_LIMIT);
+        }
+        return MathHelper.ceil(velocity * ConfigMissile.DAMAGE_SCALE);
     }
 
     @Override

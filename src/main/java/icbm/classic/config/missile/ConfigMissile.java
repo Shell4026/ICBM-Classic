@@ -53,6 +53,16 @@ public class ConfigMissile
     @Config.RangeInt(min = 1)
     public static int TIER_4_HEALTH = 200;
 
+    @Config.Name("impact_damage_limit")
+    @Config.Comment("Max amount of damage a missile can apply to a target on impact. Set to -1 to have no limit. Set to 0 to disable")
+    @Config.RangeInt(min = -1)
+    public static int DAMAGE_LIMIT = -1;
+
+    @Config.Name("impact_damage_scale")
+    @Config.Comment("scale * velocity = damage. RPG fired missiles often impact with a velocity of 2")
+    @Config.RangeDouble(min = 0)
+    public static float DAMAGE_SCALE = 20f;
+
     @Config.LangKey("config.icbmclassic:missile.sam.title")
     public static ConfigSAMMissile SAM_MISSILE = new ConfigSAMMissile();
 
