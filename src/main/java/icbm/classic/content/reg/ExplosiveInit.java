@@ -60,9 +60,15 @@ public class ExplosiveInit
 
 
         ICBMExplosives.SHRAPNEL = newEx(1, "shrapnel", EnumTier.ONE, (w, x, y, z, s) -> new BlastShrapnel()
-            .setProjectile(EntityFragments::new)
+            .setProjectile((world) -> {
+                final EntityFragments fragments = new EntityFragments(world);
+                fragments.setArrowCritical(true);
+                fragments.setFire(100);
+                fragments.setDamage(ConfigBlast.shrapnel.damage);
+                return fragments;
+            })
             .setBlastWorld(w).setBlastPosition(x, y, z)
-            .setBlastSize(ConfigBlast.shrapnel.scale));
+            .setBlastSize(ConfigBlast.shrapnel.fragments));
         ICBMClassicAPI.EX_BLOCK_REGISTRY.setFuseSupplier(ICBMExplosives.SHRAPNEL.getRegistryKey(), (world, x, y, z) -> ConfigBlast.FUSE_TIMES.EXPLOSIVES.SHRAPNEL);
         ICBMClassicAPI.EX_GRENADE_REGISTRY.setFuseSupplier(ICBMExplosives.SHRAPNEL.getRegistryKey(), (entity) -> ConfigBlast.FUSE_TIMES.GRENADES.SHRAPNEL);
         ICBMClassicAPI.EX_MINECART_REGISTRY.setFuseSupplier(ICBMExplosives.SHRAPNEL.getRegistryKey(), (entity) -> ConfigBlast.FUSE_TIMES.BOMB_CARTS.SHRAPNEL);
@@ -95,9 +101,14 @@ public class ExplosiveInit
 
         ICBMExplosives.ANVIL = newEx(5, "anvil", EnumTier.ONE,
                 (w, x, y, z, s) -> new BlastShrapnel()
-                    .setProjectile((world) -> new EntityFragments(world).setAnvil(true))
+                    .setProjectile((world) -> {
+                        final EntityFragments fragments = new EntityFragments(world);
+                        fragments.setAnvil(true);
+                        fragments.setDamage(ConfigBlast.anvil.damage);
+                        return fragments;
+                    })
                     .setBlastWorld(w).setBlastPosition(x, y, z)
-                    .setBlastSize(ConfigBlast.anvil.scale));
+                    .setBlastSize(ConfigBlast.anvil.fragments));
 
         ICBMClassicAPI.EX_BLOCK_REGISTRY.setFuseSupplier(ICBMExplosives.ANVIL.getRegistryKey(), (world, x, y, z) -> ConfigBlast.FUSE_TIMES.EXPLOSIVES.ANVIL);
         ICBMClassicAPI.EX_GRENADE_REGISTRY.setFuseSupplier(ICBMExplosives.ANVIL.getRegistryKey(), (entity) -> ConfigBlast.FUSE_TIMES.GRENADES.ANVIL);
@@ -123,8 +134,14 @@ public class ExplosiveInit
         //=================== Tier 2
         ICBMExplosives.FRAGMENTATION = newEx(8, "fragmentation", EnumTier.TWO,
                 (w, x, y, z, s) -> new BlastShrapnel()
-                    .setProjectile((world) -> new EntityFragments(world).setExplosive(true))
-                    .setBlastSize(ConfigBlast.fragmentation.scale)
+                    .setProjectile((world) -> {
+                        final EntityFragments fragments =  new EntityFragments(world);
+                        fragments.setExplosive(true);
+                        fragments.setDamage(ConfigBlast.fragmentation.damage);
+                        fragments.explosionSize = ConfigBlast.fragmentation.explosionSize;
+                        return fragments;
+                    })
+                    .setBlastSize(ConfigBlast.fragmentation.fragments)
                     .setBlastWorld(w).setBlastPosition(x, y, z));
         ICBMClassicAPI.EX_BLOCK_REGISTRY.setFuseSupplier(ICBMExplosives.FRAGMENTATION.getRegistryKey(), (world, x, y, z) -> ConfigBlast.FUSE_TIMES.EXPLOSIVES.FRAGMENTATION);
         ICBMClassicAPI.EX_MINECART_REGISTRY.setFuseSupplier(ICBMExplosives.FRAGMENTATION.getRegistryKey(), (entity) -> ConfigBlast.FUSE_TIMES.BOMB_CARTS.FRAGMENTATION);

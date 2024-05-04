@@ -7,7 +7,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class BlastShrapnel extends Blast
 {
@@ -19,31 +18,32 @@ public class BlastShrapnel extends Blast
     {
         if (!world().isRemote)
         {
-            float amountToRotate = 360 / this.getBlastRadius();
+            float rotationStep = 360 / this.getBlastRadius();
 
-            for (int i = 0; i < this.getBlastRadius(); i++)
+            // TODO add logic to detect when rotation is blocked by ground and to avoid spawning fragments
+            for (int yawIndex = 0; yawIndex < this.getBlastRadius(); yawIndex++)
             {
                 // Try to do a 360 explosion on all 6 faces of the cube.
-                float rotationYaw = 0.0F + amountToRotate * i;
+                float rotationYaw = 0.0F + rotationStep * yawIndex;
 
-                for (int ii = 0; ii < this.getBlastRadius(); ii++)
+                // TODO randomize position, velocity y rotation to create a more realistic blast fragmentation effect
+                for (int pitchIndex = 0; pitchIndex < this.getBlastRadius(); pitchIndex++)
                 {
-                    final EntityFragments arrow = projectile.apply(world);
-                    arrow.setPosition(location.x(), location.y(), location.z());
+                    final EntityFragments fragment = projectile.apply(world);
 
-                    float rotationPitch = 0.0F + amountToRotate * ii;
-                    arrow.setLocationAndAngles(location.x(), Math.floor(location.y()) + 1.5, location.z(), rotationYaw, rotationPitch);
-                    arrow.posX -= (MathHelper.cos(rotationYaw / 180.0F * (float) Math.PI) * 0.16F);
-                    arrow.posY -= 0.10000000149011612D;
-                    arrow.posZ -= (MathHelper.sin(rotationYaw / 180.0F * (float) Math.PI) * 0.16F);
-                    arrow.setPosition(arrow.posX, arrow.posY, arrow.posZ);
+                    float rotationPitch = 0.0F + rotationStep * pitchIndex;
+                    fragment.setLocationAndAngles(location.x(), Math.floor(location.y()) + 1.5, location.z(), rotationYaw, rotationPitch); //TODO fix y-pos to not offset by 1.5
+                    fragment.posX -= (MathHelper.cos(rotationYaw / 180.0F * (float) Math.PI) * 0.16F);
+                    fragment.posY -= 0.10000000149011612D; //TODO figure out why magic number
+                    fragment.posZ -= (MathHelper.sin(rotationYaw / 180.0F * (float) Math.PI) * 0.16F);
+                    fragment.setPosition(fragment.posX, fragment.posY, fragment.posZ);
 
-                    arrow.motionX = (-MathHelper.sin(rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(rotationPitch / 180.0F * (float) Math.PI));
-                    arrow.motionZ = (MathHelper.cos(rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(rotationPitch / 180.0F * (float) Math.PI));
-                    arrow.motionY = (-MathHelper.sin(rotationPitch / 180.0F * (float) Math.PI));
+                    fragment.motionX = (-MathHelper.sin(rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(rotationPitch / 180.0F * (float) Math.PI));
+                    fragment.motionZ = (MathHelper.cos(rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(rotationPitch / 180.0F * (float) Math.PI));
+                    fragment.motionY = (-MathHelper.sin(rotationPitch / 180.0F * (float) Math.PI));
 
-                    arrow.setArrowHeading(arrow.motionX * world().rand.nextFloat(), arrow.motionY * world().rand.nextFloat(), arrow.motionZ * world().rand.nextFloat(), 0.5f + (0.7f * world().rand.nextFloat()), 1.0F);
-                    world().spawnEntity(arrow);
+                    fragment.setArrowHeading(fragment.motionX * world().rand.nextFloat(), fragment.motionY * world().rand.nextFloat(), fragment.motionZ * world().rand.nextFloat(), 0.5f + (0.7f * world().rand.nextFloat()), 1.0F);
+                    world().spawnEntity(fragment);
 
                 }
             }

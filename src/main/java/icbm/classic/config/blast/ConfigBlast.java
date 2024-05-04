@@ -1,10 +1,7 @@
 package icbm.classic.config.blast;
 
 import icbm.classic.ICBMConstants;
-import icbm.classic.config.blast.types.ConfigCondensed;
-import icbm.classic.config.blast.types.ConfigExBasics;
-import icbm.classic.config.blast.types.ConfigNuclear;
-import icbm.classic.config.blast.types.ConfigRedmatter;
+import icbm.classic.config.blast.types.*;
 import net.minecraftforge.common.config.Config;
 
 /**
@@ -21,7 +18,7 @@ public class ConfigBlast
 
     @Config.LangKey("config.icbmclassic:blast.shrapnel.title")
     @Config.Comment("Settings for shrapnel explosive")
-    public static ConfigExBasics shrapnel = new ConfigExBasics(30);
+    public static ConfigShrapnel shrapnel = new ConfigShrapnel();
 
     @Config.LangKey("config.icbmclassic:blast.incendiary.title")
     @Config.Comment("Settings for incendiary explosive")
@@ -37,7 +34,7 @@ public class ConfigBlast
 
     @Config.LangKey("config.icbmclassic:blast.anvil.title")
     @Config.Comment("Settings for anvil explosive")
-    public static ConfigExBasics anvil = new ConfigExBasics(25);
+    public static ConfigAnvil anvil = new ConfigAnvil();
 
     @Config.LangKey("config.icbmclassic:blast.repulsive.title")
     @Config.Comment("Settings for repulsive explosive")
@@ -49,7 +46,7 @@ public class ConfigBlast
 
     @Config.LangKey("config.icbmclassic:blast.fragmentation.title")
     @Config.Comment("Settings for fragmentation explosive")
-    public static ConfigExBasics fragmentation = new ConfigExBasics(15);
+    public static ConfigFragment fragmentation = new ConfigFragment();
 
     @Config.LangKey("config.icbmclassic:blast.contagious.title")
     @Config.Comment("Settings for contagious explosive")

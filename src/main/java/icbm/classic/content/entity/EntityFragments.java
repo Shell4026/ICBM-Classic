@@ -48,10 +48,14 @@ public class EntityFragments extends Entity implements IEntityAdditionalSpawnDat
 
     /** The owner of this arrow. */
     private int ticksInAir = 0;
+
+    @Setter @Accessors(chain = true)
     public int damage = 11;
+
     public boolean flatDamage = false;
 
     /** Is this arrow a critical hit? (Controls particles and damage) */
+    @Setter @Accessors(chain = true)
     public boolean arrowCritical = false;
     public float explosionSize = 1.5F;
 
@@ -59,25 +63,6 @@ public class EntityFragments extends Entity implements IEntityAdditionalSpawnDat
     {
         super(par1World);
         this.setSize(0.5F, 0.5F);
-    }
-
-    public EntityFragments(World par1World, double x, double y, double z, boolean isExplosive, boolean isAnvil)
-    {
-        super(par1World);
-        this.setPosition(x, y, z);
-        //this.yOffset = 0.0F;
-        this.isExplosive = isExplosive;
-        this.isAnvil = isAnvil;
-
-        if (this.isAnvil)
-        {
-            this.setSize(1, 1);
-            this.damage = 30;
-        }
-        else
-        {
-            this.setSize(0.5f, 0.5f);
-        }
     }
 
     @Override
