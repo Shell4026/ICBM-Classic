@@ -160,7 +160,15 @@ public class ExplosiveInit
 
 
         ICBMExplosives.BREACHING = newEx(11, "breaching", EnumTier.TWO,
-                (w, x, y, z, s) -> new BlastBreach(7).setBlastSize(ConfigBlast.breaching.scale).setBlastWorld(w).setBlastPosition(x, y, z));
+                (w, x, y, z, s) -> new BlastBreach()
+                    .setDepth(ConfigBlast.breaching.depth)
+                    .setWidth(ConfigBlast.breaching.size)
+                    .setEnergy(ConfigBlast.breaching.energy)
+                    .setEnergyDistanceScale(ConfigBlast.breaching.energyDistanceScale)
+                    .setEnergyCostDistance(ConfigBlast.breaching.energyCostDistance)
+                    .setDamageToEntities(ConfigBlast.breaching.damage)
+                    .setBlastWorld(w).setBlastPosition(x, y, z)
+        );
         ICBMClassicAPI.EX_BLOCK_REGISTRY.setFuseSupplier(ICBMExplosives.BREACHING.getRegistryKey(), (world, x, y, z) -> ConfigBlast.FUSE_TIMES.EXPLOSIVES.BREACHING);
         ICBMClassicAPI.EX_MINECART_REGISTRY.setFuseSupplier(ICBMExplosives.BREACHING.getRegistryKey(), (entity) -> ConfigBlast.FUSE_TIMES.BOMB_CARTS.BREACHING);
 

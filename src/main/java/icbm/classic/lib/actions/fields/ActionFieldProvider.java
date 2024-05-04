@@ -4,6 +4,9 @@ import icbm.classic.api.actions.data.ActionField;
 import icbm.classic.api.actions.data.IActionFieldProvider;
 import net.minecraft.nbt.NBTBase;
 
+import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -28,5 +31,10 @@ public final class ActionFieldProvider implements IActionFieldProvider {
     @Override
     public <VALUE, TAG extends NBTBase> boolean hasField(ActionField<VALUE, TAG> key) {
         return fieldAccessors.containsKey(key);
+    }
+
+    @Nonnull
+    public Collection<ActionField> getFields() {
+        return fieldAccessors.keySet();
     }
 }

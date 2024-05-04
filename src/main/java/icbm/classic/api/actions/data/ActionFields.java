@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.*;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 
@@ -17,6 +18,9 @@ public final class ActionFields {
 
     /** RUNTIME_ONLY: Position of the host */
     public static ActionField<Vec3d, NBTTagCompound> HOST_POSITION;
+
+    /** RUNTIME_ONLY: Rough direction the host is facing */
+    public static ActionField<EnumFacing, NBTTagByte> HOST_DIRECTION;
 
     /** True if system has impacted something. Usually being entity has impacted ground or another entity. */
     public static ActionField<Boolean, NBTTagByte> IMPACTED;

@@ -58,7 +58,7 @@ public class ConfigBlast
 
     @Config.LangKey("config.icbmclassic:blast.breaching.title")
     @Config.Comment("Settings for breaching explosive")
-    public static ConfigExBasics breaching = new ConfigExBasics(2.5);
+    public static ConfigBreaching breaching = new ConfigBreaching();
 
     @Config.LangKey("config.icbmclassic:blast.thermobaric.title")
     @Config.Comment("Settings for thermobaric explosive")
