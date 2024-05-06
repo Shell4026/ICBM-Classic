@@ -120,7 +120,6 @@ public class ICBMClassic
     @Deprecated
     private static final Logger logger = LogManager.getLogger(ICBMConstants.DOMAIN);
 
-
     public static final PacketManager packetHandler = new PacketManager(ICBMConstants.DOMAIN);
 
     //Mod support

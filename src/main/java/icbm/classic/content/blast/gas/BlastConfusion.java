@@ -16,7 +16,7 @@ public class BlastConfusion extends BlastGasBase
 
     public BlastConfusion()
     {
-        super(DURATION, false);
+        setDuration(DURATION);
     }
 
     @Override

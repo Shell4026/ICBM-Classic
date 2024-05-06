@@ -5,6 +5,8 @@ import icbm.classic.api.explosion.IBlastTickable;
 import icbm.classic.client.ICBMSounds;
 import icbm.classic.content.blast.Blast;
 import icbm.classic.lib.NBTConstants;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,8 +27,10 @@ public abstract class BlastGasBase extends Blast implements IBlastTickable
     private static final BlockPos.MutableBlockPos checkPos = new BlockPos.MutableBlockPos();
 
     /** Duration of gas effect, also controls particles */
+    @Setter @Accessors(chain = true)
     protected int duration;
 
+    @Setter @Accessors(chain = true)
     private boolean playShortSoundFX;
 
     private int lastRadius = 0;
@@ -40,12 +44,6 @@ public abstract class BlastGasBase extends Blast implements IBlastTickable
     private final HashMap<EntityLivingBase, Integer> impactedEntityMap = new HashMap();
     //TODO turn into entity capability to prevent damage stacking of several explosives
     //TODO use weak refs to not hold instances
-
-    public BlastGasBase(int duration, boolean playShortSoundFX)
-    {
-        this.duration = duration;
-        this.playShortSoundFX = playShortSoundFX;
-    }
 
     private double sizePercentageOverTime(int timePassed)
     {

@@ -1,6 +1,8 @@
 package icbm.classic.content.blast.gas;
 
 import icbm.classic.ICBMClassic;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.Vec3i;
@@ -9,15 +11,14 @@ public class BlastChemical extends BlastGasBase
 {
     public static final DamageSource CHEMICAL_DAMAGE = new DamageSource("icbm.chemical");
 
-    public static final int DURATION = 20 * 30; //TODO move to config
-
     public static final float red = 0.8f, green = 0.8f, blue = 0;
 
-
-    public BlastChemical()
-    {
-        super(DURATION, false);
-    }
+    @Setter @Accessors(chain = true)
+    private int toxicityBuildup = 20; // tick rate is 5
+    @Setter @Accessors(chain = true)
+    private float toxicityScale = 0.1f;
+    @Setter @Accessors(chain = true)
+    private float toxicityMinDamage = 1f;
 
     @Override
     protected boolean canEffectEntities()
@@ -35,9 +36,10 @@ public class BlastChemical extends BlastGasBase
     protected void applyEffect(final EntityLivingBase entity, final int hitCount)
     {
         ICBMClassic.chemicalPotion.poisonEntity(location.toPos(), entity);
-        if (hitCount > 20)
+        if (hitCount > toxicityBuildup)
         {
-            entity.attackEntityFrom(CHEMICAL_DAMAGE, (hitCount - 10f) / 10);
+            // TODO https://builtbroken.codecks.io/decks/14-icbm-backlog/card/1aq-rework-gas-weapons
+            entity.attackEntityFrom(CHEMICAL_DAMAGE, Math.max(toxicityMinDamage, hitCount * toxicityScale));
         }
     }
 

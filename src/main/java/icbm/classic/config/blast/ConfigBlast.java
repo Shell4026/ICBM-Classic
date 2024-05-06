@@ -30,7 +30,7 @@ public class ConfigBlast
 
     @Config.LangKey("config.icbmclassic:blast.chemical.title")
     @Config.Comment("Settings for chemical explosive")
-    public static ConfigExBasics chemical = new ConfigExBasics(20);
+    public static ConfigChemical chemical = new ConfigChemical();
 
     @Config.LangKey("config.icbmclassic:blast.anvil.title")
     @Config.Comment("Settings for anvil explosive")

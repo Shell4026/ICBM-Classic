@@ -92,7 +92,14 @@ public class ExplosiveInit
 
 
         ICBMExplosives.CHEMICAL = newEx(4, "chemical", EnumTier.ONE,
-                (w, x, y, z, s) -> new BlastChemical().setBlastWorld(w).setBlastPosition(x, y, z).setBlastSize(ConfigBlast.chemical.scale));
+                (w, x, y, z, s) -> new BlastChemical()
+                    .setToxicityBuildup(ConfigBlast.chemical.toxicityBuildup)
+                    .setToxicityScale(ConfigBlast.chemical.toxicityScale)
+                    .setToxicityMinDamage(ConfigBlast.chemical.toxicityMinDamage)
+                    .setDuration(ConfigBlast.chemical.duration)
+                    .setBlastWorld(w).setBlastPosition(x, y, z)
+                    .setBlastSize(ConfigBlast.chemical.size)
+        );
 
         ICBMClassicAPI.EX_BLOCK_REGISTRY.setFuseSupplier(ICBMExplosives.CHEMICAL.getRegistryKey(), (world, x, y, z) -> ConfigBlast.FUSE_TIMES.EXPLOSIVES.CHEMICAL);
         ICBMClassicAPI.EX_GRENADE_REGISTRY.setFuseSupplier(ICBMExplosives.CHEMICAL.getRegistryKey(), (entity) -> ConfigBlast.FUSE_TIMES.GRENADES.CHEMICAL);

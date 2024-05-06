@@ -18,7 +18,7 @@ public class BlastContagious extends BlastGasBase
 
     public BlastContagious()
     {
-        super(DURATION, false);
+        setDuration(DURATION);
     }
 
     @Override
