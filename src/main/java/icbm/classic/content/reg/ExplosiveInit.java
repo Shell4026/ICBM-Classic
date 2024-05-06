@@ -159,7 +159,14 @@ public class ExplosiveInit
         //TODO add fire version of fragmentation with smaller animated flames
 
         ICBMExplosives.CONTAGIOUS = newEx(9, "contagious", EnumTier.TWO,
-                (w, x, y, z, s) -> new BlastContagious().setBlastSize(ConfigBlast.contagious.scale).setBlastWorld(w).setBlastPosition(x, y, z));
+                (w, x, y, z, s) -> new BlastContagious()
+                    .setToxicityScale(ConfigBlast.contagious.toxicityScale)
+                    .setToxicityBuildup(ConfigBlast.contagious.toxicityBuildup)
+                    .setToxicityMinDamage(ConfigBlast.contagious.toxicityMinDamage)
+                    .setDuration(ConfigBlast.contagious.duration)
+                    .setBlastSize(ConfigBlast.contagious.size)
+                    .setBlastWorld(w).setBlastPosition(x, y, z)
+        );
         ICBMClassicAPI.EX_BLOCK_REGISTRY.setFuseSupplier(ICBMExplosives.CONTAGIOUS.getRegistryKey(), (world, x, y, z) -> ConfigBlast.FUSE_TIMES.EXPLOSIVES.CONTAGIOUS);
         ICBMClassicAPI.EX_MINECART_REGISTRY.setFuseSupplier(ICBMExplosives.CONTAGIOUS.getRegistryKey(), (entity) -> ConfigBlast.FUSE_TIMES.BOMB_CARTS.CONTAGIOUS);
 

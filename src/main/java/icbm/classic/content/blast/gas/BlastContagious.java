@@ -2,6 +2,8 @@ package icbm.classic.content.blast.gas;
 
 import icbm.classic.ICBMClassic;
 import icbm.classic.content.blast.BlastMutation;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.Vec3i;
@@ -12,14 +14,14 @@ import net.minecraft.util.math.Vec3i;
 public class BlastContagious extends BlastGasBase
 {
     public static final DamageSource CONTAGIOUS_DAMAGE = new DamageSource("icbm.contagious");
-    public static final int DURATION = 20 * 30; //TODO move to config
-
     public static final float red = 0.3f, green = 0.8f, blue = 0;
 
-    public BlastContagious()
-    {
-        setDuration(DURATION);
-    }
+    @Setter @Accessors(chain = true)
+    private int toxicityBuildup = 10; // tick rate is 5
+    @Setter @Accessors(chain = true)
+    private float toxicityScale = 0.05f;
+    @Setter @Accessors(chain = true)
+    private float toxicityMinDamage = 1f;
 
     @Override
     protected boolean canEffectEntities()
@@ -36,12 +38,12 @@ public class BlastContagious extends BlastGasBase
     @Override
     protected void applyEffect(final EntityLivingBase entity, final int hitCount)
     {
-        ICBMClassic.contagiousPotion.poisonEntity(location.toPos(), entity, 3); //TODO scale
+        ICBMClassic.contagiousPotion.poisonEntity(location.toPos(), entity, 3);
 
         //Apply damage to non-mutated entities if toxin level is high enough
-        if (!BlastMutation.applyMutationEffect(entity) && hitCount > 10)
+        if (!BlastMutation.applyMutationEffect(entity) && hitCount > toxicityBuildup)
         {
-            entity.attackEntityFrom(CONTAGIOUS_DAMAGE, (hitCount - 10f) / 5);
+            entity.attackEntityFrom(CONTAGIOUS_DAMAGE,  Math.max(toxicityMinDamage, hitCount * toxicityScale));
         }
     }
 

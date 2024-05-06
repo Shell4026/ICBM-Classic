@@ -50,7 +50,7 @@ public class ConfigBlast
 
     @Config.LangKey("config.icbmclassic:blast.contagious.title")
     @Config.Comment("Settings for contagious explosive")
-    public static ConfigExBasics contagious = new ConfigExBasics(20);
+    public static ConfigContagious contagious = new ConfigContagious();
 
     @Config.LangKey("config.icbmclassic:blast.sonic.title")
     @Config.Comment("Settings for sonic explosive")
