@@ -20,7 +20,7 @@ import icbm.classic.content.blast.ender.BlastEnder;
 import icbm.classic.content.blast.ender.EnderBlastCustomization;
 import icbm.classic.content.blast.gas.BlastChemical;
 import icbm.classic.content.blast.gas.BlastColor;
-import icbm.classic.content.blast.gas.BlastConfusion;
+import icbm.classic.content.blast.gas.BlastDebilitation;
 import icbm.classic.content.blast.gas.BlastContagious;
 import icbm.classic.content.blast.redmatter.ActionSpawnRedmatter;
 import icbm.classic.content.blast.threaded.BlastAntimatter;
@@ -84,7 +84,11 @@ public class ExplosiveInit
 
 
         ICBMExplosives.DEBILITATION = newEx(3, "debilitation", EnumTier.ONE,
-                (w, x, y, z, s) -> new BlastConfusion().setBlastWorld(w).setBlastPosition(x, y, z).setBlastSize(ConfigBlast.debilitation.scale));
+                (w, x, y, z, s) -> new BlastDebilitation()
+                    .setDuration(ConfigBlast.debilitation.duration)
+                    .setBlastWorld(w).setBlastPosition(x, y, z)
+                    .setBlastSize(ConfigBlast.debilitation.size)
+        );
 
         ICBMClassicAPI.EX_BLOCK_REGISTRY.setFuseSupplier(ICBMExplosives.DEBILITATION.getRegistryKey(), (world, x, y, z) -> ConfigBlast.FUSE_TIMES.EXPLOSIVES.DEBILITATION);
         ICBMClassicAPI.EX_GRENADE_REGISTRY.setFuseSupplier(ICBMExplosives.DEBILITATION.getRegistryKey(), (entity) -> ConfigBlast.FUSE_TIMES.GRENADES.DEBILITATION);

@@ -8,13 +8,13 @@ import net.minecraft.util.math.Vec3i;
 /**
  * Created by Robin Seifert on 4/1/2022.
  */
-public class BlastConfusion extends BlastGasBase
+public class BlastDebilitation extends BlastGasBase
 {
     public static final int DURATION = 20 * 30; //TODO move to config
 
     public static final float red = 1f, green = 1f, blue = 1f;
 
-    public BlastConfusion()
+    public BlastDebilitation()
     {
         setDuration(DURATION);
     }

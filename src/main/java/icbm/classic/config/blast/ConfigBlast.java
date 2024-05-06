@@ -26,7 +26,7 @@ public class ConfigBlast
 
     @Config.LangKey("config.icbmclassic:blast.debilitation.title")
     @Config.Comment("Settings for debilitation explosive")
-    public static ConfigExBasics debilitation = new ConfigExBasics(20);
+    public static ConfigDebilitation debilitation = new ConfigDebilitation();
 
     @Config.LangKey("config.icbmclassic:blast.chemical.title")
     @Config.Comment("Settings for chemical explosive")
