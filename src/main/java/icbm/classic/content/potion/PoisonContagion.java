@@ -53,7 +53,7 @@ public class PoisonContagion extends CustomPotion
         }
 
         // Undead can't be harmed by the illness
-        if (!(entityLiving instanceof EntityZombie))
+        if (!entityLiving.isEntityUndead())
         {
             entityLiving.attackEntityFrom(BlastContagious.CONTAGIOUS_DAMAGE, ConfigMain.contagiousPoison.damage);
         }
