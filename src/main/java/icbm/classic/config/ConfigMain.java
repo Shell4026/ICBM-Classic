@@ -23,10 +23,9 @@ public class ConfigMain
     @Config.Comment("Range of tier 1 launcher")
     public static boolean REQUIRES_POWER = true;
 
-    @Config.Name("handheld_launcher_tier_limit")
-    @Config.Comment("Limits the max tier the handheld launcher can fire,} outside of creative mode")
-    @Config.RangeInt(min = 1, max = 4)
-    public static int ROCKET_LAUNCHER_TIER_FIRE_LIMIT = 2;
+    @Config.LangKey("config.icbmclassic:contagious.title")
+    @Config.Comment("Settings for contagious poison effect")
+    public static ConfigContagious contagiousPoison = new ConfigContagious();
 
     @SubscribeEvent
     public static void onConfigChangedEvent(final ConfigChangedEvent.OnConfigChangedEvent event)

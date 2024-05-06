@@ -18,6 +18,7 @@ config.icbmclassic:ic2.title=Industrial Craft 2
 config.icbmclassic:debug.title=Debug
 config.icbmclassic:missile.sam.title=Surface to Air Missile
 config.icbmclassic:missile.cluster.title=Cluster Missile
+config.icbmclassic:contagious.title=Contagious Poison
 
 ## Chat commands
 

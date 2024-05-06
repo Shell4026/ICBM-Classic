@@ -1,9 +1,13 @@
 package icbm.classic.content.potion;
 
 import icbm.classic.ICBMClassic;
+import icbm.classic.config.ConfigMain;
+import icbm.classic.content.blast.gas.BlastContagious;
 import icbm.classic.lib.transform.vector.Pos;
+import jdk.nashorn.internal.runtime.regexp.joni.Config;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.monster.*;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.passive.EntitySkeletonHorse;
@@ -23,9 +27,6 @@ import java.util.function.Function;
 public class PoisonContagion extends CustomPotion
 {
     public static Potion INSTANCE;
-    public static int TRIGGER_RATE = 20 * 2; //TODO config
-    public static int SPREAD_RANGE = 13;
-    public static float SPREAD_CHANCE = 0.8f;
     public static boolean ENABLED = true;
     public static List<Function<Entity, Boolean>> DISABLE_LIST = new ArrayList<>();
 
@@ -54,14 +55,14 @@ public class PoisonContagion extends CustomPotion
         // Undead can't be harmed by the illness
         if (!(entityLiving instanceof EntityZombie))
         {
-            entityLiving.attackEntityFrom(DamageSource.MAGIC, 1); //TODO add custom damage source
+            entityLiving.attackEntityFrom(BlastContagious.CONTAGIOUS_DAMAGE, ConfigMain.contagiousPoison.damage);
         }
 
-        if (entityLiving.world.rand.nextFloat() > SPREAD_CHANCE) //TODO spread on attack, and add cough sound effect
+        if (entityLiving.world.rand.nextFloat() > ConfigMain.contagiousPoison.chance) //TODO spread on attack, and add cough sound effect
         {
             AxisAlignedBB entitySurroundings = new AxisAlignedBB(
-                entityLiving.posX - SPREAD_RANGE, entityLiving.posY - SPREAD_RANGE, entityLiving.posZ - SPREAD_RANGE,
-                entityLiving.posX + SPREAD_RANGE, entityLiving.posY + SPREAD_RANGE, entityLiving.posZ + SPREAD_RANGE
+                entityLiving.posX - ConfigMain.contagiousPoison.range, entityLiving.posY - ConfigMain.contagiousPoison.range, entityLiving.posZ - ConfigMain.contagiousPoison.range,
+                entityLiving.posX + ConfigMain.contagiousPoison.range, entityLiving.posY + ConfigMain.contagiousPoison.range, entityLiving.posZ + ConfigMain.contagiousPoison.range
             );
             List<EntityLivingBase> entities = entityLiving.world.getEntitiesWithinAABB(EntityLivingBase.class, entitySurroundings);
 
@@ -122,6 +123,6 @@ public class PoisonContagion extends CustomPotion
     @Override
     public boolean isReady(int duration, int amplifier)
     {
-        return duration % TRIGGER_RATE == 0;
+        return duration % ConfigMain.contagiousPoison.cycle == 0;
     }
 }
