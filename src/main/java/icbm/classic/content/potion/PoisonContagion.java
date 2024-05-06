@@ -27,7 +27,6 @@ import java.util.function.Function;
 public class PoisonContagion extends CustomPotion
 {
     public static Potion INSTANCE;
-    public static boolean ENABLED = true;
     public static List<Function<Entity, Boolean>> DISABLE_LIST = new ArrayList<>();
 
     static {
@@ -47,7 +46,7 @@ public class PoisonContagion extends CustomPotion
         final World world = entityLiving.world;
 
         // Allow removing the effect
-        if(!ENABLED || DISABLE_LIST.stream().anyMatch(f -> f.apply(entityLiving))) {
+        if(!ConfigMain.contagiousPoison.enabled || DISABLE_LIST.stream().anyMatch(f -> f.apply(entityLiving))) {
             entityLiving.removePotionEffect(this);
             return;
         }

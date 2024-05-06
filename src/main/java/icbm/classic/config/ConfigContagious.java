@@ -4,6 +4,11 @@ import icbm.classic.ICBMConstants;
 import net.minecraftforge.common.config.Config;
 
 public class ConfigContagious {
+
+    @Config.Name("enable")
+    @Config.Comment("Set to false to disable contagious virus effect")
+    public boolean enabled = true;
+
     @Config.Name("damage")
     @Config.Comment("Damage per cycle to do to players impacted by contagious damage")
     @Config.RangeDouble(min = 0)
