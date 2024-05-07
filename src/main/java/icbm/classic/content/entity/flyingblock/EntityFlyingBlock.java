@@ -2,6 +2,7 @@ package icbm.classic.content.entity.flyingblock;
 
 import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
+import icbm.classic.config.ConfigFlyingBlocks;
 import icbm.classic.content.entity.EntityPlayerSeat;
 import icbm.classic.lib.projectile.EntityProjectile;
 import icbm.classic.lib.saving.NbtSaveHandler;
@@ -236,6 +237,11 @@ public class EntityFlyingBlock extends EntityProjectile<EntityFlyingBlock> imple
     @Override
     protected DamageSource getImpactDamageSource(Entity entityHit, float velocity, RayTraceResult hit) {
         return DamageSource.FALLING_BLOCK;
+    }
+
+    @Override
+    protected float getImpactDamage(Entity entityHit, float velocity, RayTraceResult hit) {
+        return MathHelper.ceil(velocity * ConfigFlyingBlocks.damageScale);
     }
 
     @Override

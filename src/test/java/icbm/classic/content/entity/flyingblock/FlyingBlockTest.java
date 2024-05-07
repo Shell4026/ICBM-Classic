@@ -6,7 +6,6 @@ import icbm.classic.config.ConfigFlyingBlocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Bootstrap;
-import net.minecraft.util.ClassInheritanceMultiMap;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.junit.jupiter.api.*;
@@ -36,7 +35,7 @@ class FlyingBlockTest {
     }
     @Test
     void loadFromConfig() {
-        ConfigFlyingBlocks.BAN_ALLOW.BLOCK_STATES = new String[] {"minecraft:iron_~", "minecraft:~_ore", "minecraft:stone"};
+        ConfigFlyingBlocks.banAllow.blockStates = new String[] {"minecraft:iron_~", "minecraft:~_ore", "minecraft:stone"};
         FlyingBlock.loadFromConfig();
 
         Assertions.assertEquals(Lists.newArrayList(

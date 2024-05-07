@@ -5,11 +5,8 @@ import icbm.classic.config.util.BlockStateConfigList;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fluids.IFluidBlock;
 
 import java.util.*;
@@ -26,7 +23,7 @@ public class FlyingBlock {
 
 
             // Load configs
-            blockStateConfigList.loadBlockStates(ConfigFlyingBlocks.BAN_ALLOW.BLOCK_STATES);
+            blockStateConfigList.loadBlockStates(ConfigFlyingBlocks.banAllow.blockStates);
         }
     );
 
@@ -37,7 +34,7 @@ public class FlyingBlock {
      * @return true if allowed
      */
     public static boolean isAllowed(IBlockState state) {
-        if(!ConfigFlyingBlocks.ENABLED
+        if(!ConfigFlyingBlocks.enabled
             || state == null
             || state.getBlock().getMaterial(state) == Material.FIRE
             || state.getBlock() instanceof IFluidBlock
@@ -47,7 +44,7 @@ public class FlyingBlock {
         }
 
         // Ban List
-        if (ConfigFlyingBlocks.BAN_ALLOW.BAN) {
+        if (ConfigFlyingBlocks.banAllow.ban) {
             return !banAllowList.contains(state);
         }
 
