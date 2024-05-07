@@ -51,7 +51,7 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
     /**
      * Generic damage source to use on impact
      */
-    public static final DamageSource DAMAGE_SOURCE = new DamageSource("icbm:projectile").setProjectile();
+    public static final DamageSource DAMAGE_SOURCE = new DamageSource("icbmclassic:projectile").setProjectile();
 
     // Default is motionY *= 0.9800000190734863D
     public static final float DEFAULT_GRAVITY = 0.05F;

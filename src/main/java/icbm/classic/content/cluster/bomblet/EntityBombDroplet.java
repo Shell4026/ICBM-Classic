@@ -2,6 +2,8 @@ package icbm.classic.content.cluster.bomblet;
 
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.reg.IExplosiveData;
+import icbm.classic.config.missile.ConfigBomblet;
+import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.content.missile.logic.source.ActionSource;
 import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.lib.capability.ex.CapabilityExplosiveEntity;
@@ -14,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.translation.I18n;
@@ -28,11 +31,23 @@ import javax.annotation.Nullable;
 
 public class EntityBombDroplet extends EntityProjectile<EntityBombDroplet> implements IEntityAdditionalSpawnData {
 
+    public static final DamageSource DAMAGE_SOURCE = new DamageSource("icbmclassic:bomblet");
+
     public final CapabilityExplosiveEntity explosive = new CapabilityExplosiveEntity(this);
     public EntityBombDroplet(World world) {
         super(world);
         this.setSize(0.25f, 0.25f);
         this.hasHealth = false;
+    }
+
+    @Override
+    protected float getImpactDamage(Entity entityHit, float velocity, RayTraceResult hit) {
+        return MathHelper.ceil(velocity * ConfigMissile.bomblet.impactDamage);
+    }
+
+    @Override
+    protected DamageSource getImpactDamageSource(Entity entityHit, float velocity, RayTraceResult hit) {
+        return EntityBombDroplet.DAMAGE_SOURCE;
     }
 
     @Override
@@ -57,7 +72,7 @@ public class EntityBombDroplet extends EntityProjectile<EntityBombDroplet> imple
     @Override
     public float getMaxHealth()
     {
-        return 5; //TODO config
+        return Math.max(1, ConfigMissile.bomblet.health);
     }
 
     @Override
