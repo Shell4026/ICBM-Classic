@@ -241,7 +241,10 @@ public class ExplosiveInit
 
         //=================== Tier 4
         ICBMExplosives.ANTIMATTER = newEx(22, "antimatter", EnumTier.FOUR,
-                (w, x, y, z, s) -> new BlastAntimatter().setBlastSize(ConfigBlast.antimatter.scale).setBlastWorld(w).setBlastPosition(x, y, z));
+                (w, x, y, z, s) -> new BlastAntimatter()
+                    .setBlastSize(ConfigBlast.antimatter.size)
+                    .setBlastWorld(w).setBlastPosition(x, y, z)
+        );
         ICBMClassicAPI.EX_BLOCK_REGISTRY.setFuseSupplier(ICBMExplosives.ANTIMATTER.getRegistryKey(), (world, x, y, z) -> ConfigBlast.FUSE_TIMES.EXPLOSIVES.ANTIMATTER);
         ICBMClassicAPI.EX_MINECART_REGISTRY.setFuseSupplier(ICBMExplosives.ANTIMATTER.getRegistryKey(), (entity) -> ConfigBlast.FUSE_TIMES.BOMB_CARTS.ANTIMATTER);
 

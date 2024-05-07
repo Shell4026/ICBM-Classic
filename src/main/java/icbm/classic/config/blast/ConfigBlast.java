@@ -91,7 +91,7 @@ public class ConfigBlast
 
     @Config.LangKey("config.icbmclassic:blast.antimatter.title")
     @Config.Comment("Settings for antimatter explosive")
-    public static ConfigExBasics antimatter = new ConfigExBasics(55);
+    public static ConfigAntimatter antimatter = new ConfigAntimatter();
 
     @Config.LangKey("config.icbmclassic:blast.redmatter.title")
     @Config.Comment("Set for redmatter blast")
@@ -100,16 +100,6 @@ public class ConfigBlast
     @Config.LangKey("config.icbmclassic:blast.colorful.title")
     @Config.Comment("Set for colorful blast")
     public static ConfigExBasics colorful = new ConfigExBasics(10);
-
-    @Deprecated //Move to sub-config
-    @Config.Name("antimatter_break_unbreakable")
-    @Config.Comment({"Should antimatter ignore hardness checks for unbreakable, allows destroying bedrock and warded stone.", "This config option does nothing if 'antimatter_break_blocks' is set to false."})
-    public static boolean ANTIMATTER_DESTROY_UNBREAKABLE_BLOCKS = true;
-
-    @Deprecated //Move to sub-config
-    @Config.Name("antimatter_block_and_ent_dmg_on_redmatter")
-    @Config.Comment("Whether or not antimatter damages blocks and entities when detonating and killing a black hole (caused by red matter explosives)")
-    public static boolean ANTIMATTER_BLOCK_AND_ENT_DAMAGE_ON_REDMATTER = false;
 
     @Config.Name("blast_do_block_updates")
     @Config.Comment("Whether or not the big explosions trigger block updates for all blocks.\nSetting this to false leads to performance improvements, especially when dealing with a lot of water.")
