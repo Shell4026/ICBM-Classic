@@ -8,6 +8,7 @@ import icbm.classic.api.explosion.IBlastIgnore;
 import icbm.classic.api.explosion.redmatter.IBlastVelocity;
 import icbm.classic.client.ICBMSounds;
 import icbm.classic.config.blast.ConfigBlast;
+import icbm.classic.config.blast.types.ConfigRedmatter;
 import icbm.classic.content.blast.helpers.BlastBlockHelpers;
 import icbm.classic.content.blast.redmatter.DamageSourceRedmatter;
 import icbm.classic.content.blast.redmatter.EntityRedmatter;
@@ -477,7 +478,7 @@ public class RedmatterLogic
             }
             else if (entity instanceof EntityLivingBase)
             {
-                entity.attackEntityFrom(new DamageSourceRedmatter(this), 2000);
+                entity.attackEntityFrom(new DamageSourceRedmatter(this), ConfigBlast.redmatter.damage);
             }
             else
             {
