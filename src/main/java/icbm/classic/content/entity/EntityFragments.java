@@ -136,8 +136,6 @@ public class EntityFragments extends Entity implements IEntityAdditionalSpawnDat
             float var7 = MathHelper.sqrt(par1 * par1 + par5 * par5);
             this.prevRotationYaw = this.rotationYaw = (float) (Math.atan2(par1, par5) * 180.0D / Math.PI);
             this.prevRotationPitch = this.rotationPitch = (float) (Math.atan2(par3, var7) * 180.0D / Math.PI);
-            this.prevRotationPitch = this.rotationPitch;
-            this.prevRotationYaw = this.rotationYaw;
             this.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
         }
     }
@@ -153,7 +151,6 @@ public class EntityFragments extends Entity implements IEntityAdditionalSpawnDat
     }
 
     /** Called to update the entity's position/logic. */
-    //  entity.attackEntityFrom(DamageSource.ANVIL, 15);
     @Override
     public void onUpdate()
     {
