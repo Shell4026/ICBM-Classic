@@ -4,6 +4,10 @@ import icbm.classic.lib.transform.vector.Pos;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
 
+/**
+ * @deprecated remove at some point and apply potion effects directly
+ */
+@Deprecated
 public class ContagiousPoison extends Poison
 {
     private final boolean isContagious;
