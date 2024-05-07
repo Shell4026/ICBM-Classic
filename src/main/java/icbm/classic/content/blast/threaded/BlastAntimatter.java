@@ -29,7 +29,7 @@ public class BlastAntimatter extends BlastThreaded
     {
         super.setupBlast();
         ICBMSounds.ANTIMATTER.play(world, this.location.x(), this.location.y(), this.location.z(), 7F, (float) (this.world().rand.nextFloat() * 0.1 + 0.9F), true);
-        return this.doDamageEntities(this.getBlastRadius() * 2, ConfigBlast.antimatter.damage);
+        return this.doDamageEntities(this.getBlastRadius() * 2, ConfigBlast.antimatter.damage); //TODO config for radius
     }
 
     @Override
@@ -149,7 +149,7 @@ public class BlastAntimatter extends BlastThreaded
     public void onBlastCompleted()
     {
         super.onBlastCompleted();
-        this.doDamageEntities(this.getBlastRadius() * 2, ConfigBlast.antimatter.damage);
+        this.doDamageEntities(this.getBlastRadius() * 2, ConfigBlast.antimatter.damage); //TODO config for radius
     }
 
     @Override
@@ -157,7 +157,7 @@ public class BlastAntimatter extends BlastThreaded
 
         if (!ConfigBlast.antimatter.damageOnRedmatterKill)
         {
-            final List<Entity> allEntities = getEntities(radius * 2);
+            final List<Entity> allEntities = getEntities(radius * 2); //TODO config for radius
             final long killed = allEntities.stream().filter(e -> e instanceof EntityRedmatter).peek(this::onDamageEntity).count();
             if(killed > 0) {
                 return false;
