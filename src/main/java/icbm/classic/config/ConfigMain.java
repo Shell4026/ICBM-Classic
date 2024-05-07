@@ -1,6 +1,7 @@
 package icbm.classic.config;
 
 import icbm.classic.ICBMConstants;
+import icbm.classic.config.machines.ConfigSpikes;
 import icbm.classic.content.cluster.missile.ClusterMissileHandler;
 import icbm.classic.content.entity.flyingblock.FlyingBlock;
 import net.minecraftforge.common.config.Config;
@@ -22,6 +23,8 @@ public class ConfigMain
     @Config.Name("use_energy")
     @Config.Comment("Range of tier 1 launcher")
     public static boolean REQUIRES_POWER = true;
+
+    public static ConfigSpikes spikes = new ConfigSpikes();
 
     @SubscribeEvent
     public static void onConfigChangedEvent(final ConfigChangedEvent.OnConfigChangedEvent event)

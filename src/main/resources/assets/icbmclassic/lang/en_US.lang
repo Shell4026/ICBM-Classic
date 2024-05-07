@@ -526,6 +526,7 @@ info.tracker.tooltip=Left-click on a mob (players aswell) and I will point to it
 death.attack.icbm.redmatter=%s was crushed by the immense mass of the mighty black hole.
 death.attack.icbm.chemical=%s suddenly started feeling not so well.
 death.attack.icbm.contagious=%s breathed in too much of the green stuff.
+death.attack.icbmclassic:spikes=%s died to spikes
 
 ## GPS
 gps.pos.set.name=GPS data saved
@@ -543,9 +544,6 @@ radio.icbmclassic:message.target.set=Target set to (%1$f %2$f %3$f)
 radio.icbmclassic:message.launch.success=Firing missile(s) at (%1$f %2$f %3$f) with range %4$f
 radio.icbmclassic:message.launch.failed=Failed to fire missile(s)
 radio.icbmclassic:message.launch.triggered=Firing missile(s), aiming launcher(s)
-
-### Missile
-
 
 # SubTitles
 subtitle.icbmclassic:missile.movement=Missile Engine

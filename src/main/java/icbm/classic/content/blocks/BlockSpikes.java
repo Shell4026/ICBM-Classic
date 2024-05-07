@@ -3,6 +3,7 @@ package icbm.classic.content.blocks;
 import com.google.common.collect.Lists;
 import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
+import icbm.classic.config.ConfigMain;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -12,6 +13,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -26,6 +28,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockSpikes extends Block
 {
     public static final SpikeProperty SPIKE_PROPERTY = new SpikeProperty();
+
+    public static final DamageSource DAMAGE_SOURCE = new DamageSource("icbmclassic:spikes");
 
     public BlockSpikes()
     {
@@ -109,15 +113,18 @@ public class BlockSpikes extends Block
         // If the entity is a living entity
         if (entity instanceof EntityLivingBase)
         {
-            entity.attackEntityFrom(DamageSource.CACTUS, 1);
-
             if (world.getBlockState(pos).getValue(SPIKE_PROPERTY) == EnumSpikes.POISON) //TODO replace with state
             {
-                ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("poison"), 7 * 20, 0));
+                entity.attackEntityFrom(DAMAGE_SOURCE, ConfigMain.spikes.poisonDamage);
+                ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.POISON, 7 * 20, 0));
             }
             else if (world.getBlockState(pos).getValue(SPIKE_PROPERTY) == EnumSpikes.FIRE)
             {
+                entity.attackEntityFrom(DAMAGE_SOURCE, ConfigMain.spikes.fireDamage);
                 entity.setFire(7);
+            }
+            else {
+                entity.attackEntityFrom(DAMAGE_SOURCE, ConfigMain.spikes.normalDamage);
             }
         }
     }
