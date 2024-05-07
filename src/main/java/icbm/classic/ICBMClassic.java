@@ -33,9 +33,6 @@ import icbm.classic.content.missile.logic.targeting.BallisticTargetingData;
 import icbm.classic.content.missile.logic.targeting.BasicTargetData;
 import icbm.classic.content.cargo.parachute.ParachuteProjectileData;
 import icbm.classic.content.potion.ContagiousPoison;
-import icbm.classic.content.potion.PoisonContagion;
-import icbm.classic.content.potion.PoisonFrostBite;
-import icbm.classic.content.potion.PoisonToxin;
 import icbm.classic.content.reg.ExplosiveInit;
 import icbm.classic.content.reg.ItemReg;
 import icbm.classic.datafix.*;
@@ -375,11 +372,6 @@ public class ICBMClassic
         ((ProjectileDataRegistry) ICBMClassicAPI.PROJECTILE_DATA_REGISTRY).registerVanillaDefaults();
         MinecraftForge.EVENT_BUS.post(new ProjectileDataRegistryEvent(ICBMClassicAPI.PROJECTILE_DATA_REGISTRY));
         ((ProjectileDataRegistry) ICBMClassicAPI.PROJECTILE_DATA_REGISTRY).lock();
-
-        /** Potion Effects */ //TODO move to effect system
-        PoisonToxin.INSTANCE = MobEffects.POISON;//new PoisonToxin(true, 5149489, "toxin");
-        PoisonContagion.INSTANCE = MobEffects.POISON;//new PoisonContagion(false, 5149489, "virus");
-        PoisonFrostBite.INSTANCE = MobEffects.POISON;//new PoisonFrostBite(false, 5149489, "frostBite");
 
         /** Dispenser Handler */
         if (ItemReg.itemGrenade != null)

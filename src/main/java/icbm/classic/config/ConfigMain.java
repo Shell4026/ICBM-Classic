@@ -23,10 +23,6 @@ public class ConfigMain
     @Config.Comment("Range of tier 1 launcher")
     public static boolean REQUIRES_POWER = true;
 
-    @Config.LangKey("config.icbmclassic:contagious.title")
-    @Config.Comment("Settings for contagious poison effect")
-    public static ConfigContagious contagiousPoison = new ConfigContagious();
-
     @SubscribeEvent
     public static void onConfigChangedEvent(final ConfigChangedEvent.OnConfigChangedEvent event)
     {
