@@ -21,6 +21,7 @@ config.icbmclassic:missile.cluster.title=Cluster Missile
 config.icbmclassic:contagious.title=Contagious Poison
 config.icbmclassic:frostbite.title=Frostbite Poison
 config.icbmclassic:bomblet.title=Bomblet / Droplet
+config.icbmclassic:cargo.holder.title=Cargo Holders (Parachute, Balloon)
 
 ## Chat commands
 

@@ -10,6 +10,7 @@ import icbm.classic.command.ICBMCommands;
 import icbm.classic.command.system.CommandEntryPoint;
 import icbm.classic.config.ConfigItems;
 import icbm.classic.config.ConfigThread;
+import icbm.classic.content.cargo.CargoHolderHandler;
 import icbm.classic.content.cluster.missile.ClusterMissileHandler;
 import icbm.classic.content.cluster.missile.RecipeCluster;
 import icbm.classic.content.missile.logic.flight.move.MoveByVec3Logic;
@@ -366,7 +367,7 @@ public class ICBMClassic
         CREATIVE_TAB.init();
         ProjectileBlockInteraction.register();
         ClusterMissileHandler.setup();
-
+        CargoHolderHandler.setup();
 
         // Needs to lock late as we need content to register some types
         ((ProjectileDataRegistry) ICBMClassicAPI.PROJECTILE_DATA_REGISTRY).registerVanillaDefaults();

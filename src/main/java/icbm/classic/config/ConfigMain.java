@@ -2,6 +2,7 @@ package icbm.classic.config;
 
 import icbm.classic.ICBMConstants;
 import icbm.classic.config.machines.ConfigSpikes;
+import icbm.classic.content.cargo.CargoHolderHandler;
 import icbm.classic.content.cluster.missile.ClusterMissileHandler;
 import icbm.classic.content.entity.flyingblock.FlyingBlock;
 import net.minecraftforge.common.config.Config;
@@ -36,6 +37,7 @@ public class ConfigMain
             // Reload config so we can convert to easier to hash lists
             FlyingBlock.loadFromConfig();
             ClusterMissileHandler.loadFromConfig();
+            CargoHolderHandler.loadFromConfig();
         }
     }
 }
