@@ -11,12 +11,18 @@
   "type": "icbmclassic:explosive",
   "key": {
     "r": {
-      "type" : "icbmclassic:explosive",
+      "type": "icbmclassic:explosive",
       "explosive": "icbmclassic:nuclear"
     },
     "n": {
-      "item": "minecraft:nether_star",
-      "data": 0
+      "item": "mekanism:atomicalloy"
     }
-  }
+  },
+  "conditions": [
+    {
+      "type": "minecraft:item_exists",
+      "condition": "true",
+      "item": "mekanism:atomicalloy"
+    }
+  ]
 }
