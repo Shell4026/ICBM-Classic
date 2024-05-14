@@ -1,5 +1,6 @@
 package icbm.classic.content.blast.gas;
 
+import icbm.classic.config.ConfigMain;
 import icbm.classic.content.potion.CustomPotionEffect;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
@@ -23,6 +24,11 @@ public class BlastDebilitation extends BlastGasBase
     protected boolean canEffectEntities()
     {
         return true;
+    }
+
+    @Override
+    protected float minGasProtection() {
+        return ConfigMain.protectiveArmor.minProtectionDebilitationGas;
     }
 
     @Override

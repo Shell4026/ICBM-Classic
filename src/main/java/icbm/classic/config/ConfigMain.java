@@ -25,7 +25,40 @@ public class ConfigMain
     @Config.Comment("Range of tier 1 launcher")
     public static boolean REQUIRES_POWER = true;
 
+    @Config.Name("spike_blocks")
+    @Config.Comment("Config for spike blocks")
     public static ConfigSpikes spikes = new ConfigSpikes();
+
+    @Config.Name("protective_armor")
+    @Config.Comment("Settings for setting protection support on armor items")
+    public static ProtectiveArmorConfig protectiveArmor = new ProtectiveArmorConfig();
+
+    public static class ProtectiveArmorConfig {
+
+        @Config.Name("min_chemical_gas_protection")
+        @Config.Comment("Minimal percentage of protection required to start guarding from chemical attacks")
+        @Config.RangeDouble(min = 0, max = 1)
+        public float minProtectionChemicalGas = 0.5f;
+
+        @Config.Name("min_viral_gas_protection")
+        @Config.Comment("Minimal percentage of protection required to start guarding from viral attacks")
+        @Config.RangeDouble(min = 0, max = 1)
+        public float minProtectionViralGas = 0.8f;
+
+        @Config.Name("min_debilitation_gas_protection")
+        @Config.Comment("Minimal percentage of protection required to start guarding from debilitation attacks")
+        @Config.RangeDouble(min = 0, max = 1)
+        public float minProtectionDebilitationGas = 0.1f;
+
+        @Config.Name("require_helmet")
+        @Config.Comment("Is head slot required to count as protection")
+        public boolean requireHelmet = true;
+
+        //TODO once on latest MC rethinking gas protection to be per weapon system.
+        @Config.Name("item_ratings")
+        @Config.Comment("Item/ItemStack to percentage protection between 0.0 to 1.0 'domain:resource=floating_point', ex: 'minecraft:iron_helmet=0.02'")
+        public String[] ITEMS = new String[]{"example:mask=0.95"};
+    }
 
     @SubscribeEvent
     public static void onConfigChangedEvent(final ConfigChangedEvent.OnConfigChangedEvent event)

@@ -1,6 +1,7 @@
 package icbm.classic.content.blast.gas;
 
 import icbm.classic.ICBMClassic;
+import icbm.classic.config.ConfigMain;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,6 +31,11 @@ public class BlastChemical extends BlastGasBase
     protected boolean canGasEffect(EntityLivingBase entity)
     {
         return super.canGasEffect(entity) && !entity.isEntityInvulnerable(CHEMICAL_DAMAGE);
+    }
+
+    @Override
+    protected float minGasProtection() {
+        return ConfigMain.protectiveArmor.minProtectionChemicalGas;
     }
 
     @Override

@@ -108,4 +108,36 @@ public abstract class ItemStackConfigList<VALUE> extends ResourceConfigList<Item
             return value == null ? null : Integer.parseInt(value, 10);
         }
     }
+
+    public static class FloatOut extends ItemStackConfigList<Float> {
+
+        public FloatOut(String name, Consumer<ItemStackConfigList> reloadCallback) {
+            super(name, reloadCallback);
+        }
+
+        @Override
+        protected Function<ItemStack, Float> getDomainValue(String domain, @Nullable Float value) {
+            return (stack) -> {
+                if(getContentKey(stack).getResourceDomain().equalsIgnoreCase(domain)) {
+                    return value;
+                }
+                return null;
+            };
+        }
+
+        @Override
+        protected Function<ItemStack, Float> getSimpleValue(ResourceLocation key, @Nullable Float value) {
+            return (stack) -> {
+                if(getContentKey(stack) == key) {
+                    return value;
+                }
+                return null;
+            };
+        }
+
+        @Override
+        protected Float parseValue(@Nullable String value) {
+            return value == null ? null : Float.parseFloat(value);
+        }
+    }
 }
