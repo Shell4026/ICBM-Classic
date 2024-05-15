@@ -533,6 +533,7 @@ death.attack.icbm.contagious=%s breathed in too much of the green stuff.
 death.attack.icbmclassic:spikes=%s died to spikes
 death.attack.icbmclassic:projectile=%s died to a projectile
 death.attack.icbmclassic:bomblet=%s got smacked in the head with a bomb
+death.attack.icbmclassic:radioactive_block=%s died to radioactive fallout
 
 ## GPS
 gps.pos.set.name=GPS data saved

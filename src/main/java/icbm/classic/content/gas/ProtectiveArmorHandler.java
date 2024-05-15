@@ -4,11 +4,13 @@ import icbm.classic.config.ConfigMain;
 import icbm.classic.config.util.ItemStackConfigList;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 @NoArgsConstructor(access = AccessLevel.NONE)
-public class GasArmorHandler {
+public class ProtectiveArmorHandler {
 
     public static final ItemStackConfigList.FloatOut protectionValues = new ItemStackConfigList.FloatOut("[CargoHolder][Ban/Allow Config]", (configList) -> {
         configList.setDefault(new ResourceLocation("atomicscience","hazmat_color_mask"), 0.75f, 1);
@@ -35,5 +37,18 @@ public class GasArmorHandler {
 
     public static void loadFromConfig() {
         protectionValues.reload();
+    }
+
+    public static float getProtectionRating(EntityLivingBase entityLivingBase) {
+
+        if(ConfigMain.protectiveArmor.requireHelmet && entityLivingBase.getItemStackFromSlot(EntityEquipmentSlot.HEAD).isEmpty()) {
+            return 0;
+        }
+
+        float value = 0;
+        for(ItemStack armorStack: entityLivingBase.getArmorInventoryList()) {
+            value += ProtectiveArmorHandler.getValue(armorStack);
+        }
+        return value;
     }
 }

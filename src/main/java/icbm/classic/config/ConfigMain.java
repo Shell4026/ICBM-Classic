@@ -45,6 +45,11 @@ public class ConfigMain
         @Config.RangeDouble(min = 0, max = 1)
         public float minProtectionViralGas = 0.8f;
 
+        @Config.Name("min_radiation_protection")
+        @Config.Comment("Minimal percentage of protection required to start guarding from radiation attacks")
+        @Config.RangeDouble(min = 0, max = 1)
+        public float minProtectionRadiation = 1f;
+
         @Config.Name("min_debilitation_gas_protection")
         @Config.Comment("Minimal percentage of protection required to start guarding from debilitation attacks")
         @Config.RangeDouble(min = 0, max = 1)

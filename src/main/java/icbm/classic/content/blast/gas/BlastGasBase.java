@@ -3,17 +3,14 @@ package icbm.classic.content.blast.gas;
 import icbm.classic.ICBMClassic;
 import icbm.classic.api.explosion.IBlastTickable;
 import icbm.classic.client.ICBMSounds;
-import icbm.classic.config.ConfigMain;
 import icbm.classic.content.blast.Blast;
-import icbm.classic.content.gas.GasArmorHandler;
+import icbm.classic.content.gas.ProtectiveArmorHandler;
 import icbm.classic.lib.NBTConstants;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -118,16 +115,7 @@ public abstract class BlastGasBase extends Blast implements IBlastTickable
     }
 
     protected float getProtectionRating(EntityLivingBase entityLivingBase) {
-
-        if(ConfigMain.protectiveArmor.requireHelmet && entityLivingBase.getItemStackFromSlot(EntityEquipmentSlot.HEAD).isEmpty()) {
-            return 0;
-        }
-
-        float value = 0;
-        for(ItemStack armorStack: entityLivingBase.getArmorInventoryList()) {
-            value += GasArmorHandler.getValue(armorStack);
-        }
-        return value;
+        return ProtectiveArmorHandler.getProtectionRating(entityLivingBase);
     }
 
     /**
