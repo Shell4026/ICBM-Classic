@@ -8,6 +8,7 @@ import icbm.classic.content.radioactive.RadioactiveHandler;
 import icbm.classic.content.reg.BlockReg;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.function.Consumer;
 
@@ -30,13 +31,9 @@ public class BlastRadioactiveBlockSwaps extends BlastThreaded implements IBlastT
     public void destroyBlock(BlockPos targetPosition)
     {
         final IBlockState blockState = world.getBlockState(targetPosition);
-        final IBlockState replacement = RadioactiveHandler.radioactiveBlockSwaps.getValue(blockState);
-        if(replacement != null) {
-            // Reduce radioactive placements to prevent lag TODO config drive this per block
-            if(replacement.getBlock() == BlockReg.blockRadioactive && world.rand.nextFloat() < 0.8) {
-                return;
-            }
-            world.setBlockState(targetPosition, replacement, 3);
+        final Pair<IBlockState, Float> replacement = RadioactiveHandler.radioactiveBlockSwaps.getValue(blockState);
+        if(replacement != null && (replacement.getValue() == null || replacement.getValue() < world.rand.nextFloat())) {
+            world.setBlockState(targetPosition, replacement.getKey(), 3);
         }
     }
 }

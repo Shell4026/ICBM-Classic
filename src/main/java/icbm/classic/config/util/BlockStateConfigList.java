@@ -10,6 +10,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -112,6 +113,25 @@ public abstract class BlockStateConfigList<VALUE> extends ResourceConfigList<Blo
         @Override
         protected IBlockState parseValue(@Nullable String value) {
             return super.parseBlockState(value);
+        }
+    }
+
+    public static class BlockChanceOut extends BlockStateConfigList<Pair<IBlockState, Float>> {
+
+        public BlockChanceOut(String name, Consumer<BlockStateConfigList<Pair<IBlockState, Float>>> reloadCallback) {
+            super(name, reloadCallback);
+        }
+
+        @Override
+        protected Pair<IBlockState, Float> parseValue(@Nullable String value) {
+            if(value == null) {
+                return null;
+            }
+            if(value.contains(",")) {
+                final String[] split = value.split(",");
+                return Pair.of(super.parseBlockState(split[0]), Math.min(1, Math.max(0, Float.parseFloat(split[1]))));
+            }
+            return Pair.of(super.parseBlockState(value), null);
         }
     }
 
