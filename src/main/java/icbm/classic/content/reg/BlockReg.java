@@ -36,30 +36,45 @@ public class BlockReg
 {
     @ObjectHolder(ICBMConstants.PREFIX + "glassPressurePlate")
     public static Block blockGlassPlate;
+
     @ObjectHolder(ICBMConstants.PREFIX + "glassButton")
     public static Block blockGlassButton;
+
     @ObjectHolder(ICBMConstants.PREFIX + "spikes")
     public static Block blockSpikes;
+
     @ObjectHolder(ICBMConstants.PREFIX + "concrete")
     public static Block blockConcrete;
+
     @ObjectHolder(ICBMConstants.PREFIX + "reinforcedGlass")
     public static Block blockReinforcedGlass;
+
     @ObjectHolder(ICBMConstants.PREFIX + "explosives")
     public static Block blockExplosive;
+
     @ObjectHolder(ICBMConstants.PREFIX + "launcherbase")
     public static Block blockLaunchBase;
+
     @ObjectHolder(ICBMConstants.PREFIX + "launcherscreen")
     public static Block blockLaunchScreen;
+
     @ObjectHolder(ICBMConstants.PREFIX + "launcherframe")
     public static Block blockLaunchSupport;
+
     @ObjectHolder(ICBMConstants.PREFIX + "launcher_connector")
     public static Block blockLaunchConnector;
+
     @ObjectHolder(ICBMConstants.PREFIX + "radarStation")
     public static Block blockRadarStation;
+
     @ObjectHolder(ICBMConstants.PREFIX + "emptower")
     public static Block blockEmpTower;
+
     @ObjectHolder(ICBMConstants.PREFIX + "cruiseLauncher")
     public static Block blockCruiseLauncher;
+
+    @ObjectHolder(ICBMConstants.PREFIX + "radioactive")
+    public static Block blockRadioactive;
 
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event)
@@ -79,6 +94,8 @@ public class BlockReg
         event.getRegistry().register(new BlockLaunchScreen());
 
         event.getRegistry().register(new BlockCruiseLauncher());
+
+        event.getRegistry().register(new BlockRadioactive());
 
         GameRegistry.registerTileEntity(TileEntityExplosive.class, new ResourceLocation(ICBMConstants.DOMAIN, "explosive"));
         TileEMPTower.register();

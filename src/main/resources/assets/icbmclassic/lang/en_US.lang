@@ -210,21 +210,18 @@ tile.icbmclassic:missilecoordinator.name=Missile Coordinator
 tile.icbmclassic:missilecoordinator.info=Oversized calculator. Calculates flight paths
 
 ## Blocks
-tile.icbmclassic:reinforcedRail.name=Reinforced Rail
-tile.icbmclassic:reinforcedRail.info=Hardened against explosives
-
-tile.icbmclassic:redmatter.ore.name=Redmatter Ore
-tile.icbmclassic:redmatter.ore.info=Oh shiz, how did you get that? Put it down, it could explode!
+tile.icbmclassic:radioactive.0.name=Radioactive Dirt
+tile.icbmclassic:radioactive.1.name=Radioactive Stone
 
 ## ICBM Explosives
 
-## Tiers
+### Tiers
 tier.icbmclassic.one=One
 tier.icbmclassic.two=Two
 tier.icbmclassic.three=Three
 tier.icbmclassic.four=Four
 
-## Block Form
+### Block Form
 explosive.icbmclassic:condensed.name=Condensed Explosives
 explosive.icbmclassic:shrapnel.name=Shrapnel Explosives
 explosive.icbmclassic:incendiary.name=Incendiary Explosives
@@ -253,7 +250,7 @@ explosive.icbmclassic:hypersonic.name=Hypersonic Explosives
 explosive.icbmclassic:antimatter.name=Antimatter Explosives
 explosive.icbmclassic:redmatter.name=Red Matter Explosives
 
-## Ender
+### Ender
 explosive.icbmclassic:ender.name=Ender Explosives
 missile.icbmclassic:ender.name=Ender Missile
 bombcart.icbmclassic:ender.name=Ender Minecart
@@ -261,7 +258,7 @@ explosive.icbmclassic:ender.info=Let's relocate that base of yours
 explosive.icbmclassic:ender.pos=Target: %1$sx, %2$sy, %3$sz
 explosive.icbmclassic:ender.world=World: [%1$s] %2$s
 
-## Missile Form
+### Missile Form
 missile.icbmclassic:generic.name=Missile
 
 missile.icbmclassic:condensed.name=Conventional Missile
@@ -292,7 +289,7 @@ missile.icbmclassic:hypersonic.name=Hypersonic Missile
 missile.icbmclassic:antimatter.name=Antimatter Missile
 missile.icbmclassic:redmatter.name=Red Matter Missile
 
-## Explosive Minecarts
+### Explosive Minecarts
 bombcart.icbmclassic:condensed.name=Explosive Cart
 bombcart.icbmclassic:shrapnel.name=Shrapnel Minecart
 bombcart.icbmclassic:incendiary.name=Incendiary Minecart
@@ -322,7 +319,7 @@ bombcart.icbmclassic:hypersonic.name=Hypersonic Minecart
 bombcart.icbmclassic:antimatter.name=Antimatter Minecart
 bombcart.icbmclassic:redmatter.name=Red Matter Minecart
 
-## Explosive Info
+### Explosive Info
 explosive.icbmclassic:condensed.info=Slightly more destructive version of TNT
 explosive.icbmclassic:shrapnel.info=Erupts in a barrage of metal fragments
 explosive.icbmclassic:incendiary.info=Catches the place on fire
@@ -350,7 +347,7 @@ explosive.icbmclassic:hypersonic.info=I feel bad for your ears
 
 explosive.icbmclassic:antimatter.info=Matter + antimatter = No matter
 
-##Some extra messages just to honor the great Yogscast https://www.youtube.com/watch?v=F2ohslGivm8
+### Some extra messages just to honor the great Yogscast https://www.youtube.com/watch?v=F2ohslGivm8
 explosive.icbmclassic:redMatter.info.count=11
 explosive.icbmclassic:redMatter.info.0=Yogscast? Diggy diggy hole
 explosive.icbmclassic:redMatter.info.1=Be a shame if your base was compacted into nothing
@@ -370,8 +367,6 @@ item.icbmclassic:cluster_missile.info=Deploys a spread of projectiles in proximi
 item.icbmclassic:cluster_missile.contents=Contents: %1$s
 
 missile.icbmclassic:cluster.name=Cluster Missile
-
-
 
 ## Special Missiles
 missile.icbmclassic:missile.name=Missile Module

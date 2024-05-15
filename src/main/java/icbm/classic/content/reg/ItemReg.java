@@ -152,6 +152,7 @@ public class ItemReg
         event.getRegistry().register(new ItemBlock(BlockReg.blockLaunchConnector).setRegistryName(BlockReg.blockLaunchConnector.getRegistryName()));
         event.getRegistry().register(new ItemBlock(BlockReg.blockLaunchScreen).setRegistryName(BlockReg.blockLaunchScreen.getRegistryName()));
         event.getRegistry().register(new ItemBlock(BlockReg.blockCruiseLauncher).setRegistryName(BlockReg.blockCruiseLauncher.getRegistryName()));
+        event.getRegistry().register(new ItemBlockSubTypes(BlockReg.blockRadioactive));
 
         //Crafting resources
         if (ConfigItems.ENABLE_CRAFTING_ITEMS)

@@ -117,6 +117,10 @@ public class ClientReg
         newBlockModel(BlockReg.blockConcrete, 1, "inventory", "_compact");
         newBlockModel(BlockReg.blockConcrete, 2, "inventory", "_reinforced");
 
+        //Radioactive
+        newBlockModel(BlockReg.blockRadioactive, 0, "inventory", "_dirt");
+        newBlockModel(BlockReg.blockRadioactive, 1, "inventory", "_stone");
+
         //Explosives
         registerExBlockRenders();
         registerGrenadeRenders();
