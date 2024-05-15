@@ -51,6 +51,8 @@ dependencies {
 
     //Mods
     implementation files('libs/NBT-Exporter-1.0-forgelib.jar')
+    compileOnly "mezz.jei:jei_1.12.2:4.16.1.302:api"
+    //https://github.com/mekanism/Mekanism/tree/1.12
 
     //Junit 5
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
@@ -62,7 +64,7 @@ dependencies {
     //Resource injector
     // https://hosuaby.github.io/inject-resources/0.3.2/asciidoc/#inject-resources-junit-jupiter
     // https://github.com/hosuaby/inject-resources
-    testImplementation 'io.hosuaby:inject-resources-junit-jupiter:0.3.2'
+    testImplementation 'io.hosuaby:inject-resources-junit-jupiter:0.3.2' //TODO replace with better maintained library
 
     //Mockito
     testImplementation 'org.mockito:mockito-inline:4.3.1'
@@ -175,6 +177,16 @@ jar {
 
 repositories {
     mavenCentral();
+    maven {
+        // JEI
+        name "Progwml6 maven"
+        url "https://dvs1.progwml6.com/files/maven/"
+    };
+    maven {
+        // JEI fallback
+        name "ModMaven"
+        url "https://modmaven.dev"
+    };
     maven {
         name 'SquidDev'
         url 'https://squiddev.cc/maven/'
