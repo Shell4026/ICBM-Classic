@@ -17,7 +17,6 @@ import icbm.classic.content.blocks.launcher.frame.BlockLaunchFrame;
 import icbm.classic.content.blocks.launcher.frame.TileLauncherFrame;
 import icbm.classic.content.blocks.launcher.screen.BlockLaunchScreen;
 import icbm.classic.content.blocks.launcher.screen.TileLauncherScreen;
-import icbm.classic.content.blocks.multiblock.BlockMultiblock;
 import icbm.classic.content.blocks.multiblock.TileMulti;
 import icbm.classic.content.blocks.radarstation.BlockRadarStation;
 import icbm.classic.content.blocks.radarstation.TileRadarStation;
@@ -61,8 +60,6 @@ public class BlockReg
     public static Block blockEmpTower;
     @ObjectHolder(ICBMConstants.PREFIX + "cruiseLauncher")
     public static Block blockCruiseLauncher;
-    @ObjectHolder(ICBMConstants.PREFIX + "multiblock")
-    public static Block multiBlock;
 
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event)
@@ -80,7 +77,6 @@ public class BlockReg
         event.getRegistry().register(new BlockLaunchConnector());
         event.getRegistry().register(new BlockLauncherBase());
         event.getRegistry().register(new BlockLaunchScreen());
-        event.getRegistry().register(new BlockMultiblock());
 
         event.getRegistry().register(new BlockCruiseLauncher());
 
