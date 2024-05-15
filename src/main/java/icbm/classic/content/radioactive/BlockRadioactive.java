@@ -1,4 +1,4 @@
-package icbm.classic.content.blocks;
+package icbm.classic.content.radioactive;
 
 import com.google.common.collect.Lists;
 import icbm.classic.ICBMClassic;
@@ -14,8 +14,10 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -65,6 +67,7 @@ public class BlockRadioactive extends Block {
                     float protection = ProtectiveArmorHandler.getProtectionRating(entity);
                     if (protection < ConfigMain.protectiveArmor.minProtectionRadiation || protection < random.nextFloat()) {
                         entity.attackEntityFrom(damageSource, damage); //TODO consider reducing damage by random amount of protection found. This way iron armor can reduce damage every so often
+                        entity.addPotionEffect(new PotionEffect(MobEffects.WITHER, 20));
                     }
                 }
             }
@@ -80,7 +83,7 @@ public class BlockRadioactive extends Block {
         {
             worldIn.playSound(((float)pos.getX() + 0.5F), ((float)pos.getY() + 0.5F), ((float)pos.getZ() + 0.5F),
                 SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, //TODO get custom audio
-                1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
+                1.0F + rand.nextFloat(), rand.nextFloat() * 1.7F + 0.3F, false);
         }
 
         //TODO spawn particles showing AOE

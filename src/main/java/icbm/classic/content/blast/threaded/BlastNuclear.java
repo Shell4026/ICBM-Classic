@@ -5,7 +5,7 @@ import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.client.ICBMSounds;
 import icbm.classic.config.blast.ConfigBlast;
 import icbm.classic.content.blast.BlastMutation;
-import icbm.classic.content.blast.BlastRot;
+import icbm.classic.content.blast.BlastRadioactiveBlockSwaps;
 import icbm.classic.lib.transform.vector.Location;
 import icbm.classic.lib.transform.vector.Pos;
 import net.minecraft.block.Block;
@@ -189,30 +189,30 @@ public class BlastNuclear extends BlastThreaded {
         super.onBlastCompleted();
         if (world() != null && !world().isRemote) {
             try {
-                //Attack entities
+                //Attack entities with concussion wave
                 this.doDamageEntities((float)ConfigBlast.nuclear.entityDamageScale, (float) (this.energy * ConfigBlast.nuclear.entityDamageMultiplier));
-                //TODO hook into AS and apply radiation damage or fire a damage event to allow AS/proxy to hook
 
-                //Place radio active blocks
-                if(ConfigBlast.nuclear.useRotBlast) {
-                    new BlastRot()
-                        .setBlastWorld(world())
-                        .setBlastSource(this.exploder)
-                        .setBlastPosition(location.x(), location.y(), location.z())
-                        .setBlastSize((float)ConfigBlast.nuclear.rotScale)
-                        .setExplosiveData(ICBMExplosives.ROT)
-                        .buildBlast().doAction();  //TODO trigger from explosive handler
-                }
+                //Place radioactive blocks
+                new BlastRadioactiveBlockSwaps()
+                    .setBlastWorld(world())
+                    .setBlastSource(this.exploder)
+                    .setBlastPosition(location.x(), location.y(), location.z())
+                    .setBlastSize((float)ConfigBlast.nuclear.rotScale)
+                    .setExplosiveData(ICBMExplosives.ROT)
+                    .buildBlast().doAction();
 
-                if(ConfigBlast.nuclear.useMutationBlast) {
-                    new BlastMutation()
-                        .setBlastWorld(world())
-                        .setBlastSource(this.exploder)
-                        .setBlastPosition(location.x(), location.y(), location.z())
-                        .setBlastSize((float)ConfigBlast.nuclear.mutationScale)
-                        .setExplosiveData(ICBMExplosives.MUTATION)
-                        .buildBlast().doAction();  //TODO trigger from explosive handler
-                }
+                new BlastMutation()
+                    .setBlastWorld(world())
+                    .setBlastSource(this.exploder)
+                    .setBlastPosition(location.x(), location.y(), location.z())
+                    .setBlastSize((float)ConfigBlast.nuclear.mutationScale)
+                    .setExplosiveData(ICBMExplosives.MUTATION)
+                    .buildBlast().doAction();
+
+                // TODO trigger blast wave that hits all entities with radiation damage not behind protection (basically line of sight)
+                // TODO spawn a radioactive gas cloud, can recycle the gas blast and set it to expand quickly
+                // TODO throw projectiles containing radioactive material. On impact have the projectiles place radioactive dust in a nearby area shotgun pattern
+                // TODO have radioactive dust fall from sky in a radius around the blast
 
                 //Play audio
                 ICBMSounds.EXPLOSION.play(world, this.location.x(), this.location.y(), this.location.z(), 10.0F, (1.0F + (this.world().rand.nextFloat() - this.world().rand.nextFloat()) * 0.2F) * 0.7F, true);

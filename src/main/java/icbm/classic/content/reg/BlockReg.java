@@ -20,6 +20,7 @@ import icbm.classic.content.blocks.launcher.screen.TileLauncherScreen;
 import icbm.classic.content.blocks.multiblock.TileMulti;
 import icbm.classic.content.blocks.radarstation.BlockRadarStation;
 import icbm.classic.content.blocks.radarstation.TileRadarStation;
+import icbm.classic.content.radioactive.BlockRadioactive;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;

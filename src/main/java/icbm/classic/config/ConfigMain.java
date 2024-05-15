@@ -5,6 +5,7 @@ import icbm.classic.config.machines.ConfigSpikes;
 import icbm.classic.content.cargo.CargoHolderHandler;
 import icbm.classic.content.cluster.missile.ClusterMissileHandler;
 import icbm.classic.content.entity.flyingblock.FlyingBlock;
+import icbm.classic.content.radioactive.RadioactiveHandler;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -76,6 +77,7 @@ public class ConfigMain
             FlyingBlock.loadFromConfig();
             ClusterMissileHandler.loadFromConfig();
             CargoHolderHandler.loadFromConfig();
+            RadioactiveHandler.loadFromConfig();
         }
     }
 }

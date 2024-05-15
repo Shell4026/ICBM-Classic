@@ -259,7 +259,7 @@ public class ExplosiveInit
         // originally "mutation" had the id 24, but to keep metadata consistent, the missile module now has metadata 24
         ICBMExplosives.MISSILEMODULE = newEx(24, "missile",  EnumTier.NONE, (w, x, y, z, s) -> new BlastTNT().setBlastSize(0).setBlastWorld(w).setBlastPosition(x, y, z)); //TODO remove need
 
-        ICBMExplosives.ROT = newEx(25, "rot", EnumTier.NONE, (w, x, y, z, s) -> new BlastRot().setBlastWorld(w).setBlastPosition(x, y, z)); //TODO add item version
+        ICBMExplosives.ROT = newEx(25, "rot", EnumTier.NONE, (w, x, y, z, s) -> new BlastRadioactiveBlockSwaps().setBlastWorld(w).setBlastPosition(x, y, z)); //TODO add item version
         ICBMExplosives.MUTATION = newEx(26, "mutation", EnumTier.NONE, (w, x, y, z, s) -> new BlastMutation().setBlastWorld(w).setBlastPosition(x, y, z)); //TODO add item version
 
         //=================== New Explosives not part of classic original

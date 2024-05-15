@@ -27,7 +27,7 @@ class BlockStateConfigListTest {
     class HandleSimpleBlockTests {
         @Test
         void matchingBlock_noMetaData() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertTrue(configList.handleSimpleBlock("minecraft:dirt"));
 
             final HashSet<Block> expected = new HashSet<Block>();
@@ -37,7 +37,7 @@ class BlockStateConfigListTest {
 
         @Test
         void matchingBlock_withMetaData() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertTrue(configList.handleSimpleBlock("minecraft:stone"));
 
             final HashSet<Block> expected = new HashSet<Block>();
@@ -47,21 +47,21 @@ class BlockStateConfigListTest {
 
         @Test
         void noMatchFound() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertFalse(configList.handleSimpleBlock("minecraft:tower"));
             Assertions.assertEquals(new HashSet<Block>(), configList.blocks);
         }
 
         @Test
         void badFormat_missingResource() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertFalse(configList.handleSimpleBlock("minecraft:"));
             Assertions.assertEquals(new HashSet<Block>(), configList.blocks);
         }
 
         @Test
         void badFormat_missingDomain() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertFalse(configList.handleSimpleBlock("minecraft:"));
             Assertions.assertEquals(new HashSet<Block>(), configList.blocks);
         }
@@ -83,7 +83,7 @@ class BlockStateConfigListTest {
             "minecraftstone"
         })
         void badFormats(String value) {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertFalse(configList.handleSimpleBlock(value));
             Assertions.assertEquals(new HashSet<Block>(), configList.blocks);
         }
@@ -93,19 +93,19 @@ class BlockStateConfigListTest {
     class BlockPathEndsWithTests {
         @Test
         void endsWith_pass() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertTrue(configList.blockPathEndsWith(Blocks.BONE_BLOCK, "block"));
         }
 
         @Test
         void matches_pass() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertTrue(configList.blockPathEndsWith(Blocks.BONE_BLOCK, "bone_block"));
         }
 
         @Test
         void notEnds_fail() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertFalse(configList.blockPathEndsWith(Blocks.BONE_BLOCK, "bone"));
         }
     }
@@ -114,19 +114,19 @@ class BlockStateConfigListTest {
     class BlockPathStartsWithTests {
         @Test
         void startsWith_pass() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertTrue(configList.blockPathStartsWith(Blocks.BONE_BLOCK, "bone"));
         }
 
         @Test
         void matches_pass() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertTrue(configList.blockPathStartsWith(Blocks.BONE_BLOCK, "bone_block"));
         }
 
         @Test
         void notStarts_fail() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertFalse(configList.blockPathStartsWith(Blocks.BONE_BLOCK, "block"));
         }
     }
@@ -136,14 +136,14 @@ class BlockStateConfigListTest {
 
         @Test
         void modEntry_addToModList() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertTrue(configList.handleFuzzyBlocks("icbm:~"));
             Assertions.assertEquals(Lists.newArrayList("icbm"), configList.mods);
         }
 
         @Test
         void blockFuzzyStart_addFuzzyBlockList() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertTrue(configList.handleFuzzyBlocks("minecraft:iron~"));
 
             // Validate we only added 1 entry
@@ -160,7 +160,7 @@ class BlockStateConfigListTest {
 
         @Test
         void blockFuzzyEnds_addFuzzyBlockList() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertTrue(configList.handleFuzzyBlocks("minecraft:~door"));
 
             // Validate we only added 1 entry
@@ -202,7 +202,7 @@ class BlockStateConfigListTest {
             "minecraft: ~~stone"
         })
         void badFormats(String value) {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertFalse(configList.handleFuzzyBlocks(value));
             Assertions.assertEquals(Lists.newArrayList(), configList.mods);
         }
@@ -213,7 +213,7 @@ class BlockStateConfigListTest {
 
         @Test
         void badFormat_missingColon() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertFalse(configList.handleMetaData("minecraftstone@2"));
 
             // Would expect nothing to be added
@@ -222,7 +222,7 @@ class BlockStateConfigListTest {
 
         @Test
         void badFormat_doubleColon() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertFalse(configList.handleMetaData("minecraft::stone@2"));
 
             // Would expect nothing to be added
@@ -231,7 +231,7 @@ class BlockStateConfigListTest {
 
         @Test
         void badFormat_doubleColon2() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertFalse(configList.handleMetaData("minecraft:stone:@2"));
 
             // Would expect nothing to be added
@@ -240,7 +240,7 @@ class BlockStateConfigListTest {
 
         @Test
         void badFormat_missingNumber() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertFalse(configList.handleMetaData("minecraft:stone@"));
 
             // Would expect nothing to be added
@@ -249,7 +249,7 @@ class BlockStateConfigListTest {
 
         @Test
         void badFormat_onlyHasNumber() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertFalse(configList.handleMetaData("@2"));
 
             // Would expect nothing to be added
@@ -258,7 +258,7 @@ class BlockStateConfigListTest {
 
         @Test
         void badFormat_missingDomain() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertFalse(configList.handleMetaData(":stone@2"));
 
             // Would expect nothing to be added
@@ -267,7 +267,7 @@ class BlockStateConfigListTest {
 
         @Test
         void badFormat_missingResource() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertFalse(configList.handleMetaData("minecraft:@2"));
 
             // Would expect nothing to be added
@@ -276,7 +276,7 @@ class BlockStateConfigListTest {
 
         @Test
         void blockWithMetadata_notMatching() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertFalse(configList.handleMetaData("minecraft:stone@20"));
 
             // Would expect nothing to be added
@@ -285,7 +285,7 @@ class BlockStateConfigListTest {
 
         @Test
         void blockWithMetadata_blockNotFound() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertFalse(configList.handleMetaData("minecraft:tower@2"));
             //TODO find a way to confirm it is false due to missing block, as this produced a false-positive for 'block == null' almost missing that forgeReg returns Blocks.air for missing entries
 
@@ -297,7 +297,7 @@ class BlockStateConfigListTest {
 
         @Test
         void blockWithMetadata_matching() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertTrue(configList.handleMetaData("minecraft:stone@2"));
 
             HashSet<IBlockState> sets = new HashSet();
@@ -314,7 +314,7 @@ class BlockStateConfigListTest {
     class HandleBlockStateTests {
         @Test
         void singleState() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertTrue(configList.handleBlockState("minecraft:stone[variant:diorite]"));
 
             // Would expect 1 item to be present and contain a mather that fits out block
@@ -331,7 +331,7 @@ class BlockStateConfigListTest {
 
         @Test
         void singleStateFuzzy_endsWithName() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertTrue(configList.handleBlockState("minecraft:stone[variant:~diorite]"));
 
             // Would expect 1 item to be present and contain a mather that fits out block
@@ -350,7 +350,7 @@ class BlockStateConfigListTest {
 
         @Test
         void singleStateFuzzy_startsWithName() {
-            final BlockStateConfigList configList = new BlockStateConfigList("test", null);
+            final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", null);
             Assertions.assertTrue(configList.handleBlockState("minecraft:stone[variant:smooth~]"));
 
             // Would expect 1 item to be present and contain a mather that fits out block
@@ -370,7 +370,7 @@ class BlockStateConfigListTest {
 
     @Test
     void fullTest_arrayOfStates() {
-        final BlockStateConfigList configList = new BlockStateConfigList("test", (config) -> {
+        final BlockStateConfigListOld configList = new BlockStateConfigListOld("test", (config) -> {
             final String[] entries = new String[]{
                 "minecraft:stone",
                 "minecraft:~ore",

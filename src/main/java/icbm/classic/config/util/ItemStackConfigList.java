@@ -35,20 +35,48 @@ public abstract class ItemStackConfigList<VALUE> extends ResourceConfigList<Item
             .add(new ResourceConfigEntry<>(order, (itemStack) -> ItemStack.areItemsEqual(itemStack, content) ? value : null));
     }
 
-    //TODO add support for metadata
     //TODO add support for NBT
+
+    @Override
+    protected Function<ItemStack, VALUE> getDomainValue(String domain, @Nullable VALUE value) {
+        return (stack) -> {
+            if(getContentKey(stack).getResourceDomain().equalsIgnoreCase(domain)) {
+                return value;
+            }
+            return null;
+        };
+    }
+
+    @Override
+    protected Function<ItemStack, VALUE> getSimpleValue(ResourceLocation key, @Nullable VALUE value) {
+        return (stack) -> {
+            if(getContentKey(stack) == key) {
+                return value;
+            }
+            return null;
+        };
+    }
+
+    @Override
+    protected Function<ItemStack, VALUE> getMetaValue(ResourceLocation key, int metadata, @Nullable VALUE value) {
+        return (stack) -> {
+            if(getContentKey(stack) == key && stack.getMetadata() == metadata) {
+                return value;
+            }
+            return null;
+        };
+    }
 
     @Override
     protected ResourceLocation getContentKey(ItemStack itemStack) {
         return itemStack.getItem().getRegistryName();
     }
 
-    public static class BooleanOut extends ItemStackConfigList<Boolean> {
+    public static class ContainsCheck extends ItemStackConfigList<Boolean> {
 
-        public BooleanOut(String name, Consumer<ItemStackConfigList> reloadCallback) {
+        public ContainsCheck(String name, Consumer<ItemStackConfigList> reloadCallback) {
             super(name, reloadCallback);
         }
-
 
         public boolean isAllowed(ItemStack stack) {
             Boolean value = super.getValue(stack);
@@ -60,7 +88,7 @@ public abstract class ItemStackConfigList<VALUE> extends ResourceConfigList<Item
             if(Boolean.TRUE.equals(disable)) {
                 return null;
             }
-            return (stack) -> getContentKey(stack).getResourceDomain().equalsIgnoreCase(domain);
+            return super.getDomainValue(domain, true);
         }
 
         @Override
@@ -68,7 +96,15 @@ public abstract class ItemStackConfigList<VALUE> extends ResourceConfigList<Item
             if(Boolean.TRUE.equals(disable)) {
                 return null;
             }
-            return (stack) -> getContentKey(stack) == key;
+            return super.getSimpleValue(key, true);
+        }
+
+        @Override
+        protected Function<ItemStack, Boolean> getMetaValue(ResourceLocation key, int metadata, @Nullable Boolean disable) {
+            if(Boolean.TRUE.equals(disable)) {
+                return null;
+            }
+            return super.getMetaValue(key, metadata, true);
         }
 
         @Override
@@ -84,26 +120,6 @@ public abstract class ItemStackConfigList<VALUE> extends ResourceConfigList<Item
         }
 
         @Override
-        protected Function<ItemStack, Integer> getDomainValue(String domain, @Nullable Integer value) {
-            return (stack) -> {
-                if(getContentKey(stack).getResourceDomain().equalsIgnoreCase(domain)) {
-                    return value;
-                }
-                return null;
-            };
-        }
-
-        @Override
-        protected Function<ItemStack, Integer> getSimpleValue(ResourceLocation key, @Nullable Integer value) {
-            return (stack) -> {
-                if(getContentKey(stack) == key) {
-                    return value;
-                }
-                return null;
-            };
-        }
-
-        @Override
         protected Integer parseValue(@Nullable String value) {
             return value == null ? null : Integer.parseInt(value, 10);
         }
@@ -113,26 +129,6 @@ public abstract class ItemStackConfigList<VALUE> extends ResourceConfigList<Item
 
         public FloatOut(String name, Consumer<ItemStackConfigList> reloadCallback) {
             super(name, reloadCallback);
-        }
-
-        @Override
-        protected Function<ItemStack, Float> getDomainValue(String domain, @Nullable Float value) {
-            return (stack) -> {
-                if(getContentKey(stack).getResourceDomain().equalsIgnoreCase(domain)) {
-                    return value;
-                }
-                return null;
-            };
-        }
-
-        @Override
-        protected Function<ItemStack, Float> getSimpleValue(ResourceLocation key, @Nullable Float value) {
-            return (stack) -> {
-                if(getContentKey(stack) == key) {
-                    return value;
-                }
-                return null;
-            };
         }
 
         @Override

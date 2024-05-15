@@ -387,7 +387,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
 
                 damage = (int) ((var36 * var36 + var36) / 2.0D * 8.0D * power + 1.0D);
 
-                entity.attackEntityFrom(DamageSource.causeExplosionDamage(this), damage);
+                entity.attackEntityFrom(getDamageSource(), damage);
 
                 entity.motionX += xDifference * var36;
                 entity.motionY += yDifference * var36;
@@ -396,6 +396,10 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
         }
 
         return true;
+    }
+
+    protected DamageSource getDamageSource() {
+        return DamageSource.causeExplosionDamage(this);
     }
 
     /**

@@ -9,11 +9,11 @@ public class ConfigNuclear {
     @Config.RangeDouble(min = 1, max = Integer.MAX_VALUE)
     public double scale = 50;
 
-    @Config.Comment("Scale of the rot blast")
+    @Config.Comment("Scale of the block rot blast. Handles radioactive blocks and destroying plants")
     @Config.RangeDouble(min = 1, max = Integer.MAX_VALUE)
     public double rotScale = 80;
 
-    @Config.Comment("Scale of the rot blast")
+    @Config.Comment("Scale of the entity mutation blast")
     @Config.RangeDouble(min = 1, max = Integer.MAX_VALUE)
     public double mutationScale = 80;
 
@@ -30,11 +30,13 @@ public class ConfigNuclear {
     @Config.RangeDouble(min = 1, max = Integer.MAX_VALUE)
     public double entityDamageMultiplier = 1000;
 
-    @Config.Comment("Triggers the secondary rot blast")
-    @Config.RangeDouble(min = 1, max = Integer.MAX_VALUE)
-    public boolean useRotBlast = true;
+    @Config.Name("radioactive_replacements")
+    public BlockReplacements radiationReplacements = new BlockReplacements();
 
-    @Config.Comment("Triggers the secondary mutation blast")
-    @Config.RangeDouble(min = 1, max = Integer.MAX_VALUE)
-    public boolean useMutationBlast = true;
+    public static class BlockReplacements {
+
+        @Config.Name("list")
+        @Config.Comment("Sets which block to use when replacing a block during a radiation event Docs: https://github.com/BuiltBrokenModding/ICBM-Classic/wiki/config-block-states")
+        public String[] blockStates = new String[]{};
+    }
 }

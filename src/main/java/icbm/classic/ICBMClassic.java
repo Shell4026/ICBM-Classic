@@ -14,6 +14,7 @@ import icbm.classic.content.cargo.CargoHolderHandler;
 import icbm.classic.content.cluster.missile.ClusterMissileHandler;
 import icbm.classic.content.cluster.missile.RecipeCluster;
 import icbm.classic.content.missile.logic.flight.move.MoveByVec3Logic;
+import icbm.classic.content.radioactive.RadioactiveHandler;
 import icbm.classic.lib.actions.ActionSystem;
 import icbm.classic.content.blast.caps.CapabilityBlast;
 import icbm.classic.content.blast.caps.CapabilityBlastVelocity;
@@ -119,9 +120,6 @@ public class ICBMClassic
     private static final Logger logger = LogManager.getLogger(ICBMConstants.DOMAIN);
 
     public static final PacketManager packetHandler = new PacketManager(ICBMConstants.DOMAIN);
-
-    //Mod support
-    public static Block blockRadioactive = Blocks.MYCELIUM; //TODO implement
 
     public static final ContagiousPoison chemicalPotion = new ContagiousPoison("Chemical", 0, false);
     public static final ContagiousPoison contagiousPotion = new ContagiousPoison("Contagious", 1, true);
@@ -368,6 +366,7 @@ public class ICBMClassic
         ProjectileBlockInteraction.register();
         ClusterMissileHandler.setup();
         CargoHolderHandler.setup();
+        RadioactiveHandler.setup();
 
         // Needs to lock late as we need content to register some types
         ((ProjectileDataRegistry) ICBMClassicAPI.PROJECTILE_DATA_REGISTRY).registerVanillaDefaults();

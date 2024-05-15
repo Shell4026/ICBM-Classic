@@ -1,5 +1,6 @@
 package icbm.classic.config.util;
 
+import akka.japi.pf.Match;
 import icbm.classic.ICBMClassic;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -34,8 +35,10 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
     //      entries to consider once JSON is allowed: time/date specific, conditional statements such as IF(MOD) IF(WORLD) IF(MATH) IF(GEO_AREA), block sets/lists
 
     protected final Pattern SORTING_REGEX = Pattern.compile("^@sort\\((\\d*),(.*)\\)$");
-    protected final Pattern KEY_VALUE_REGEX = Pattern.compile("^(.*):([^=\\s]*)(=(.*))?");
     protected final Pattern DOMAIN_VALE_REGEX = Pattern.compile("^@domain:(.*?)(=(.*))?$");
+
+    protected final Pattern KEY_VALUE_REGEX = Pattern.compile("^(.*):([^=\\s]*)(=(.*))?");
+    protected final Pattern META_KEY_REGEX = Pattern.compile("^(.*):([^=\\s]*)@([0-9]+)(=(.*))?");
 
     // Constructor
     @Getter
@@ -134,7 +137,7 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
         }
 
         // Defaults
-        final List<ResourceConfigEntry<CONTENT, VALUE>> defaultMatchers = contentMatchers.get(key);
+        final List<ResourceConfigEntry<CONTENT, VALUE>> defaultMatchers = this.defaultMatchers.get(key);
         if (defaultMatchers != null) {
             for (Function<CONTENT, VALUE> matcher : defaultMatchers) {
                 final VALUE result = matcher.apply(state);
@@ -166,7 +169,6 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
         for (String str : entries) {
             handleEntry(str, null);
         }
-        ;
     }
 
     /**
@@ -186,7 +188,7 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
 
     private boolean checkLock(String type, Supplier<String> entry) {
         if (this.isLocked) {
-            ICBMClassic.logger().error(name + ": list is locked. Unable to add '" + type + "' entry '" + entry.get() + "'", new IllegalArgumentException());
+            ICBMClassic.logger().error("{}: list is locked. Unable to add '{}' entry '{}'", name, type, entry.get(), new IllegalArgumentException());
             return true;
         }
         return false;
@@ -208,12 +210,24 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
             this.generalMatchers.add(new ResourceConfigEntry<>(index, getDomainValue(domain, parseValue(value))));
             return true;
         }
+
+        final Matcher metaMatcher = META_KEY_REGEX.matcher(entry);
+        if(metaMatcher.matches()) {
+            final String domain = metaMatcher.group(1);
+            final String resource = metaMatcher.group(2);
+            final int meta = Integer.parseInt(metaMatcher.group(3));
+            final String value = metaMatcher.group(5);
+            this.generalMatchers.add(new ResourceConfigEntry<>(index, getMetaValue(new ResourceLocation(domain, resource), meta, parseValue(value))));
+            return true;
+        }
         return handleSimple(entry, index);
     }
 
     protected abstract Function<CONTENT, VALUE> getDomainValue(String domain, @Nullable VALUE value);
 
     protected abstract Function<CONTENT, VALUE> getSimpleValue(ResourceLocation key, @Nullable VALUE value);
+
+    protected abstract Function<CONTENT, VALUE> getMetaValue(ResourceLocation key, int metadata, @Nullable VALUE value);
 
     protected abstract VALUE parseValue(@Nullable String value);
 

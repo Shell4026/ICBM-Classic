@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
 @NoArgsConstructor(access = AccessLevel.NONE)
 public final class ClusterMissileHandler {
 
-    public static final ItemStackConfigList.BooleanOut banAllowItems = new ItemStackConfigList.BooleanOut("[Cluster Contents][Ban/Allow Config]", (configList) -> {
+    public static final ItemStackConfigList.ContainsCheck banAllowItems = new ItemStackConfigList.ContainsCheck("[Cluster Contents][Ban/Allow Config]", (configList) -> {
         configList.load(ConfigMissile.CLUSTER_MISSILE.BAN_ALLOW.ITEMS);
     });
 

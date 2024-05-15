@@ -1,7 +1,7 @@
 package icbm.classic.content.entity.flyingblock;
 
 import icbm.classic.config.ConfigFlyingBlocks;
-import icbm.classic.config.util.BlockStateConfigList;
+import icbm.classic.config.util.BlockStateConfigListOld;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 public class FlyingBlock {
 
     // Config list controlling if a block is allowed for spawning
-    static final BlockStateConfigList banAllowList = new BlockStateConfigList("[Flying Blocks][Ban/Allow Config]",
+    static final BlockStateConfigListOld banAllowList = new BlockStateConfigListOld("[Flying Blocks][Ban/Allow Config]",
         (blockStateConfigList) -> {
             // Mod blacklisted due to https://github.com/BuiltBrokenModding/ICBM-Classic/issues/420
             blockStateConfigList.addMod("dynamictrees");//TODO remove when issue #420 is resolved
