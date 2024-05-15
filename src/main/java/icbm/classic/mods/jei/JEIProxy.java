@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @JEIPlugin
 public class JEIProxy implements IModPlugin {
@@ -83,7 +84,13 @@ public class JEIProxy implements IModPlugin {
                 recipes.add(new ClusterItemWrapper(new ItemStack(ItemReg.itemClusterMissile), stack, new ResourceLocation(ICBMConstants.DOMAIN, "cluster_missile")));
             }
         }
-        //TODO cluster
+
+        /*final List<ItemStack> stacks = registry.getIngredientRegistry().getIngredients(ItemStack.class)
+            .stream().filter(i -> ClusterMissileHandler.isAllowed(i))
+            .collect(Collectors.toList());
+        recipes.add(new ClusterItemAllWrapper(new ItemStack(ItemReg.itemClusterMissile), stacks, false, new ResourceLocation(ICBMConstants.DOMAIN, "cluster_missile")));
+        recipes.add(new ClusterItemAllWrapper(new ItemStack(ItemReg.itemClusterMissile), stacks, true, new ResourceLocation(ICBMConstants.DOMAIN, "cluster_missile")));
+        */
         registry.addRecipes(recipes, VanillaRecipeCategoryUid.CRAFTING);
     }
 }
