@@ -37,8 +37,8 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
     protected final Pattern SORTING_REGEX = Pattern.compile("^@sort\\((\\d*),(.*)\\)$");
     protected final Pattern DOMAIN_VALE_REGEX = Pattern.compile("^@domain:(.*?)(=(.*))?$");
 
-    protected final Pattern KEY_VALUE_REGEX = Pattern.compile("^(.*):([^=\\s]*)(=(.*))?");
-    protected final Pattern META_KEY_REGEX = Pattern.compile("^(.*):([^=\\s]*)@([0-9]+)(=(.*))?");
+    protected static final Pattern KEY_VALUE_REGEX = Pattern.compile("^(.*):([^=\\s]*)(=(.*))?");
+    protected static final Pattern META_KEY_REGEX = Pattern.compile("^(.*):([^=\\s]*)@([0-9]+)(=(.*))?");
 
     // Constructor
     @Getter

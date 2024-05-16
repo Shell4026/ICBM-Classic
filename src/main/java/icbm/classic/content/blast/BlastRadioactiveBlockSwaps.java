@@ -1,11 +1,8 @@
 package icbm.classic.content.blast;
 
-import icbm.classic.ICBMClassic;
-import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.explosion.IBlastTickable;
 import icbm.classic.content.blast.threaded.BlastThreaded;
 import icbm.classic.content.radioactive.RadioactiveHandler;
-import icbm.classic.content.reg.BlockReg;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import org.apache.commons.lang3.tuple.Pair;
