@@ -162,8 +162,8 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
      *
      * @param entries to process
      */
-    public void load(Iterable<String> entries) {
-        if (checkLock("entries", () -> String.join(", ", entries))) {
+    public void load(String... entries) {
+        if (checkLock("entries", () -> String.join(", ", entries))) { //TODO trim string to not dump 1000s of lines into logs
             return;
         }
 
@@ -174,21 +174,6 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
 
         if(someFailed) {
             ICBMClassic.logger().error("{}: Some entries failed to process. Check config and verify usage with documentation at {}", this.getName(), this.configUrl);
-        }
-    }
-
-    /**
-     * Loads entries converting them into key:value functions
-     *
-     * @param entries to process
-     */
-    public void load(String... entries) {
-        if (checkLock("entries", () -> String.join(", ", entries))) { //TODO trim string to not dump 1000s of lines into logs
-            return;
-        }
-
-        for (final String str : entries) {
-            handleEntry(str, null);
         }
     }
 
