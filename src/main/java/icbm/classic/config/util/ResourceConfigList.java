@@ -118,17 +118,9 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
         }
         final ResourceLocation key = getContentKey(state);
 
-        // User defined
-        final List<ResourceConfigEntry<CONTENT, VALUE>> matchers = contentMatchers.get(key);
-        if (matchers != null) {
-            for (Function<CONTENT, VALUE> matcher : matchers) {
-                final VALUE result = matcher.apply(state);
-                if (result != null) {
-                    matcherHit(state, matcher);
-                    return result;
-                }
-            }
-        }
+        final VALUE contentValue = getValue(state, contentMatchers.get(key));
+        if (contentValue != null) return contentValue;
+
         for (Function<CONTENT, VALUE> matcher : generalMatchers) {
             final VALUE result = matcher.apply(state);
             if (result != null) {
@@ -137,10 +129,12 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
             }
         }
 
-        // Defaults
-        final List<ResourceConfigEntry<CONTENT, VALUE>> defaultMatchers = this.defaultMatchers.get(key);
-        if (defaultMatchers != null) {
-            for (Function<CONTENT, VALUE> matcher : defaultMatchers) {
+        return getValue(state, this.defaultMatchers.get(key));
+    }
+
+    private VALUE getValue(CONTENT state, List<ResourceConfigEntry<CONTENT, VALUE>> matchers) {
+        if (matchers != null) {
+            for (Function<CONTENT, VALUE> matcher : matchers) {
                 final VALUE result = matcher.apply(state);
                 if (result != null) {
                     matcherHit(state, matcher);
