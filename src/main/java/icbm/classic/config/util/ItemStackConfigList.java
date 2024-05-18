@@ -16,7 +16,7 @@ import java.util.function.Function;
  */
 public abstract class ItemStackConfigList<VALUE> extends ResourceConfigList<ItemStackConfigList, ItemStack, VALUE> {
     public ItemStackConfigList(String name, Consumer<ItemStackConfigList> reloadCallback) {
-        super(name, reloadCallback);
+        super(name, "https://github.com/BuiltBrokenModding/ICBM-Classic/wiki/config-itemstack", reloadCallback);
     }
 
     @Override

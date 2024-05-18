@@ -34,15 +34,16 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
     // TODO once ContentBuilder Json system is published for MC replace this with JSON version to support programmatic and more complex entries
     //      entries to consider once JSON is allowed: time/date specific, conditional statements such as IF(MOD) IF(WORLD) IF(MATH) IF(GEO_AREA), block sets/lists
 
-    protected final Pattern SORTING_REGEX = Pattern.compile("^@sort\\((\\d*),(.*)\\)$");
-    protected final Pattern DOMAIN_VALE_REGEX = Pattern.compile("^@domain:(.*?)(=(.*))?$");
+    protected static final Pattern SORTING_REGEX = Pattern.compile("^@sort\\((\\d*),(\\S*)\\)$");
+    protected static final Pattern DOMAIN_VALE_REGEX = Pattern.compile("^@domain:([^=]*)(?:=(\\S))?$");
 
-    protected static final Pattern KEY_VALUE_REGEX = Pattern.compile("^(.*):([^=\\s]*)(=(.*))?");
-    protected static final Pattern META_KEY_REGEX = Pattern.compile("^(.*):([^=\\s]*)@([0-9]+)(=(.*))?");
+    protected static final Pattern KEY_VALUE_REGEX = Pattern.compile("^([^\\s@]*):([^\\s=]*)(?:=(\\S*))?");
+    protected static final Pattern META_KEY_REGEX = Pattern.compile("^([^\\s@]*):([^\\s=@]*)@([0-9]+)(?:=(\\S*))?");
 
     // Constructor
     @Getter
     private final String name;
+    private final String configUrl; //TODO load from a JSON localization metadata file for better dev configuration and traceability of URL usage
     private final Consumer<CONFIG> reloadCallback;
 
     // Block lists
@@ -166,8 +167,13 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
             return;
         }
 
+        boolean someFailed = false;
         for (String str : entries) {
-            handleEntry(str, null);
+            someFailed = someFailed | handleEntry(str, null);
+        }
+
+        if(someFailed) {
+            ICBMClassic.logger().error("{}: Some entries failed to process. Check config and verify usage with documentation at {}", this.getName(), this.configUrl);
         }
     }
 
@@ -194,10 +200,11 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
         return false;
     }
 
-    boolean handleEntry(String entryRaw, Integer index) {
+    protected boolean handleEntry(String entryRaw, Integer index) {
 
         final String entry = entryRaw.replaceAll("\\s", ""); //Kill spaces off -> "M I N E C R A F T" turns into "MINECRAFT"
 
+        // TODO allow permutation arguments
         final Matcher sortMatcher = SORTING_REGEX.matcher(entry);
         if (sortMatcher.matches()) {
             return handleEntry(sortMatcher.group(2), Integer.parseInt(sortMatcher.group(1)));
@@ -206,8 +213,16 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
         final Matcher domainMatcher = DOMAIN_VALE_REGEX.matcher(entry);
         if (domainMatcher.matches()) {
             final String domain = domainMatcher.group(1);
-            final String value = domainMatcher.group(3);
-            this.generalMatchers.add(new ResourceConfigEntry<>(index, getDomainValue(domain, parseValue(value))));
+
+            final String valueStr = domainMatcher.group(2);
+            final VALUE value = parseValue(valueStr);
+
+            final Function<CONTENT, VALUE> matcher = getDomainValue(domain, value);
+            if(matcher == null) {
+                return false;
+            }
+
+            this.generalMatchers.add(new ResourceConfigEntry<>(index, matcher));
             return true;
         }
 
@@ -215,9 +230,21 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
         if(metaMatcher.matches()) {
             final String domain = metaMatcher.group(1);
             final String resource = metaMatcher.group(2);
+            final ResourceLocation key = new ResourceLocation(domain, resource);
+
             final int meta = Integer.parseInt(metaMatcher.group(3));
-            final String value = metaMatcher.group(5);
-            this.generalMatchers.add(new ResourceConfigEntry<>(index, getMetaValue(new ResourceLocation(domain, resource), meta, parseValue(value))));
+
+            final String valueStr = metaMatcher.group(4);
+            final VALUE value = parseValue(valueStr);
+
+            final Function<CONTENT, VALUE> matcher = getMetaValue(key, meta, value);
+            if(matcher == null) {
+                return false;
+            }
+
+            this.contentMatchers
+                .computeIfAbsent(key, (ResourceLocation k) -> new ArrayList<>())
+                .add(new ResourceConfigEntry<>(index, matcher));
             return true;
         }
         return handleSimple(entry, index);
@@ -232,21 +259,25 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
     protected abstract VALUE parseValue(@Nullable String value);
 
     boolean handleSimple(String entry, Integer index) {
-        final Matcher matcher = KEY_VALUE_REGEX.matcher(entry);
-        if (matcher.matches()) {
-            final String domain = matcher.group(1);
-            final String resource = matcher.group(2);
-            if (matcher.groupCount() == 4) {
-                this.contentMatchers
-                    .computeIfAbsent(new ResourceLocation(domain, resource), (ResourceLocation k) -> new ArrayList<>())
-                    .add(new ResourceConfigEntry<>(index, getSimpleValue(new ResourceLocation(domain, resource), parseValue(matcher.group(4)))));
-            } else {
-                this.contentMatchers
-                    .computeIfAbsent(new ResourceLocation(domain, resource), (ResourceLocation k) -> new ArrayList<>())
-                    .add(new ResourceConfigEntry<>(index, getSimpleValue(new ResourceLocation(domain, resource), null)));
+        final Matcher regexMatcher = KEY_VALUE_REGEX.matcher(entry);
+        if (regexMatcher.matches()) {
+            final String domain = regexMatcher.group(1);
+            final String resource = regexMatcher.group(2);
+            final ResourceLocation key = new ResourceLocation(domain, resource);
+
+            final VALUE value = parseValue(regexMatcher.group(3));
+            final Function<CONTENT, VALUE> matcher = getSimpleValue(key, value);
+            if(matcher == null) {
+                return false;
             }
+
+            this.contentMatchers
+                .computeIfAbsent(key, (ResourceLocation k) -> new ArrayList<>())
+                .add(new ResourceConfigEntry<>(index, matcher));
             return true;
         }
+
+        ICBMClassic.logger().error("{}: Unknown format for entry '{}'", this.getName(), entry);
         return false;
     }
 }

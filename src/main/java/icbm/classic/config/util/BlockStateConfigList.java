@@ -23,11 +23,11 @@ import java.util.stream.Collectors;
  */
 public abstract class BlockStateConfigList<VALUE> extends ResourceConfigList<BlockStateConfigList<VALUE>, IBlockState, VALUE> {
 
-    protected static final Pattern BLOCK_PROP_REGEX = Pattern.compile("^(.*):([^=\\s]*)\\[((?:[\\w.]+:[\\w.]+[,]?)+)\\](?:=(.*))?");
+    protected static final Pattern BLOCK_PROP_REGEX = Pattern.compile("^(.*):([^=\\s]*)\\[((?:[\\w.]+:[\\w.]+,?)+)\\](?:=(.*))?");
 
 
     public BlockStateConfigList(String name, Consumer<BlockStateConfigList<VALUE>> reloadCallback) {
-        super(name, reloadCallback);
+        super(name, "https://github.com/BuiltBrokenModding/ICBM-Classic/wiki/config-block-states", reloadCallback);
     }
 
     @Override
@@ -86,7 +86,7 @@ public abstract class BlockStateConfigList<VALUE> extends ResourceConfigList<Blo
     }
 
     @Override
-    boolean handleEntry(String entryRaw, Integer index) {
+    protected boolean handleEntry(String entryRaw, Integer index) {
 
         final Matcher domainMatcher = BLOCK_PROP_REGEX.matcher(entryRaw);
         if (domainMatcher.matches()) {
