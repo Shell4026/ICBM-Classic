@@ -65,6 +65,66 @@ class ResourceConfigListTest {
         Assertions.assertEquals(expected, list);
     }
 
+    @ParameterizedTest
+    @MethodSource("getDomainValueData")
+    void getDomainValue(String domain, ResourceLocation input, boolean expected) {
+        final String content = "tree_cat";
+        final ResourceConfigList configList = new StubbedList("stub", (c) -> {}) {
+            @Override
+            protected ResourceLocation getContentKey(Object o) {
+                Assertions.assertEquals(content, o);
+                return input;
+            }
+        };
+        final Function matcher = configList.getDomainValue(domain, 3);
+        if(expected) {
+            Assertions.assertEquals(3, matcher.apply(content));
+        }
+        else {
+            Assertions.assertNull(matcher.apply(content));
+        }
+    }
+
+    private static Stream<Arguments> getDomainValueData() {
+        return Stream.of(
+            Arguments.of("minecraft", new ResourceLocation("minecraft", "stone"), true),
+            Arguments.of("minecraft", new ResourceLocation("minecraft", "tree"), true),
+            Arguments.of("minecraft", new ResourceLocation("Minecraft", "tree"), true),
+            Arguments.of("minecraft", new ResourceLocation("MiNecRaft", "tree"), true),
+            Arguments.of("minecraft", new ResourceLocation("minecraf", "tree"), false),
+            Arguments.of("minecraft", new ResourceLocation("inecraft", "tree"), false)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("getSimpleValueData")
+    void getSimpleValue(ResourceLocation key, ResourceLocation input, boolean expected) {
+        final String content = "tree_cat";
+        final ResourceConfigList configList = new StubbedList("stub", (c) -> {}) {
+            @Override
+            protected ResourceLocation getContentKey(Object o) {
+                Assertions.assertEquals(content, o);
+                return input;
+            }
+        };
+        final Function matcher = configList.getSimpleValue(key, 3);
+        if(expected) {
+            Assertions.assertEquals(3, matcher.apply(content));
+        }
+        else {
+            Assertions.assertNull(matcher.apply(content));
+        }
+    }
+
+    private static Stream<Arguments> getSimpleValueData() {
+        return Stream.of(
+            Arguments.of(new ResourceLocation("minecraft", "stone"), new ResourceLocation("minecraft", "stone"), true),
+            Arguments.of(new ResourceLocation("minecraft", "stone"), new ResourceLocation("minecraft", "log"), false),
+            Arguments.of(new ResourceLocation("minecraft", "stone"), new ResourceLocation("mod", "stone"), false),
+            Arguments.of(new ResourceLocation("minecraft", "stone"), new ResourceLocation("minecraft", "stone1"), false)
+        );
+    }
+
     @Nested
     class HandleEntryTests {
         @Test
