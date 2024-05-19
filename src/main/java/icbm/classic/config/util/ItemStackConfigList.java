@@ -4,6 +4,7 @@ package icbm.classic.config.util;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ import java.util.function.Function;
 public abstract class ItemStackConfigList<VALUE> extends ResourceConfigList<ItemStackConfigList, ItemStack, VALUE> {
     public ItemStackConfigList(String name, Consumer<ItemStackConfigList> reloadCallback) {
         super(name, "https://github.com/BuiltBrokenModding/ICBM-Classic/wiki/config-itemstack", reloadCallback);
+        addMatcher(META_KEY_REGEX, this::handleMeta);
+        addMatcher(KEY_VALUE_REGEX, this::handleSimple);
     }
 
     @Override
@@ -32,39 +35,25 @@ public abstract class ItemStackConfigList<VALUE> extends ResourceConfigList<Item
         final ResourceLocation key = content.getItem().getRegistryName();
         defaultMatchers
             .computeIfAbsent(key, k -> new ArrayList<>())
-            .add(new ResourceConfigEntry<>(order, (itemStack) -> ItemStack.areItemsEqual(itemStack, content) ? value : null));
+            .add(new ResourceConfigEntry<>("default_metadata", order, (itemStack) -> ItemStack.areItemsEqual(itemStack, content) ? value : null));
     }
 
     //TODO add support for NBT
 
     @Override
-    protected Function<ItemStack, VALUE> getDomainValue(String domain, @Nullable VALUE value) {
-        return (stack) -> {
-            if(getContentKey(stack).getResourceDomain().equalsIgnoreCase(domain)) {
-                return value;
-            }
-            return null;
-        };
-    }
-
-    @Override
-    protected Function<ItemStack, VALUE> getSimpleValue(ResourceLocation key, @Nullable VALUE value) {
-        return (stack) -> {
-            if(getContentKey(stack) == key) {
-                return value;
-            }
-            return null;
-        };
-    }
-
-    @Override
     protected Function<ItemStack, VALUE> getMetaValue(ResourceLocation key, int metadata, @Nullable VALUE value) {
+        // TODO check that the item supports sub-types
         return (stack) -> {
             if(getContentKey(stack) == key && stack.getMetadata() == metadata) {
                 return value;
             }
             return null;
         };
+    }
+
+    @Override
+    protected boolean isValidKey(ResourceLocation key) {
+        return ForgeRegistries.ITEMS.containsKey(key) && ForgeRegistries.ITEMS.getValue(key) != null;
     }
 
     @Override
@@ -108,7 +97,7 @@ public abstract class ItemStackConfigList<VALUE> extends ResourceConfigList<Item
         }
 
         @Override
-        protected Boolean parseValue(@Nullable String value) {
+        protected Boolean parseValue(String source, String entry, String value) {
             return Boolean.parseBoolean(value);
         }
     }
@@ -120,8 +109,14 @@ public abstract class ItemStackConfigList<VALUE> extends ResourceConfigList<Item
         }
 
         @Override
-        protected Integer parseValue(@Nullable String value) {
-            return value == null ? null : Integer.parseInt(value, 10);
+        protected Integer parseValue(String source, String entry, String value) {
+            try {
+                return Integer.parseInt(value, 10);
+            }
+            catch (NumberFormatException e) {
+                error(source, entry, "Value is not an integer");
+            }
+            return null;
         }
     }
 
@@ -132,8 +127,14 @@ public abstract class ItemStackConfigList<VALUE> extends ResourceConfigList<Item
         }
 
         @Override
-        protected Float parseValue(@Nullable String value) {
-            return value == null ? null : Float.parseFloat(value);
+        protected Float parseValue(String source, String entry, String value) {
+            try {
+                return Float.parseFloat(value);
+            }
+            catch (NumberFormatException e) {
+                error(source, entry, "Value is not a Float");
+            }
+            return null;
         }
     }
 }

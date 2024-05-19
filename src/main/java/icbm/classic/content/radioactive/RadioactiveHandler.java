@@ -26,7 +26,7 @@ public class RadioactiveHandler {
             }
         }
 
-        configList.load(ConfigBlast.nuclear.radiationReplacements.blockStates);
+        configList.load("icbmclassic/blast/nuclear/radioactive_replacements/list", ConfigBlast.nuclear.radiationReplacements.blockStates);
     });
 
     public static void loadFromConfig() {

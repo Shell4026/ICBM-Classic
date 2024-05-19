@@ -3,6 +3,8 @@ package icbm.classic.config.util;
 
 import icbm.classic.ICBMClassic;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Loader;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -30,9 +32,9 @@ class ResourceConfigListTest {
 
     private static Stream<Arguments> compareData() {
         return Stream.of(
-            Arguments.of(new ResourceConfigEntry(1, null), new ResourceConfigEntry(0, null), -1),
-            Arguments.of(new ResourceConfigEntry(0, null), new ResourceConfigEntry(1, null), 1),
-            Arguments.of(new ResourceConfigEntry(0, null), new ResourceConfigEntry(0, null), 0)
+            Arguments.of(new ResourceConfigEntry("test", 1, null), new ResourceConfigEntry("test", 0, null), -1),
+            Arguments.of(new ResourceConfigEntry("test", 0, null), new ResourceConfigEntry("test", 1, null), 1),
+            Arguments.of(new ResourceConfigEntry("test", 0, null), new ResourceConfigEntry("test", 0, null), 0)
         );
     }
 
@@ -42,24 +44,24 @@ class ResourceConfigListTest {
         final ResourceConfigList configList = new StubbedList("stub", (c) -> {});
 
         final List<ResourceConfigEntry> list = new ArrayList();
-        list.add(new ResourceConfigEntry(3, null));
-        list.add(new ResourceConfigEntry(17, null));
-        list.add(new ResourceConfigEntry(8, null));
-        list.add(new ResourceConfigEntry(null, null));
-        list.add(new ResourceConfigEntry(1, null));
-        list.add(new ResourceConfigEntry(-1, null));
-        list.add(new ResourceConfigEntry(null, null));
+        list.add(new ResourceConfigEntry("test", 3, null));
+        list.add(new ResourceConfigEntry("test", 17, null));
+        list.add(new ResourceConfigEntry("test", 8, null));
+        list.add(new ResourceConfigEntry("test", null, null));
+        list.add(new ResourceConfigEntry("test", 1, null));
+        list.add(new ResourceConfigEntry("test", -1, null));
+        list.add(new ResourceConfigEntry("test", null, null));
 
         configList.sort(list);
 
         final List<ResourceConfigEntry> expected = new ArrayList();
-        expected.add(new ResourceConfigEntry(19, null));
-        expected.add(new ResourceConfigEntry(18, null));
-        expected.add(new ResourceConfigEntry(17, null));
-        expected.add(new ResourceConfigEntry(8, null));
-        expected.add(new ResourceConfigEntry(3, null));
-        expected.add(new ResourceConfigEntry(1, null));
-        expected.add(new ResourceConfigEntry(-1, null));
+        expected.add(new ResourceConfigEntry("test", 19, null));
+        expected.add(new ResourceConfigEntry("test", 18, null));
+        expected.add(new ResourceConfigEntry("test", 17, null));
+        expected.add(new ResourceConfigEntry("test", 8, null));
+        expected.add(new ResourceConfigEntry("test", 3, null));
+        expected.add(new ResourceConfigEntry("test", 1, null));
+        expected.add(new ResourceConfigEntry("test", -1, null));
         Assertions.assertEquals(expected, list);
     }
 
@@ -69,16 +71,25 @@ class ResourceConfigListTest {
         void noMatches() {
 
             // Arrange
-            final ResourceConfigList configList = new StubbedList("stub", (c) -> {});
-
             final String entry = "@tree(minecraft:stone)";
+            final boolean[] wasCalled = new boolean[]{false};
+            final ResourceConfigList configList = new StubbedList("stub", (c) -> {}) {
+                @Override
+                protected void issue(String source, String ent, String error, boolean isError) {
+                    wasCalled[0] = true;
+                    Assertions.assertEquals("test", source);
+                    Assertions.assertEquals(entry, ent);
+                    Assertions.assertEquals("Unknown format", error);
+                    Assertions.assertTrue(isError);
+                }
+            };
 
             // Act
-            final boolean result = configList.handleEntry(entry, 0);
+            final boolean result = configList.handleEntry("test", entry, 0);
 
             // Assert
             Assertions.assertFalse(result);
-            //TODO Mockito.verify(ICBMClassic.logger()).error("{}: Unknown format for entry '{}'", "stub", entry);
+
             final Map<ResourceLocation, List<ResourceConfigEntry>> expected = new HashMap();
             Assertions.assertEquals(expected, configList.contentMatchers);
         }
@@ -105,13 +116,13 @@ class ResourceConfigListTest {
             final String entry = "minecraft:stone";
 
             // Act
-            final boolean result = configList.handleEntry(entry, 0);
+            final boolean result = configList.handleEntry("test", entry, 0);
 
             // Assert
             Assertions.assertTrue(wasCalled[0]);
             Assertions.assertTrue(result);
             final Map<ResourceLocation, List<ResourceConfigEntry>> expected = new HashMap();
-            expected.put(key, Collections.singletonList(new ResourceConfigEntry(0, fun)));
+            expected.put(key, Collections.singletonList(new ResourceConfigEntry("resource_simple",0, fun).setKey(key)));
             Assertions.assertEquals(expected, configList.contentMatchers);
         }
 
@@ -135,20 +146,20 @@ class ResourceConfigListTest {
                 }
 
                 @Override
-                protected Object parseValue(@Nullable String value) {
+                protected Object parseValue(String source, String entry, String value) {
                     assert value != null;
                     return Integer.parseInt(value);
                 }
             };
 
             // Act
-            final boolean result = configList.handleEntry(entry, 0);
+            final boolean result = configList.handleEntry("test", entry, 0);
 
             // Assert
             Assertions.assertTrue(wasCalled[0]);
             Assertions.assertTrue(result);
             final Map<ResourceLocation, List<ResourceConfigEntry>> expected = new HashMap();
-            expected.put(key, Collections.singletonList(new ResourceConfigEntry(0, fun)));
+            expected.put(key, Collections.singletonList(new ResourceConfigEntry("resource_simple", 0, fun).setKey(key)));
             Assertions.assertEquals(expected, configList.contentMatchers);
         }
 
@@ -170,11 +181,11 @@ class ResourceConfigListTest {
             };
 
             // Act
-            final boolean result = configList.handleEntry(entry, 0);
+            final boolean result = configList.handleEntry("test", entry, 0);
 
             // Assert
             Assertions.assertTrue(wasCalled[0]);
-            Assertions.assertFalse(result);
+            Assertions.assertTrue(result);
             final Map<ResourceLocation, List<ResourceConfigEntry>> expected = new HashMap();
             Assertions.assertEquals(expected, configList.contentMatchers);
         }
@@ -199,13 +210,13 @@ class ResourceConfigListTest {
             };
 
             // Act
-            final boolean result = configList.handleEntry(entry, 0);
+            final boolean result = configList.handleEntry("test", entry, 0);
 
             // Assert
             Assertions.assertTrue(wasCalled[0]);
             Assertions.assertTrue(result);
             final Map<ResourceLocation, List<ResourceConfigEntry>> expected = new HashMap();
-            expected.put(key, Collections.singletonList(new ResourceConfigEntry(0, fun)));
+            expected.put(key, Collections.singletonList(new ResourceConfigEntry("resource_metadata",0, fun).setKey(key)));
 
             Assertions.assertEquals(expected, configList.contentMatchers);
         }
@@ -229,20 +240,20 @@ class ResourceConfigListTest {
                 }
 
                 @Override
-                protected Object parseValue(@Nullable String value) {
+                protected Object parseValue(String source, String entry, @Nullable String value) {
                     assert value != null;
                     return Integer.parseInt(value);
                 }
             };
 
             // Act
-            final boolean result = configList.handleEntry(entry, 0);
+            final boolean result = configList.handleEntry("test", entry, 0);
 
             // Assert
             Assertions.assertTrue(wasCalled[0]);
             Assertions.assertTrue(result);
             final Map<ResourceLocation, List<ResourceConfigEntry>> expected = new HashMap();
-            expected.put(key, Collections.singletonList(new ResourceConfigEntry(0, fun)));
+            expected.put(key, Collections.singletonList(new ResourceConfigEntry("resource_metadata",0, fun).setKey(key)));
 
             Assertions.assertEquals(expected, configList.contentMatchers);
         }
@@ -266,11 +277,11 @@ class ResourceConfigListTest {
             };
 
             // Act
-            final boolean result = configList.handleEntry(entry, 0);
+            final boolean result = configList.handleEntry("test", entry, 0);
 
             // Assert
             Assertions.assertTrue(wasCalled[0]);
-            Assertions.assertFalse(result);
+            Assertions.assertTrue(result);
             final Map<ResourceLocation, List<ResourceConfigEntry>> expected = new HashMap();
             Assertions.assertEquals(expected, configList.contentMatchers);
         }
@@ -294,14 +305,14 @@ class ResourceConfigListTest {
             };
 
             // Act
-            final boolean result = configList.handleEntry(entry, 33);
+            final boolean result = configList.handleEntry("test", entry, 33);
 
             // Assert
             Assertions.assertTrue(wasCalled[0]);
             Assertions.assertTrue(result);
 
             final Map<ResourceLocation, List<ResourceConfigEntry>> expected = new HashMap();
-            expected.put(key, Collections.singletonList(new ResourceConfigEntry(3, fun)));
+            expected.put(key, Collections.singletonList(new ResourceConfigEntry("resource_simple", 3, fun).setKey(key)));
 
             Assertions.assertEquals(expected, configList.contentMatchers);
         }
@@ -324,12 +335,12 @@ class ResourceConfigListTest {
             };
 
             // Act
-            final boolean result = configList.handleEntry(entry, 3);
+            final boolean result = configList.handleEntry("test", entry, 3);
 
             // Assert
             Assertions.assertTrue(wasCalled[0]);
             Assertions.assertTrue(result);
-            Assertions.assertEquals(Collections.singletonList(new ResourceConfigEntry(3, fun)), configList.generalMatchers);
+            Assertions.assertEquals(Collections.singletonList(new ResourceConfigEntry("resource_domain", 3, fun)), configList.generalMatchers);
         }
 
         @Test
@@ -348,11 +359,11 @@ class ResourceConfigListTest {
             };
 
             // Act
-            final boolean result = configList.handleEntry(entry, 30);
+            final boolean result = configList.handleEntry("test", entry, 30);
 
             // Assert
             Assertions.assertTrue(wasCalled[0]);
-            Assertions.assertFalse(result);
+            Assertions.assertTrue(result);
             Assertions.assertEquals(Collections.emptyList(), configList.generalMatchers);
         }
     }
@@ -361,6 +372,13 @@ class ResourceConfigListTest {
 
         public StubbedList(String name, Consumer reloadCallback) {
             super(name, "www.config.url", reloadCallback);
+            addMatcher(META_KEY_REGEX, this::handleMeta);
+            addMatcher(KEY_VALUE_REGEX, this::handleSimple);
+        }
+
+        @Override
+        protected boolean isDomainValid(String domain) {
+            return true;
         }
 
         @Override
@@ -369,22 +387,7 @@ class ResourceConfigListTest {
         }
 
         @Override
-        protected Function getDomainValue(String domain, @Nullable Object o) {
-            return null;
-        }
-
-        @Override
-        protected Function getSimpleValue(ResourceLocation key, @Nullable Object o) {
-            return null;
-        }
-
-        @Override
-        protected Function getMetaValue(ResourceLocation key, int metadata, @Nullable Object o) {
-            return null;
-        }
-
-        @Override
-        protected Object parseValue(@Nullable String value) {
+        protected Object parseValue(String source, String entry, String value) {
             return null;
         }
     }

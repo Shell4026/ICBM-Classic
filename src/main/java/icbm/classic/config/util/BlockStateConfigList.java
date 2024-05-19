@@ -28,31 +28,14 @@ public abstract class BlockStateConfigList<VALUE> extends ResourceConfigList<Blo
 
     public BlockStateConfigList(String name, Consumer<BlockStateConfigList<VALUE>> reloadCallback) {
         super(name, "https://github.com/BuiltBrokenModding/ICBM-Classic/wiki/config-block-states", reloadCallback);
+        addMatcher(BLOCK_PROP_REGEX, this::handleBlockProps);
+        addMatcher(META_KEY_REGEX, this::handleMeta);
+        addMatcher(KEY_VALUE_REGEX, this::handleSimple);
     }
 
     @Override
     protected ResourceLocation getContentKey(IBlockState iBlockState) {
         return iBlockState.getBlock().getRegistryName();
-    }
-
-    @Override
-    protected Function<IBlockState, VALUE> getDomainValue(String domain, @Nullable VALUE value) {
-        return (blockState) -> {
-            if (getContentKey(blockState).getResourceDomain().equalsIgnoreCase(domain)) {
-                return value;
-            }
-            return null;
-        };
-    }
-
-    @Override
-    protected Function<IBlockState, VALUE> getSimpleValue(ResourceLocation key, @Nullable VALUE value) {
-        return (blockState) -> {
-            if (getContentKey(blockState) == key) {
-                return value;
-            }
-            return null;
-        };
     }
 
     @Override
@@ -85,37 +68,40 @@ public abstract class BlockStateConfigList<VALUE> extends ResourceConfigList<Blo
         };
     }
 
-    @Override
-    protected boolean handleEntry(String entryRaw, Integer index) {
+    protected ResourceConfigEntry<IBlockState, VALUE> handleBlockProps(Matcher domainMatcher, String source, String entry, int index) {
+        final String domain = domainMatcher.group(1);
+        final String resource = domainMatcher.group(2);
+        final ResourceLocation key = new ResourceLocation(domain, resource);
 
-        final Matcher domainMatcher = BLOCK_PROP_REGEX.matcher(entryRaw);
-        if (domainMatcher.matches()) {
-            final String domain = domainMatcher.group(1);
-            final String resource = domainMatcher.group(2);
-            final ResourceLocation key = new ResourceLocation(domain, resource);
-
-            final Block block = ForgeRegistries.BLOCKS.getValue(key);
-            if (block == null) {
-                // TODO error log
-                return false;
-            }
-
-            final String[] props = domainMatcher.group(3).split(",");
-            final Map<IProperty, Function<Comparable, Boolean>> propMatchers = collectBlockProps(block, props);
-            if (propMatchers == null) {
-                return false;
-            }
-
-            final String value = domainMatcher.group(4);
-            this.generalMatchers.add(new ResourceConfigEntry<>(index, getPropValue(key, propMatchers, parseValue(value))));
-            return true;
+        if (!isDomainValid(key.getResourceDomain())) {
+            error(source, entry, "No matching mod domain found for '" + key + "'");
+            return null;
+        } else if (!isValidKey(key)) {
+            error(source, entry, "No matching content found for '" + key + "'");
+            return null;
         }
 
-        //TODO handle fuzzy ~
-        return super.handleEntry(entryRaw, index);
+        final Block block = ForgeRegistries.BLOCKS.getValue(key);
+        final String[] props = domainMatcher.group(3).split(",");
+        final Map<IProperty, Function<Comparable, Boolean>> propMatchers = collectBlockProps(source, entry, block, props);
+        if (propMatchers == null) {
+            return null;
+        }
+
+        final String valueStr = domainMatcher.group(4);
+        final VALUE value = parseValue(source, entry, valueStr);
+
+        final Function<IBlockState, VALUE> matcher = getPropValue(key, propMatchers, value);
+        return new ResourceConfigEntry<>("resource_block_state", index, matcher);
     }
 
-    protected Map<IProperty, Function<Comparable, Boolean>> collectBlockProps(Block block, String[] props) {
+    @Override
+    protected boolean isValidKey(ResourceLocation key) {
+        return ForgeRegistries.BLOCKS.containsKey(key) && ForgeRegistries.BLOCKS.getValue(key) != null;
+    }
+
+
+    protected Map<IProperty, Function<Comparable, Boolean>> collectBlockProps(String source, String entry, Block block, String[] props) {
         final Map<IProperty, Function<Comparable, Boolean>> matchers = new HashMap();
         for (String propEntry : props) {
             final Matcher propMatcher = KEY_VALUE_REGEX.matcher(propEntry);
@@ -129,8 +115,7 @@ public abstract class BlockStateConfigList<VALUE> extends ResourceConfigList<Blo
 
             final IProperty property = block.getBlockState().getProperty(propKey);
             if (property == null) {
-                ICBMClassic.logger().error("{}: Failed to find property '{}' for block '{}' matching entry `{}`",
-                    this.getName(), propKey, block.getRegistryName(), propEntry);
+                error(source, entry, String.format("Failed to find property '%s' for block '%s' matching entry `%s`", propKey, block.getRegistryName(), propEntry));
                 return null;
             }
 
@@ -146,8 +131,7 @@ public abstract class BlockStateConfigList<VALUE> extends ResourceConfigList<Blo
                         return property.getName((Comparable) o).startsWith(stringMatch);
                     }).collect(Collectors.toList());
                 if (valuesToMatch.isEmpty()) {
-                    ICBMClassic.logger().error("Config Flying Block: Failed to find values matching '{}' for property '{}' and block '{}' matching entry '{}'",
-                        propValue, propKey, block.getRegistryName(), propEntry);
+                    error(source, entry, String.format("Failed to find values matching '%s' for property '%s' and block '%s' matching entry '%s'", propValue, propKey, block.getRegistryName(), propEntry));
                     return null;
                 }
                 matchers.put(property, valuesToMatch::contains);
@@ -155,8 +139,7 @@ public abstract class BlockStateConfigList<VALUE> extends ResourceConfigList<Blo
                 // Simple value matcher
                 final Optional value = property.getAllowedValues().stream().filter(o -> property.getName((Comparable) o).equalsIgnoreCase(propValue)).findFirst();
                 if (!value.isPresent()) {
-                    ICBMClassic.logger().error("Config Flying Block: Failed to find value matching '{}' for property '{}' and block '{}' matching entry '{}'",
-                        propValue, propKey, block.getRegistryName(), propEntry);
+                    error(source, entry, String.format("Failed to find values matching '%s' for property '%s' and block '%s' matching entry '%s'", propValue, propKey, block.getRegistryName(), propEntry));
                     return null;
                 }
                 matchers.put(property, (o) -> Objects.equals(value.get(), o));
@@ -166,26 +149,42 @@ public abstract class BlockStateConfigList<VALUE> extends ResourceConfigList<Blo
     }
 
 
-    protected IBlockState parseBlockState(String entry) {
-        final Matcher metaMatcher = META_KEY_REGEX.matcher(entry);
+    protected IBlockState parseBlockState(String source, String entry, String valueToParse) {
+        final Matcher metaMatcher = META_KEY_REGEX.matcher(valueToParse);
         if (metaMatcher.matches()) {
             final String domain = metaMatcher.group(1);
             final String resource = metaMatcher.group(2);
+            final ResourceLocation key = new ResourceLocation(domain, resource);
+            if (!isDomainValid(key.getResourceDomain())) {
+                error(source, entry, "No matching mod domain found for '" + key + "'");
+                return null;
+            } else if (!isValidKey(key)) {
+                error(source, entry, "No matching content found for '" + key + "'");
+                return null;
+            }
+
             final int meta = Integer.parseInt(metaMatcher.group(3));
 
-            final ResourceLocation key = new ResourceLocation(domain, resource);
             final Block block = ForgeRegistries.BLOCKS.getValue(key);
             if (block != null) {
                 return block.getStateFromMeta(meta);
             }
         }
 
-        final Matcher matcher = KEY_VALUE_REGEX.matcher(entry);
+        final Matcher matcher = KEY_VALUE_REGEX.matcher(valueToParse);
         if (matcher.matches()) {
             final String domain = matcher.group(1);
             final String resource = matcher.group(2);
-
             final ResourceLocation key = new ResourceLocation(domain, resource);
+
+            if (!isDomainValid(key.getResourceDomain())) {
+                error(source, entry, "No matching mod domain found for '" + key + "'");
+                return null;
+            } else if (!isValidKey(key)) {
+                error(source, entry, "No matching content found for '" + key + "'");
+                return null;
+            }
+
             final Block block = ForgeRegistries.BLOCKS.getValue(key);
             if (block != null) {
                 return block.getDefaultState();
@@ -201,8 +200,8 @@ public abstract class BlockStateConfigList<VALUE> extends ResourceConfigList<Blo
         }
 
         @Override
-        protected IBlockState parseValue(@Nullable String value) {
-            return super.parseBlockState(value);
+        protected IBlockState parseValue(String source, String entry, @Nullable String value) {
+            return super.parseBlockState(source, entry, value);
         }
     }
 
@@ -213,15 +212,13 @@ public abstract class BlockStateConfigList<VALUE> extends ResourceConfigList<Blo
         }
 
         @Override
-        protected Pair<IBlockState, Float> parseValue(@Nullable String value) {
-            if (value == null) {
-                return null;
-            }
+        protected Pair<IBlockState, Float> parseValue(String source, String entry, String value) {
+
             if (value.contains(",")) { //TODO use regex to ensure we only have 1 comma
                 final String[] split = value.split(",");
-                return Pair.of(super.parseBlockState(split[0]), Math.min(1, Math.max(0, Float.parseFloat(split[1]))));
+                return Pair.of(super.parseBlockState(source, entry, split[0]), Math.min(1, Math.max(0, Float.parseFloat(split[1]))));
             }
-            return Pair.of(super.parseBlockState(value), null);
+            return Pair.of(super.parseBlockState(source, entry, value), null);
         }
     }
 
@@ -232,8 +229,14 @@ public abstract class BlockStateConfigList<VALUE> extends ResourceConfigList<Blo
         }
 
         @Override
-        protected Float parseValue(@Nullable String value) {
-            return value == null ? null : Float.parseFloat(value);
+        protected Float parseValue(String source, String entry, String value) {
+            try {
+                return Float.parseFloat(value);
+            }
+            catch (NumberFormatException e) {
+                error(source, entry, "Value is not a Float");
+            }
+            return null;
         }
     }
 }

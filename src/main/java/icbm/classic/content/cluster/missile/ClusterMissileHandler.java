@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack;
 public final class ClusterMissileHandler {
 
     public static final ItemStackConfigList.ContainsCheck banAllowItems = new ItemStackConfigList.ContainsCheck("[Cluster Contents][Ban/Allow Config]", (configList) -> {
-        configList.load(ConfigMissile.CLUSTER_MISSILE.BAN_ALLOW.ITEMS);
+        configList.load("icbmclassic/missile/cluster/item_ban_allow/list", ConfigMissile.CLUSTER_MISSILE.BAN_ALLOW.ITEMS);
     });
 
     public static final ItemStackConfigList.IntOut itemSizes = new ItemStackConfigList.IntOut("[Cluster Contents][Item Sizes]", (configList) -> {
@@ -37,7 +37,7 @@ public final class ClusterMissileHandler {
         }
 
 
-        configList.load(ConfigMissile.CLUSTER_MISSILE.ITEM_SIZES.ITEMS);
+        configList.load("icbmclassic/missile/cluster/item_ban_allow/list/item_sizes", ConfigMissile.CLUSTER_MISSILE.ITEM_SIZES.ITEMS);
     });
 
     public static void setup() {

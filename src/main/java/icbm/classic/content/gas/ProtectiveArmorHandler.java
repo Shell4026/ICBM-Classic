@@ -23,7 +23,7 @@ public class ProtectiveArmorHandler {
         configList.setDefault(new ResourceLocation("atomicscience","hazmat_leggings"), 0.05f, 1);
         configList.setDefault(new ResourceLocation("atomicscience","hazmat_boots"), 0.05f, 1);
 
-        configList.load(ConfigMain.protectiveArmor.ITEMS);
+        configList.load("icbmclassic/main/protective_armor/item_ratings", ConfigMain.protectiveArmor.ITEMS);
     });
 
     public static void setup() {
