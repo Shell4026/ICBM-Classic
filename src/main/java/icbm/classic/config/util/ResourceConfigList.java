@@ -359,7 +359,7 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
     }
 
     protected Function<CONTENT, VALUE> getSimpleValue(ResourceLocation key, @Nullable VALUE value) {
-        return (content) -> key == getContentKey(content) ? value : null;
+        return (content) -> key.equals(getContentKey(content)) ? value : null;
     }
 
     protected Function<CONTENT, VALUE> getMetaValue(ResourceLocation key, int metadata, @Nullable VALUE value) {
