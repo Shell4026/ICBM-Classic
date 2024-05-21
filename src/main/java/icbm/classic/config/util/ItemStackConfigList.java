@@ -2,6 +2,7 @@ package icbm.classic.config.util;
 
 
 
+import icbm.classic.lib.ForgeRegistryHelpers;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -52,8 +53,8 @@ public abstract class ItemStackConfigList<VALUE> extends ResourceConfigList<Item
     }
 
     @Override
-    protected boolean isValidKey(ResourceLocation key) {
-        return ForgeRegistries.ITEMS.containsKey(key) && ForgeRegistries.ITEMS.getValue(key) != null;
+    protected boolean isValidKey(ResourceLocation targetKey) {
+        return ForgeRegistryHelpers.contains(ForgeRegistries.ITEMS, targetKey);
     }
 
     @Override
@@ -81,11 +82,11 @@ public abstract class ItemStackConfigList<VALUE> extends ResourceConfigList<Item
         }
 
         @Override
-        protected Function<ItemStack, Boolean> getSimpleValue(ResourceLocation key, Boolean disable) {
+        protected Function<ItemStack, Boolean> getSimpleValue(ResourceLocation targetKey, Boolean disable) {
             if(Boolean.TRUE.equals(disable)) {
                 return null;
             }
-            return super.getSimpleValue(key, true);
+            return super.getSimpleValue(targetKey, true);
         }
 
         @Override

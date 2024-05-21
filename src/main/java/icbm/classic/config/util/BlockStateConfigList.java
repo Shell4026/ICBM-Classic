@@ -1,7 +1,7 @@
 package icbm.classic.config.util;
 
 import com.google.common.collect.ImmutableMap;
-import icbm.classic.ICBMClassic;
+import icbm.classic.lib.ForgeRegistryHelpers;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
@@ -96,10 +96,9 @@ public abstract class BlockStateConfigList<VALUE> extends ResourceConfigList<Blo
     }
 
     @Override
-    protected boolean isValidKey(ResourceLocation key) {
-        return ForgeRegistries.BLOCKS.containsKey(key) && ForgeRegistries.BLOCKS.getValue(key) != null;
+    protected boolean isValidKey(ResourceLocation targetKey) {
+        return ForgeRegistryHelpers.contains(ForgeRegistries.BLOCKS, targetKey);
     }
-
 
     protected Map<IProperty, Function<Comparable, Boolean>> collectBlockProps(String source, String entry, Block block, String[] props) {
         final Map<IProperty, Function<Comparable, Boolean>> matchers = new HashMap();

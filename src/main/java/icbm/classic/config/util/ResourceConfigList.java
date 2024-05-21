@@ -2,9 +2,10 @@ package icbm.classic.config.util;
 
 import icbm.classic.ICBMClassic;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
@@ -358,8 +359,45 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
         return (content) -> domain.equalsIgnoreCase(getContentKey(content).getResourceDomain()) ? value : null;
     }
 
-    protected Function<CONTENT, VALUE> getSimpleValue(ResourceLocation key, @Nullable VALUE value) {
-        return (content) -> key.equals(getContentKey(content)) ? value : null;
+    protected Function<CONTENT, VALUE> getSimpleValue(ResourceLocation targetKey, @Nullable VALUE value) {
+        // TODO consider caching for faster matching.
+        //      As string compare will be slower than object.is(object) for Items and Blocks
+        // Contains: ~stone~ ->  dark_stone_deep
+        if(targetKey.getResourcePath().startsWith("~") && targetKey.getResourcePath().endsWith("~")) {
+            final String checkStr = targetKey.getResourcePath().substring(1, targetKey.getResourcePath().length() - 1);
+            return (content) -> {
+                final ResourceLocation contentKey = getContentKey(content);
+                if(!targetKey.getResourceDomain().equalsIgnoreCase(contentKey.getResourceDomain())) {
+                    return null;
+                }
+                return  targetKey.getResourcePath().contains(checkStr) ? value : null;
+            };
+        }
+        // Starts: ~stone -> dark_stone
+        else if(targetKey.getResourcePath().startsWith("~")) {
+            final String checkStr = targetKey.getResourcePath().substring(1);
+            return (content) -> {
+                final ResourceLocation contentKey = getContentKey(content);
+                if(!targetKey.getResourceDomain().equalsIgnoreCase(contentKey.getResourceDomain())) {
+                    return null;
+                }
+                return  targetKey.getResourcePath().endsWith(checkStr) ? value : null;
+            };
+        }
+        // Ends: stone~ -> stone_dark
+        else if(targetKey.getResourcePath().endsWith("~")) {
+            final String checkStr = targetKey.getResourcePath().substring(0, targetKey.getResourcePath().length() - 1);
+            return (content) -> {
+                final ResourceLocation contentKey = getContentKey(content);
+                if(!targetKey.getResourceDomain().equalsIgnoreCase(contentKey.getResourceDomain())) {
+                    return null;
+                }
+                return  targetKey.getResourcePath().startsWith(checkStr) ? value : null;
+            };
+        }
+
+        // equals: a is a
+        return (content) -> targetKey.equals(getContentKey(content)) ? value : null;
     }
 
     protected Function<CONTENT, VALUE> getMetaValue(ResourceLocation key, int metadata, @Nullable VALUE value) {
@@ -380,8 +418,11 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
     }
 
     protected boolean isDomainValid(String domain) {
+        //TODO fuzzy domains?
         return "minecraft".equalsIgnoreCase(domain) || Loader.isModLoaded(domain);
     }
+
+
 
     protected void error(String source, String entry, String error) {
         issue(source, entry, error, true);

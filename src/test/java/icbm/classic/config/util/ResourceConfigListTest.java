@@ -165,9 +165,9 @@ class ResourceConfigListTest {
             final ResourceConfigList configList = new StubbedList("stub", (c) -> {}) {
                 //Work around as Mockito.spy is breaking code-coverage
                 @Override
-                protected Function getSimpleValue(ResourceLocation k, @Nullable Object o) {
+                protected Function getSimpleValue(ResourceLocation targetKey, @Nullable Object o) {
                     wasCalled[0] = true;
-                    Assertions.assertEquals(key, k);
+                    Assertions.assertEquals(key, targetKey);
                     Assertions.assertNull(o);
                     return fun;
                 }
@@ -198,9 +198,9 @@ class ResourceConfigListTest {
             final ResourceConfigList configList = new StubbedList("stub", (c) -> {}) {
                 //Work around as Mockito.spy is breaking code-coverage
                 @Override
-                protected Function getSimpleValue(ResourceLocation k, @Nullable Object o) {
+                protected Function getSimpleValue(ResourceLocation targetKey, @Nullable Object o) {
                     wasCalled[0] = true;
-                    Assertions.assertEquals(key, k);
+                    Assertions.assertEquals(key, targetKey);
                     Assertions.assertEquals(578, o);
                     return fun;
                 }
@@ -232,9 +232,9 @@ class ResourceConfigListTest {
             final boolean[] wasCalled = {false};
             final ResourceConfigList configList = new StubbedList("stub", (c) -> {}) {
                 @Override
-                protected Function getSimpleValue(ResourceLocation k, @Nullable Object o) {
+                protected Function getSimpleValue(ResourceLocation targetKey, @Nullable Object o) {
                     wasCalled[0] = true;
-                    Assertions.assertEquals(key, k);
+                    Assertions.assertEquals(key, targetKey);
                     Assertions.assertNull(o);
                     return null; // null is rejected, usually means key is not found
                 }
@@ -356,9 +356,9 @@ class ResourceConfigListTest {
             final boolean[] wasCalled = {false};
             final ResourceConfigList configList = new StubbedList("stub", (c) -> {}) {
                 @Override
-                protected Function getSimpleValue(ResourceLocation k, @Nullable Object o) {
+                protected Function getSimpleValue(ResourceLocation targetKey, @Nullable Object o) {
                     wasCalled[0] = true;
-                    Assertions.assertEquals(key, k);
+                    Assertions.assertEquals(key, targetKey);
                     Assertions.assertNull(o);
                     return fun;
                 }
