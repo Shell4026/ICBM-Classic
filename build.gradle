@@ -16,7 +16,7 @@ java {
     }
 }
 
-version = "${version_major}.${version_minor}.${version_revis}"
+version = "${version_major}.${version_minor}.${version_revise}"
 archivesBaseName = "ICBM-classic-${version_mc}"
 
 fancyGradle {
