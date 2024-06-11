@@ -65,7 +65,6 @@ public class ItemClusterMissile extends ItemBase {
 
     private ItemStack createStack(ItemStack projectile, int count) {
         final ItemStack clusterStack = new ItemStack(this, 1);
-        ICBMClassic.logger().info(clusterStack.getCapability(ICBMClassicAPI.MISSILE_STACK_CAPABILITY, null));
         if (!clusterStack.hasCapability(ICBMClassicAPI.MISSILE_STACK_CAPABILITY, null)) {
             return clusterStack;
         }

@@ -161,7 +161,6 @@ public class EntityBalloon extends EntityProjectile<EntityBalloon> implements IE
     }
 
     protected void releaseCargoAndDespawn() {
-        ICBMClassic.logger().info("despan ballon " + this);
         if(!this.getPassengers().isEmpty()) {
             this.removePassengers();
         }

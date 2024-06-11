@@ -466,8 +466,6 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
             final float damage = getImpactDamage(entityHit, velocity, hit);
             final DamageSource damageSource = getImpactDamageSource(entityHit, velocity, hit);
 
-            ICBMClassic.logger().info("vel={}, damage={}", velocity, damage);
-
             if (damageSource != null && entityHit.attackEntityFrom(damageSource, damage)
                 && entityHit instanceof EntityLivingBase) {
                 applyKnockBack(entityHit);
