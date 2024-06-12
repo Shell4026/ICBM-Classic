@@ -112,6 +112,7 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
     @Getter
     private final List<EntityPlayer> playersUsing = new LinkedList<>();
 
+    private int firingCooldown = 0;
 
     public TileRadarStation() {
         tickActions.add(descriptionPacketSender);
@@ -159,9 +160,16 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
                 }
 
                 //Spam launch packets to nearby silos
-                if (this.ticks % 10 == 0 && !radio.getChannel().equals(RadioRegistry.EMPTY_HZ) && !this.incomingThreats.isEmpty())
+                if (!radio.getChannel().equals(RadioRegistry.EMPTY_HZ) && !this.incomingThreats.isEmpty())
                 {
-                    RadioRegistry.popMessage(world, radio, new IncomingMissileMessage(radio.getChannel(), this.incomingThreats.get(0), true));
+                    if(firingCooldown > 0) {
+                        firingCooldown--;
+                    }
+
+                    if(firingCooldown <= 0) {
+                        firingCooldown = ConfigRadar.SAM_TICKS;
+                        RadioRegistry.popMessage(world, radio, new IncomingMissileMessage(radio.getChannel(), this.incomingThreats.get(0), true));
+                    }
                 }
             }
             // No power, reset state
