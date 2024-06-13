@@ -98,7 +98,7 @@ public class BlastSonic extends Blast implements IBlastTickable
                 }
                 else
                 {
-                    isAlive = false;
+                    this.endBlast();
                     if (ConfigDebug.DEBUG_THREADS)
                     {
                         String msg = String.format("BlastSonic#doPostExplode() -> Thread failed to find blocks to edit. Either thread failed or no valid blocks were found in range." +

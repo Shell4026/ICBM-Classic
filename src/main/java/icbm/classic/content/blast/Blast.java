@@ -58,7 +58,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
     /**
      * Is the blast alive, if false the blast is dead
      */
-    public boolean isAlive = true;
+    private boolean isAlive = true;
 
     /**
      * The amount of times the explosion has been called
@@ -243,11 +243,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
     {
         if (isAlive)
         {
-            //Mark as dead to prevent blast running
-            isAlive = false;
-
-            //Remove from tracker
-            WorkTickingActionHandler.remove(this);
+            this.endBlast();
 
             //Run post code
             this.onBlastCompleted();
@@ -653,6 +649,13 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
     @Override
     public void clearBlast()
     {
+       endBlast();
+    }
+
+    protected void endBlast() {
+        isAlive = false;
+        WorkTickingActionHandler.remove(this);
+
         if (getThread() != null)
         {
             getThread().kill();
@@ -661,6 +664,5 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
         {
             controller.setDead();
         }
-        isAlive = false;
     }
 }
