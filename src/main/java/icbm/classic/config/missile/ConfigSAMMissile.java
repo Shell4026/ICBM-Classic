@@ -18,7 +18,7 @@ public class ConfigSAMMissile
 
     @Config.Name("target_range")
     @Config.Comment("Range (meters) to limit scanning for new targets. Higher values will cause lag if using AABB scanning. Set use_radar_only=true to disable AABB scanning.")
-    @Config.RangeDouble(min = 1)
+    @Config.RangeInt(min = 1)
     public int TARGET_RANGE = 30;
 
     @Config.Name("fuel")
@@ -28,6 +28,6 @@ public class ConfigSAMMissile
 
     @Config.Name("attack_damage")
     @Config.Comment("Damage (hearts) to apply to the target on intercept")
-    @Config.RangeInt(min = 0)
+    @Config.RangeDouble(min = 0)
     public float ATTACK_DAMAGE = 100;
 }
