@@ -25,5 +25,5 @@ public class ConfigRadar
 
     @Config.Name("sam_delay")
     @Config.Comment("Delay in ticks before triggering more SAM launches")
-    public static int SAM_TICKS = 10;
+    public static int SAM_TICKS = 40;
 }
