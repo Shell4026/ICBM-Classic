@@ -93,7 +93,7 @@ public class ArcFlightLogic extends BuildableObject<ArcFlightLogic, IBuilderRegi
         // Ground Displacement
         final float flatDistance = (float)Math.sqrt(deltaPathX * deltaPathX + deltaPathZ * deltaPathZ);
 
-        if(flatDistance < 200) {
+        if(flatDistance < ConfigMissile.ARC_DISTANCE_LIMIT) {
 
             //Path constants
             final float ticksPerMeterFlat = 2f;

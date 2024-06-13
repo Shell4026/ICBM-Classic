@@ -28,6 +28,11 @@ public class ConfigMissile
     @Config.RangeInt(min = 1)
     public static int SIMULATION_ENTER_HEIGHT = 450;
 
+    @Config.Name("arc_distance_limit")
+    @Config.Comment("Distance, ignoring y, to allow flying in an arc towards target. Over distance will fly strait up for better performance.")
+    @Config.RangeInt(min = 0)
+    public static int ARC_DISTANCE_LIMIT = 500;
+
     @Config.Name("simulation_enter_speed")
     @Config.Comment("Speed (meters per tick) to spawn the missile")
     @Config.RangeDouble(min = 0)
