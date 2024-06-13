@@ -3,6 +3,7 @@ package icbm.classic.content.missile.tracker;
 import icbm.classic.ICBMClassic;
 import icbm.classic.api.events.MissileChunkEvent;
 import icbm.classic.config.ConfigDebug;
+import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.content.missile.entity.explosive.EntityExplosiveMissile;
 import icbm.classic.content.missile.logic.flight.DeadFlightLogic;
 import icbm.classic.lib.NBTConstants;
@@ -208,10 +209,10 @@ public class MissileTrackerWorld extends WorldSavedData
 
         //Set data
         missile.readEntityFromNBT(mtd.missileData);
-        missile.posY = 250; //TODO pull from config
-        missile.posX = mtd.targetPos.x(); //TODO calculate arc position at 250 so we don't come in on top of the target
+        missile.posY = ConfigMissile.SIMULATION_ENTER_HEIGHT;
+        missile.posX = mtd.targetPos.x(); //TODO calculate arc position so we don't come in on top of the target
         missile.posZ = mtd.targetPos.z();
-        missile.motionY = -2; //TODO get speed it would have been at the given time
+        missile.motionY = -ConfigMissile.SIMULATION_ENTER_SPEED; //TODO get speed it would have been at the given time
         missile.motionZ = 0;
         missile.motionX = 0;
         missile.rotateTowardsMotion(1);

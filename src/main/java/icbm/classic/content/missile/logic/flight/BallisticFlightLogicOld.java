@@ -10,17 +10,13 @@ import icbm.classic.api.reg.obj.IBuilderRegistry;
 import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.content.missile.entity.EntityMissile;
 import icbm.classic.content.missile.entity.explosive.EntityExplosiveMissile;
-import icbm.classic.content.missile.logic.targeting.BallisticTargetingData;
 import icbm.classic.content.missile.tracker.MissileTrackerHandler;
 import icbm.classic.lib.buildable.BuildableObject;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import javax.annotation.Nonnull;
 
 /**
  * @deprecated replaced with modular flight systems, kept for loading old save data
@@ -288,7 +284,7 @@ public class BallisticFlightLogicOld extends BuildableObject<BallisticFlightLogi
         {
             return false;
         }
-        else if (entity.posY >= ConfigMissile.SIMULATION_START_HEIGHT)
+        else if (entity.posY >= ConfigMissile.SIMULATION_EXIT_HEIGHT)
         {
             return true;
         }

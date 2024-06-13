@@ -1,6 +1,5 @@
 package icbm.classic.content.missile.logic.flight;
 
-import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.missiles.IMissile;
@@ -15,12 +14,9 @@ import icbm.classic.lib.buildable.BuildableObject;
 import icbm.classic.lib.projectile.EntityProjectile;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import javax.annotation.Nonnull;
 
 /**
  * Flight path that moves in a ballistic arc from start position to target position
@@ -221,7 +217,7 @@ public class ArcFlightLogic extends BuildableObject<ArcFlightLogic, IBuilderRegi
         {
             return false;
         }
-        else if (entity.posY >= ConfigMissile.SIMULATION_START_HEIGHT)
+        else if (entity.posY >= ConfigMissile.SIMULATION_EXIT_HEIGHT)
         {
             return true;
         }

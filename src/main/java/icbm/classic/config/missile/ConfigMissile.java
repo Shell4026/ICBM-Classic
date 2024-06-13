@@ -18,10 +18,20 @@ public class ConfigMissile
     @Config.RangeDouble(min = 0.0001, max = 10)
     public static float DIRECT_FLIGHT_SPEED = 2;
 
-    @Config.Name("simulation_start_height")
+    @Config.Name("simulation_exit_height")
     @Config.Comment("Height (y level) to start simulating a missile when it travels above the map")
     @Config.RangeInt(min = 1)
-    public static int SIMULATION_START_HEIGHT = 300;
+    public static int SIMULATION_EXIT_HEIGHT = 500;
+
+    @Config.Name("simulation_enter_height")
+    @Config.Comment("Height (y level) to spawn missiles when they enter the map")
+    @Config.RangeInt(min = 1)
+    public static int SIMULATION_ENTER_HEIGHT = 450;
+
+    @Config.Name("simulation_enter_speed")
+    @Config.Comment("Speed (meters per tick) to spawn the missile")
+    @Config.RangeDouble(min = 0)
+    public static float SIMULATION_ENTER_SPEED = 1;
 
     @Config.Name("cruise_fuel")
     @Config.Comment("Fuel (ticks) before a missile fired from a cruise launcher starts to fall out of the air")
