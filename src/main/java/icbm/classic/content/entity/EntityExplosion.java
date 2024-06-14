@@ -52,7 +52,7 @@ public class EntityExplosion extends Entity implements IEntityAdditionalSpawnDat
         this.setBlast(blast);
         if (ConfigDebug.DEBUG_EXPLOSIVES)
         {
-            ICBMClassic.logger().info("EntityExplosion#new(" + blast + ") Created new blast controller entity");
+            ICBMClassic.logger().info("EntityExplosion#new({}) Created new blast controller entity", blast);
         }
     }
 
@@ -209,10 +209,7 @@ public class EntityExplosion extends Entity implements IEntityAdditionalSpawnDat
         this.blast = blast;
         if (blast != null)
         {
-            if (blast instanceof IBlastInit)
-            {
-                ((Blast) this.blast).setEntityController(this);
-            }
+            ((Blast) this.blast).setEntityController(this);
             this.setPosition(blast.location.x(), !blast.isMovable() ? -1 : blast.y(), blast.location.z());
             blastYOffset = blast.isMovable() ? 0 : blast.y() + 1;
         }
