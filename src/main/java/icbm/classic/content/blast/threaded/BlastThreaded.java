@@ -103,7 +103,7 @@ public abstract class BlastThreaded extends Blast
     @Override
     protected void onBlastCompleted()
     {
-
+        endBlast();
     }
 
     public void destroyBlock(BlockPos pos)
