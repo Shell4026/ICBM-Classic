@@ -223,7 +223,13 @@ public class EntityExplosion extends Entity implements IEntityAdditionalSpawnDat
     private void constructBlast(String exId, double yOffset)
     {
         ResourceLocation id = new ResourceLocation(exId);
-        IExplosiveData exData = ICBMClassicAPI.EXPLOSIVE_REGISTRY.getExplosiveData(id);
+        IExplosiveData exData = ICBMClassicAPI.EXPLOSIVE_REGISTRY.getExplosiveData(id, true);
+
+        if(exData == null) {
+            ICBMClassic.logger().error("EntityExplosion: Failed to locate explosive with id '{}'!", id);
+            this.setDead();
+            return;
+        }
 
         ActionSource actionSource = new ActionSource(world, new Vec3d(posX, posY + yOffset, posZ), new EntityCause(this)); //TODO provide additional cause information such as fire, lighter, player, etc
         blast = exData.create(world, posX, posY + yOffset, posZ, actionSource, null);
@@ -232,7 +238,5 @@ public class EntityExplosion extends Entity implements IEntityAdditionalSpawnDat
             ((IBlastInit) blast).setEntityController(this);
             blast = ((IBlastInit) blast).buildBlast();
         }
-
-        ICBMClassic.logger().error("EntityExplosion: Failed to locate explosive with id '" + id + "'!");
     }
 }
