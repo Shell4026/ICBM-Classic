@@ -167,6 +167,7 @@ public class EntityExplosion extends Entity implements IEntityAdditionalSpawnDat
                 else
                 {
                     ICBMClassic.logger().error("EntityExplosion: Failed to read save state for explosion!");
+                    setDead();
                 }
             }
 
