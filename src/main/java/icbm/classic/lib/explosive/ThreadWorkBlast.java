@@ -15,12 +15,15 @@ import java.util.function.Consumer;
  */
 public class ThreadWorkBlast implements IThreadWork
 {
+    public final String name;
     public List<BlockPos> editPositions = new ArrayList();
     public BiFunction<Integer, Consumer<BlockPos>, Boolean> runFunction;
     public Consumer<List<BlockPos>> onComplete;
 
-    public ThreadWorkBlast(BiFunction<Integer, Consumer<BlockPos>, Boolean> runFunction, Consumer<List<BlockPos>> onComplete)
+
+    public ThreadWorkBlast(String name, BiFunction<Integer, Consumer<BlockPos>, Boolean> runFunction, Consumer<List<BlockPos>> onComplete)
     {
+        this.name = name;
         this.runFunction = runFunction;
         this.onComplete = onComplete;
     }
@@ -34,13 +37,13 @@ public class ThreadWorkBlast implements IThreadWork
     @Override
     public void onStarted()
     {
-        ICBMClassic.logger().debug(toString() + " started");
+        ICBMClassic.logger().debug("ThreadWorkerBlast({}): started", name);
     }
 
     @Override
     public void onCompleted()
     {
-        ICBMClassic.logger().debug(toString() + " completed");
+        ICBMClassic.logger().debug("ThreadWorkerBlast({}): completed", name);
         onComplete.accept(editPositions);
     }
 }

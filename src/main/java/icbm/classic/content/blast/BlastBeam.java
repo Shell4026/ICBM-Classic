@@ -134,7 +134,7 @@ public abstract class BlastBeam extends Blast implements IBlastTickable
 
     protected IThreadWork getFirstThread()
     {
-        return new ThreadWorkBlast((steps, edits) -> collectFlyingBlocks(edits), edits ->
+        return new ThreadWorkBlast(this.toString(), (steps, edits) -> collectFlyingBlocks(edits), edits ->
         {
             blocksToRemove.addAll(edits);
             hasGeneratedFlyingBlocks = false;
@@ -144,7 +144,7 @@ public abstract class BlastBeam extends Blast implements IBlastTickable
 
     protected IThreadWork getSecondThread()
     {
-        return new ThreadWorkBlast((steps, edits) -> collectBlocksToMutate(edits), edits ->
+        return new ThreadWorkBlast(this.toString(), (steps, edits) -> collectBlocksToMutate(edits), edits ->
         {
             blocksToRemove.addAll(edits);
             hasPlacedBlocks = false;
