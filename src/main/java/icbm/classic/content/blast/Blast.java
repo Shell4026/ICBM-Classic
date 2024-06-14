@@ -160,6 +160,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
         catch (Exception e)
         {
             ICBMClassic.logger().error(this + ": Unexpected error running blast", e);
+            endBlast();
             return ActionResponses.UNKNOWN_ERROR; //TODO provide dynamic data
         }
     }
