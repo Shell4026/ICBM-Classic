@@ -11,11 +11,13 @@ import com.google.gson.stream.JsonReader;
 import icbm.classic.ICBMClassic;
 import icbm.classic.api.EnumTier;
 import icbm.classic.api.explosion.IBlastFactory;
+import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.api.reg.IExplosiveRegistry;
 import icbm.classic.api.reg.content.IExplosiveContentRegistry;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -129,9 +131,13 @@ public class ExplosiveRegistry implements IExplosiveRegistry
     }
 
     @Override
-    public IExplosiveData getExplosiveData(ResourceLocation name)
+    public IExplosiveData getExplosiveData(ResourceLocation name, boolean allowNull)
     {
-        return explosiveData.get(name);
+        final IExplosiveData data = explosiveData.get(name);
+        if(data == null && !allowNull) {
+            return ICBMExplosives.CONDENSED;
+        }
+        return data;
     }
 
     @Override

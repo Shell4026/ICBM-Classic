@@ -40,7 +40,11 @@ public interface IExplosiveRegistry
      * @return explosive data if registered
      */
     @Nonnull
-    IExplosiveData getExplosiveData(ResourceLocation name);
+    default IExplosiveData getExplosiveData(ResourceLocation name) {
+        return getExplosiveData(name, false);
+    }
+
+    IExplosiveData getExplosiveData(ResourceLocation name, boolean allowNull);
 
     /**
      * Gets the explosive data for the registry name
