@@ -1,9 +1,9 @@
 package icbm.classic.api.reg.content;
 
 /**
- *
- * Created by Dark(DarkGuardsman, Robert) on 1/4/19.
+ * @deprecated being removed in 1.13
  */
+@Deprecated
 public interface IExMinecartRegistry extends IExplosiveContentRegistry, IExFuseEntityRegistry
 {
 

@@ -4,7 +4,7 @@ import com.builtbroken.jlib.data.vector.IPos2D;
 import icbm.classic.lib.transform.vector.Point;
 
 /**
- * Created by robert on 1/12/2015.
+ * Created by Robin on 1/12/2015.
  */
 public class Triangle extends Shape2D
 {

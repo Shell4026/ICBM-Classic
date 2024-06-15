@@ -4,7 +4,7 @@ import icbm.classic.ICBMConstants;
 import net.minecraftforge.common.config.Config;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2/10/2019.
+ * Created by Dark(DarkGuardsman, Robin) on 2/10/2019.
  */
 @Config(modid = ICBMConstants.DOMAIN, name = "icbmclassic/thread")
 @Config.LangKey("config.icbmclassic:thread.title")

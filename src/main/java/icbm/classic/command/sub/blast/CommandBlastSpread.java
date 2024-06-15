@@ -1,12 +1,13 @@
 package icbm.classic.command.sub.blast;
 
-import icbm.classic.api.explosion.BlastState;
-import icbm.classic.api.explosion.responses.BlastResponse;
+import icbm.classic.api.actions.data.ActionFields;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.command.CommandUtils;
 import icbm.classic.command.ICBMCommands;
 import icbm.classic.command.system.SubCommand;
-import icbm.classic.lib.explosive.ExplosiveHandler;
+import icbm.classic.content.missile.logic.source.ActionSource;
+import icbm.classic.lib.actions.fields.ActionFieldProvider;
 import net.minecraft.command.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -16,7 +17,7 @@ import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
- * Created by Robert Seifert on 1/6/20.
+ * Created by Robin Seifert on 1/6/20.
  */
 public class CommandBlastSpread extends SubCommand
 {
@@ -71,7 +72,7 @@ public class CommandBlastSpread extends SubCommand
         final int expectedSpawnCount = (int)Math.floor(Math.pow((count * 2) + 1, 2));
 
         sender.sendMessage(new TextComponentTranslation(TRANSLATION_SPREAD_START,
-                explosiveData.getRegistryName(), scale,
+                explosiveData.getRegistryKey(), scale,
                 world.provider.getDimension(), world.getWorldType().getName(),
                 xInput, yInput, zInput,
                 count, distance,
@@ -87,19 +88,10 @@ public class CommandBlastSpread extends SubCommand
                 final double z = zInput + zi * distance;
 
                 //Trigger blast
-                final BlastResponse result = ExplosiveHandler.createExplosion(null,
-                        world, x, yInput, z,
-                        explosiveData.getRegistryID(), scale,
-                        null);
+                final IActionStatus result = explosiveData.create(world, x, yInput, z, new ActionSource(),new ActionFieldProvider().field(ActionFields.AREA_SIZE, () -> scale)).doAction();
 
-                if(result.state != BlastState.TRIGGERED && result.state != BlastState.THREADING)
-                {
-                    //Send translated message to user
-                    sender.sendMessage(new TextComponentTranslation(CommandBlastTrigger.getTranslationKey(result.state), //TODO handle sub-error
-                            explosiveData.getRegistryName(), scale,
-                            world.provider.getDimension(), world.getWorldType().getName(),
-                            x, yInput, z));
-                }
+                //Send translated message to user
+                sender.sendMessage(result.getTooltip());
             }
         }
     }

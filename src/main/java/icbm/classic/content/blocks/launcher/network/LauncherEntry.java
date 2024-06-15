@@ -1,6 +1,6 @@
 package icbm.classic.content.blocks.launcher.network;
 
-import icbm.classic.api.launcher.IActionStatus;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.launcher.IMissileLauncher;
 import icbm.classic.content.blocks.launcher.FiringPackage;
 import lombok.Data;

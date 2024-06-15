@@ -5,11 +5,12 @@ import icbm.classic.api.caps.IEMPReceiver;
 import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.api.tile.IRotatable;
+import icbm.classic.content.missile.logic.source.ActionSource;
+import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.lib.NBTConstants;
 import icbm.classic.lib.capability.emp.CapabilityEMP;
 import icbm.classic.lib.capability.emp.CapabilityEmpKill;
 import icbm.classic.lib.capability.ex.CapabilityExplosiveEntity;
-import icbm.classic.lib.explosive.ExplosiveHandler;
 import icbm.classic.lib.transform.vector.Pos;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
@@ -17,6 +18,7 @@ import net.minecraft.entity.MoverType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -102,7 +104,7 @@ public class EntityExplosive extends Entity implements IRotatable, IEntityAdditi
 
     public void explode()
     {
-        ExplosiveHandler.createExplosion(this, this.world, this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, getExplosiveCap());
+        getExplosiveCap().doExplosion(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, new ActionSource(world, new Vec3d(posX, posY, posZ), new EntityCause(this)));
         this.setDead();
     }
 
@@ -232,7 +234,7 @@ public class EntityExplosive extends Entity implements IRotatable, IEntityAdditi
     {
         if (getExplosiveData() != null)
         {
-            return "Explosive[" + getExplosiveData().getRegistryName() + "]";
+            return "Explosive[" + getExplosiveData().getRegistryKey() + "]";
         }
         return "Explosive";
     }

@@ -6,7 +6,6 @@ import icbm.classic.config.ConfigFlyingBlocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Bootstrap;
-import net.minecraft.util.ClassInheritanceMultiMap;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.junit.jupiter.api.*;
@@ -36,7 +35,7 @@ class FlyingBlockTest {
     }
     @Test
     void loadFromConfig() {
-        ConfigFlyingBlocks.BAN_ALLOW.BLOCK_STATES = new String[] {"minecraft:iron_~", "minecraft:~_ore", "minecraft:stone"};
+        ConfigFlyingBlocks.banAllow.blockStates = new String[] {"minecraft:iron_~", "minecraft:~_ore", "minecraft:stone"};
         FlyingBlock.loadFromConfig();
 
         Assertions.assertEquals(Lists.newArrayList(
@@ -61,9 +60,12 @@ class FlyingBlockTest {
     @DisplayName("Confirm we can spawn a flying block if allowed")
     void spawnFlyingBlock_allowedToSpawn() {
         final World world = testManager.getWorld(0);
-
         final BlockPos pos = new BlockPos(10, 10, 10);
-        final boolean result = FlyingBlock.spawnFlyingBlock(world, pos, Blocks.STONE.getDefaultState());
+
+        world.setBlockState(pos, Blocks.STONE.getDefaultState());
+
+
+        final boolean result = FlyingBlock.spawnFlyingBlock(world, pos,  null, null);
         Assertions.assertTrue(result);
 
         assertMobCountInChunk(world, pos, (entity) -> entity instanceof EntityFlyingBlock, 1);
@@ -79,7 +81,9 @@ class FlyingBlockTest {
         FlyingBlock.banAllowList.loadBlockStates("minecraft:dirt");
 
         final BlockPos pos = new BlockPos(10, 10, 10);
-        final boolean result = FlyingBlock.spawnFlyingBlock(world, pos, Blocks.DIRT.getDefaultState());
+        world.setBlockState(pos, Blocks.DIRT.getDefaultState());
+
+        final boolean result = FlyingBlock.spawnFlyingBlock(world, pos, null, null);
         Assertions.assertFalse(result);
 
         assertMobCountInChunk(world, pos, Objects::nonNull, 0);

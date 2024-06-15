@@ -4,10 +4,10 @@ import com.builtbroken.mc.testing.junit.TestManager;
 import com.builtbroken.mc.testing.junit.testers.DummyCommandSender;
 import icbm.classic.api.EnumTier;
 import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.explosion.BlastState;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.command.FakeBlast;
 import icbm.classic.command.ICBMCommands;
+import icbm.classic.lib.actions.status.ActionResponses;
 import icbm.classic.lib.explosive.reg.ExplosiveRegistry;
 import net.minecraft.command.CommandException;
 import net.minecraft.util.ResourceLocation;
@@ -48,9 +48,9 @@ public class CommandBlastSpreadTest
     public void setupBeforeTest()
     {
         ICBMClassicAPI.EXPLOSIVE_REGISTRY = new ExplosiveRegistry();
-        fakeExData = ICBMClassicAPI.EXPLOSIVE_REGISTRY.register(new ResourceLocation("tree", "small"), EnumTier.ONE, () ->
+        fakeExData = ICBMClassicAPI.EXPLOSIVE_REGISTRY.register(new ResourceLocation("tree", "small"), EnumTier.ONE, (w, x, y, z, s) ->
         {
-            FakeBlast fakeBlast = new FakeBlast(BlastState.TRIGGERED.genericResponse);
+            FakeBlast fakeBlast = (FakeBlast) new FakeBlast(ActionResponses.COMPLETED).setBlastWorld(w).setBlastPosition(x, y, z);
             blastsCreated.add(fakeBlast);
             return fakeBlast;
         });
@@ -181,7 +181,7 @@ public class CommandBlastSpreadTest
 
 
             //Check explosive settings
-            Assertions.assertEquals(fakeExData, blast.getExplosiveData(), "Explosive data does not match");
+            Assertions.assertEquals(fakeExData, blast.getActionData(), "Explosive data does not match");
             Assertions.assertNull(blast.customData, "Explosive custom data should be empty");
             Assertions.assertEquals(2, (int) Math.floor(blast.getBlastRadius()), "Explosive radius should be 2");
 

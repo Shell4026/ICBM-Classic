@@ -15,7 +15,7 @@ import net.minecraftforge.common.crafting.JsonContext;
 import javax.annotation.Nonnull;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 7/28/2019.
+ * Created by Dark(DarkGuardsman, Robin) on 7/28/2019.
  */
 public class ExIngredientFactory implements IIngredientFactory
 {
@@ -40,6 +40,10 @@ public class ExIngredientFactory implements IIngredientFactory
         }
 
         final String explosive = JsonUtils.getString(json, EX_KEY);
+
+        if(device.equals("icbmclassic:explosive_bomblet")) { //work around for lack of content registry
+            return new ItemStack(ItemReg.itemBombletExplosive, 1, ICBMClassicAPI.EX_GRENADE_REGISTRY.getDeviceStack(new ResourceLocation(explosive)).getItemDamage());
+        }
 
         final IExplosiveContentRegistry reg = ICBMClassicAPI.EXPLOSIVE_REGISTRY.getContentRegistry(new ResourceLocation(device));
         if (reg != null)

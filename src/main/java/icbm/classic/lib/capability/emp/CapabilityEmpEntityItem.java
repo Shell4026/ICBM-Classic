@@ -1,7 +1,7 @@
 package icbm.classic.lib.capability.emp;
 
+import icbm.classic.api.actions.IAction;
 import icbm.classic.api.caps.IEMPReceiver;
-import icbm.classic.api.explosion.IBlast;
 import icbm.classic.config.ConfigEMP;
 import icbm.classic.lib.InventoryUtility;
 import net.minecraft.entity.item.EntityItem;
@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
  * Wrapper to trigger EMP calls on ItemStack contained inside of {@link EntityItem}
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 3/12/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 3/12/2018.
  */
 public class CapabilityEmpEntityItem implements IEMPReceiver, ICapabilityProvider
 {
@@ -30,7 +30,7 @@ public class CapabilityEmpEntityItem implements IEMPReceiver, ICapabilityProvide
     }
 
     @Override
-    public float applyEmpAction(World world, double x, double y, double z, IBlast emp_blast, float power, boolean doAction)
+    public float applyEmpAction(World world, double x, double y, double z, IAction emp_blast, float power, boolean doAction)
     {
         if (ConfigEMP.ALLOW_GROUND_ITEMS)
         {

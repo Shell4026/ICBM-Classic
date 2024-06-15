@@ -1,5 +1,6 @@
 package icbm.classic.content.blocks.launcher.cruise;
 
+import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
 import icbm.classic.client.models.CruiseLauncherTopModel;
 import icbm.classic.client.render.entity.RenderMissile;
@@ -15,7 +16,7 @@ import org.lwjgl.util.glu.Sphere;
 
 /**
  *
- * Created by Dark(DarkGuardsman, Robert) on 1/10/2017.
+ * Created by Dark(DarkGuardsman, Robin) on 1/10/2017.
  */
 public class TESRCruiseLauncher extends TileEntitySpecialRenderer<TileCruiseLauncher>
 {
@@ -44,14 +45,8 @@ public class TESRCruiseLauncher extends TileEntitySpecialRenderer<TileCruiseLaun
 
             GlStateManager.pushMatrix();
             GlStateManager.translate(x + 0.5f, (float) y + 2, z + 0.5f);
-            GlStateManager.rotate(yaw , 0F, 1F, 0F);
-            GlStateManager.rotate(pitch - 90, 1F, 0F, 0F);
 
-            try {
-                RenderMissile.INSTANCE.renderMissile(launcher.cachedMissileStack, launcher, 0, 0, 0, 0, partialTicks);
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
+            RenderMissile.INSTANCE.renderItem(launcher.cachedMissileStack,launcher.getWorld(), 0, 0, 0, yaw, pitch - 90, partialTicks);
             GlStateManager.popMatrix();
         }
     }
@@ -97,12 +92,7 @@ public class TESRCruiseLauncher extends TileEntitySpecialRenderer<TileCruiseLaun
                     GlStateManager.rotate(pu + 90, 1F, 0F, 0F);
 
                     GlStateManager.translate(0, -1, 0);
-
-                    try {
-                        RenderMissile.INSTANCE.renderMissile(launcher.cachedMissileStack, launcher, 0, 0, 0, 0, partialTicks);
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                    }
+                    RenderMissile.INSTANCE.renderItem(launcher.cachedMissileStack,launcher.getWorld(),0, 0, 0, 0, 0, partialTicks);
                     GlStateManager.popMatrix();
                 }
             }

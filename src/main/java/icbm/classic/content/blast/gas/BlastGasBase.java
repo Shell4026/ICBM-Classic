@@ -4,7 +4,10 @@ import icbm.classic.ICBMClassic;
 import icbm.classic.api.explosion.IBlastTickable;
 import icbm.classic.client.ICBMSounds;
 import icbm.classic.content.blast.Blast;
+import icbm.classic.content.gas.ProtectiveArmorHandler;
 import icbm.classic.lib.NBTConstants;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,8 +28,10 @@ public abstract class BlastGasBase extends Blast implements IBlastTickable
     private static final BlockPos.MutableBlockPos checkPos = new BlockPos.MutableBlockPos();
 
     /** Duration of gas effect, also controls particles */
+    @Setter @Accessors(chain = true)
     protected int duration;
 
+    @Setter @Accessors(chain = true)
     private boolean playShortSoundFX;
 
     private int lastRadius = 0;
@@ -40,12 +45,6 @@ public abstract class BlastGasBase extends Blast implements IBlastTickable
     private final HashMap<EntityLivingBase, Integer> impactedEntityMap = new HashMap();
     //TODO turn into entity capability to prevent damage stacking of several explosives
     //TODO use weak refs to not hold instances
-
-    public BlastGasBase(int duration, boolean playShortSoundFX)
-    {
-        this.duration = duration;
-        this.playShortSoundFX = playShortSoundFX;
-    }
 
     private double sizePercentageOverTime(int timePassed)
     {
@@ -86,21 +85,21 @@ public abstract class BlastGasBase extends Blast implements IBlastTickable
                 //Loop all entities
                 for (EntityLivingBase entity : entityList)
                 {
-                    //Track entities
-                    if (!impactedEntityMap.containsKey(entity))
-                    {
-                        impactedEntityMap.put(entity, 1);
-                    }
-                    else
-                    {
-                        impactedEntityMap.replace(entity, impactedEntityMap.get(entity) + 1);
-                    }
+                    final float protection = getProtectionRating(entity);
+                    if(protection < minGasProtection() || protection < world.rand.nextFloat()) {
+                        //Track entities
+                        if (!impactedEntityMap.containsKey(entity)) {
+                            impactedEntityMap.put(entity, 1);
+                        } else {
+                            impactedEntityMap.replace(entity, impactedEntityMap.get(entity) + 1);
+                        }
 
-                    //Scale damage with hit count
-                    final int hitCount = impactedEntityMap.get(entity);
+                        //Scale damage with hit count
+                        final int hitCount = impactedEntityMap.get(entity);
 
-                    //Apply effects
-                    applyEffect(entity, hitCount);
+                        //Apply effects
+                        applyEffect(entity, hitCount);
+                    }
                 }
             }
 
@@ -109,6 +108,14 @@ public abstract class BlastGasBase extends Blast implements IBlastTickable
         }
 
         return false;
+    }
+
+    protected float minGasProtection() {
+        return 0.5f;
+    }
+
+    protected float getProtectionRating(EntityLivingBase entityLivingBase) {
+        return ProtectiveArmorHandler.getProtectionRating(entityLivingBase);
     }
 
     /**
@@ -146,6 +153,8 @@ public abstract class BlastGasBase extends Blast implements IBlastTickable
                 return false;
             }
 
+
+
             //Check that the entity is in range
             return affectedBlocks.contains(checkPos.setPos(entity.posX, entity.posY, entity.posZ));
         }
@@ -157,7 +166,7 @@ public abstract class BlastGasBase extends Blast implements IBlastTickable
         if (this.playShortSoundFX)
         {
             ICBMSounds.GAS_LEAK.play(world, location.x() + 0.5D, location.y() + 0.5D, location.z() + 0.5D,
-                    4.0F, (1.0F + (world().rand.nextFloat() - world().rand.nextFloat()) * 0.2F) * 1F, true);
+                    4.0F, (1.0F + (world().rand.nextFloat() - world().rand.nextFloat()) * 0.2F), true);
         }
     }
 

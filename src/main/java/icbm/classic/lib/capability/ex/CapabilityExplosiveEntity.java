@@ -2,24 +2,30 @@ package icbm.classic.lib.capability.ex;
 
 import icbm.classic.ICBMClassic;
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.actions.cause.IActionSource;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.caps.IExplosive;
+import icbm.classic.api.explosion.IBlast;
 import icbm.classic.api.refs.ICBMExplosives;
+import icbm.classic.api.reg.IExplosiveCustomization;
 import icbm.classic.api.reg.IExplosiveData;
+import icbm.classic.lib.actions.status.ActionResponses;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 1/7/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/7/19.
  */
 public class CapabilityExplosiveEntity implements IExplosive
 {
     public final Entity entity;
     private ItemStack stack = ItemStack.EMPTY;
+
+    private boolean isExploding = false;
 
     public CapabilityExplosiveEntity(@Nonnull Entity entity)
     {
@@ -43,7 +49,23 @@ public class CapabilityExplosiveEntity implements IExplosive
         }
     }
 
-    @Nullable
+    public IActionStatus doExplosion(double x, double y, double z, IActionSource source)
+    {
+        if (this.isExploding) {
+            return ActionResponses.COMPLETED;
+        }
+
+        //Make sure to note we are currently exploding
+        this.isExploding = true;
+
+        if (!this.entity.world.isRemote)
+        {
+            return this.getExplosiveData().create(this.entity.world, x, y, z, source, null).doAction();
+        }
+        return ActionResponses.COMPLETED;
+    }
+
+    @Nonnull
     @Override
     public IExplosiveData getExplosiveData()
     {
@@ -59,24 +81,30 @@ public class CapabilityExplosiveEntity implements IExplosive
         return ICBMExplosives.CONDENSED;
     }
 
-    @Nonnull
     @Override
-    public NBTTagCompound getCustomBlastData()
-    {
+    public void applyCustomizations(IBlast blast) {
         final ItemStack stack = toStack();
         if (stack.hasCapability(ICBMClassicAPI.EXPLOSIVE_CAPABILITY, null))
         {
             final IExplosive explosive = stack.getCapability(ICBMClassicAPI.EXPLOSIVE_CAPABILITY, null);
             if (explosive != null)
             {
-                final NBTTagCompound tag = explosive.getCustomBlastData();
-                if (tag != null && !tag.hasNoTags())
-                {
-                    return tag;
-                }
+                explosive.applyCustomizations(blast);
             }
         }
-        return new NBTTagCompound();
+    }
+
+    @Override
+    public void addCustomization(IExplosiveCustomization customization) {
+        final ItemStack stack = toStack();
+        if (stack.hasCapability(ICBMClassicAPI.EXPLOSIVE_CAPABILITY, null))
+        {
+            final IExplosive explosive = stack.getCapability(ICBMClassicAPI.EXPLOSIVE_CAPABILITY, null);
+            if (explosive != null)
+            {
+                explosive.addCustomization(customization);
+            }
+        }
     }
 
     @Nonnull

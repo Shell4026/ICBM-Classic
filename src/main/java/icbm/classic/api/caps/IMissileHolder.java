@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
  * <p>
  * In theory this should just be a wrapper to the inventory. However,
  * it may do additional checks to ensure the missile is supported
- * Created by Dark(DarkGuardsman, Robert) on 1/9/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/9/19.
  */
 public interface IMissileHolder //TODO refactor to be a list
 {

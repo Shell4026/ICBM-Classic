@@ -2,8 +2,8 @@ package icbm.classic.content.blast;
 
 import icbm.classic.api.explosion.IBlastTickable;
 import icbm.classic.client.ICBMSounds;
-import icbm.classic.content.entity.flyingblock.EntityFlyingBlock;
 import icbm.classic.content.entity.EntityLightBeam;
+import icbm.classic.content.entity.flyingblock.EntityFlyingBlock;
 import icbm.classic.content.entity.flyingblock.FlyingBlock;
 import icbm.classic.lib.explosive.ThreadWorkBlast;
 import icbm.classic.lib.thread.IThreadWork;
@@ -96,15 +96,9 @@ public abstract class BlastBeam extends Blast implements IBlastTickable
                 //Edit blocks and queue spawning
                 for (BlockPos blockPos : blocksToRemove)
                 {
-                    final IBlockState state = world.getBlockState(blockPos); //TODO filter what can turn into a flying block
-
-                    //Remove block
-                    if (world.setBlockToAir(blockPos))
-                    {
-                        FlyingBlock.spawnFlyingBlock(this.world, blockPos, state, (entity) -> {
-                            entity.gravity = -0.01f;
-                        }, null);
-                    }
+                    FlyingBlock.spawnFlyingBlock(this.world, blockPos,
+                        (entity) -> entity.setGravity(entity.getGravity() - 0.01f),
+                        (e) -> world.setBlockToAir(blockPos));
                 }
 
                 blocksToRemove.clear();
@@ -125,7 +119,7 @@ public abstract class BlastBeam extends Blast implements IBlastTickable
             if (!hasEnabledGravityForFlyingBlocks)
             {
                 hasEnabledGravityForFlyingBlocks = true;
-                flyingBlocks.forEach(entity -> entity.gravity = 0.5f);
+                flyingBlocks.forEach(entity -> entity.setGravity(0.5f));
             }
 
             if (!hasPlacedBlocks)
@@ -140,7 +134,7 @@ public abstract class BlastBeam extends Blast implements IBlastTickable
 
     protected IThreadWork getFirstThread()
     {
-        return new ThreadWorkBlast((steps, edits) -> collectFlyingBlocks(edits), edits ->
+        return new ThreadWorkBlast(this.toString(), (steps, edits) -> collectFlyingBlocks(edits), edits ->
         {
             blocksToRemove.addAll(edits);
             hasGeneratedFlyingBlocks = false;
@@ -150,7 +144,7 @@ public abstract class BlastBeam extends Blast implements IBlastTickable
 
     protected IThreadWork getSecondThread()
     {
-        return new ThreadWorkBlast((steps, edits) -> collectBlocksToMutate(edits), edits ->
+        return new ThreadWorkBlast(this.toString(), (steps, edits) -> collectBlocksToMutate(edits), edits ->
         {
             blocksToRemove.addAll(edits);
             hasPlacedBlocks = false;

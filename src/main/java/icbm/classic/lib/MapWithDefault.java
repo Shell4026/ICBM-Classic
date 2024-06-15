@@ -2,9 +2,7 @@ package icbm.classic.lib;
 
 import java.util.HashMap;
 
-/**
- * Created by Robert on 1/2/20.
- */
+
 public class MapWithDefault<K, V> extends HashMap<K, V>
 {
 

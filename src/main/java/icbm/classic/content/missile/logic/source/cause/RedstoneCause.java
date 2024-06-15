@@ -12,10 +12,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class RedstoneCause extends BlockCause {
+public class RedstoneCause extends CausedByBlock {
 
     public static final ResourceLocation REG_NAME = new ResourceLocation(ICBMConstants.DOMAIN, "block.redstone");
 
@@ -26,8 +28,9 @@ public class RedstoneCause extends BlockCause {
         this.side = side;
     }
 
+    @Nonnull
     @Override
-    public ResourceLocation getRegistryName() {
+    public ResourceLocation getRegistryKey() {
         return REG_NAME;
     }
 

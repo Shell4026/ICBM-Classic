@@ -1,414 +1,241 @@
 package icbm.classic.config.util;
 
 import com.google.common.collect.ImmutableMap;
-import icbm.classic.ICBMClassic;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import icbm.classic.lib.ForgeRegistryHelpers;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
  * List of BlockStates/Blocks to use in config purposes. This is meant for internal use by the mod and should
  * never be touched by other mods. Use events, integrations, or ask for changes before bypassing this system.
- * <p>
- * Life Cycle:
- * - unlock
- * - clear existing
- * - load(external inputs)
- * - batch(block-registry)
- * - lock
  */
-@RequiredArgsConstructor
-public class BlockStateConfigList {
-    // TODO once ContentBuilder Json system is published for MC replace this with JSON version to support programmatic and more complex entries
-    //      entries to consider once JSON is allowed: time/date specific, conditional statements such as IF(MOD) IF(WORLD) IF(MATH) IF(GEO_AREA), block sets/lists
+public abstract class BlockStateConfigList<VALUE> extends ResourceConfigList<BlockStateConfigList<VALUE>, IBlockState, VALUE> {
 
-    // Constructor
-    @Getter
-    private final String name;
-    private final Consumer<BlockStateConfigList> reloadCallback;
+    protected static final Pattern BLOCK_PROP_REGEX = Pattern.compile("^(.*):([^=\\s]*)\\[((?:[\\w.]+:[\\w.]+,?)+)\\](?:=(.*))?");
 
-    // Temporary storage
-    final List<String> mods = new ArrayList<>();
-    final Map<String, List<Function<Block, Boolean>>> fuzzyBlockChecks = new HashMap<>();
 
-    // Block lists
-    final HashSet<IBlockState> blockStates = new HashSet();
-    final HashSet<Block> blocks = new HashSet();
-    final Map<Block, List<Function<IBlockState, Boolean>>> blockStateMatchers = new HashMap();
-
-    // States
-    @Getter
-    private boolean isLocked = false;
-
-    public void reload() {
-        this.unlock();
-        this.reset();
-        // Let the parent load defaults and pull in configs
-        this.reloadCallback.accept(this);
-        this.batchBlockRegistry();
-        this.lock();
+    public BlockStateConfigList(String name, Consumer<BlockStateConfigList<VALUE>> reloadCallback) {
+        super(name, "https://github.com/BuiltBrokenModding/ICBM-Classic/wiki/config-block-states", reloadCallback);
+        addMatcher(BLOCK_PROP_REGEX, this::handleBlockProps);
+        addMatcher(META_KEY_REGEX, this::handleMeta);
+        addMatcher(KEY_VALUE_REGEX, this::handleSimple);
     }
 
-    private void unlock() {
-        this.isLocked = false;
+    @Override
+    protected ResourceLocation getContentKey(IBlockState iBlockState) {
+        return iBlockState.getBlock().getRegistryName();
     }
 
-    private void reset() {
-        blockStates.clear();
-        blocks.clear();
-    }
-
-    private void lock() {
-        this.isLocked = true;
-
-        // Clear temp data
-        mods.clear();
-        fuzzyBlockChecks.clear();
-    }
-
-    public void batchBlockRegistry() {
-        if (isLocked) {
-            ICBMClassic.logger().error(name + ": list is locked but loading was invoked!!", new IllegalArgumentException());
-            return;
-        }
-
-        // Handle mods by looping entire registry
-        ForgeRegistries.BLOCKS.forEach(block -> {
-
-            // Mods
-            final String modId = Objects.requireNonNull(block.getRegistryName()).getResourceDomain();
-            if (mods.contains(modId)) {
-                blocks.add(block);
+    @Override
+    protected Function<IBlockState, VALUE> getMetaValue(ResourceLocation key, int metadata, @Nullable VALUE value) {
+        return (blockState) -> {
+            if (getContentKey(blockState) == key && blockState.getBlock().getMetaFromState(blockState) == metadata) {
+                return value;
             }
+            return null;
+        };
+    }
 
-            // Blocks generic fuzzy, allows for any logic to be run per block
-            if (fuzzyBlockChecks.containsKey(modId)) {
-                if (fuzzyBlockChecks.get(modId).stream().anyMatch(func -> func.apply(block))) {
-                    blocks.add(block);
+    protected Function<IBlockState, VALUE> getPropValue(ResourceLocation key, Map<IProperty, Function<Comparable, Boolean>> propMatchers, @Nullable VALUE value) {
+        return (blockState) -> {
+            if (getContentKey(blockState) == key) {
+                final ImmutableMap<IProperty<?>, Comparable<?>> stateProps = blockState.getProperties();
+                for(IProperty propKey: propMatchers.keySet()) {
+                    if(!stateProps.containsKey(propKey)) {
+                        return null;
+                    }
+
+                    final Function<Comparable, Boolean> check = propMatchers.get(propKey);
+                    if(check != null && !check.apply(stateProps.get(propKey))) {
+                        return null;
+                    }
                 }
+                return value;
             }
-        });
-
-        lock();
+            return null;
+        };
     }
 
-    public boolean contains(IBlockState state) {
-        if (state == null) {
-            return false;
-        }
-        if(blocks.contains(state.getBlock()) || blockStates.contains(state))
-        {
-            return true;
-        }
-        if(Optional.ofNullable(blockStateMatchers.get(state.getBlock()))
-            .map(l -> l.stream().anyMatch(f -> f.apply(state))).orElse(false)) {
-            blockStates.add(state);
-            return true;
-        }
-        return false;
-    }
+    protected ResourceConfigEntry<IBlockState, VALUE> handleBlockProps(Matcher domainMatcher, String source, String entry, int index) {
+        final String domain = domainMatcher.group(1);
+        final String resource = domainMatcher.group(2);
+        final ResourceLocation key = new ResourceLocation(domain, resource);
 
-    /**
-     * Loads block states from a collection of strings. Strings can contain nearly anything
-     * so long as it results in block(s) or block-state(s).
-     *
-     * @param entries to process
-     */
-    public void loadBlockStates(Iterable<String> entries) {
-        if (checkLock("blocks", () -> String.join(", ", entries))) {
-            return;
-        }
-
-        entries.forEach((str) -> {
-            final String entry = str.trim();
-            handleEntry(entry);
-        });
-    }
-
-    /**
-     * Loads block states from a collection of strings. Strings can contain nearly anything
-     * so long as it results in block(s) or block-state(s).
-     *
-     * @param entries to process
-     */
-    public void loadBlockStates(String... entries) {
-        if (checkLock("blocks", () -> String.join(", ", entries))) { //TODO trim string to not dump 1000s of lines into logs
-            return;
-        }
-
-        for (String str : entries) {
-            final String entry = str.trim();
-            handleEntry(entry);
-        }
-    }
-
-    public void addMod(String mod) {
-        if (checkLock("mod", () -> mod)) {
-            return;
-        }
-        this.mods.add(mod);
-    }
-
-    private boolean checkLock(String type, Supplier<String> entry) {
-        if (this.isLocked) {
-            ICBMClassic.logger().error(name + ": list is locked. Unable to add '" + type + "' entry '" + entry.get() + "'", new IllegalArgumentException());
-            return true;
-        }
-        return false;
-    }
-
-    boolean handleEntry(String entry) {
-        try {
-            // TODO replace with regex for better match detection
-            // TODO remove spaces from entries so we don't need to do string.trim() everywhere, really don't care if `m i n e c r a f t : s t o    n e' is valid as a result
-
-            // Metadata sugar for 1.12
-            if (entry.contains("@")) {
-                return handleMetaData(entry);
-            }
-            // Block states, also supports ~
-            else if (entry.contains("[")) {
-                return handleBlockState(entry);
-            }
-            // Blocks with fuzzy checks
-            else if (entry.contains("~")) {
-                return handleFuzzyBlocks(entry);
-            }
-            //TODO add ore-dictionary using `@ore:` likely can do keywords using `@word` such as `@contains:` or `@regex:`
-            return handleSimpleBlock(entry);
-        }
-        // Catch all if something fails with block states in other mods
-        catch (Exception e) {
-            ICBMClassic.logger().error(name + ": Unexpected error parsing `" + entry + "` for banAllow list.", e);
-        }
-        return false;
-    }
-
-    boolean handleSimpleBlock(String entry) {
-        final ResourceLocation blockKey = this.getBlockKey(entry);
-        if(blockKey == null) {
-            return false;
-        }
-
-        if(!ForgeRegistries.BLOCKS.containsKey(blockKey)) {
-            ICBMClassic.logger().error(name + ": Failed to find block matching entry `" + entry + "`");
-            return false;
-        }
-
-        return blocks.add(ForgeRegistries.BLOCKS.getValue(blockKey));
-    }
-
-    ResourceLocation getBlockKey(String entry) {
-        // TODO convert to regex
-        final String[] keySplit = entry.split(":", -1);
-        final String domain = keySplit.length == 2 ? keySplit[0].trim() : null;
-        final String key = keySplit.length == 2 ? keySplit[1].trim() : null;
-        if (keySplit.length != 2 || domain.isEmpty() || key.isEmpty()) {
+        if (!isDomainValid(key.getResourceDomain())) {
+            error(source, entry, "No matching mod domain found for '" + key + "'");
+            return null;
+        } else if (!isValidKey(key)) {
+            error(source, entry, "No matching content found for '" + key + "'");
             return null;
         }
-        return new ResourceLocation(domain, key);
+
+        final Block block = ForgeRegistries.BLOCKS.getValue(key);
+        final String[] props = domainMatcher.group(3).split(",");
+        final Map<IProperty, Function<Comparable, Boolean>> propMatchers = collectBlockProps(source, entry, block, props);
+        if (propMatchers == null) {
+            return null;
+        }
+
+        final String valueStr = domainMatcher.group(4);
+        final VALUE value = parseValue(source, entry, valueStr);
+
+        final Function<IBlockState, VALUE> matcher = getPropValue(key, propMatchers, value);
+        return new ResourceConfigEntry<>("resource_block_state", index, matcher);
     }
 
-    boolean handleMetaData(String entry) {
-        // TODO replace validation sections with regex for cleaner extraction and linting
-
-        // Validate general format
-        final String[] metaSplit = entry.split("@");
-        if (metaSplit.length != 2 || !metaSplit[1].matches("\\d+") || !metaSplit[0].contains(":")) {
-            ICBMClassic.logger().error(name + ": Detected invalid metadata format for `" + entry + "`  for banAllow list. Expected `mod:key@number` example: `minecraft:stone@2`");
-            return false; //TODO maybe throw instead so we can unit test the errors?
-        }
-
-        // Validate key format
-        final ResourceLocation blockKey = this.getBlockKey(metaSplit[0]);
-        if (blockKey == null) {
-            ICBMClassic.logger().error(name + ": Detected invalid metadata format for `" + entry + "`  for banAllow list. Expected `mod:key@number` example: `minecraft:stone@2`");
-            return false;
-        }
-
-        // Get block from provided key
-        if (!ForgeRegistries.BLOCKS.containsKey(blockKey)) {
-            ICBMClassic.logger().error(name + ": Failed to find block matching entry `" + entry + "` for banAllow list.");
-            return false;
-        }
-        final Block block = ForgeRegistries.BLOCKS.getValue(blockKey);
-
-        // Get state from meta value
-        final int desiredMetadata = Integer.parseInt(metaSplit[1]);
-        final IBlockState state = block.getStateFromMeta(desiredMetadata);
-
-        // Null state is a sign of a buggy mod-block
-        if (state == null) {
-            ICBMClassic.logger().error(name + ": Failed to find state matching entry `" + entry + "` for banAllow list. This is a bug in '" + blockKey.getResourceDomain() + "'!");
-            return false;
-        }
-
-        // Validate metadata, default implementation is to return meta value of 0 for unknowns
-        final int metaActual = block.getMetaFromState(state);
-        if (desiredMetadata != metaActual) {
-            ICBMClassic.logger().error(name + ": Block returned a state with metadata[" + metaActual + "] but it didn't match metadata[" + desiredMetadata + "] for entry `" + entry + "` for banAllow list.");
-            return false;
-        }
-
-        return blockStates.add(state);
+    @Override
+    protected boolean isValidKey(ResourceLocation targetKey) {
+        return ForgeRegistryHelpers.contains(ForgeRegistries.BLOCKS, targetKey);
     }
 
-    boolean handleBlockState(String entry) {
-
-        final String[] nameVsPropSplit = entry.split("\\[");
-
-        // Block data
-        final ResourceLocation regName = this.getBlockKey(nameVsPropSplit[0]);
-        if (regName == null) {
-            // TODO log formatting issue
-            return false;
-        }
-
-        final Block block = ForgeRegistries.BLOCKS.getValue(regName);
-
-        if (block == null) {
-            ICBMClassic.logger().error("Config Flying Block: Failed to find block '" + regName + "' matching entry `" + entry + "` for banAllow list.");
-            return false;
-        }
-
-        // Properties
-        final String[] properties = nameVsPropSplit[1].replace("]", "").split(",");
-
+    protected Map<IProperty, Function<Comparable, Boolean>> collectBlockProps(String source, String entry, Block block, String[] props) {
         final Map<IProperty, Function<Comparable, Boolean>> matchers = new HashMap();
+        for (String propEntry : props) {
+            final Matcher propMatcher = KEY_VALUE_REGEX.matcher(propEntry);
+            if (!propMatcher.matches()) {
+                // TODO error log
+                return null;
+            }
+            final String propKey = propMatcher.group(1);
+            final String propValue = propMatcher.group(2);
+            //TODO consider using group 3 as a boolean contains check
 
-        for (String propEntry : properties) {
-            final String[] stateSplit = propEntry.split(":");
-            final String propName = stateSplit[0].trim();
-            final String propValue = stateSplit[1].trim();
-
-            final IProperty property = block.getBlockState().getProperty(propName);
+            final IProperty property = block.getBlockState().getProperty(propKey);
             if (property == null) {
-                ICBMClassic.logger().error("Config Flying Block: Failed to find property '" + propName + "' for block '" + regName + "' matching entry `" + entry + "` for banAllow list.");
-                return false;
+                error(source, entry, String.format("Failed to find property '%s' for block '%s' matching entry `%s`", propKey, block.getRegistryName(), propEntry));
+                return null;
             }
 
             if (propValue.equals("~")) {
                 matchers.put(property, (o) -> true);
-            } else if (propValue.startsWith("~")) {
+            } else if (propValue.startsWith("~") || propValue.endsWith("~")) {
                 final String stringMatch = propValue.substring(1).trim();
                 final List<Comparable<?>> valuesToMatch = (List<Comparable<?>>) property.getAllowedValues().stream()
-                    .filter(o -> property.getName((Comparable) o).endsWith(stringMatch)).collect(Collectors.toList());
-                if(valuesToMatch.isEmpty()) {
-                    ICBMClassic.logger().error("Config Flying Block: Failed to find values matching '" + propValue + "' for property '" + propName + "' and block '" + regName + "' matching entry `" + entry + "`");
-                    return false;
-                }
-                matchers.put(property, valuesToMatch::contains);
-            } else if (propValue.endsWith("~")) {
-                final String stringMatch = propValue.substring(0, propValue.length() - 1).trim();
-                final List<Comparable<?>> valuesToMatch = (List<Comparable<?>>) property.getAllowedValues().stream()
-                    .filter(o -> property.getName((Comparable) o).startsWith(stringMatch)).collect(Collectors.toList());
-                if(valuesToMatch.isEmpty()) {
-                    ICBMClassic.logger().error("Config Flying Block: Failed to find values matching '" + propValue + "' for property '" + propName + "' and block '" + regName + "' matching entry `" + entry + "`");
-                    return false;
+                    .filter(o -> {
+                        if (propValue.endsWith("~")) {
+                            return property.getName((Comparable) o).endsWith(stringMatch);
+                        }
+                        return property.getName((Comparable) o).startsWith(stringMatch);
+                    }).collect(Collectors.toList());
+                if (valuesToMatch.isEmpty()) {
+                    error(source, entry, String.format("Failed to find values matching '%s' for property '%s' and block '%s' matching entry '%s'", propValue, propKey, block.getRegistryName(), propEntry));
+                    return null;
                 }
                 matchers.put(property, valuesToMatch::contains);
             } else {
                 // Simple value matcher
                 final Optional value = property.getAllowedValues().stream().filter(o -> property.getName((Comparable) o).equalsIgnoreCase(propValue)).findFirst();
                 if (!value.isPresent()) {
-                    ICBMClassic.logger().error("Config Flying Block: Failed to find value '" + propValue + "' for property '" + propName + "' and block '" + regName + "' matching entry `" + entry + "`");
-                    return false;
+                    error(source, entry, String.format("Failed to find values matching '%s' for property '%s' and block '%s' matching entry '%s'", propValue, propKey, block.getRegistryName(), propEntry));
+                    return null;
                 }
                 matchers.put(property, (o) -> Objects.equals(value.get(), o));
             }
         }
-
-        if(matchers.isEmpty()) {
-            return false;
-        }
-
-        if(!blockStateMatchers.containsKey(block)) {
-            blockStateMatchers.put(block, new ArrayList());
-        }
-        return blockStateMatchers.get(block).add((blockState) -> matchesFuzzyState(blockState, matchers));
+        return matchers;
     }
 
-    boolean matchesFuzzyState(IBlockState state, Map<IProperty, Function<Comparable, Boolean>> matchers) {
-        final ImmutableMap<IProperty<?>, Comparable<?>> stateProps = state.getProperties();
-        for(IProperty propKey: matchers.keySet()) {
-            if(!stateProps.containsKey(propKey)) {
-                return false;
+
+    protected IBlockState parseBlockState(String source, String entry, String valueToParse) {
+        final Matcher metaMatcher = META_KEY_REGEX.matcher(valueToParse);
+        if (metaMatcher.matches()) {
+            final String domain = metaMatcher.group(1);
+            final String resource = metaMatcher.group(2);
+            final ResourceLocation key = new ResourceLocation(domain, resource);
+            if (!isDomainValid(key.getResourceDomain())) {
+                error(source, entry, "No matching mod domain found for '" + key + "'");
+                return null;
+            } else if (!isValidKey(key)) {
+                error(source, entry, "No matching content found for '" + key + "'");
+                return null;
             }
 
-            final Function<Comparable, Boolean> check = matchers.get(propKey);
-            if(check != null && !check.apply(stateProps.get(propKey))) {
-                return false;
+            final int meta = Integer.parseInt(metaMatcher.group(3));
+
+            final Block block = ForgeRegistries.BLOCKS.getValue(key);
+            if (block != null) {
+                return block.getStateFromMeta(meta);
             }
         }
-        return true;
-    }
 
-    boolean handleFuzzyBlocks(String entry) {
-        final String[] split = entry.split(":");
+        final Matcher matcher = KEY_VALUE_REGEX.matcher(valueToParse);
+        if (matcher.matches()) {
+            final String domain = matcher.group(1);
+            final String resource = matcher.group(2);
+            final ResourceLocation key = new ResourceLocation(domain, resource);
 
-        // TODO replace with regex
-        //FORMAT CHECK: Requires single ':' and should contain only a single '~'
-        if (split.length != 2 || split[1].lastIndexOf("~") != split[1].indexOf("~") || split[0].contains("~") || split[0].isEmpty()) {
-            ICBMClassic.logger().error(name + ": Detected invalid fuzzy format for `" + entry + "`  for banAllow list. Expected `mod:~`, `mod:key~` or `mod:~key`");
-            return false;
-        }
-
-        // TODO add fuzzy without domain such as `~stone`
-
-        final String domain = split[0].trim();
-        final String resource = split[1].trim();
-
-        // case 1: General mod addition, technically a fuzzy check but really is a modID==value for sanity reasons
-        if (Objects.equals(resource, "~")) {
-            return mods.add(domain);
-        }
-        // case 2: fuzzy leading word check, Ex: `minecraft:iron~` would match all iron blocks such as `minecraft:iron_bars`
-        else if (resource.endsWith("~")) {
-            addFuzzyForBlock(domain, (block) -> blockPathStartsWith(block, resource.substring(0, resource.length() - 1)));
-            return true;
-        }
-        // case 3: fuzzy trailing word check, EX: `minecraft:~door` would match all doors such as `minecraft:oak_door`
-        else if (resource.startsWith("~")) {
-            addFuzzyForBlock(domain, (block) -> blockPathEndsWith(block, resource.substring(1)));
-            return true;
-        }
-
-        ICBMClassic.logger().error(name + ": Couldn't match fuzzy format for `" + entry + "`  for banAllow list. Expected `mod:~`, `mod:key~` or `mod:~key`");
-        return false;
-    }
-
-    boolean blockPathStartsWith(Block block, String value) {
-        return Objects.requireNonNull(block.getRegistryName()).getResourcePath().startsWith(value);
-    }
-
-    boolean blockPathEndsWith(Block block, String value) {
-        return Objects.requireNonNull(block.getRegistryName()).getResourcePath().endsWith(value);
-    }
-
-    void addFuzzyForBlock(String domain, Function<Block, Boolean> check) {
-        if (!this.fuzzyBlockChecks.containsKey(domain)) {
-            this.fuzzyBlockChecks.put(domain, new ArrayList<>());
-        }
-        this.fuzzyBlockChecks.get(domain).add(check);
-    }
-
-    public List<String> dumpBlocksContained() {
-        final List<String> list = new ArrayList<>();
-        ForgeRegistries.BLOCKS.forEach(block -> {
-            if(this.contains(block.getDefaultState())) {
-                list.add(block.getRegistryName().toString());
+            if (!isDomainValid(key.getResourceDomain())) {
+                error(source, entry, "No matching mod domain found for '" + key + "'");
+                return null;
+            } else if (!isValidKey(key)) {
+                error(source, entry, "No matching content found for '" + key + "'");
+                return null;
             }
-        });
-        return list;
+
+            final Block block = ForgeRegistries.BLOCKS.getValue(key);
+            if (block != null) {
+                return block.getDefaultState();
+            }
+        }
+        return null;
+    }
+
+    public static class BlockOut extends BlockStateConfigList<IBlockState> {
+
+        public BlockOut(String name, Consumer<BlockStateConfigList<IBlockState>> reloadCallback) {
+            super(name, reloadCallback);
+        }
+
+        @Override
+        protected IBlockState parseValue(String source, String entry, @Nullable String value) {
+            return super.parseBlockState(source, entry, value);
+        }
+    }
+
+    public static class BlockChanceOut extends BlockStateConfigList<Pair<IBlockState, Float>> {
+
+        public BlockChanceOut(String name, Consumer<BlockStateConfigList<Pair<IBlockState, Float>>> reloadCallback) {
+            super(name, reloadCallback);
+        }
+
+        @Override
+        protected Pair<IBlockState, Float> parseValue(String source, String entry, String value) {
+
+            if (value.contains(",")) { //TODO use regex to ensure we only have 1 comma
+                final String[] split = value.split(",");
+                return Pair.of(super.parseBlockState(source, entry, split[0]), Math.min(1, Math.max(0, Float.parseFloat(split[1]))));
+            }
+            return Pair.of(super.parseBlockState(source, entry, value), null);
+        }
+    }
+
+    public static class FloatOut extends BlockStateConfigList<Float> {
+
+        public FloatOut(String name, Consumer<BlockStateConfigList<Float>> reloadCallback) {
+            super(name, reloadCallback);
+        }
+
+        @Override
+        protected Float parseValue(String source, String entry, String value) {
+            try {
+                return Float.parseFloat(value);
+            }
+            catch (NumberFormatException e) {
+                error(source, entry, "Value is not a Float");
+            }
+            return null;
+        }
     }
 }

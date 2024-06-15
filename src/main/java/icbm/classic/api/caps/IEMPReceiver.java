@@ -1,6 +1,6 @@
 package icbm.classic.api.caps;
 
-import icbm.classic.api.explosion.IBlast;
+import icbm.classic.api.actions.IAction;
 import net.minecraft.world.World;
 
 /**
@@ -9,7 +9,7 @@ import net.minecraft.world.World;
  * to receiver EMP effects from a EMP blast or similiar system.
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 3/12/2018.
+ * Created by Dark on 3/12/2018.
  */
 public interface IEMPReceiver
 {
@@ -29,7 +29,7 @@ public interface IEMPReceiver
      * @param doAction  - set to try to apply effects to the world, false to simulate actions.
      * @return power to apply on the other side of the entity, any value under zero will be ignored
      */
-    default float applyEmpAction(World world, double x, double y, double z, IBlast emp_blast, float power, boolean doAction)
+    default float applyEmpAction(World world, double x, double y, double z, IAction emp_blast, float power, boolean doAction)
     {
         //At the moment power is not used, check back later - 3/12/2018 Dark
 
@@ -49,7 +49,7 @@ public interface IEMPReceiver
     }
 
     /**
-     * Sub version of {@link #applyEmpAction(World, double, double, double, IBlast, float, boolean)} used in
+     * Sub version of {@link #applyEmpAction(World, double, double, double, IAction, float, boolean)} used in
      * connection with objects that are contained inside other objects. Allows gaining access to parent object
      * in case addition effects are required.
      * <p>
@@ -60,7 +60,7 @@ public interface IEMPReceiver
      *
      * @param container - object containing this sub-object
      */
-    default float applyEmpAction(World world, double x, double y, double z, IBlast emp_blast, Object container, float power, boolean doAction)
+    default float applyEmpAction(World world, double x, double y, double z, IAction emp_blast, Object container, float power, boolean doAction)
     {
         return applyEmpAction(world, x, y, z, emp_blast, power, doAction);
     }

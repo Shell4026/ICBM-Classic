@@ -7,7 +7,6 @@ import io.netty.buffer.ByteBuf;
  * packet handler you need to have a constructor
  * to create the object on the other end.
  *
- * Created by robert on 1/11/2015.
  */
 @Deprecated
 public interface IByteBufWriter

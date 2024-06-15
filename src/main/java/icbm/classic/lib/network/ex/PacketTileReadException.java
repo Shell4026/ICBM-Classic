@@ -8,7 +8,7 @@ import net.minecraft.tileentity.TileEntity;
  * Exception that is thrown when reading a packet with bad data.
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 10/26/2015.
+ * Created by Dark(DarkGuardsman, Robin) on 10/26/2015.
  */
 public class PacketTileReadException extends RuntimeException
 {

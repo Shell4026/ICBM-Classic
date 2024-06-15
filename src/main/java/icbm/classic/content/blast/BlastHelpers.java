@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
 import java.util.function.BooleanSupplier;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-08-27.
+ * Created by Dark(DarkGuardsman, Robin) on 2019-08-27.
  */
 public final class BlastHelpers
 {

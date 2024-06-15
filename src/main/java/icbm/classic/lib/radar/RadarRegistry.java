@@ -18,7 +18,7 @@ import java.util.List;
  * Map based system for tracking objects using a radar devices. Only works server side to prevent unwanted data from stacking up.
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 3/5/2016.
+ * Created by Dark(DarkGuardsman, Robin) on 3/5/2016.
  */
 public final class RadarRegistry
 {
@@ -107,18 +107,18 @@ public final class RadarRegistry
     }
 
     /**
-     * Grabs all living radar objects within range
+     * Grabs all living radar objects within range 2D
      *
-     * @param world
-     * @param x
-     * @param y
-     * @param z
-     * @param distance
+     * @param world to check
+     * @param x center
+     * @param y center
+     * @param z center
+     * @param distance in x & z axis
      * @return list, never null
      */
     public static List<Entity> getAllLivingObjectsWithin(World world, double x, double y, double z, double distance)
     {
-        return getAllLivingObjectsWithin(world, new Cube(x - distance, Math.max(0, y - distance), z - distance, x + distance, Math.min(ICBMClassic.MAP_HEIGHT, y + distance), z + distance));
+        return getAllLivingObjectsWithin(world, new Cube(x - distance, 0, z - distance, x + distance, ICBMClassic.MAP_HEIGHT, z + distance));
     }
 
     /**

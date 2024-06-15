@@ -1,5 +1,6 @@
 package icbm.classic.api.explosion;
 
+import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.reg.IExplosiveData;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,10 +12,14 @@ import javax.annotation.Nonnull;
  * Separate interface for blasts that can be built from {@link IBlastFactory}
  * <p>
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 1/3/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/3/19.
+ * @deprecated being replaced with {@link icbm.classic.api.actions.IActionData#create(World, double, double, double, IActionSource)} and likely a customization provider
  */
 public interface IBlastInit extends IBlast
 {
+    default IBlastInit setActionSource(IActionSource source) {
+        return this;
+    }
 
     /**
      * Sets the size of the blast
@@ -31,6 +36,7 @@ public interface IBlastInit extends IBlast
      * @param scale - multiplier to apply
      * @return this
      */
+    @Deprecated
     default IBlastInit scaleBlast(double scale) {
         return this;
     }
@@ -41,7 +47,10 @@ public interface IBlastInit extends IBlast
      *
      * @param entity - source of the blast
      * @return this
+     *
+     * @deprecated replaced with ${@link #getSource()}
      */
+    @Deprecated
     default IBlastInit setBlastSource(Entity entity)
     { //TODO maybe consider using a blame object that wrappers the source in case it dies
         return this;
@@ -55,7 +64,9 @@ public interface IBlastInit extends IBlast
      *
      * @param world
      * @return this
+     * @deprecated replaced with {@link icbm.classic.api.actions.IActionData#create(World, double, double, double, IActionSource)}
      */
+    @Deprecated
     IBlastInit setBlastWorld(World world);
 
     /**
@@ -67,7 +78,9 @@ public interface IBlastInit extends IBlast
      * @param y
      * @param z
      * @return this
+     * @deprecated replaced with {@link icbm.classic.api.actions.IActionData#create(World, double, double, double, IActionSource)}
      */
+    @Deprecated
     IBlastInit setBlastPosition(double x, double y, double z);
 
     /**
@@ -77,6 +90,7 @@ public interface IBlastInit extends IBlast
      * @param customData - nbt save data
      * @return this
      */
+    @Deprecated
     default IBlastInit setCustomData(@Nonnull NBTTagCompound customData) {
         return this;
     }

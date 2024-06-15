@@ -1,10 +1,19 @@
 package icbm.classic.content.missile.entity.anti;
 
 import icbm.classic.ICBMConstants;
+import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.missiles.parts.IMissileTarget;
+import icbm.classic.api.reg.obj.IBuilderRegistry;
+import icbm.classic.config.missile.ConfigMissile;
+import icbm.classic.config.missile.ConfigSAMMissile;
+import icbm.classic.content.missile.entity.EntityMissile;
 import icbm.classic.content.missile.entity.explosive.EntityExplosiveMissile;
+import icbm.classic.lib.buildable.BuildableObject;
+import icbm.classic.lib.radar.RadarEntity;
+import icbm.classic.lib.radar.RadarRegistry;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
@@ -13,20 +22,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.stream.Collectors;
 
 /**
  * Handles scanning for targets
  */
-public class SAMTargetData implements IMissileTarget {
+public class SAMTargetData extends BuildableObject<SAMTargetData, IBuilderRegistry<IMissileTarget>> implements IMissileTarget {
 
     public static final ResourceLocation REG_NAME = new ResourceLocation(ICBMConstants.DOMAIN, "anti.missile");
 
     private static final int MAX_TARGETS = 5;
     private static final int SCAN_DELAY = 10;
-    private static final int MAX_RANGE = 30;
 
     private final Queue<Entity> targets = new LinkedList();
 
+    @Setter
     private Entity currentTarget;
 
     private final EntitySurfaceToAirMissile host;
@@ -34,6 +44,7 @@ public class SAMTargetData implements IMissileTarget {
     private int scanDelayTick = 0;
 
     public SAMTargetData(EntitySurfaceToAirMissile host) {
+        super(REG_NAME, ICBMClassicAPI.MISSILE_TARGET_DATA_REGISTRY, null);
         this.host = host;
     }
 
@@ -47,8 +58,37 @@ public class SAMTargetData implements IMissileTarget {
     }
 
     public void refreshTargets() {
+
+        if(ConfigMissile.SAM_MISSILE.RADAR_MAP_ONLY) {
+            seekByRadar();
+        }
+        else {
+            seekByAABB();
+        }
+
+    }
+
+    private void seekByRadar() {
+        final List<RadarEntity> entries = RadarRegistry.getRadarMapForWorld(host.world).getRadarObjects(host.x(), host.y(), ConfigMissile.SAM_MISSILE.TARGET_RANGE);
+        final List<Entity> valid = entries.stream().filter(RadarEntity::isValid).map(e -> e.entity).filter(this::isValid).collect(Collectors.toList());
+
+        //Sort so we get more priority targets
+         entries.sort((a, b) -> {
+            // we want to avoid comparing on tier as this can create balance issues
+
+            //Compare with distance from self TODO add radar priority settings
+            final double distanceA = host.getDistanceSq(a.entity);
+            final double distanceB = host.getDistanceSq(b.entity);
+            return Double.compare(distanceA, distanceB);
+        });
+
+        //Only track a few targets at a time
+        targets.addAll(valid.subList(0, Math.min(MAX_TARGETS, valid.size())));
+    }
+
+    private void seekByAABB() {
         //FInd new targets
-        List<EntityExplosiveMissile> missiles = getValidTargets();
+        final List<Entity> missiles = getValidTargets();
 
         //Sort so we get more priority targets
         missiles.sort((a, b) -> {
@@ -64,24 +104,25 @@ public class SAMTargetData implements IMissileTarget {
         targets.addAll(missiles.subList(0, Math.min(MAX_TARGETS, missiles.size())));
     }
 
-    private List<EntityExplosiveMissile> getValidTargets() {
+    private List<Entity> getValidTargets() {
         return host.world()
-            .getEntitiesWithinAABB(EntityExplosiveMissile.class, targetArea(), this::isValid);
+            .getEntitiesWithinAABB(EntityMissile.class, targetArea(), this::isValid);
     }
 
     private AxisAlignedBB targetArea() {
         return new AxisAlignedBB(
-            host.x() - MAX_RANGE,
-            host.y() - MAX_RANGE,
-            host.z() - MAX_RANGE,
-            host.x() + MAX_RANGE,
-            host.y() + MAX_RANGE,
-            host.z() + MAX_RANGE
+            host.x() - ConfigMissile.SAM_MISSILE.TARGET_RANGE,
+            host.y() - ConfigMissile.SAM_MISSILE.TARGET_RANGE,
+            host.z() - ConfigMissile.SAM_MISSILE.TARGET_RANGE,
+            host.x() + ConfigMissile.SAM_MISSILE.TARGET_RANGE,
+            host.y() + ConfigMissile.SAM_MISSILE.TARGET_RANGE,
+            host.z() + ConfigMissile.SAM_MISSILE.TARGET_RANGE
         );
     }
 
     private boolean isValid(Entity entity) {
-        return entity instanceof EntityExplosiveMissile
+        return entity instanceof EntityMissile
+            && !(entity instanceof EntitySurfaceToAirMissile)
             && entity.isEntityAlive();
         //TODO setup a FoF system to prevent targeting friendly missiles
         //TODO link to radar system so we can prioritize targets
@@ -129,21 +170,5 @@ public class SAMTargetData implements IMissileTarget {
     @Override
     public double getZ() {
         return Optional.ofNullable(getTarget()).map((entity) -> entity.posZ).orElse(0.0);
-    }
-
-    @Override
-    public ResourceLocation getRegistryName() {
-        return REG_NAME;
-    }
-
-    @Override
-    public NBTTagCompound serializeNBT() {
-        //TODO find a way to save current target so we don't change targets after save/load
-        return null;
-    }
-
-    @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
-
     }
 }

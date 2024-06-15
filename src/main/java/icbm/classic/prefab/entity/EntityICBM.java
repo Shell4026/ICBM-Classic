@@ -1,7 +1,7 @@
 package icbm.classic.prefab.entity;
 
 import icbm.classic.api.data.IWorldPosition;
-import icbm.classic.lib.NBTConstants;
+import icbm.classic.lib.saving.NbtSaveHandler;
 import icbm.classic.lib.transform.vector.Pos;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -12,11 +12,14 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Base entity class to be shared by most entities
- * Created by robert on 1/24/2015.
+ * Created by Robin on 1/24/2015.
  */
 public abstract class EntityICBM extends Entity implements IWorldPosition
 {
@@ -24,6 +27,7 @@ public abstract class EntityICBM extends Entity implements IWorldPosition
     protected boolean hasHealth = false;
 
     private static final DataParameter<Float> HEALTH = EntityDataManager.<Float>createKey(EntityICBM.class, DataSerializers.FLOAT);
+    private static final DataParameter<Float> MAX_HEALTH = EntityDataManager.<Float>createKey(EntityICBM.class, DataSerializers.FLOAT);
 
     public EntityICBM(World world)
     {
@@ -33,7 +37,8 @@ public abstract class EntityICBM extends Entity implements IWorldPosition
     @Override
     protected void entityInit()
     {
-        this.dataManager.register(HEALTH, (float) 0);
+        this.dataManager.register(HEALTH, 1f);
+        this.dataManager.register(MAX_HEALTH, 1f);
     }
 
     public float getHealth()
@@ -41,14 +46,26 @@ public abstract class EntityICBM extends Entity implements IWorldPosition
         return this.dataManager.get(HEALTH);
     }
 
-    public void setHealth(float health)
+    public <T> T setHealth(float health)
     {
         this.dataManager.set(HEALTH, MathHelper.clamp(health, 0.0F, this.getMaxHealth()));
+        return (T) this;
     }
 
     public float getMaxHealth()
     {
-        return 5;
+        return this.dataManager.get(MAX_HEALTH);
+    }
+
+    public <T> T  setMaxHealth(float hp) {
+        this.dataManager.set(MAX_HEALTH, hp);
+        return (T) this;
+    }
+
+    public <T> T  initHealth(float hp) {
+        this.setMaxHealth(hp);
+        this.setHealth(hp);
+        return (T) this;
     }
 
     @Override
@@ -97,6 +114,14 @@ public abstract class EntityICBM extends Entity implements IWorldPosition
      */
     protected void onDestroyedBy(DamageSource source, float damage)
     {
+       this.destroy();
+    }
+
+    /**
+     * Called when the entity expires or
+     * is destroyed in some way.
+     */
+    protected void destroy() {
         this.setDead();
     }
 
@@ -116,29 +141,28 @@ public abstract class EntityICBM extends Entity implements IWorldPosition
      * @param t - number of ticks to predicted
      * @return predicted position of the project
      */
-    public Pos getPredictedPosition(int t)
+    public Vec3d getPredictedPosition(int t)
     {
-        Pos newPos = new Pos((Entity) this);
-
-        for (int i = 0; i < t; i++)
-        {
-            newPos.add(motionX, motionY, motionZ);
-        }
-
-        return newPos;
+        return new Vec3d(posX + motionX * t, posY + motionY * t, posZ + motionZ * t);
     }
 
     @Override
     protected void readEntityFromNBT(NBTTagCompound nbt)
     {
-        setHealth(nbt.getFloat(NBTConstants.HEALTH));
+        SAVE_LOGIC.load(this, nbt);
     }
 
     @Override
     protected void writeEntityToNBT(NBTTagCompound nbt)
     {
-        nbt.setFloat(NBTConstants.HEALTH, this.getHealth());
+        SAVE_LOGIC.save(this, nbt);
     }
+
+    private static final NbtSaveHandler<EntityICBM> SAVE_LOGIC = new NbtSaveHandler<EntityICBM>()
+        .mainRoot()
+        /* */.nodeFloat("health", EntityICBM::getHealth, EntityICBM::setHealth)
+        /* */.nodeFloat("health_max", EntityICBM::getMaxHealth, EntityICBM::setMaxHealth)
+        .base();
 
     @Override
     public World world()
@@ -167,5 +191,20 @@ public abstract class EntityICBM extends Entity implements IWorldPosition
     public Pos getVelocity()
     {
         return new Pos(motionX, motionY, motionZ); //TODO make wrapper object
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void setVelocity(double xx, double yy, double zz) {
+        //ICBMClassic.logger().info("Projectile#setVelocity: {} {} {} from {}", xx, yy, zz, Thread.currentThread().getStackTrace()[2]);
+
+        // Client side only gets 5 decimal places due to packet storing as int then converting back to double using divide by 8000... effectively a float
+        setMotionVector(xx, yy, zz);
+    }
+
+    public void setMotionVector(double xx, double yy, double zz) {
+        this.motionX = xx;
+        this.motionY = yy;
+        this.motionZ = zz;
     }
 }

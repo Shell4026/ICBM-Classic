@@ -1,10 +1,16 @@
 package icbm.classic.content.blast.redmatter.caps;
 
-import icbm.classic.api.explosion.BlastState;
+import icbm.classic.api.actions.cause.IActionSource;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.explosion.IBlast;
-import icbm.classic.api.explosion.responses.BlastResponse;
+import icbm.classic.api.refs.ICBMExplosives;
+import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.content.blast.redmatter.EntityRedmatter;
+import icbm.classic.content.missile.logic.source.ActionSource;
+import icbm.classic.content.missile.logic.source.cause.EntityCause;
+import icbm.classic.lib.actions.status.ActionResponses;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -13,8 +19,9 @@ import javax.annotation.Nullable;
 /**
  * Wrapper for exposing the {@link EntityRedmatter} as a Blast
  *
- * Created by Dark(DarkGuardsman, Robert) on 4/19/2020.
+ * Created by Dark(DarkGuardsman, Robin) on 4/19/2020.
  */
+@Deprecated //TODO rework so we don't need a blast wrapper as this is an entity that should be spawned using IAction not IBlast
 public class BlastRedmatterWrapper implements IBlast
 {
     private final EntityRedmatter host;
@@ -26,9 +33,15 @@ public class BlastRedmatterWrapper implements IBlast
 
     @Nonnull
     @Override
-    public BlastResponse runBlast()
+    public IActionStatus doAction()
     {
-        return BlastState.ALREADY_TRIGGERED.genericResponse;
+        return ActionResponses.COMPLETED;
+    }
+
+    @Nonnull
+    @Override
+    public IActionSource getSource() {
+        return new ActionSource(host.world, new Vec3d(host.posX, host.posY, host.posZ), new EntityCause(host));
     }
 
     @Override
@@ -42,6 +55,12 @@ public class BlastRedmatterWrapper implements IBlast
     public boolean isCompleted()
     {
         return host.isDead;
+    }
+
+    @Nonnull
+    @Override
+    public IExplosiveData getActionData() {
+        return ICBMExplosives.REDMATTER;
     }
 
     @Override

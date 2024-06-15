@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import java.util.Map;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 1/21/2019.
+ * Created by Dark(DarkGuardsman, Robin) on 1/21/2019.
  */
 public class ItemModelMapperExplosive implements ItemMeshDefinition
 {

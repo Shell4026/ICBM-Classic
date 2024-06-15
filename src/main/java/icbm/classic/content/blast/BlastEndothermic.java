@@ -2,7 +2,6 @@ package icbm.classic.content.blast;
 
 import icbm.classic.config.blast.ConfigBlast;
 import icbm.classic.content.potion.CustomPotionEffect;
-import icbm.classic.content.potion.PoisonFrostBite;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.BlockSnow;
 import net.minecraft.block.material.Material;
@@ -137,14 +136,9 @@ public class BlastEndothermic extends BlastBeam
 
         if (livingEntities != null && !livingEntities.isEmpty())
         {
-            final Iterator<EntityLiving> it = livingEntities.iterator();
-
-            while (it.hasNext())
-            {
-                EntityLiving entity = it.next();
-                if (entity != null && entity.isEntityAlive())
-                {
-                    entity.addPotionEffect(new CustomPotionEffect(PoisonFrostBite.INSTANCE, 60 * 20, 1, null));
+            for (EntityLiving entity : livingEntities) {
+                if (entity != null && entity.isEntityAlive()) {
+                    //entity.addPotionEffect(new CustomPotionEffect(PoisonFrostBite.INSTANCE, 60 * 20, 1, null));
                     entity.addPotionEffect(new PotionEffect(MobEffects.POISON, 10 * 20, 2));
                     entity.addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 120 * 20, 2));
                     entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 120 * 20, 4));

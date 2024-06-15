@@ -1,7 +1,10 @@
 package icbm.classic.content.blast.caps;
 
+import icbm.classic.api.actions.cause.IActionSource;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.explosion.IBlast;
-import icbm.classic.api.explosion.responses.BlastResponse;
+import icbm.classic.api.reg.IExplosiveData;
+import icbm.classic.content.blast.BlastStatus;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
@@ -13,6 +16,7 @@ import javax.annotation.Nullable;
 
 /**
  * Created by Robin Seifert on 5/22/2021.
+ * @deprecated
  */
 public class CapabilityBlast implements IBlast
 {
@@ -42,8 +46,20 @@ public class CapabilityBlast implements IBlast
 
     @Nonnull
     @Override
-    public BlastResponse runBlast()
+    public IActionStatus doAction()
     {
+        return BlastStatus.SETUP_ERROR;
+    }
+
+    @Nonnull
+    @Override
+    public IActionSource getSource() {
+        return null;
+    }
+
+    @Nonnull
+    @Override
+    public IExplosiveData getActionData() {
         return null;
     }
 

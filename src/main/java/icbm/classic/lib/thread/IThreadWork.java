@@ -2,7 +2,7 @@ package icbm.classic.lib.thread;
 
 /**
  *
- * Created by Dark(DarkGuardsman, Robert) on 10/8/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 10/8/2018.
  */
 public interface IThreadWork
 {

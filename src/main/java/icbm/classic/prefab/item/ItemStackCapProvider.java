@@ -16,7 +16,7 @@ import java.util.Map;
  * Wrapper to store, save, and load capabilities on an ItemStack
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 3/21/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 3/21/2018.
  */
 public class ItemStackCapProvider implements ICapabilityProvider, INBTSerializable<NBTTagCompound>
 {

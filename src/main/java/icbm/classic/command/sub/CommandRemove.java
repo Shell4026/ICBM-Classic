@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 4/13/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 4/13/2018.
  */
 public class CommandRemove extends SubCommand
 {

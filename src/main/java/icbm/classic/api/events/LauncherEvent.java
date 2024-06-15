@@ -1,26 +1,29 @@
 package icbm.classic.api.events;
 
+import icbm.classic.api.actions.cause.IActionSource;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.caps.IMissileHolder;
-import icbm.classic.api.launcher.IActionStatus;
 import icbm.classic.api.launcher.IMissileLauncher;
-import icbm.classic.api.missiles.cause.IMissileSource;
 import icbm.classic.api.missiles.parts.IMissileTarget;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 1/9/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/9/19.
+ *
+ * @deprecated will be replaced with an event providing {@link icbm.classic.api.actions.IAction}
  */
+@Deprecated
 public abstract class LauncherEvent extends Event
 {
     /** Starting point of the missile */
-    public final IMissileSource source;
+    public final IActionSource source;
     /** Launcher capability, can be used to relaunch missile with edits */
     public final IMissileLauncher launcher;
     /** Missile inventory */
     public final IMissileHolder holder;
 
-    public LauncherEvent(IMissileSource source, IMissileLauncher launcher, IMissileHolder holder)
+    public LauncherEvent(IActionSource source, IMissileLauncher launcher, IMissileHolder holder)
     {
         this.source = source;
         this.launcher = launcher;
@@ -46,7 +49,7 @@ public abstract class LauncherEvent extends Event
         /** Optional reason for event being canceled, defaults to 'launcher.status.icbmclassic:message.canceled' */
         public IActionStatus cancelReason;
 
-        public PreLaunch(IMissileSource source, IMissileLauncher launcher, IMissileHolder holder, IMissileTarget target, boolean simulate)
+        public PreLaunch(IActionSource source, IMissileLauncher launcher, IMissileHolder holder, IMissileTarget target, boolean simulate)
         {
             super(source, launcher, holder);
             this.target = target;

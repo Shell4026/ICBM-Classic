@@ -1,5 +1,6 @@
 package icbm.classic.client.render.entity;
 
+import icbm.classic.client.render.entity.item.RenderItemImp;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
@@ -18,6 +19,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
+/**
+ * @deprecated used {@link RenderItemImp}
+ */
+@Deprecated
 @SideOnly(Side.CLIENT)
 public class RenderEntityItem2 extends Render<EntityItem>
 {
@@ -34,20 +39,18 @@ public class RenderEntityItem2 extends Render<EntityItem>
         this.shadowOpaque = 0.75F;
     }
 
-    /**
-     * Renders the desired {@code T} type Entity.
-     */
+    @Override
     public void doRender(EntityItem entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
         ItemStack itemstack = entity.getItem();
-        int i = itemstack.isEmpty() ? 187 : Item.getIdFromItem(itemstack.getItem()) + itemstack.getMetadata();
-        this.random.setSeed((long) i);
-        boolean flag = false;
+        int seed = itemstack.isEmpty() ? 187 : Item.getIdFromItem(itemstack.getItem()) + itemstack.getMetadata();
+        this.random.setSeed((long) seed);
+        boolean hasTexture = false;
 
         if (this.bindEntityTexture(entity))
         {
             this.renderManager.renderEngine.getTexture(this.getEntityTexture(entity)).setBlurMipmap(false, false);
-            flag = true;
+            hasTexture = true;
         }
 
         GlStateManager.enableRescaleNormal();
@@ -80,7 +83,7 @@ public class RenderEntityItem2 extends Render<EntityItem>
         GlStateManager.disableBlend();
         this.bindEntityTexture(entity);
 
-        if (flag)
+        if (hasTexture)
         {
             this.renderManager.renderEngine.getTexture(this.getEntityTexture(entity)).restoreLastBlurMipmap();
         }

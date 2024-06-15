@@ -10,10 +10,9 @@ import net.minecraft.world.World;
 import java.util.HashMap;
 
 /**
- * A poison registry class used to register different types of poison effects.
- *
- * @author Calclavia
+ * @deprecated remove at some point and apply potion effects directly
  */
+@Deprecated
 public abstract class Poison
 {
     static HashMap<String, Poison> poisons = new HashMap();

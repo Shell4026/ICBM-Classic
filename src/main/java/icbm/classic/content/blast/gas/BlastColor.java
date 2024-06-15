@@ -27,7 +27,7 @@ public class BlastColor extends BlastGasBase
 
     public BlastColor()
     {
-        super(DURATION, false);
+        setDuration(DURATION);
     }
 
     @Override

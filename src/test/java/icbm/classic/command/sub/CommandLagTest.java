@@ -5,7 +5,7 @@ import com.builtbroken.mc.testing.junit.testers.DummyCommandSender;
 import icbm.classic.TestUtils;
 import icbm.classic.command.FakeBlast;
 import icbm.classic.content.missile.entity.explosive.EntityExplosiveMissile;
-import icbm.classic.lib.explosive.ExplosiveHandler;
+import icbm.classic.lib.actions.WorkTickingActionHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.util.math.Vec3d;
@@ -109,8 +109,8 @@ public class CommandLagTest
         TestUtils.sheep(testManager.getWorld(), 100, 30, 100);
         TestUtils.sheep(testManager.getWorld(), 100, 40, 100);
 
-        ExplosiveHandler.activeBlasts.add(new FakeBlast(null).setBlastPosition(100, 20, 100).setBlastWorld(testManager.getWorld()));
-        ExplosiveHandler.activeBlasts.add(new FakeBlast(null).setBlastPosition(100, 20, 100).setBlastWorld(testManager.getWorld()));
+        WorkTickingActionHandler.activeBlasts.add(new FakeBlast(null).setBlastPosition(100, 20, 100).setBlastWorld(testManager.getWorld()));
+        WorkTickingActionHandler.activeBlasts.add(new FakeBlast(null).setBlastPosition(100, 20, 100).setBlastWorld(testManager.getWorld()));
 
         //Validate start condition
         Assertions.assertEquals(3, testManager.getWorld().loadedEntityList.size(), "Should start with 3 entities");
@@ -124,6 +124,6 @@ public class CommandLagTest
 
         //Should still have 3 sheep
         Assertions.assertEquals(3, testManager.getWorld().loadedEntityList.size(), "Should end with 3 entities");
-        Assertions.assertEquals(0, ExplosiveHandler.activeBlasts.size(), "Should end with 0 blasts");
+        Assertions.assertEquals(0, WorkTickingActionHandler.activeBlasts.size(), "Should end with 0 blasts");
     }
 }

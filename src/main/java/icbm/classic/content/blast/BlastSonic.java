@@ -6,7 +6,6 @@ import icbm.classic.client.ICBMSounds;
 import icbm.classic.config.ConfigDebug;
 import icbm.classic.content.blast.thread.ThreadLargeExplosion;
 import icbm.classic.content.blocks.explosive.TileEntityExplosive;
-import icbm.classic.content.entity.flyingblock.EntityFlyingBlock;
 import icbm.classic.content.entity.flyingblock.FlyingBlock;
 import icbm.classic.content.reg.BlockReg;
 import net.minecraft.block.Block;
@@ -17,7 +16,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fluids.IFluidBlock;
 
 import java.util.Iterator;
 import java.util.List;
@@ -90,22 +88,17 @@ public class BlastSonic extends Blast implements IBlastTickable
                                     }
                                 }
 
-                                //Destroy block
-                                this.world().setBlockToAir(targetPosition);
-
-                                //Create floating block
-                                if (!(block instanceof IFluidBlock) //TODO add ban list covered by a utility, but also try fixing fluids by causing a rain/slash effect
-                                        && this.world().rand.nextFloat() < 0.1) //TODO add config for chance, increase chance if we fail to spawn a block
-                                {
-                                    FlyingBlock.spawnFlyingBlock(world, targetPosition, blockState);
+                                if(this.world().rand.nextFloat() < 0.1) {  //TODO add config for chance, increase chance if we fail to spawn a block
+                                    FlyingBlock.spawnFlyingBlock(world, targetPosition, null, null);
                                 }
+                                this.world().setBlockToAir(targetPosition);
                             }
                         }
                     }
                 }
                 else
                 {
-                    isAlive = false;
+                    this.endBlast();
                     if (ConfigDebug.DEBUG_THREADS)
                     {
                         String msg = String.format("BlastSonic#doPostExplode() -> Thread failed to find blocks to edit. Either thread failed or no valid blocks were found in range." +

@@ -7,6 +7,7 @@ import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.client.mapper.BlockModelMapperExplosive;
 import icbm.classic.client.mapper.ItemModelMapperExplosive;
 import icbm.classic.client.render.entity.*;
+import icbm.classic.client.render.entity.item.RenderAsItem;
 import icbm.classic.config.ConfigItems;
 import icbm.classic.content.blast.redmatter.EntityRedmatter;
 import icbm.classic.content.blast.redmatter.render.RenderRedmatter;
@@ -17,6 +18,11 @@ import icbm.classic.content.blocks.launcher.base.TESRLauncherBase;
 import icbm.classic.content.blocks.launcher.base.TileLauncherBase;
 import icbm.classic.content.blocks.launcher.cruise.TESRCruiseLauncher;
 import icbm.classic.content.blocks.launcher.cruise.TileCruiseLauncher;
+import icbm.classic.content.cargo.balloon.EntityBalloon;
+import icbm.classic.content.cargo.parachute.EntityParachute;
+import icbm.classic.content.cargo.parachute.RenderParachute;
+import icbm.classic.content.cluster.bomblet.EntityBombDroplet;
+import icbm.classic.content.cluster.bomblet.RenderBombDroplet;
 import icbm.classic.content.entity.*;
 import icbm.classic.content.entity.flyingblock.EntityFlyingBlock;
 import icbm.classic.content.entity.flyingblock.RenderEntityBlock;
@@ -47,7 +53,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 1/7/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/7/19.
  */
 @Mod.EventBusSubscriber(modid = ICBMConstants.DOMAIN, value=Side.CLIENT)
 public class ClientReg
@@ -57,6 +63,7 @@ public class ClientReg
     private final static Map<IExplosiveData, Map<EnumFacing,ModelResourceLocation>> blockModelMap = new HashMap();
     private final static Map<IExplosiveData, ModelResourceLocation> itemBlockModelMap = new HashMap();
     private final static Map<IExplosiveData, ModelResourceLocation> cartModelMap = new HashMap();
+    private final static Map<IExplosiveData, ModelResourceLocation> bombletModelMap = new HashMap();
 
     private static void clearModelCache()
     {
@@ -110,11 +117,16 @@ public class ClientReg
         newBlockModel(BlockReg.blockConcrete, 1, "inventory", "_compact");
         newBlockModel(BlockReg.blockConcrete, 2, "inventory", "_reinforced");
 
+        //Radioactive
+        newBlockModel(BlockReg.blockRadioactive, 0, "inventory", "_dirt");
+        newBlockModel(BlockReg.blockRadioactive, 1, "inventory", "_stone");
+
         //Explosives
         registerExBlockRenders();
         registerGrenadeRenders();
         registerCartRenders();
         registerMissileRenders();
+        registerBombletRenders();
 
         //Machines
         newBlockModel(BlockReg.blockEmpTower, 0, "inventory_0", "");
@@ -139,8 +151,16 @@ public class ClientReg
         newItemModel(ItemReg.itemRemoteDetonator, 0, "inventory", "");
         newItemModel(ItemReg.itemLaserDetonator, 0, "inventory", "");
         newItemModel(ItemReg.itemRocketLauncher, 0, "inventory", "");
+        newItemModel(ItemReg.itemBallisticLauncher, 0, "inventory", "");
         newItemModel(ItemReg.itemBattery, 0, "inventory", "");
+
+        newItemModel(ItemReg.itemBombletEmpty, 0, "inventory", "");
+
+        newItemModel(ItemReg.itemParachute, 0, "inventory", "");
+        newItemModel(ItemReg.itemBalloon, 0, "render=2d", "");
+        newItemModel(ItemReg.itemBalloon, 1, "render=3d", ""); // Fake meta version purely for entity renderer
         ModelLoader.setCustomModelResourceLocation(ItemReg.itemSAM, 0, new ModelResourceLocation(ICBMConstants.DOMAIN + ":missiles/surface_to_air", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(ItemReg.itemClusterMissile, 0, new ModelResourceLocation(ICBMConstants.DOMAIN + ":missiles/cluster", "inventory"));
 
         //crafting parts
         if(ConfigItems.ENABLE_CRAFTING_ITEMS)
@@ -168,12 +188,20 @@ public class ClientReg
         RenderingRegistry.registerEntityRenderingHandler(EntityRedmatter.class, RenderRedmatter::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityFlyingBlock.class, RenderEntityBlock::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityExplosion.class, RenderExplosion::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityGrenade.class, RenderGrenade::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityGrenade.class,
+            (rm) -> new RenderAsItem<EntityGrenade>(rm, EntityGrenade::renderItemStack).setBillboard(true));
+        RenderingRegistry.registerEntityRenderingHandler(EntityParachute.class,
+                RenderParachute::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityBalloon.class,
+            (rm) -> new RenderAsItem<EntityBalloon>(rm, EntityBalloon::getRenderItemStack));
         RenderingRegistry.registerEntityRenderingHandler(EntityLightBeam.class, RenderLightBeam::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityFragments.class, RenderFragments::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityBombDroplet.class, RenderBombDroplet::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityPlayerSeat.class, RenderSeat::new);
         RenderingRegistry.registerEntityRenderingHandler(EntitySmoke.class, RenderSmoke::new);
+
         RenderingRegistry.registerEntityRenderingHandler(EntityMissile.class, manager -> RenderMissile.INSTANCE = new RenderMissile(manager));
+
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileLauncherBase.class, new TESRLauncherBase());
         ClientRegistry.bindTileEntitySpecialRenderer(TileCruiseLauncher.class, new TESRCruiseLauncher());
@@ -187,11 +215,11 @@ public class ClientReg
         {
             //Add block state
             final HashMap<EnumFacing,ModelResourceLocation> facingModelMap = new HashMap<>();
-            final String resourcePath = data.getRegistryName().getResourceDomain() + ":explosives/" + data.getRegistryName().getResourcePath();
+            final String resourcePath = data.getRegistryKey().getResourceDomain() + ":explosives/" + data.getRegistryKey().getResourcePath();
 
             for(EnumFacing facing : EnumFacing.VALUES)
             {
-                facingModelMap.put(facing, new ModelResourceLocation(resourcePath, "explosive=" + data.getRegistryName().toString().replace(":", "_") + ",rotation=" + facing));
+                facingModelMap.put(facing, new ModelResourceLocation(resourcePath, "explosive=" + data.getRegistryKey().toString().replace(":", "_") + ",rotation=" + facing));
             }
 
             blockModelMap.put(data, facingModelMap);
@@ -216,7 +244,7 @@ public class ClientReg
     {
         for (IExplosiveData data : ICBMClassicAPI.EX_GRENADE_REGISTRY.getExplosives()) //TODO run loop once for all 4 content types
         {
-            final String resourcePath = data.getRegistryName().getResourceDomain() + ":grenades/" + data.getRegistryName().getResourcePath();
+            final String resourcePath = data.getRegistryKey().getResourceDomain() + ":grenades/" + data.getRegistryKey().getResourcePath();
             grenadeModelMap.put(data, new ModelResourceLocation(resourcePath, "inventory"));
         }
 
@@ -225,11 +253,24 @@ public class ClientReg
         ModelLoader.setCustomMeshDefinition(ItemReg.itemGrenade, new ItemModelMapperExplosive(grenadeModelMap, grenadeModelMap.get(ICBMExplosives.CONDENSED)));
     }
 
+    protected static void registerBombletRenders()
+    {
+        for (IExplosiveData data : ICBMClassicAPI.EX_GRENADE_REGISTRY.getExplosives()) //TODO run loop once for all 4 content types
+        {
+            final String resourcePath = "icbmclassic:explosive_bomblet"; //TODO add per version models
+            bombletModelMap.put(data, new ModelResourceLocation(resourcePath, "inventory"));
+        }
+
+        ModelLoader.registerItemVariants(ItemReg.itemBombletExplosive, bombletModelMap.values()
+            .stream().map(model -> new ResourceLocation(model.getResourceDomain() + ":" + model.getResourcePath())).toArray(ResourceLocation[]::new));
+        ModelLoader.setCustomMeshDefinition(ItemReg.itemBombletExplosive, new ItemModelMapperExplosive(bombletModelMap, bombletModelMap.get(ICBMExplosives.CONDENSED)));
+    }
+
     protected static void registerCartRenders()
     {
         for (IExplosiveData data : ICBMClassicAPI.EX_MINECART_REGISTRY.getExplosives()) //TODO run loop once for all 4 content types
         {
-            final String resourcePath = data.getRegistryName().getResourceDomain() + ":bombcarts/" + data.getRegistryName().getResourcePath();
+            final String resourcePath = data.getRegistryKey().getResourceDomain() + ":bombcarts/" + data.getRegistryKey().getResourcePath();
             cartModelMap.put(data, new ModelResourceLocation(resourcePath, "inventory"));
         }
         ModelLoader.registerItemVariants(ItemReg.itemBombCart, cartModelMap.values()
@@ -241,7 +282,7 @@ public class ClientReg
     {
         for (IExplosiveData data : ICBMClassicAPI.EX_MISSILE_REGISTRY.getExplosives()) //TODO run loop once for all 4 content types
         {
-            final String resourcePath = data.getRegistryName().getResourceDomain() + ":missiles/" + data.getRegistryName().getResourcePath();
+            final String resourcePath = data.getRegistryKey().getResourceDomain() + ":missiles/" + data.getRegistryKey().getResourcePath();
             missileModelMap.put(data, new ModelResourceLocation(resourcePath, "inventory"));
         }
 

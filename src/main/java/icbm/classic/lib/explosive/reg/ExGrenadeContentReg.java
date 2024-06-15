@@ -1,6 +1,7 @@
 package icbm.classic.lib.explosive.reg;
 
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.ICBMClassicHelpers;
 import icbm.classic.api.data.EntityTickFunction;
 import icbm.classic.api.data.WorldEntityIntSupplier;
 import icbm.classic.api.reg.IExplosiveData;
@@ -15,7 +16,7 @@ import java.util.HashMap;
 
 /**
  *
- * Created by Dark(DarkGuardsman, Robert) on 1/7/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/7/19.
  */
 public class ExGrenadeContentReg extends ExplosiveContentRegistry implements IExGrenadeRegistry
 {
@@ -33,7 +34,7 @@ public class ExGrenadeContentReg extends ExplosiveContentRegistry implements IEx
     @Override
     public ItemStack getDeviceStack(ResourceLocation regName)
     {
-        IExplosiveData ex = getExplosive(regName);
+        IExplosiveData ex = ICBMClassicHelpers.getExplosive(regName, false);
         if(ex != null)
         {
             return new ItemStack(ItemReg.itemGrenade, 1, ex.getRegistryID());
@@ -79,9 +80,9 @@ public class ExGrenadeContentReg extends ExplosiveContentRegistry implements IEx
     }
 
     @Override
-    public void tickFuse(Entity entity, int ticksExisted, int explosiveID)
+    public void tickFuse(Entity entity, IExplosiveData data, int ticksExisted)
     {
-        final EntityTickFunction function = fuseTickCallback.lookup(explosiveID);
+        final EntityTickFunction function = fuseTickCallback.lookup(data != null ? data.getRegistryID() : 0);
         if (function != null)
         {
             function.onTick(entity, ticksExisted);
@@ -89,9 +90,9 @@ public class ExGrenadeContentReg extends ExplosiveContentRegistry implements IEx
     }
 
     @Override
-    public int getFuseTime(Entity entity, int explosiveID)
+    public int getFuseTime(Entity entity, IExplosiveData data)
     {
-        final WorldEntityIntSupplier function = fuseSetSupplier.lookup(explosiveID);
+        final WorldEntityIntSupplier function = fuseSetSupplier.lookup(data != null ? data.getRegistryID() : 0);
         if (function != null)
         {
             return function.get(entity);

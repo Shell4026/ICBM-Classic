@@ -33,7 +33,7 @@ public class CapabilityMissileStack implements ICapabilityMissileStack
         return ICBMConstants.PREFIX + "missile["
             + Optional.ofNullable(ICBMClassicHelpers.getExplosive(stack))
             .map(IExplosive::getExplosiveData)
-            .map(IExplosiveData::getRegistryName)
+            .map(IExplosiveData::getRegistryKey)
             .map(Object::toString)
             .orElse("unknown")
             + "]";

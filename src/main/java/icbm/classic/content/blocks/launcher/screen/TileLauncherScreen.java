@@ -3,10 +3,10 @@ package icbm.classic.content.blocks.launcher.screen;
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.events.LauncherSetTargetEvent;
-import icbm.classic.api.launcher.IActionStatus;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.launcher.ILauncherSolution;
 import icbm.classic.api.launcher.IMissileLauncher;
-import icbm.classic.api.missiles.cause.IMissileCause;
+import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.api.missiles.parts.IMissileTarget;
 import icbm.classic.config.ConfigMain;
 import icbm.classic.config.machines.ConfigLauncher;
@@ -220,7 +220,7 @@ public class TileLauncherScreen extends TileMachine implements ILauncherComponen
         return launcher.preCheckLaunch(new BasicTargetData(this.getTarget()), createCause());
     }
 
-    private IMissileCause createCause() {
+    private IActionCause createCause() {
         return new BlockScreenCause(world, pos, getBlockState()); //TODO cache?
     }
 
@@ -233,12 +233,12 @@ public class TileLauncherScreen extends TileMachine implements ILauncherComponen
 
         final List<LauncherEntry> launchers = getLaunchersInGroup();
 
-        final IMissileCause cause = createCause();
+        final IActionCause cause = createCause();
         final IMissileTarget target = new BasicTargetData(getTarget());
         final ILauncherSolution solution = new LauncherSolution(target, getFiringGroup(), launchers.size());
         return getNetworkNode().getNetwork()
             .launch(solution, cause, simulate)
-            .filter(entry -> !entry.getLastFiringStatus().shouldBlockInteraction())
+            .filter(entry -> !entry.getLastFiringStatus().isBlocking())
             // count is required, as anyMatch() or similar will short-circuit before running all
             .count() > 0;
     }
@@ -249,7 +249,7 @@ public class TileLauncherScreen extends TileMachine implements ILauncherComponen
      * @return true if current status list contains no blocking
      */
     public boolean canLaunch() {
-        return !statusList.isEmpty() && statusList.stream().map(LauncherPair::getStatus).noneMatch(IActionStatus::shouldBlockInteraction);
+        return !statusList.isEmpty() && statusList.stream().map(LauncherPair::getStatus).noneMatch(IActionStatus::isBlocking);
     }
 
     /**
@@ -272,7 +272,7 @@ public class TileLauncherScreen extends TileMachine implements ILauncherComponen
         else if(statusList.isEmpty()) {
             return LauncherLangs.TRANSLATION_ERROR_NO_NETWORK_STATUS;
         }
-        final List<LauncherPair> errors = statusList.stream().filter(pair -> pair.getStatus().shouldBlockInteraction()).collect(Collectors.toList());
+        final List<LauncherPair> errors = statusList.stream().filter(pair -> pair.getStatus().isBlocking()).collect(Collectors.toList());
         if(errors.isEmpty()) {
             return LauncherLangs.TRANSLATION_READY;
         }

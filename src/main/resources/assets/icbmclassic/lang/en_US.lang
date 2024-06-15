@@ -17,6 +17,11 @@ config.icbmclassic:item.title=Item
 config.icbmclassic:ic2.title=Industrial Craft 2
 config.icbmclassic:debug.title=Debug
 config.icbmclassic:missile.sam.title=Surface to Air Missile
+config.icbmclassic:missile.cluster.title=Cluster Missile
+config.icbmclassic:contagious.title=Contagious Poison
+config.icbmclassic:frostbite.title=Frostbite Poison
+config.icbmclassic:bomblet.title=Bomblet / Droplet
+config.icbmclassic:cargo.holder.title=Cargo Holders (Parachute, Balloon)
 
 ## Chat commands
 
@@ -93,11 +98,17 @@ item.icbmclassic:laserDetonator.laser.canceled=Laser event canceled
 item.icbmclassic:laserDetonator.laser.missed=Laser Error; Nothing on path within %1$sm
 item.icbmclassic:laserDetonator.target=Target set (%1$s, %2$s, %3$s)
 
-item.icbmclassic:rocketLauncher.name=Rocket Launcher
-item.icbmclassic:rocketLauncher.info=This rocket launcher can fire up to Tier %s rockets
+item.icbmclassic:rocketLauncher.name=Rocket Launcher: Direct
+item.icbmclassic:rocketLauncher.info=Fires missiles in a direct line
+
+item.icbmclassic:ballisticLauncher.name=Rocket Launcher: Ballistic
+item.icbmclassic:ballisticLauncher.info=Fires missiles in an arc towards target. Has a 3m pre-kick and 20m y+ offset.
+
 item.icbmclassic:rocketLauncher.info.creative=Creative: Bypasses tier restriction
 item.icbmclassic:rocketLauncher.error.IMissileAiming=Missile %1 doesn't implement IMissileAiming to allow for use in handheld launchers
 item.icbmclassic:rocketLauncher.error.spawning=Missile spawning was canceled by world
+item.icbmclassic:rocketLauncher.error.targeting=Fire Safety: No Target
+item.icbmclassic:rocketLauncher.error.distance.min=Fire Safety: Min Range %1$s meters
 
 item.icbmclassic:surface_to_air_missile.name=Surface to Air Missile
 item.icbmclassic:surface_to_air_missile.info=Missile designed to fire from the ground to attack flying targets
@@ -118,6 +129,58 @@ item.icbmclassic:wire.gold.name=Gold Wire
 item.icbmclassic:circuit.basic.name=Basic Circuit
 item.icbmclassic:circuit.advanced.name=Advanced Circuit
 item.icbmclassic:circuit.elite.name=Elite Circuit
+
+## Bomblet/Droplet
+item.icbmclassic:empty_bomblet.name=Droplet
+item.icbmclassic:empty_bomblet.info=Empty unguided projectile
+
+item.icbmclassic:explosive_bomblet.name=Bomblet
+
+bomblet.icbmclassic:condensed.name=Conventional Bomblet
+bomblet.icbmclassic:shrapnel.name=Shrapnel Bomblet
+bomblet.icbmclassic:incendiary.name=Incendiary Bomblet
+bomblet.icbmclassic:debilitation.name=Debilitation Bomblet
+bomblet.icbmclassic:chemical.name=Chemical Bomblet
+bomblet.icbmclassic:anvil.name=Anvil Bomblet
+bomblet.icbmclassic:repulsive.name=Repulsive Bomblet
+bomblet.icbmclassic:attractive.name=Attractive Bomblet
+bomblet.icbmclassic:colors.name=Colorful Bomblet
+bomblet.icbmclassic:smoke.name=Smoke Marking Bomblet
+
+bomblet.icbmclassic:fragmentation.name=Fragmentation Bomblet
+bomblet.icbmclassic:contagious.name=Contagious Bomblet
+bomblet.icbmclassic:sonic.name=Sonic Bomblet
+bomblet.icbmclassic:breaching.name=Breaching Bomblet
+bomblet.icbmclassic:thermobaric.name=Thermobaric Bomblet
+
+bomblet.icbmclassic:nuclear.name=Nuclear Bomblet
+bomblet.icbmclassic:emp.name=EMP Bomblet
+bomblet.icbmclassic:exothermic.name=Exothermic Bomblet
+bomblet.icbmclassic:endothermic.name=Endothermic Bomblet
+bomblet.icbmclassic:antigravitational.name=Anti-Gravitational Bomblet
+
+bomblet.icbmclassic:hypersonic.name=Hypersonic Bomblet
+
+bomblet.icbmclassic:antimatter.name=Antimatter Bomblet
+bomblet.icbmclassic:redmatter.name=Red Matter Bomblet
+
+## Parchute Projectile
+item.icbmclassic:parachute.name=Payload Parachute
+item.icbmclassic:parachute.info=Allow slowing deployed payloads
+
+item.icbmclassic:balloon.name=Payload Balloon
+item.icbmclassic:balloon.info=Comical way to drop payloads
+
+error.icbmclassic:projectile.throwing.interface=Dev Error: Missing %1$s
+error.icbmclassic:projectile.throwing.type=Dev Error: Missing Projectile Type %1$s
+
+projectile.icbmclassic:holder.parachute.info.entity=Deploys entity with parachute \n Held: %1$s
+projectile.icbmclassic:holder.parachute.info.item=Deploys item with parachute \n Held: %1$s
+projectile.icbmclassic:holder.parachute.info.block=Deploys block with parachute \n Held: %1$s
+
+projectile.icbmclassic:holder.balloon.info.entity=Deploys entity with balloon \n Held: %1$s
+projectile.icbmclassic:holder.balloon.info.item=Deploys item with balloon \n Held: %1$s
+projectile.icbmclassic:holder.balloon.info.block=Deploys block with balloon \n Held: %1$s
 
 ## ICBM Machines
 tile.icbmclassic:launcherbase.name=Launcher Pad
@@ -147,21 +210,18 @@ tile.icbmclassic:missilecoordinator.name=Missile Coordinator
 tile.icbmclassic:missilecoordinator.info=Oversized calculator. Calculates flight paths
 
 ## Blocks
-tile.icbmclassic:reinforcedRail.name=Reinforced Rail
-tile.icbmclassic:reinforcedRail.info=Hardened against explosives
-
-tile.icbmclassic:redmatter.ore.name=Redmatter Ore
-tile.icbmclassic:redmatter.ore.info=Oh shiz, how did you get that? Put it down, it could explode!
+tile.icbmclassic:radioactive.0.name=Radioactive Dirt
+tile.icbmclassic:radioactive.1.name=Radioactive Stone
 
 ## ICBM Explosives
 
-## Tiers
+### Tiers
 tier.icbmclassic.one=One
 tier.icbmclassic.two=Two
 tier.icbmclassic.three=Three
 tier.icbmclassic.four=Four
 
-## Block Form
+### Block Form
 explosive.icbmclassic:condensed.name=Condensed Explosives
 explosive.icbmclassic:shrapnel.name=Shrapnel Explosives
 explosive.icbmclassic:incendiary.name=Incendiary Explosives
@@ -185,13 +245,20 @@ explosive.icbmclassic:emp.name=EMP Explosives
 explosive.icbmclassic:exothermic.name=Exothermic Explosives
 explosive.icbmclassic:endothermic.name=Endothermic Explosives
 explosive.icbmclassic:antigravitational.name=Anti-Gravitational Explosives
-explosive.icbmclassic:ender.name=Ender Explosives
-explosive.icbmclassic:hypersonic.name=Hypersonic Explosives
 
+explosive.icbmclassic:hypersonic.name=Hypersonic Explosives
 explosive.icbmclassic:antimatter.name=Antimatter Explosives
 explosive.icbmclassic:redmatter.name=Red Matter Explosives
 
-## Missile Form
+### Ender
+explosive.icbmclassic:ender.name=Ender Explosives
+missile.icbmclassic:ender.name=Ender Missile
+bombcart.icbmclassic:ender.name=Ender Minecart
+explosive.icbmclassic:ender.info=Let's relocate that base of yours
+explosive.icbmclassic:ender.pos=Target: %1$sx, %2$sy, %3$sz
+explosive.icbmclassic:ender.world=World: [%1$s] %2$s
+
+### Missile Form
 missile.icbmclassic:generic.name=Missile
 
 missile.icbmclassic:condensed.name=Conventional Missile
@@ -216,13 +283,13 @@ missile.icbmclassic:emp.name=EMP Missile
 missile.icbmclassic:exothermic.name=Exothermic Missile
 missile.icbmclassic:endothermic.name=Endothermic Missile
 missile.icbmclassic:antigravitational.name=Anti-Gravitational Missile
-missile.icbmclassic:ender.name=Ender Missile
+
 missile.icbmclassic:hypersonic.name=Hypersonic Missile
 
 missile.icbmclassic:antimatter.name=Antimatter Missile
 missile.icbmclassic:redmatter.name=Red Matter Missile
 
-## Explosive Minecarts
+### Explosive Minecarts
 bombcart.icbmclassic:condensed.name=Explosive Cart
 bombcart.icbmclassic:shrapnel.name=Shrapnel Minecart
 bombcart.icbmclassic:incendiary.name=Incendiary Minecart
@@ -246,13 +313,13 @@ bombcart.icbmclassic:emp.name=EMP Minecart
 bombcart.icbmclassic:exothermic.name=Exothermic Minecart
 bombcart.icbmclassic:endothermic.name=Endothermic Minecart
 bombcart.icbmclassic:antigravitational.name=Anti-Gravitational Minecart
-bombcart.icbmclassic:ender.name=Ender Minecart
+
 bombcart.icbmclassic:hypersonic.name=Hypersonic Minecart
 
 bombcart.icbmclassic:antimatter.name=Antimatter Minecart
 bombcart.icbmclassic:redmatter.name=Red Matter Minecart
 
-## Explosive Info
+### Explosive Info
 explosive.icbmclassic:condensed.info=Slightly more destructive version of TNT
 explosive.icbmclassic:shrapnel.info=Erupts in a barrage of metal fragments
 explosive.icbmclassic:incendiary.info=Catches the place on fire
@@ -275,12 +342,12 @@ explosive.icbmclassic:emp.info=Over 9000? Not anymore
 explosive.icbmclassic:exothermic.info=You thought the sun was hot
 explosive.icbmclassic:endothermic.info=They call me Mr. Freeze
 explosive.icbmclassic:antigravitational.info=I think your base looks better floating
-explosive.icbmclassic:ender.info=Let's relocate that base of yours
+
 explosive.icbmclassic:hypersonic.info=I feel bad for your ears
 
 explosive.icbmclassic:antimatter.info=Matter + antimatter = No matter
 
-##Some extra messages just to honor the great Yogscast https://www.youtube.com/watch?v=F2ohslGivm8
+### Some extra messages just to honor the great Yogscast https://www.youtube.com/watch?v=F2ohslGivm8
 explosive.icbmclassic:redMatter.info.count=11
 explosive.icbmclassic:redMatter.info.0=Yogscast? Diggy diggy hole
 explosive.icbmclassic:redMatter.info.1=Be a shame if your base was compacted into nothing
@@ -294,10 +361,16 @@ explosive.icbmclassic:redMatter.info.8=Into the void
 explosive.icbmclassic:redMatter.info.9=Oh? You think you can escape
 explosive.icbmclassic:redMatter.info.10=Oh baby come back
 
+## Cluster Missile
+item.icbmclassic:cluster_missile.name=Cluster Missile
+item.icbmclassic:cluster_missile.info=Deploys a spread of projectiles in proximity to target. Lacks impact sensor.
+item.icbmclassic:cluster_missile.contents=Contents: %1$s
+
+missile.icbmclassic:cluster.name=Cluster Missile
+
 ## Special Missiles
 missile.icbmclassic:missile.name=Missile Module
 missile.icbmclassic:antiBallistic.name=Anti-ballistic Missile
-missile.icbmclassic:cluster.name=Cluster Missile
 missile.icbmclassic:nuclearCluster.name=Nuclear Cluster Missile
 missile.icbmclassic:homing.name=Homing Missile
 
@@ -457,6 +530,10 @@ info.tracker.tooltip=Left-click on a mob (players aswell) and I will point to it
 death.attack.icbm.redmatter=%s was crushed by the immense mass of the mighty black hole.
 death.attack.icbm.chemical=%s suddenly started feeling not so well.
 death.attack.icbm.contagious=%s breathed in too much of the green stuff.
+death.attack.icbmclassic:spikes=%s died to spikes
+death.attack.icbmclassic:projectile=%s died to a projectile
+death.attack.icbmclassic:bomblet=%s got smacked in the head with a bomb
+death.attack.icbmclassic:radioactive_block=%s died to radioactive fallout
 
 ## GPS
 gps.pos.set.name=GPS data saved
@@ -474,9 +551,6 @@ radio.icbmclassic:message.target.set=Target set to (%1$f %2$f %3$f)
 radio.icbmclassic:message.launch.success=Firing missile(s) at (%1$f %2$f %3$f) with range %4$f
 radio.icbmclassic:message.launch.failed=Failed to fire missile(s)
 radio.icbmclassic:message.launch.triggered=Firing missile(s), aiming launcher(s)
-
-### Missile
-
 
 # SubTitles
 subtitle.icbmclassic:missile.movement=Missile Engine

@@ -19,19 +19,14 @@ import javax.annotation.Nullable;
 public class EntitySurfaceToAirMissile extends EntityMissile<EntitySurfaceToAirMissile> {
 
     private ItemStack renderStackCache;
-    protected final SAMTargetData scanLogic = new SAMTargetData(this);
+    public final SAMTargetData scanLogic = new SAMTargetData(this);
 
     private boolean hasStartedFollowing = false;
 
     public EntitySurfaceToAirMissile(World world) {
         super(world);
         this.getMissileCapability().setTargetData(scanLogic); //TODO create custom missileCap to force getTarget()
-    }
-
-    @Override
-    public float getMaxHealth()
-    {
-        return ConfigMissile.TIER_2_HEALTH;
+        this.setMaxHealth(ConfigMissile.TIER_2_HEALTH);
     }
 
     @Override

@@ -2,7 +2,7 @@ package icbm.classic.command.sub;
 
 import icbm.classic.command.CommandUtils;
 import icbm.classic.command.system.SubCommand;
-import icbm.classic.lib.explosive.ExplosiveHandler;
+import icbm.classic.lib.actions.WorkTickingActionHandler;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 4/13/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 4/13/2018.
  */
 public class CommandLag extends SubCommand
 {
@@ -52,7 +52,7 @@ public class CommandLag extends SubCommand
         entities.forEach(Entity::setDead);
 
         //Remove blasts queue to run or currently running
-        final int blastRemoveCount = ExplosiveHandler.removeNear(sender.getEntityWorld(),
+        final int blastRemoveCount = WorkTickingActionHandler.removeNear(sender.getEntityWorld(),
                 sender.getPositionVector().x, sender.getPositionVector().y, sender.getPositionVector().z,
                 range);
 

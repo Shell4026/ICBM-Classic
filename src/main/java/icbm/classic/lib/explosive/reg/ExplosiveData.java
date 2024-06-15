@@ -1,49 +1,47 @@
 package icbm.classic.lib.explosive.reg;
 
 import icbm.classic.api.EnumTier;
+import icbm.classic.api.actions.IAction;
+import icbm.classic.api.actions.cause.IActionSource;
+import icbm.classic.api.actions.data.ActionFields;
+import icbm.classic.api.actions.data.IActionFieldProvider;
 import icbm.classic.api.explosion.IBlastFactory;
+import icbm.classic.api.explosion.IBlastInit;
 import icbm.classic.api.reg.IExplosiveData;
-import icbm.classic.api.reg.content.IExplosiveContentRegistry;
+import icbm.classic.lib.actions.ActionDataBase;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 
-import java.util.HashSet;
-import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Handles storing data about an explosive in the {@link ExplosiveRegistry}
- *
- *
- * Created by Dark(DarkGuardsman, Robert) on 1/4/19.
+ * @deprecated
  */
 @ToString(of={"regName", "id"})
-public class ExplosiveData implements IExplosiveData
+@RequiredArgsConstructor
+@Data
+public class ExplosiveData extends ActionDataBase implements IExplosiveData
 {
+    @Nonnull
     public final ResourceLocation regName;
-    public final int id;
-    public final EnumTier tier;
 
-    public IBlastFactory blastCreationFactory;
+    /** Will be removed in 1.13 */
+    @Deprecated
+    private final int id;
 
-    public final Set<ResourceLocation> enabledContent = new HashSet();
+    @Nonnull
+    private final EnumTier tier;
 
-    public boolean enabled = true;
-
-    public ExplosiveData(ResourceLocation regName, int id, EnumTier tier)
-    {
-        this.regName = regName;
-        this.id = id;
-        this.tier = tier;
-    }
-
-    public ExplosiveData blastFactory(IBlastFactory factory)
-    {
-        blastCreationFactory = factory;
-        return this;
-    }
+    @Nonnull
+    private final IBlastFactory blastCreationFactory;
 
     @Override
-    public ResourceLocation getRegistryName()
+    public ResourceLocation getRegistryKey()
     {
         return regName;
     }
@@ -55,34 +53,23 @@ public class ExplosiveData implements IExplosiveData
     }
 
     @Override
-    public IBlastFactory getBlastFactory()
-    {
-        return blastCreationFactory;
-    }
+    @Nonnull
+    public IAction create(World world, double x, double y, double z, @Nonnull IActionSource source, @Nullable IActionFieldProvider fieldAccessors) {
+        final IAction blast = blastCreationFactory.create(world, x, y, z, source);
 
-    @Override
-    public EnumTier getTier()
-    {
-        return tier;
-    }
+        if(blast instanceof IBlastInit) {
+            ((IBlastInit)blast).setExplosiveData(this);
+            ((IBlastInit)blast).setActionSource(source);
 
-    @Override
-    public boolean isEnabled()
-    {
-        return enabled;
-    }
+            if (fieldAccessors != null && fieldAccessors.hasField(ActionFields.AREA_SIZE)) {
+                ((IBlastInit)blast).setBlastSize(fieldAccessors.getValue(ActionFields.AREA_SIZE));
+            }
+        }
 
-    @Override
-    public void setEnabled(boolean b)
-    {
-        this.enabled = b;
-    }
+        blast.applyFields(fieldAccessors);
+        blast.applyFields(this);
 
-    @Override
-    public boolean onEnableContent(ResourceLocation contentID, IExplosiveContentRegistry registry)
-    {
-        enabledContent.add(contentID);
-        return true;
+        return blast;
     }
 
     @Override

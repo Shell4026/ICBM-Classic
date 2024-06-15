@@ -20,7 +20,7 @@ import java.util.List;
  * Map of radio wave receivers
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 3/5/2016.
+ * Created by Dark(DarkGuardsman, Robin) on 3/5/2016.
  */
 public class RadioMap
 {

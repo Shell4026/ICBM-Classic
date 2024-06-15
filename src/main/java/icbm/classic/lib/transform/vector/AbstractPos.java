@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  * Abstract version of Pos3D for interaction with the minecraft world
- * Created by robert on 1/13/2015.
+ * Created by Robin on 1/13/2015.
  */
 public abstract class AbstractPos<R extends AbstractPos> extends Pos3D<R> implements IPosition
 {

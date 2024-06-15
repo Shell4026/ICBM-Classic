@@ -3,10 +3,15 @@ package icbm.classic.config.blast.types;
 import net.minecraftforge.common.config.Config;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2/9/2020.
+ * Created by Dark(DarkGuardsman, Robin) on 2/9/2020.
  */
 public class ConfigRedmatter
 {
+    @Config.Name("damage")
+    @Config.Comment("Damage to apply to entities being crushed by redmatter center")
+    @Config.RangeDouble(min = 0)
+    public float damage = 2000;
+
     @Config.Name("redmatter_max_size")
     @Config.Comment("Largest size the redmatter can grow into before stopping.")
     public float MAX_SIZE = 70;

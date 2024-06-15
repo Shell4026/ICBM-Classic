@@ -5,6 +5,8 @@ import icbm.classic.api.radio.IRadioReceiver;
 import icbm.classic.api.radio.IRadioSender;
 import icbm.classic.api.radio.messages.ITargetMessage;
 import icbm.classic.api.radio.messages.ITriggerActionMessage;
+import icbm.classic.config.missile.ConfigMissile;
+import icbm.classic.content.reg.ItemReg;
 import icbm.classic.lib.radio.imp.RadioTile;
 import icbm.classic.lib.radio.messages.RadioTranslations;
 import icbm.classic.lib.radio.messages.TextMessage;
@@ -22,7 +24,10 @@ public class RadioScreen extends RadioTile<TileLauncherScreen> implements IRadio
 
             // Set target packet, run first as laser-det triggers both (set & fire) from the same packet
             if(packet instanceof ITargetMessage) {
-                final Vec3d target = ((ITargetMessage) packet).getTarget();
+                final double vel = host.getLaunchersInGroup()
+                    .stream().mapToDouble(launcherEntry -> launcherEntry.getLauncher().getPayloadVelocity()).max()
+                    .orElse(ConfigMissile.DIRECT_FLIGHT_SPEED);
+                final Vec3d target = ((ITargetMessage) packet).getIntercept(host.getPos().getX() + 0.5, host.getPos().getY() + 0.5, host.getPos().getZ() + 0.5, vel);
                 if(target != null) {
                     host.setTarget(target);
 
@@ -37,7 +42,7 @@ public class RadioScreen extends RadioTile<TileLauncherScreen> implements IRadio
             }
 
             // Fire missile packet
-            if(packet instanceof ITriggerActionMessage) {
+            if(packet instanceof ITriggerActionMessage && ((ITriggerActionMessage) packet).shouldTrigger()) {
                 if (host.fireAllLaunchers(false)) { // TODO collect all screens and provide a single feedback message
                     final Vec3d target = host.getTarget();
                     final double distance = Math.sqrt(target.squareDistanceTo(host.getPos().getX() + 0.5, host.getPos().getY() + 0.5, host.getPos().getZ() + 0.5)); // TODO base from launcher

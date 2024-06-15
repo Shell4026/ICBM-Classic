@@ -4,9 +4,13 @@ import icbm.classic.lib.transform.vector.Pos;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
 
+/**
+ * @deprecated remove at some point and apply potion effects directly
+ */
+@Deprecated
 public class ContagiousPoison extends Poison
 {
-    private boolean isContagious;
+    private final boolean isContagious;
 
     public ContagiousPoison(String name, int id, boolean isContagious)
     {
@@ -19,12 +23,12 @@ public class ContagiousPoison extends Poison
     {
         if (this.isContagious)
         {
-            entity.addPotionEffect(new CustomPotionEffect(PoisonContagion.INSTANCE, 45 * 20, amplifier, null));
+            entity.addPotionEffect(new CustomPotionEffect(MobEffects.POISON, 45 * 20, amplifier, null)); //TODO was contagious potion
             entity.addPotionEffect(new CustomPotionEffect(MobEffects.BLINDNESS, 15 * 20, amplifier));
         }
         else
         {
-            entity.addPotionEffect(new CustomPotionEffect(PoisonToxin.INSTANCE, 30 * 20, amplifier, null));
+            entity.addPotionEffect(new CustomPotionEffect(MobEffects.POISON, 30 * 20, amplifier, null)); //TODO was toxin potion
             entity.addPotionEffect(new CustomPotionEffect(MobEffects.NAUSEA, 30 * 20, amplifier));
         }
 

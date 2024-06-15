@@ -4,8 +4,10 @@ import icbm.classic.api.reg.IExplosiveData;
 
 /**
  *
- * Created by Dark(DarkGuardsman, Robert) on 1/7/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/7/19.
+ * @deprecated will be migrated to IActionData with tags
  */
+@Deprecated
 public final class ICBMExplosives
 {
     //=================== Tier 1
@@ -45,7 +47,9 @@ public final class ICBMExplosives
     public static IExplosiveData REDMATTER;
 
     //=================== No content, only blast
+    @Deprecated
     public static IExplosiveData MISSILEMODULE;
     public static IExplosiveData MUTATION;
     public static IExplosiveData ROT;
+    public static IExplosiveData CLUSTER;
 }

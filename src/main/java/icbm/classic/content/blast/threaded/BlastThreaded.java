@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 10/8/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 10/8/2018.
  */
 public abstract class BlastThreaded extends Blast
 {
@@ -27,7 +27,7 @@ public abstract class BlastThreaded extends Blast
 
     protected IThreadWork getWorkerTask()
     {
-        return new ThreadWorkBlast(this::doRun, this::onWorkerThreadComplete);
+        return new ThreadWorkBlast(this.toString(), this::doRun, this::onWorkerThreadComplete);
     }
 
     /**
@@ -103,7 +103,7 @@ public abstract class BlastThreaded extends Blast
     @Override
     protected void onBlastCompleted()
     {
-
+        endBlast();
     }
 
     public void destroyBlock(BlockPos pos)

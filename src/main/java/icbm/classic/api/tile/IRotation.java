@@ -5,7 +5,7 @@ import net.minecraft.util.EnumFacing;
 
 /** Used by blocks that have a placement direction in the world
  *
- * Created by robert on 12/9/2014.
+ * Created by Robin on 12/9/2014.
  */
 @Deprecated //Highly likely this will be replaced or removed
 public interface IRotation

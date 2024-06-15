@@ -325,9 +325,10 @@ public class TileCruiseLauncher extends TileMachine implements IGuiTile, ILaunch
                  for (int z = -1; z < 2; z++) {
                      final BlockPos pos = getPos().add(x, y, z);
                      final IBlockState state = world.getBlockState(pos);
-                     Block block = state.getBlock();
+                     final Block block = state.getBlock();
                      if (!block.isAir(state, world, pos)) {
-                         return false;
+                         final AxisAlignedBB box = block.getCollisionBoundingBox(state, world, pos);
+                         return box == null || box.maxY < 0.5;
                      }
                  }
              }

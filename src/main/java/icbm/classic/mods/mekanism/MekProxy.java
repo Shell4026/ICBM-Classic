@@ -2,10 +2,10 @@ package icbm.classic.mods.mekanism;
 
 import icbm.classic.ICBMClassic;
 import icbm.classic.lib.network.packet.PacketEntityPos;
+import icbm.classic.lib.projectile.EntityProjectile;
 import icbm.classic.lib.world.IProjectileBlockInteraction;
 import icbm.classic.lib.world.ProjectileBlockInteraction;
 import icbm.classic.mods.ModProxy;
-import icbm.classic.prefab.entity.EntityProjectile;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 
 /**
  *
- * Created by Dark(DarkGuardsman, Robert) on 5/22/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 5/22/2018.
  */
 public class MekProxy extends ModProxy
 {
@@ -130,7 +130,7 @@ public class MekProxy extends ModProxy
                             }
 
                             if(entity instanceof EntityProjectile) {
-                                ((EntityProjectile)entity).rotateTowardsMotion();
+                                ((EntityProjectile)entity).rotateTowardsMotion(1);
                                 //TODO manually calculate rotation based on directly
                                 //  As some flight logic systems will not allow rotation towards motion
                             }

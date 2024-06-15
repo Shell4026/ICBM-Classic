@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * Enum of sounds used by ICBM
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 1/6/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 1/6/2018.
  * <p>
  * Credit to https://github.com/kitsushadow for sharing info on how to do sounds in MC 1.12
  */

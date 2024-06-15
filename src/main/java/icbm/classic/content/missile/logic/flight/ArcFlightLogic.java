@@ -1,25 +1,29 @@
 package icbm.classic.content.missile.logic.flight;
 
-import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
+import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.missiles.IMissile;
 import icbm.classic.api.missiles.parts.IMissileFlightLogic;
 import icbm.classic.api.missiles.parts.IMissileTarget;
+import icbm.classic.api.reg.obj.IBuilderRegistry;
 import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.content.missile.entity.EntityMissile;
 import icbm.classic.content.missile.entity.explosive.EntityExplosiveMissile;
 import icbm.classic.content.missile.tracker.MissileTrackerHandler;
+import icbm.classic.lib.buildable.BuildableObject;
+import icbm.classic.lib.projectile.EntityProjectile;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.gen.ChunkProviderServer;
 
 /**
  * Flight path that moves in a ballistic arc from start position to target position
  */
-public class ArcFlightLogic implements IMissileFlightLogic
+public class ArcFlightLogic extends BuildableObject<ArcFlightLogic, IBuilderRegistry<IMissileFlightLogic>> implements IMissileFlightLogic
 {
     public static final ResourceLocation REG_NAME = new ResourceLocation(ICBMConstants.DOMAIN, "path.arc");
 
@@ -45,6 +49,12 @@ public class ArcFlightLogic implements IMissileFlightLogic
 
     private int ticksFlight = 0;
 
+    private boolean wasSimulationBlocked = false;
+
+    public ArcFlightLogic() {
+        super(REG_NAME, ICBMClassicAPI.MISSILE_FLIGHT_LOGIC_REGISTRY, SAVE_LOGIC);
+    }
+
     @Override
     public void calculateFlightPath(final World world, double startX, double startY, double startZ, final IMissileTarget targetData)
     {
@@ -59,6 +69,11 @@ public class ArcFlightLogic implements IMissileFlightLogic
             this.endY = targetData.getY();
             this.endZ = targetData.getZ();
         }
+
+        // TODO check if entire path is chunk loaded, if a reasonable chunk count isn't then we should notify the user in the launcher UI and change to a up/down flight path
+        //      This likely will require a static function to run the calculation and show in the GUI. However, should be referenced based on the missile type
+        //      As future version might include different guidance systems based on the item's stored data. Meaning a single function wouldn't work but could
+        //      be referenced in a prediction callback. Something like IMissile#getGuidance().doPrediction()
     }
 
     //TODO wire IMissile to connect to ILauncher so we can get launcher source and let the launcher know when we are clear
@@ -80,7 +95,7 @@ public class ArcFlightLogic implements IMissileFlightLogic
         // Ground Displacement
         final float flatDistance = (float)Math.sqrt(deltaPathX * deltaPathX + deltaPathZ * deltaPathZ);
 
-        if(flatDistance < 200) {
+        if(flatDistance < ConfigMissile.ARC_DISTANCE_LIMIT) {
 
             //Path constants
             final float ticksPerMeterFlat = 2f;
@@ -101,7 +116,6 @@ public class ArcFlightLogic implements IMissileFlightLogic
             double timeToDistance = missileFlightTime / flatDistance;
             this.acceleration = (float) (((arcHeightMax - heightToDistance) * heightToDistance) / (missileFlightTime / timeToDistance) / (heightToTime * flatDistance));
         }
-        // If over 200 assume we will missile simulate rather than arc
         else {
             flightUpAlways = true;
         }
@@ -151,13 +165,23 @@ public class ArcFlightLogic implements IMissileFlightLogic
         {
             // Apply gravity
             if(!flightUpAlways) {
-                entity.motionY -= this.acceleration;
+                if(entity instanceof EntityProjectile) {
+                    ((EntityProjectile<?>) entity).setMotionVector(entity.motionX, entity.motionY - this.acceleration, entity.motionZ);
+                }
+                else {
+                    entity.motionY -= this.acceleration;
+                }
             }
 
             // Cut off x-z motion to prevent missing target
             if(Math.abs(entity.posX - endX) <= 0.1f && Math.abs(entity.posZ - endZ) <= 0.1f) {
-                entity.motionX = 0;
-                entity.motionZ = 0;
+                if(entity instanceof EntityProjectile) {
+                    ((EntityProjectile<?>) entity).setMotionVector(0, entity.motionY, 0);
+                }
+                else {
+                   entity.motionX = 0;
+                   entity.motionZ = 0;
+                }
             }
 
             // Update animate rotations
@@ -166,7 +190,7 @@ public class ArcFlightLogic implements IMissileFlightLogic
             // Sim system
             if (entity instanceof EntityExplosiveMissile && shouldSimulate(entity))
             {
-                MissileTrackerHandler.simulateMissile((EntityExplosiveMissile) entity); //TODO add ability to simulate any entity
+                wasSimulationBlocked = !MissileTrackerHandler.simulateMissile((EntityExplosiveMissile) entity); //TODO add ability to simulate any entity
             }
         }
     }
@@ -183,18 +207,6 @@ public class ArcFlightLogic implements IMissileFlightLogic
         entity.rotationYaw = (float) (Math.atan2(entity.motionX, entity.motionZ) * 180 / Math.PI);
     }
 
-    /**
-     * Has the missile wait on the pad while it's engines start and generate a lot of smoke
-     *
-     * @param entity     representing the missile
-     * @param ticksInAir the missile has been in the air
-     */
-    protected void idleMissileOnPad(Entity entity, int ticksInAir)
-    {
-        entity.rotationPitch = entity.prevRotationPitch = 90;
-        ICBMClassic.proxy.spawnPadSmoke(entity, this, ticksInAir);
-    }
-
     @Override
     public boolean shouldRunEngineEffects(Entity entity) {
         return hasStartedFlight;
@@ -202,19 +214,37 @@ public class ArcFlightLogic implements IMissileFlightLogic
 
     protected boolean shouldSimulate(Entity entity)
     {
-        if (EntityMissile.hasPlayerRiding(entity))
+        if (wasSimulationBlocked || EntityMissile.hasPlayerRiding(entity))
         {
             return false;
         }
-        else if (entity.posY >= ConfigMissile.SIMULATION_START_HEIGHT)
+        else if (entity.posY >= ConfigMissile.SIMULATION_EXIT_HEIGHT)
         {
             return true;
         }
 
+        // TODO predict if the missile only needed a few more chunks to hit... if so chunk load or let get stuck in board to prevent changing arc path
+
         final BlockPos futurePos = predictPosition(entity, BlockPos::new, 2);
 
-        //About to enter an unloaded chunk
-        return !entity.world.isAreaLoaded(entity.getPosition(), futurePos);
+        if(entity.world instanceof WorldServer) {
+
+            int xStart = (int) Math.floor(entity.posX) >> 4;
+            int zStart = (int) Math.floor(entity.posZ) >> 4;
+            int xEnd = futurePos.getX() >> 4;
+            int zEnd = futurePos.getZ() >> 4;
+
+            final ChunkProviderServer chunkProviderServer = ((WorldServer) entity.world).getChunkProvider();
+
+            for (int i = xStart; i <= xEnd; ++i) {
+                for (int j = zStart; j <= zEnd; ++j) {
+                    if (!chunkProviderServer.chunkExists(i, j)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     @Override
@@ -239,24 +269,6 @@ public class ArcFlightLogic implements IMissileFlightLogic
     }
 
     @Override
-    public ResourceLocation getRegistryName()
-    {
-        return REG_NAME;
-    }
-
-    @Override
-    public NBTTagCompound serializeNBT()
-    {
-        return SAVE_LOGIC.save(this, new NBTTagCompound());
-    }
-
-    @Override
-    public void deserializeNBT(NBTTagCompound nbt)
-    {
-        SAVE_LOGIC.load(this, nbt);
-    }
-
-    @Override
     public boolean shouldDecreaseMotion(Entity entity)
     {
         //Disable gravity and friction
@@ -267,6 +279,7 @@ public class ArcFlightLogic implements IMissileFlightLogic
         //Stuck in ground data
         .addRoot("flags")
         /* */.nodeBoolean("flight_started", (bl) -> bl.hasStartedFlight, (bl, data) -> bl.hasStartedFlight = data)
+        /* */.nodeBoolean("block_simulation", (bl) -> bl.wasSimulationBlocked, (bl, data) -> bl.wasSimulationBlocked = data)
         .base()
         .addRoot("inputs")
         /* */.nodeDouble("start_x", (bl) -> bl.startX, (bl, i) -> bl.startX = i)

@@ -1,11 +1,11 @@
 package icbm.classic.lib.capability.launcher;
 
-import icbm.classic.api.launcher.IActionStatus;
+import icbm.classic.api.actions.cause.IActionCause;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.launcher.ILauncherSolution;
 import icbm.classic.api.launcher.IMissileLauncher;
-import icbm.classic.api.missiles.cause.IMissileCause;
 import icbm.classic.api.missiles.parts.IMissileTarget;
-import icbm.classic.lib.capability.launcher.data.LauncherStatus;
+import icbm.classic.content.blocks.launcher.status.LauncherStatus;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 1/7/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/7/19.
  */
 public class CapabilityMissileLauncher implements IMissileLauncher
 {
@@ -50,12 +50,12 @@ public class CapabilityMissileLauncher implements IMissileLauncher
     }
 
     @Override
-    public IActionStatus preCheckLaunch(IMissileTarget target, @Nullable IMissileCause cause) {
+    public IActionStatus preCheckLaunch(IMissileTarget target, @Nullable IActionCause cause) {
         return LauncherStatus.ERROR_GENERIC;
     }
 
     @Override
-    public IActionStatus launch(ILauncherSolution firingSolution, @Nullable IMissileCause cause, boolean simulate) {
+    public IActionStatus launch(ILauncherSolution firingSolution, @Nullable IActionCause cause, boolean simulate) {
         return LauncherStatus.ERROR_GENERIC;
     }
 }

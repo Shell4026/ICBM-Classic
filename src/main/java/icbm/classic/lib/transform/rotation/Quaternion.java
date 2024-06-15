@@ -9,7 +9,7 @@ import java.math.RoundingMode;
 
 /**
  *
- * Created by Dark(DarkGuardsman, Robert) on 2/9/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 2/9/2018.
  */
 public class Quaternion implements ITransform
 {

@@ -17,7 +17,7 @@ import java.util.function.Consumer;
  * used to track flying objects that are outside of the map bounds(Missile in ICBM).
  * <p>
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 3/5/2016.
+ * Created by Dark(DarkGuardsman, Robin) on 3/5/2016.
  */
 public class RadarMap
 {

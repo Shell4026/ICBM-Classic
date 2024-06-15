@@ -1,10 +1,14 @@
 package icbm.classic.command;
 
+import icbm.classic.api.actions.cause.IActionSource;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.explosion.IBlastInit;
-import icbm.classic.api.explosion.responses.BlastResponse;
 import icbm.classic.api.reg.IExplosiveData;
+import icbm.classic.content.missile.logic.source.ActionSource;
+import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -29,9 +33,9 @@ public class FakeBlast implements IBlastInit
     public boolean triggered = false;
     public boolean isAlive = true;
 
-    private final BlastResponse blastResponse;
+    private final IActionStatus blastResponse;
 
-    public FakeBlast(BlastResponse blastResponse)
+    public FakeBlast(IActionStatus blastResponse)
     {
         this.blastResponse = blastResponse;
     }
@@ -110,11 +114,18 @@ public class FakeBlast implements IBlastInit
         return this.source;
     }
 
+    @Nonnull
     @Override
-    public BlastResponse runBlast()
+    public IActionStatus doAction()
     {
         triggered = true;
         return blastResponse;
+    }
+
+    @Nonnull
+    @Override
+    public IActionSource getSource() {
+        return new ActionSource(world, new Vec3d(x, y, z), null);
     }
 
     @Override
@@ -123,11 +134,10 @@ public class FakeBlast implements IBlastInit
         return triggered;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public IExplosiveData getExplosiveData()
-    {
-        return this.data;
+    public IExplosiveData getActionData() {
+        return data;
     }
 
     @Nullable

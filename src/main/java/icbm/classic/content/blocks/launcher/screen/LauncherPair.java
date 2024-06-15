@@ -1,6 +1,6 @@
 package icbm.classic.content.blocks.launcher.screen;
 
-import icbm.classic.api.launcher.IActionStatus;
+import icbm.classic.api.actions.status.IActionStatus;
 import lombok.Data;
 
 @Data

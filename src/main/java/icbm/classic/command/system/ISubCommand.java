@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Created by Robert Seifert on 1/6/20.
+ * Created by Robin Seifert on 1/6/20.
  */
 public interface ISubCommand
 {

@@ -5,7 +5,7 @@ import net.minecraftforge.common.config.Config;
 
 /**
  *
- * Created by Dark(DarkGuardsman, Robert) on 4/10/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 4/10/2018.
  */
 @Config(modid = ICBMConstants.DOMAIN, name = "icbmclassic/debug")
 @Config.LangKey("config.icbmclassic:debug.title")

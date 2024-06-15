@@ -6,8 +6,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 9/7/2019.
+ * @deprecated being removed in 1.13
  */
+@Deprecated
 public interface IExFuseBlockRegistry
 {
     /**

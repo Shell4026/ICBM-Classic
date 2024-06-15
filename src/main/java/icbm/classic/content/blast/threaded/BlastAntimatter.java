@@ -4,18 +4,16 @@ import icbm.classic.ICBMClassic;
 import icbm.classic.client.ICBMSounds;
 import icbm.classic.config.ConfigDebug;
 import icbm.classic.config.blast.ConfigBlast;
+import icbm.classic.config.blast.types.ConfigAntimatter;
 import icbm.classic.content.blast.BlastHelpers;
 import icbm.classic.content.blast.redmatter.EntityRedmatter;
 import icbm.classic.lib.transform.BlockEditHandler;
-import icbm.classic.lib.transform.vector.Location;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
 
 import java.util.List;
@@ -31,7 +29,7 @@ public class BlastAntimatter extends BlastThreaded
     {
         super.setupBlast();
         ICBMSounds.ANTIMATTER.play(world, this.location.x(), this.location.y(), this.location.z(), 7F, (float) (this.world().rand.nextFloat() * 0.1 + 0.9F), true);
-        return this.doDamageEntities(this.getBlastRadius() * 2, Integer.MAX_VALUE);
+        return this.doDamageEntities(this.getBlastRadius() * 2, ConfigBlast.antimatter.damage); //TODO config for radius
     }
 
     @Override
@@ -40,7 +38,7 @@ public class BlastAntimatter extends BlastThreaded
         final IBlockState blockState = world.getBlockState(blockPos);
         if (!blockState.getBlock().isAir(blockState, world, blockPos))
         {
-            if (blockState.getBlockHardness(world, blockPos) >= 0 || ConfigBlast.ANTIMATTER_DESTROY_UNBREAKABLE_BLOCKS)
+            if (blockState.getBlockHardness(world, blockPos) >= 0 || ConfigBlast.antimatter.damageUnbreakable)
             {
                 world.setBlockState(blockPos, replaceState, ConfigBlast.BLAST_DO_BLOCKUPDATES ? 3 : 2);
             }
@@ -151,20 +149,20 @@ public class BlastAntimatter extends BlastThreaded
     public void onBlastCompleted()
     {
         super.onBlastCompleted();
-        this.doDamageEntities(this.getBlastRadius() * 2, Integer.MAX_VALUE);
+        this.doDamageEntities(this.getBlastRadius() * 2, ConfigBlast.antimatter.damage); //TODO config for radius
     }
 
     @Override
     protected boolean doDamageEntities(float radius, float power, boolean destroyItem) {
 
-        if (!ConfigBlast.ANTIMATTER_BLOCK_AND_ENT_DAMAGE_ON_REDMATTER)
+        if (!ConfigBlast.antimatter.damageOnRedmatterKill)
         {
-            final List<Entity> allEntities = getEntities(radius * 2);
+            final List<Entity> allEntities = getEntities(radius * 2); //TODO config for radius
             final long killed = allEntities.stream().filter(e -> e instanceof EntityRedmatter).peek(this::onDamageEntity).count();
             if(killed > 0) {
                 return false;
             }
-            return doDamageEntities(allEntities, radius, power, destroyItem);
+            return this.doDamageEntities(allEntities, radius, power, destroyItem);
         }
         return super.doDamageEntities(radius, power, destroyItem);
     }

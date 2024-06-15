@@ -1,22 +1,59 @@
 package icbm.classic.content.blast;
 
+import com.google.common.collect.ImmutableList;
+import icbm.classic.ICBMClassic;
+import icbm.classic.api.actions.data.ActionField;
+import icbm.classic.api.actions.data.ActionFields;
+import icbm.classic.api.actions.data.IActionFieldProvider;
+import icbm.classic.api.actions.data.IActionFieldReceiver;
 import icbm.classic.api.tile.IRotatable;
 import icbm.classic.content.missile.entity.EntityMissile;
 import icbm.classic.lib.transform.vector.Pos;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
+
+import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Collections;
 
 public class BlastBreach extends BlastTNT
 {
+    public static final ImmutableList<ActionField> SUPPORTED_FIELDS = ImmutableList.of(ActionFields.HOST_DIRECTION);
+    @Setter @Accessors(chain = true)
     private int depth;
 
-    public BlastBreach(int depth)
-    {
-        this.damageToEntities = 13;
-        this.depth = depth;
+    @Setter @Accessors(chain = true)
+    private int width;
+
+    @Setter @Accessors(chain = true)
+    private float energy;
+
+    @Setter @Accessors(chain = true)
+    private float energyDistanceScale;
+
+    @Setter @Accessors(chain = true)
+    private float energyCostDistance;
+
+    @Setter @Accessors(chain = true)
+    private EnumFacing direction; //TODO recode to be angle based
+
+    @Override
+    public <VALUE, TAG extends NBTBase> void setValue(ActionField<VALUE, TAG> key, VALUE value) {
+        if(key == ActionFields.HOST_DIRECTION) {
+            direction = ActionFields.HOST_DIRECTION.cast(value);
+        }
+    }
+
+    @Nonnull
+    public Collection<ActionField> getFields() {
+        return SUPPORTED_FIELDS;
     }
 
     @Override
@@ -30,98 +67,99 @@ public class BlastBreach extends BlastTNT
         //TODO add some smoke and block particles for wow effect of a breaching a building
         else if (!this.world().isRemote)
         {
-            //Get direction to push blast
-            EnumFacing direction = EnumFacing.DOWN; //TODO replace with angle for entities (blocks should stay as axis aligned)
-            if (this.exploder instanceof IRotatable)
-            {
-                direction = ((IRotatable) this.exploder).getDirection().getOpposite();
-            }
-            //Guess direction from entity rotation
-            else if (this.exploder != null)
-            {
-                if (this.exploder.rotationPitch > 45)
-                {
-                    direction = this.exploder instanceof EntityMissile ? EnumFacing.UP : EnumFacing.DOWN;
-                }
-                else if (this.exploder.rotationPitch < -45)
-                {
-                    direction = this.exploder instanceof EntityMissile ? EnumFacing.DOWN : EnumFacing.UP;
-                }
-                else
-                {
-                    direction = this.exploder.getAdjustedHorizontalFacing();
+            if(direction == null) {
+                //Guess direction from entity rotation
+                if (this.exploder != null) {
+                    // TODO move this logic to projectile and provide via ActionField.HOST_DIRECTION
+                    if (this.exploder.rotationPitch > 45) {
+                        direction = this.exploder instanceof EntityMissile ? EnumFacing.UP : EnumFacing.DOWN;
+                    } else if (this.exploder.rotationPitch < -45) {
+                        direction = this.exploder instanceof EntityMissile ? EnumFacing.DOWN : EnumFacing.UP;
+                    } else {
+                        direction = this.exploder.getAdjustedHorizontalFacing();
 
-                    // fixes explosion going backwards when the missile flies east or west.
-                    if (direction == EnumFacing.EAST || direction == EnumFacing.WEST)
-                    {
-                        direction = direction.getOpposite();
+                        // fixes explosion going backwards when the missile flies east or west.
+                        if (direction == EnumFacing.EAST || direction == EnumFacing.WEST) {
+                            direction = direction.getOpposite();
+                        }
                     }
+                }
+                else {
+                    direction = EnumFacing.DOWN;
                 }
             }
 
             //Loop with and height in direction
-            for (int h = -1; h < 2; h++) //TODO scale with size
+            for (int h = -width; h <= width; h++)
             {
-                for (int w = -1; w < 2; w++) //TODO scale with size
+                for (int w = -width; w <= width; w++)
                 {
                     //Reset energy per line
-                    float energy = 4 * size + depth * 3;
-
-                    //reduce power from center outwards
-                    double centerDst = Math.sqrt(h*h + w*w);
-                    energy*=1-centerDst/4;
+                    float energyRemaining = this.energy - (this.energy * (h + w) * energyDistanceScale);
 
                     //TODO convert magic numbers into defined logic
 
                     //Loop depth
-                    for (int i = 0; i < this.depth; i++)
+                    for (int depthIndex = 0; depthIndex < this.depth && energyRemaining > 0; depthIndex++)
                     {
-                        Pos dir = new Pos(direction).multiply(i);  //TODO replace xyz ints
-                        Pos p;
+                        int x = this.xi() + direction.getFrontOffsetX() * depthIndex;
+                        int y = this.yi() + direction.getFrontOffsetY() * depthIndex;
+                        int z = this.zi() + direction.getFrontOffsetZ() * depthIndex;
+
                         if (direction == EnumFacing.DOWN || direction == EnumFacing.UP)
                         {
-                            p = dir.add(h, 0, w);
+                            x += h;
+                            z += w;
                         }
                         else if (direction == EnumFacing.EAST || direction == EnumFacing.WEST)
                         {
-                            p = dir.add(0, h, w);
+                            y += h;
+                            z += w;
                         }
                         else if (direction == EnumFacing.NORTH || direction == EnumFacing.SOUTH)
                         {
-                            p = dir.add(w, h, 0);
+                            y += h;
+                            x += w;
                         }
                         else
                         {
                             return;
                         }
 
-                        //Translate by center
-                        p = new Pos(this).add(p); //TODO replace with BlockPos
-
                         //Get block
-                        IBlockState state = p.getBlockState(world());
-                        Block block = state.getBlock();
-                        if (!block.isAir(state, world(), p.toBlockPos()))
-                        {
-                            // get explosion resistance, take the square root of it and then half that to make it weaker
-                            double e = Math.sqrt(block.getExplosionResistance(world(), p.toBlockPos(), this.exploder, this)) / 4;
+                        final BlockPos pos = new BlockPos(x, y, z);
+                        final IBlockState state = world.getBlockState(pos);
+                        final Block block = state.getBlock();
 
-                            if (e <= energy) // if there is energy (force) left to break it
-                            {
-                                energy -= e; // reduce the remaining energy
-                                getAffectedBlockPositions().add(p.toBlockPos()); // mark block for destroying
+                        if (!block.isAir(state, world(), pos))
+                        {
+                            // Stop at unbreakable
+                            if(block.getBlockHardness(state, world, pos) < 0) {
+                                break;
                             }
-                            else
+
+                            //blockResistance=R*3.... aka hardness
+                            //explosiveResistance=blockResistance / 5
+                            //R = planks(5) -> 15 -> 3
+                            //R = stone(10) -> 30 -> 10
+                            //ICBM concrete -> 28
+                            //ICBM compact concrete -> 380
+                            //ICBM reinforced concrete -> 2800
+                            //R = obby(2000) -> 6000 -> 1200
+                            //R = unbreakable(6M) -> fuck that
+
+
+                            final float cost = block.getExplosionResistance(world(), pos, this.exploder, this);
+                            if (cost < energyRemaining)
                             {
-                                break; // block blast from continuing
+                                energyRemaining -= cost;
+                                getAffectedBlockPositions().add(pos);
                             }
+
+
                         }
-                        energy *= 0.65; // reduce the blast power by a percentage for every block it travelled
-                        energy--;
-
-                        if (energy <= 0)
-                        {
-                            break;
+                        else {
+                            energyRemaining *= (1 - energyCostDistance);
                         }
                     }
                 }

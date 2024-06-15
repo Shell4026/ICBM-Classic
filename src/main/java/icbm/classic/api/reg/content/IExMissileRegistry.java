@@ -10,9 +10,9 @@ import net.minecraft.util.ResourceLocation;
 import java.util.function.Consumer;
 
 /**
- *
- * Created by Dark(DarkGuardsman, Robert) on 1/4/19.
+ * @deprecated being removed in 1.13
  */
+@Deprecated
 public interface IExMissileRegistry extends IExplosiveContentRegistry
 {
 

@@ -20,8 +20,9 @@ import icbm.classic.lib.network.lambda.entity.PacketCodexEntity;
 import icbm.classic.lib.radar.RadarRegistry;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import icbm.classic.lib.saving.NbtSaveNode;
-import icbm.classic.prefab.entity.EntityProjectile;
+import icbm.classic.lib.projectile.EntityProjectile;
 import io.netty.buffer.ByteBuf;
+import lombok.Getter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,6 +32,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -54,7 +56,10 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
     // Generic shared missile data
     private final HashSet<Entity> collisionIgnoreList = new HashSet<Entity>();
 
-    private CapabilityMissile missileCapability; //TODO refactor to use interface so parts can be better customized
+    @Getter
+    private final CapabilityMissile missileCapability = new CapabilityMissile(this); //TODO refactor to use interface so parts can be better customized
+
+    @Getter
     private final IEMPReceiver empCapability = new CapabilityEmpMissile(getMissileCapability());
 
     /** Toggle to note the missile has impacted something and already triggered impact logic */
@@ -69,13 +74,7 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
     }
 
     @Override
-    public float getMaxHealth()
-    {
-        return ConfigMissile.TIER_1_HEALTH;
-    }
-
-    @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
     {
         if (capability == CapabilityEMP.EMP)
         {
@@ -95,18 +94,7 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
             || super.hasCapability(capability, facing);
     }
 
-    public CapabilityMissile getMissileCapability() {
-        if(missileCapability == null) {
-            missileCapability = new CapabilityMissile(this);
-        }
-        return missileCapability;
-    }
-
-    public IEMPReceiver getEmpCapability() {
-        return empCapability;
-    }
-
-    public EntityMissile ignore(Entity entity)
+    public EntityMissile<E> ignore(Entity entity)
     {
         collisionIgnoreList.add(entity);
         return this;
@@ -289,14 +277,16 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
     }
 
     @Override
-    protected void onImpact(Vec3d impactLocation) {
+    protected final void onImpact(RayTraceResult impactLocation) {
         if(!hasImpacted) {
-            this.hasImpacted = true;
-            logImpact(impactLocation);
-            dismountRidingEntity();
-            removePassengers();
-            setDead();
+            this.hasImpacted = true; //TODO store impact information and move this to projectile
+            logImpact(impactLocation.hitVec);
+            actionOnImpact(impactLocation);
         }
+    }
+
+    protected void actionOnImpact(RayTraceResult impactLocation) {
+        this.destroy();
     }
 
     protected void logImpact(Vec3d impactLocation)
@@ -319,6 +309,14 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
     }
 
     @Override
+    protected float getImpactDamage(Entity entityHit, float velocity, RayTraceResult hit) {
+        if(ConfigMissile.DAMAGE_LIMIT >= 0) {
+            return Math.min(MathHelper.ceil(velocity * ConfigMissile.DAMAGE_SCALE), ConfigMissile.DAMAGE_LIMIT);
+        }
+        return MathHelper.ceil(velocity * ConfigMissile.DAMAGE_SCALE);
+    }
+
+    @Override
     public boolean read(ByteBuf buf, int id, EntityPlayer player, IPacket type) {
         if(id == 1) {
             readSpawnData(buf);
@@ -330,6 +328,7 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
     @Override
     public void writeSpawnData(ByteBuf additionalMissileData)
     {
+        super.writeSpawnData(additionalMissileData);
         final NBTTagCompound saveData = SAVE_LOGIC.save(this, new NBTTagCompound());
         ByteBufUtils.writeTag(additionalMissileData, saveData);
     }
@@ -337,6 +336,7 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
     @Override
     public void readSpawnData(ByteBuf additionalMissileData)
     {
+        super.readSpawnData(additionalMissileData);
         final NBTTagCompound saveData = ByteBufUtils.readTag(additionalMissileData);
         SAVE_LOGIC.load(this, saveData);
     }

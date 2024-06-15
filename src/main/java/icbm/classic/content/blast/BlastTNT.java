@@ -4,6 +4,8 @@ import icbm.classic.lib.NBTConstants;
 import icbm.classic.lib.network.packet.PacketSpawnBlockExplosion;
 import icbm.classic.lib.transform.region.Cube;
 import icbm.classic.lib.transform.vector.Pos;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -31,6 +33,7 @@ public class BlastTNT extends Blast
     private boolean destroyItem = false;
 
     /** Amount of damage to do to an entity */
+    @Setter @Accessors(chain = true)
     public float damageToEntities = 10F;
 
     /** Number of rays (or steps) to use for blast per axis (x, y, z) */
@@ -193,7 +196,7 @@ public class BlastTNT extends Blast
                         //Do drops
                         if (blockState.getBlock().canDropFromExplosion(this))
                         {
-                            blockState.getBlock().dropBlockAsItemWithChance(this.world(), blockDestroyedPos, blockState, 1F, 0);
+                            blockState.getBlock().dropBlockAsItemWithChance(this.world(), blockDestroyedPos, blockState, 1.0F / this.getBlastRadius(), 0);
                         }
 
                         //Break block

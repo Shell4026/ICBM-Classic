@@ -7,8 +7,9 @@ import net.minecraft.util.ResourceLocation;
 import java.util.Set;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 1/4/19.
+ * @deprecated being removed in 1.13
  */
+@Deprecated
 public interface IExplosiveContentRegistry
 {
     /**
@@ -53,14 +54,6 @@ public interface IExplosiveContentRegistry
     Set<IExplosiveData> getExplosives();
 
     /**
-     * Gets a supported explosive by name
-     *
-     * @param regName - registry name of the explosive
-     * @return
-     */
-    IExplosiveData getExplosive(ResourceLocation regName);
-
-    /**
      * Creates a new explosive device represented by
      * this registry.
      * <p>
@@ -75,7 +68,7 @@ public interface IExplosiveContentRegistry
      * @return new device stack
      */
     default ItemStack getDeviceStack(IExplosiveData data) {
-        return getDeviceStack(data.getRegistryName());
+        return getDeviceStack(data.getRegistryKey());
     }
 
     /**

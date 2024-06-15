@@ -5,12 +5,16 @@ import icbm.classic.api.explosion.IBlastFactory;
 import icbm.classic.api.reg.content.IExplosiveContentRegistry;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Set;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 1/4/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/4/19.
+ *
+ * @deprecated being replaced by {@link icbm.classic.api.ICBMClassicAPI#ACTION_REGISTRY}
  */
+@Deprecated
 public interface IExplosiveRegistry
 {
 
@@ -35,7 +39,12 @@ public interface IExplosiveRegistry
      * @param name - registry name
      * @return explosive data if registered
      */
-    IExplosiveData getExplosiveData(ResourceLocation name);
+    @Nonnull
+    default IExplosiveData getExplosiveData(ResourceLocation name) {
+        return getExplosiveData(name, false);
+    }
+
+    IExplosiveData getExplosiveData(ResourceLocation name, boolean allowNull);
 
     /**
      * Gets the explosive data for the registry name

@@ -1,6 +1,6 @@
 # Clarification
 
-All assets are licensed from artists as either their current license or non-exlusive non-transferable non-revokable aggrement for the project. Artist maintain full rights to their works to do as they decide.
+All assets are licensed from artists as either their current license or non-exclusive non-transferable non-revocable agreement for the project. Artist maintain full rights to their works to do as they decide.
 
 See [Credits.md](Credits.md) for documented credits and license per file.
 

@@ -33,7 +33,7 @@ public class RenderEntityBlock extends Render<EntityFlyingBlock>
     {
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
 
-        IBlockState blockState = entity.getBlockState();
+        IBlockState blockState = entity.getBlockData().getBlockState();
         final BlockRendererDispatcher blockrendererdispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
 
         GlStateManager.pushMatrix();
@@ -54,7 +54,7 @@ public class RenderEntityBlock extends Render<EntityFlyingBlock>
 
             GlStateManager.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
             GlStateManager.translate(-0.5F, -0.5F, 0.5F);
-            blockrendererdispatcher.renderBlockBrightness(blockState, entity.getBrightness());
+            blockrendererdispatcher.renderBlockBrightness(blockState, entity.getBrightness()); //TODO consider using item render instead?
             GlStateManager.translate(0.0F, 0.0F, 1.0F);
         }
         catch (Exception e) {
@@ -64,7 +64,7 @@ public class RenderEntityBlock extends Render<EntityFlyingBlock>
                 // Log issue, user will likely never notice but still worth logging
                 ICBMClassic.logger().error("Failed to render FlyingBlocks. This is likely an issue with the block being rendered. Please report the problem to the block's author."
                     + "\n Entity: " + entity
-                    + "\n Block: " + entity.getBlockState()
+                    + "\n Block: " + entity.getBlockData().getBlockState()
                     , e);
             }
         }

@@ -1,9 +1,11 @@
 package icbm.classic.api.explosion;
 
+import icbm.classic.api.actions.IAction;
 import icbm.classic.api.data.IWorldPosition;
-import icbm.classic.api.explosion.responses.BlastResponse;
 import icbm.classic.api.reg.IExplosiveData;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -12,8 +14,12 @@ import javax.annotation.Nullable;
  * Applied to the object that represents or wrappers the explosion/blast.
  *
  * @author Calclavia, Darkguardsman
+ *
+ * @deprecated being phased out in favor of {@link IAction} with sub-interfaces for specific action categories.
+ * This will be a world-edit action and might use tags like projectile system does to selectively detection blast themed actions.
  */
-public interface IBlast extends IWorldPosition
+@Deprecated
+public interface IBlast extends IWorldPosition, IAction
 {
     /**
      * Gets the radius/size of the effect of the blast.
@@ -22,19 +28,14 @@ public interface IBlast extends IWorldPosition
      * Rather is used more as a scale factor
      *
      * @return size in blocks (meters)
+     *
+     * @deprecated will eventually be moved to blast data or sub-interface. As not all blasts have a radius of impact.
      */
+    @Deprecated
     default float getBlastRadius() //TODO update or add more methods to get true size
     {
         return -1; //TODO move to sub-interface (IScalableBlast) as not all blasts have a radius
     }
-
-    /**
-     * Called to start the blast
-     *
-     * @return this
-     */
-    @Nonnull
-    BlastResponse runBlast();
 
     /**
      * Is the blast completed and
@@ -48,18 +49,9 @@ public interface IBlast extends IWorldPosition
         return true;
     }
 
-    /**
-     * Data used to create the blast. Used
-     * for save state recovery
-     *
-     * @return
-     */
-    @Nullable
-    @Deprecated
-    default IExplosiveData getExplosiveData() //TODO move to save handler, this shouldn't be exposed
-    {
-        return null;
-    }
+    @Override
+    @Nonnull
+    IExplosiveData getActionData();
 
     /**
      * Entity that represents the blast
@@ -69,8 +61,7 @@ public interface IBlast extends IWorldPosition
      * <p>
      * Blasts with entities should be viewed as entities first
      * and blasts second. With the blast existing as an API
-     * drive way to provide information and events to interact
-     * with the entity's actions.
+     * wrapper to provide access to entity's behavior.
      *
      * @return controller
      */
@@ -96,4 +87,12 @@ public interface IBlast extends IWorldPosition
      * should only be used by server utilities and commands.
      */
     void clearBlast();
+
+    default World getWorld() {
+        return world();
+    }
+
+    default Vec3d getPosition() {
+        return getVec3d();
+    }
 }

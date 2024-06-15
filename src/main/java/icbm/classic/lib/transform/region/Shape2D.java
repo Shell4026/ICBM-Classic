@@ -6,7 +6,7 @@ import icbm.classic.lib.transform.vector.Point;
 import net.minecraft.util.math.Vec3d;
 
 /**
- * Created by robert on 1/12/2015.
+ * Created by Robin on 1/12/2015.
  */
 public abstract class Shape2D
 {

@@ -1,18 +1,21 @@
 package icbm.classic.content.items;
 
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.actions.IPotentialAction;
 import icbm.classic.api.missiles.ICapabilityMissileStack;
 import icbm.classic.api.missiles.IMissile;
 import icbm.classic.api.missiles.IMissileAiming;
-import icbm.classic.config.ConfigMain;
+import icbm.classic.api.missiles.parts.IMissileFlightLogicStep;
 import icbm.classic.config.missile.ConfigMissile;
+import icbm.classic.content.cluster.action.ActionDataCluster;
+import icbm.classic.content.missile.entity.explosive.EntityMissileActionable;
+import icbm.classic.content.missile.logic.flight.ArcFlightLogic;
 import icbm.classic.content.missile.logic.flight.DeadFlightLogic;
-import icbm.classic.content.missile.logic.source.MissileSource;
+import icbm.classic.content.missile.logic.flight.move.MoveByVec3Logic;
+import icbm.classic.content.missile.logic.source.ActionSource;
 import icbm.classic.content.missile.logic.source.cause.EntityCause;
-import icbm.classic.lib.LanguageUtility;
+import icbm.classic.content.missile.logic.targeting.BasicTargetData;
 import icbm.classic.prefab.item.ItemICBMElectrical;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -26,16 +29,15 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.text.Style;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Rocket Launcher
@@ -49,9 +51,15 @@ public class ItemRocketLauncher extends ItemICBMElectrical
     private static final int firingDelay = 1000;
     private final HashMap<String, Long> clickTimePlayer = new HashMap<String, Long>();
 
-    public ItemRocketLauncher()
+    private static final double minDistance = 20;
+    private static final double ballisticBurstY = 20;
+
+    private final boolean fireUpDown;
+
+    public ItemRocketLauncher(boolean fireUpDown)
     {
-        super("rocketLauncher");
+        super(fireUpDown ? "ballisticLauncher" : "rocketLauncher"); //TODO move to set name
+        this.fireUpDown = fireUpDown;
         this.addPropertyOverride(new ResourceLocation("pulling"), new IItemPropertyGetter()
         {
             @SideOnly(Side.CLIENT)
@@ -103,14 +111,60 @@ public class ItemRocketLauncher extends ItemICBMElectrical
                                 final IMissile missile = capabilityMissileStack.newMissile(world);
                                 final Entity missileEntity = missile.getMissileEntity();
 
-                                if (missileEntity instanceof IMissileAiming)
+                                if (missileEntity instanceof IMissileAiming) //TODO convert to actionData that will use causeBy to trigger init
                                 {
                                     //Setup aiming and offset from player
                                     ((IMissileAiming) missileEntity).initAimingPosition(player, 1, ConfigMissile.DIRECT_FLIGHT_SPEED);
 
-                                    //Init missile
-                                    missile.setFlightLogic(new DeadFlightLogic(ConfigMissile.HANDHELD_FUEL));
-                                    missile.setMissileSource(new MissileSource(world, missileEntity.getPositionVector(), new EntityCause(player)));
+                                    // Get player aim
+                                    final Vec3d eyePos = player.getPositionEyes(1.0F);
+                                    final Vec3d lookVector = player.getLook(1.0F);
+
+                                    // Javelin style launching
+                                    if(fireUpDown) {
+                                        //TODO check min distance
+                                        final IMissileFlightLogicStep stepLockHeight = new MoveByVec3Logic()
+                                            .setDistance(3)
+                                            .setRelative(false)
+                                            .setDirection(lookVector)
+                                            .setAcceleration(0.2);
+                                        missile.setFlightLogic(stepLockHeight.addStep(new ArcFlightLogic()));
+                                    }
+                                    // Dummy RPG firing
+                                    else {
+                                        missile.setFlightLogic(new DeadFlightLogic(ConfigMissile.HANDHELD_FUEL));
+                                    }
+
+                                    // Setup source of missile for later cause by TODO include item used
+                                    missile.setMissileSource(new ActionSource(world, missileEntity.getPositionVector(), new EntityCause(player)));
+
+                                    // Raytrace to set a default target for air-burst missiles
+                                    final double traceDistance = 500;
+                                    final Vec3d rayEnd = eyePos.addVector(lookVector.x * traceDistance, lookVector.y * traceDistance, lookVector.z * traceDistance);
+                                    final RayTraceResult rayTraceResult = world.rayTraceBlocks(eyePos, rayEnd, false, true, false);
+
+                                    if(rayTraceResult != null && rayTraceResult.hitVec != null) {
+
+                                        if(fireUpDown && rayTraceResult.hitVec.distanceTo(player.getPositionVector()) < minDistance) { //TODO customize
+                                            player.sendStatusMessage(new TextComponentTranslation("item.icbmclassic:rocketLauncher.error.distance.min", minDistance), true);
+                                            return;
+                                        }
+                                        missile.setTargetData(new BasicTargetData(rayTraceResult.hitVec));
+                                    }
+                                    else if(fireUpDown) {
+                                        player.sendStatusMessage(new TextComponentTranslation("item.icbmclassic:rocketLauncher.error.targeting"), true);
+                                        return;
+                                    }
+
+                                    // Move aim position up if cluster TODO expose this to a user so it can be set for any missile
+                                    if(fireUpDown && missileEntity instanceof EntityMissileActionable && ((EntityMissileActionable) missileEntity).getMainAction() != null)
+                                    {
+                                        final IPotentialAction potentialAction = ((EntityMissileActionable) missileEntity).getMainAction();
+                                        if(potentialAction.getActionData() instanceof ActionDataCluster) {
+                                            ((BasicTargetData)missile.getTargetData()).setPosition(missile.getTargetData().getPosition().addVector(0, ballisticBurstY, 0));
+                                        }
+                                    }
+
                                     missile.launch();
 
                                     //Spawn entity into world
@@ -189,22 +243,5 @@ public class ItemRocketLauncher extends ItemICBMElectrical
 
         player.setActiveHand(handIn);
         return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag flag)
-    {
-        final String key = "item.icbmclassic:rocketLauncher.info";
-        String translation = LanguageUtility.getLocal(key);
-
-        if (translation.contains("%s"))
-        {
-            String str = String.format(translation, String.valueOf(ConfigMain.ROCKET_LAUNCHER_TIER_FIRE_LIMIT));
-            splitAdd(str, list, false, false);
-        }
-
-        if (Minecraft.getMinecraft().player != null && Minecraft.getMinecraft().player.isCreative())
-            list.add(new TextComponentTranslation("item.icbmclassic:rocketLauncher.info.creative").setStyle(new Style().setColor(TextFormatting.LIGHT_PURPLE)).getFormattedText());
     }
 }

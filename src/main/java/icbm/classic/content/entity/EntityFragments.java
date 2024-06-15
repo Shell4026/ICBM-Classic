@@ -4,6 +4,8 @@ import icbm.classic.lib.NBTConstants;
 import icbm.classic.lib.world.IProjectileBlockInteraction;
 import icbm.classic.lib.world.ProjectileBlockInteraction;
 import io.netty.buffer.ByteBuf;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -32,7 +34,9 @@ public class EntityFragments extends Entity implements IEntityAdditionalSpawnDat
     public EntityLivingBase shootingEntity;
 
     //Type settings
+    @Setter @Accessors(chain = true)
     public boolean isExplosive; //TODO replace with ENUM
+    @Setter @Accessors(chain = true)
     public boolean isAnvil; //TODO replace with ENUM
 
     //Triggers
@@ -44,10 +48,14 @@ public class EntityFragments extends Entity implements IEntityAdditionalSpawnDat
 
     /** The owner of this arrow. */
     private int ticksInAir = 0;
+
+    @Setter @Accessors(chain = true)
     public int damage = 11;
+
     public boolean flatDamage = false;
 
     /** Is this arrow a critical hit? (Controls particles and damage) */
+    @Setter @Accessors(chain = true)
     public boolean arrowCritical = false;
     public float explosionSize = 1.5F;
 
@@ -55,25 +63,6 @@ public class EntityFragments extends Entity implements IEntityAdditionalSpawnDat
     {
         super(par1World);
         this.setSize(0.5F, 0.5F);
-    }
-
-    public EntityFragments(World par1World, double x, double y, double z, boolean isExplosive, boolean isAnvil)
-    {
-        super(par1World);
-        this.setPosition(x, y, z);
-        //this.yOffset = 0.0F;
-        this.isExplosive = isExplosive;
-        this.isAnvil = isAnvil;
-
-        if (this.isAnvil)
-        {
-            this.setSize(1, 1);
-            this.damage = 30;
-        }
-        else
-        {
-            this.setSize(0.5f, 0.5f);
-        }
     }
 
     @Override
@@ -147,8 +136,6 @@ public class EntityFragments extends Entity implements IEntityAdditionalSpawnDat
             float var7 = MathHelper.sqrt(par1 * par1 + par5 * par5);
             this.prevRotationYaw = this.rotationYaw = (float) (Math.atan2(par1, par5) * 180.0D / Math.PI);
             this.prevRotationPitch = this.rotationPitch = (float) (Math.atan2(par3, var7) * 180.0D / Math.PI);
-            this.prevRotationPitch = this.rotationPitch;
-            this.prevRotationYaw = this.rotationYaw;
             this.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
         }
     }
@@ -164,7 +151,6 @@ public class EntityFragments extends Entity implements IEntityAdditionalSpawnDat
     }
 
     /** Called to update the entity's position/logic. */
-    //  entity.attackEntityFrom(DamageSource.ANVIL, 15);
     @Override
     public void onUpdate()
     {

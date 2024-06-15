@@ -2,8 +2,15 @@ package icbm.classic.content.blocks.explosive;
 
 import icbm.classic.ICBMClassic;
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.actions.cause.IActionSource;
+import icbm.classic.api.actions.data.ActionFields;
+import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.api.tile.IRotatable;
+import icbm.classic.content.blast.BlastBreach;
 import icbm.classic.content.entity.EntityExplosive;
+import icbm.classic.content.missile.logic.source.ActionSource;
+import icbm.classic.content.missile.logic.source.cause.EntityCause;
+import icbm.classic.lib.actions.fields.ActionFieldProvider;
 import icbm.classic.lib.capability.ex.CapabilityExplosiveStack;
 import icbm.classic.lib.transform.vector.Pos;
 import net.minecraft.block.state.IBlockState;
@@ -13,6 +20,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nullable;
@@ -76,18 +84,29 @@ public class TileEntityExplosive extends TileEntity implements IRotatable
         if (!hasBeenTriggered)
         {
             hasBeenTriggered = true;
-            EntityExplosive entityExplosive = new EntityExplosive(world, new Pos(pos).add(0.5), getDirection(), capabilityExplosive.toStack());
-            //TODO check for tick rate, trigger directly if tick is less than 3
 
-            if (setFire)
-            {
-                entityExplosive.setFire(100);
+            // TODO handle this better in 1.13+ as this is a temp work around for direction being funky for breach
+            if(capabilityExplosive.getExplosiveData() == ICBMExplosives.BREACHING) {
+                final IActionSource source = new ActionSource(world, new Vec3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5), null);
+                final EnumFacing direction = this.getDirection().getOpposite();
+                capabilityExplosive.getExplosiveData()
+                    .create(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, source, new ActionFieldProvider().field(ActionFields.HOST_DIRECTION, () -> direction))
+                    .doAction();
             }
+            else {
 
-            world.spawnEntity(entityExplosive);
+                EntityExplosive entityExplosive = new EntityExplosive(world, new Pos(pos).add(0.5), getDirection(), capabilityExplosive.toStack());
+                //TODO check for tick rate, trigger directly if tick is less than 3
+
+                if (setFire) {
+                    entityExplosive.setFire(100);
+                }
+
+                world.spawnEntity(entityExplosive);
+            }
             world.setBlockToAir(pos);
 
-            ICBMClassic.logger().info("TileEntityExplosive: Triggered ITEM{" + capabilityExplosive.toStack() + "] " + capabilityExplosive.getExplosiveData().getRegistryName() + " at location " + getPos());
+            ICBMClassic.logger().info("TileEntityExplosive: Triggered ITEM{" + capabilityExplosive.toStack() + "] " + capabilityExplosive.getExplosiveData().getRegistryKey() + " at location " + getPos());
         }
     }
 

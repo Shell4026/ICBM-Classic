@@ -2,7 +2,6 @@ package com.builtbroken.jlib.data.vector;
 
 /** Basic implementation of a 2D position with math operators
  *
- * Created by robert on 1/11/2015.
  */
 public abstract class Pos2D<R extends Pos2D> extends Pos2DBean
 {

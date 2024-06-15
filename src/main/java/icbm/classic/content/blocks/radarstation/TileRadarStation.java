@@ -1,12 +1,12 @@
 package icbm.classic.content.blocks.radarstation;
 
-import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.ICBMClassicHelpers;
 import icbm.classic.api.missiles.IMissile;
 import icbm.classic.api.radio.IRadioChannelAccess;
 import icbm.classic.config.ConfigMain;
+import icbm.classic.config.machines.ConfigRadar;
 import icbm.classic.content.blocks.radarstation.data.RadarRenderData;
 import icbm.classic.content.blocks.radarstation.gui.ContainerRadarStation;
 import icbm.classic.content.blocks.radarstation.gui.GuiRadarStation;
@@ -27,7 +27,6 @@ import icbm.classic.lib.radio.messages.IncomingMissileMessage;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import icbm.classic.lib.tile.TickAction;
 import icbm.classic.lib.tile.TickDoOnce;
-import icbm.classic.lib.transform.vector.Pos;
 import icbm.classic.prefab.gui.IPlayerUsing;
 import icbm.classic.prefab.inventory.InventorySlot;
 import icbm.classic.prefab.inventory.InventoryWithSlots;
@@ -39,7 +38,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -61,10 +59,6 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
 {
     public static final ResourceLocation REGISTRY_NAME = new ResourceLocation(ICBMConstants.DOMAIN, "radarstation");
 
-    /** Max range the radar station will attempt to find targets inside */
-    public final static int MAX_DETECTION_RANGE = 500; //TODO config
-    public final static int ENERGY_COST = 1000;
-    public final static int ENERGY_CAPACITY = 20000;
 
     public static final ITextComponent TRANSLATION_GUI_NAME = new TextComponentTranslation("gui.icbmclassic:radar.name");
     public static final ITextComponent TRANSLATION_TOOLTIP_RANGE = new TextComponentTranslation("gui.icbmclassic:radar.range");
@@ -100,7 +94,7 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
     @Getter
     private final RadarRenderData radarRenderData = new RadarRenderData(this);
 
-    public final EnergyBuffer energyStorage = new EnergyBuffer(() -> ENERGY_CAPACITY)
+    public final EnergyBuffer energyStorage = new EnergyBuffer(() -> ConfigRadar.POWER_CAPACITY)
         .withOnChange((p,c,s) -> this.markDirty());
     @Getter
     private final InventoryWithSlots inventory = new InventoryWithSlots(1)
@@ -117,6 +111,8 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
 
     @Getter
     private final List<EntityPlayer> playersUsing = new LinkedList<>();
+
+    private int firingCooldown = 0;
 
     public TileRadarStation() {
         tickActions.add(descriptionPacketSender);
@@ -140,7 +136,7 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
     public void provideInformation(BiConsumer<String, Object> consumer) {
         consumer.accept(NEEDS_POWER, ConfigMain.REQUIRES_POWER);
         consumer.accept(ENERGY_COST_TICK, getEnergyCost());
-        consumer.accept("MAX_RANGE", MAX_DETECTION_RANGE);
+        consumer.accept("MAX_RANGE", ConfigRadar.MAX_RANGE);
     }
 
     @Override
@@ -158,15 +154,22 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
                 energyStorage.consumePower(getEnergyCost(), true);
 
                 // Do a radar scan
-                if (ticks % 3 == 0) //TODO make config to control scan rate to reduce lag
+                if (ticks % ConfigRadar.SCAN_TICKS == 0)
                 {
                     this.doScan(); //TODO consider rewriting to not cache targets
                 }
 
-                //Check for incoming and launch anti-missiles if
-                if (this.ticks % 20 == 0 && !radio.getChannel().equals(RadioRegistry.EMPTY_HZ) && this.incomingThreats.size() > 0) //TODO track if a anti-missile is already in air to hit target
+                //Spam launch packets to nearby silos
+                if (!radio.getChannel().equals(RadioRegistry.EMPTY_HZ) && !this.incomingThreats.isEmpty())
                 {
-                    RadioRegistry.popMessage(world, radio, new IncomingMissileMessage(radio.getChannel(), this.incomingThreats.get(0))); //TODO use static var for event name
+                    if(firingCooldown > 0) {
+                        firingCooldown--;
+                    }
+
+                    if(firingCooldown <= 0) {
+                        firingCooldown = ConfigRadar.SAM_TICKS;
+                        RadioRegistry.popMessage(world, radio, new IncomingMissileMessage(radio.getChannel(), this.incomingThreats.get(0), true));
+                    }
                 }
             }
             // No power, reset state
@@ -182,7 +185,6 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
             {
                 final BlockPos selfPos = getPos();
 
-                ICBMClassic.logger().info("Updating redstone state " + shouldBeOn);
                 world.setBlockState(selfPos, getBlockState().withProperty(BlockRadarStation.REDSTONE_PROPERTY, shouldBeOn), 3);
                 for (EnumFacing facing : EnumFacing.values())
                 {
@@ -219,7 +221,7 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
         this.descriptionPacketSender.doNext();
         this.radarRenderData.clear();
 
-        final List<Entity> entities = RadarRegistry.getAllLivingObjectsWithin(world, getPos().getX() + 0.5, getPos().getY() + 0.5, getPos().getZ() + 0.5, Math.min(detectionRange, MAX_DETECTION_RANGE));
+        final List<Entity> entities = RadarRegistry.getAllLivingObjectsWithin(world, getPos().getX() + 0.5, getPos().getY() + 0.5, getPos().getZ() + 0.5, Math.min(detectionRange, ConfigRadar.MAX_RANGE));
 
         // Loop list of contacts to ID threats
         for (Entity entity : entities)
@@ -231,31 +233,7 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
                 {
                     if (this.isMissileGoingToHit(newMissile))
                     {
-                        if (this.incomingThreats.size() > 0)
-                        {
-                            // Sort in order of distance
-                            double dist = new Pos((TileEntity) this).distance(newMissile);
-
-                            for (int i = 0; i < this.incomingThreats.size(); i++) //TODO switch to priority list
-                            {
-                                IMissile missile = this.incomingThreats.get(i);
-
-                                if (dist < new Pos((TileEntity) this).distance(missile))
-                                {
-                                    this.incomingThreats.add(i, missile);
-                                    break;
-                                }
-                                else if (i == this.incomingThreats.size() - 1)
-                                {
-                                    this.incomingThreats.add(missile);
-                                    break;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            this.incomingThreats.add(newMissile);
-                        }
+                        this.incomingThreats.add(newMissile);
                     }
                     else {
                         this.detectedThreats.add(entity);
@@ -264,10 +242,34 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
             }
         }
 
+        if(!this.incomingThreats.isEmpty()) {
+            this.incomingThreats.sort(this::compare);
+        }
+
+        if(!this.detectedThreats.isEmpty()) {
+            this.detectedThreats.sort(this::compare);
+        }
+
         // Only update render data if we have players viewing the UI
-        if(this.getPlayersUsing().size() > 0) {
+        if(!this.getPlayersUsing().isEmpty()) {
             radarRenderData.update();
         }
+    }
+
+    private int compare(IMissile a, IMissile b) {
+        return compare(a.getMissileEntity(), b.getMissileEntity());
+    }
+
+    private int compare(Entity a, Entity b) {
+        return Integer.compare(distance(a), distance(b));
+    }
+
+    private int distance(Entity entity) {
+        final int deltaX = (int)Math.floor(Math.abs(pos.getX() + 0.5) - entity.posX);
+        final int deltaY = (int)Math.floor(Math.abs(pos.getY() + 0.5) - entity.posY);
+        final int deltaZ = (int)Math.floor(Math.abs(pos.getZ() + 0.5) - entity.posZ);
+
+        return deltaX + deltaY + deltaZ;
     }
 
     public static boolean isThreat(Entity entity)
@@ -332,7 +334,7 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
     }
 
     public int getEnergyCost() {
-        return ENERGY_COST; //TODO scale cost by scan area... maybe scan duration?
+        return ConfigRadar.POWER_COST; //TODO scale cost by scan area... maybe scan duration?
     }
 
     public boolean hasIncomingMissiles() {
@@ -398,6 +400,7 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
         /* */.nodeInteger(NBT_DETECTION_RANGE, TileRadarStation::getDetectionRange, TileRadarStation::setDetectionRange)
         /* */.nodeInteger(NBT_TRIGGER_RANGE, TileRadarStation::getTriggerRange, TileRadarStation::setTriggerRange)
         /* */.nodeInteger("energy", tile -> tile.energyStorage.getEnergyStored(), (tile, i) -> tile.energyStorage.setEnergyStored(i))
+        /* */.nodeInteger("sam_delay", tile -> tile.firingCooldown, (tile, i) -> tile.firingCooldown = i)
         .base();
     public static void register() {
         GameRegistry.registerTileEntity(TileRadarStation.class, REGISTRY_NAME);

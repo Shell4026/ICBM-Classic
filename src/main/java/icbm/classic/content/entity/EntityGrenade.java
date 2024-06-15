@@ -1,9 +1,10 @@
 package icbm.classic.content.entity;
 
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.content.missile.logic.source.ActionSource;
+import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.lib.NBTConstants;
 import icbm.classic.lib.capability.ex.CapabilityExplosiveEntity;
-import icbm.classic.lib.explosive.ExplosiveHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -14,6 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -30,11 +32,12 @@ public class EntityGrenade extends Entity implements IEntityAdditionalSpawnData
     /** Explosive capability */
     public final CapabilityExplosiveEntity explosive = new CapabilityExplosiveEntity(this);
 
+    private ItemStack clientRenderStack;
+
     public EntityGrenade(World par1World)
     {
         super(par1World);
         this.setSize(0.25F, 0.25F);
-        //this.renderDistanceWeight = 8;
     }
 
     /**
@@ -47,6 +50,18 @@ public class EntityGrenade extends Entity implements IEntityAdditionalSpawnData
     {
         explosive.setStack(stack);
         return this;
+    }
+    /**
+     * Gets the itemStack meant to represent the render
+     *
+     * @return stack to render
+     */
+    public ItemStack renderItemStack() {
+        // Cache to prevent #toStack from bleeding memory creating new instances
+        if(clientRenderStack == null) {
+            clientRenderStack = explosive.toStack();
+        }
+        return clientRenderStack;
     }
 
     /**
@@ -115,7 +130,7 @@ public class EntityGrenade extends Entity implements IEntityAdditionalSpawnData
     @Override
     public String getName()
     {
-        return "icbm.grenade." + explosive.getExplosiveData().getRegistryName();
+        return "icbm.grenade." + explosive.getExplosiveData().getRegistryKey();
     }
 
     @Override
@@ -264,21 +279,22 @@ public class EntityGrenade extends Entity implements IEntityAdditionalSpawnData
     /** Ticks the fuse */
     protected void tickFuse()
     {
-        if (this.ticksExisted > ICBMClassicAPI.EX_GRENADE_REGISTRY.getFuseTime(this, explosive.getExplosiveData().getRegistryID()))
+        if (this.ticksExisted > ICBMClassicAPI.EX_GRENADE_REGISTRY.getFuseTime(this, explosive.getExplosiveData()))
         {
             triggerExplosion();
         }
         else
         {
-            ICBMClassicAPI.EX_GRENADE_REGISTRY.tickFuse(this, explosive.getExplosiveData().getRegistryID(), ticksExisted);
+            ICBMClassicAPI.EX_GRENADE_REGISTRY.tickFuse(this, explosive.getExplosiveData(), ticksExisted);
         }
     }
 
     /** Triggers the explosion of the grenade */
     protected void triggerExplosion()
     {
-        this.world.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
-        ExplosiveHandler.createExplosion(this, this.world, this.posX, this.posY + 0.3f, this.posZ, explosive.getExplosiveData().getRegistryID(), 1, explosive.getCustomBlastData());
+        // TODO handle output and record results in event system
+        explosive.doExplosion(this.posX, this.posY + 0.3f, this.posZ, new ActionSource(world, new Vec3d(posX, posY, posZ), new EntityCause(this)));
+
         this.setDead();
     }
 

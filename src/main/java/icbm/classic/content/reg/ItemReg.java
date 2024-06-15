@@ -5,6 +5,9 @@ import icbm.classic.ICBMConstants;
 import icbm.classic.config.ConfigItems;
 import icbm.classic.content.blocks.emptower.ItemBlockEmpTower;
 import icbm.classic.content.blocks.explosive.ItemBlockExplosive;
+import icbm.classic.content.cargo.ItemThrowableProjectile;
+import icbm.classic.content.cluster.bomblet.ItemBombDroplet;
+import icbm.classic.content.cluster.missile.ItemClusterMissile;
 import icbm.classic.content.items.*;
 import icbm.classic.content.missile.entity.anti.item.ItemSurfaceToAirMissile;
 import icbm.classic.prefab.item.ItemBase;
@@ -20,7 +23,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.oredict.OreDictionary;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 1/7/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/7/19.
  */
 @Mod.EventBusSubscriber(modid = ICBMConstants.DOMAIN)
 public class ItemReg
@@ -43,10 +46,17 @@ public class ItemReg
     public static Item itemLaserDetonator;
     @ObjectHolder(ICBMConstants.PREFIX + "rocketLauncher")
     public static Item itemRocketLauncher;
+    @ObjectHolder(ICBMConstants.PREFIX + "ballisticLauncher")
+    public static Item itemBallisticLauncher;
     @ObjectHolder(ICBMConstants.PREFIX + "grenade")
     public static Item itemGrenade;
     @ObjectHolder(ICBMConstants.PREFIX + "bombcart")
     public static Item itemBombCart;
+
+    @ObjectHolder(ICBMConstants.PREFIX + "explosive_bomblet")
+    public static Item itemBombletExplosive;
+    @ObjectHolder(ICBMConstants.PREFIX + "empty_bomblet")
+    public static Item itemBombletEmpty;
 
     @ObjectHolder(ICBMConstants.PREFIX + "sulfurDust")
     public static Item itemSulfurDust;
@@ -72,6 +82,15 @@ public class ItemReg
 
     @ObjectHolder(ICBMConstants.PREFIX + "surface_to_air_missile")
     public static ItemSurfaceToAirMissile itemSAM;
+
+    @ObjectHolder(ICBMConstants.PREFIX + "cluster_missile")
+    public static Item itemClusterMissile;
+
+    @ObjectHolder(ICBMConstants.PREFIX + "parachute")
+    public static ItemThrowableProjectile itemParachute;
+
+    @ObjectHolder(ICBMConstants.PREFIX + "balloon")
+    public static ItemThrowableProjectile itemBalloon;
 
     @SubscribeEvent
     public static void missingMapping(RegistryEvent.MissingMappings<Item> event) {
@@ -108,9 +127,16 @@ public class ItemReg
         event.getRegistry().register(new ItemRadarGun());
         event.getRegistry().register(new ItemRemoteDetonator());
         event.getRegistry().register(new ItemLaserDetonator());
-        event.getRegistry().register(new ItemRocketLauncher());
+        event.getRegistry().register(new ItemRocketLauncher(false));
+        event.getRegistry().register(new ItemRocketLauncher(true));
         event.getRegistry().register(new ItemMissile().setName("explosive_missile").setCreativeTab(ICBMClassic.CREATIVE_TAB));
         event.getRegistry().register(new ItemSurfaceToAirMissile());
+        event.getRegistry().register(new ItemClusterMissile().setName("cluster_missile").setCreativeTab(ICBMClassic.CREATIVE_TAB));
+
+        event.getRegistry().register(new ItemBase().setName("empty_bomblet").setCreativeTab(ICBMClassic.CREATIVE_TAB));
+        event.getRegistry().register(new ItemBombDroplet().setName("explosive_bomblet").setCreativeTab(ICBMClassic.CREATIVE_TAB));
+        event.getRegistry().register(new ItemThrowableProjectile().setName("parachute").setCreativeTab(ICBMClassic.CREATIVE_TAB));
+        event.getRegistry().register(new ItemThrowableProjectile().setName("balloon").setCreativeTab(ICBMClassic.CREATIVE_TAB));
 
         //Block items
         event.getRegistry().register(new ItemBlock(BlockReg.blockGlassPlate).setRegistryName(BlockReg.blockGlassPlate.getRegistryName()));
@@ -126,6 +152,7 @@ public class ItemReg
         event.getRegistry().register(new ItemBlock(BlockReg.blockLaunchConnector).setRegistryName(BlockReg.blockLaunchConnector.getRegistryName()));
         event.getRegistry().register(new ItemBlock(BlockReg.blockLaunchScreen).setRegistryName(BlockReg.blockLaunchScreen.getRegistryName()));
         event.getRegistry().register(new ItemBlock(BlockReg.blockCruiseLauncher).setRegistryName(BlockReg.blockCruiseLauncher.getRegistryName()));
+        event.getRegistry().register(new ItemBlockSubTypes(BlockReg.blockRadioactive));
 
         //Crafting resources
         if (ConfigItems.ENABLE_CRAFTING_ITEMS)

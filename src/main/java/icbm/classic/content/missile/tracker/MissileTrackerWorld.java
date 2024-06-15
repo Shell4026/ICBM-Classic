@@ -3,7 +3,9 @@ package icbm.classic.content.missile.tracker;
 import icbm.classic.ICBMClassic;
 import icbm.classic.api.events.MissileChunkEvent;
 import icbm.classic.config.ConfigDebug;
+import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.content.missile.entity.explosive.EntityExplosiveMissile;
+import icbm.classic.content.missile.logic.flight.DeadFlightLogic;
 import icbm.classic.lib.NBTConstants;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -68,7 +70,7 @@ public class MissileTrackerWorld extends WorldSavedData
         if (!missile.world.isRemote && missile.getMissileCapability().getTargetData()  != null)
         {
             //Clear flight logic, once we are out of simulation the computer is dead
-            missile.getMissileCapability().setFlightLogic(null);
+            missile.getMissileCapability().setFlightLogic(null); //TODO create custom sim-logic flight logic to better handle re-entry
 
             final MissileTrackerData mtd = new MissileTrackerData(missile);
 
@@ -188,7 +190,7 @@ public class MissileTrackerWorld extends WorldSavedData
                 if (mtd.preLoadChunkTimer <= 0)
                 {
                     //Load missile into world
-                    Launch(world, mtd);
+                    spawnMissileOnDestination(world, mtd);
 
                     //Remove
                     spawnIterator.remove();
@@ -200,19 +202,25 @@ public class MissileTrackerWorld extends WorldSavedData
         }
     }
 
-    private void Launch(final World world, MissileTrackerData mtd)
+    private void spawnMissileOnDestination(final World world, MissileTrackerData mtd)
     {
         //Create entity
         EntityExplosiveMissile missile = new EntityExplosiveMissile(world);
 
         //Set data
         missile.readEntityFromNBT(mtd.missileData);
-        missile.posY = 250; //TODO pull from config
-        missile.posX = mtd.targetPos.x(); //TODO calculate arc position at 250 so we don't come in on top of the target
+        missile.posY = ConfigMissile.SIMULATION_ENTER_HEIGHT;
+        missile.posX = mtd.targetPos.x(); //TODO calculate arc position so we don't come in on top of the target
         missile.posZ = mtd.targetPos.z();
-        missile.motionY = -5; //TODO get speed it would have been at the given time
+        missile.motionY = -ConfigMissile.SIMULATION_ENTER_SPEED; //TODO get speed it would have been at the given time
         missile.motionZ = 0;
         missile.motionX = 0;
+        missile.rotateTowardsMotion(1);
+
+        // Change over to dead aim if we have no custom flight system
+        if(missile.getMissileCapability().getFlightLogic() == null) {
+            missile.getMissileCapability().setFlightLogic(new DeadFlightLogic(100));
+        }
 
         //Trigger launch event
         missile.getMissileCapability().launch();

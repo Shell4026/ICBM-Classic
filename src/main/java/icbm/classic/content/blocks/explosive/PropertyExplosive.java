@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import java.util.Collection;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 1/6/2019.
+ * Created by Dark(DarkGuardsman, Robin) on 1/6/2019.
  */
 public class PropertyExplosive implements IProperty<IExplosiveData>
 {
@@ -40,6 +40,6 @@ public class PropertyExplosive implements IProperty<IExplosiveData>
     @Override
     public String getName(IExplosiveData value)
     {
-        return value.getRegistryName().toString().replaceAll(":", "_");
+        return value.getRegistryKey().toString().replaceAll(":", "_");
     }
 }

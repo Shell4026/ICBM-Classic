@@ -1,22 +1,19 @@
 package icbm.classic.content.blast;
 
 import icbm.classic.ICBMClassic;
+import icbm.classic.api.actions.cause.IActionSource;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.events.BlastBuildEvent;
-import icbm.classic.api.explosion.BlastState;
 import icbm.classic.api.explosion.IBlastInit;
 import icbm.classic.api.explosion.IBlastRestore;
 import icbm.classic.api.explosion.IBlastTickable;
-import icbm.classic.api.explosion.responses.BlastForgeResponses;
-import icbm.classic.api.explosion.responses.BlastResponse;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.config.ConfigDebug;
-import icbm.classic.config.blast.ConfigBlast;
-import icbm.classic.content.blast.redmatter.EntityRedmatter;
 import icbm.classic.content.blast.thread.ThreadExplosion;
-import icbm.classic.content.blast.threaded.BlastAntimatter;
 import icbm.classic.content.entity.EntityExplosion;
 import icbm.classic.lib.NBTConstants;
-import icbm.classic.lib.explosive.ExplosiveHandler;
+import icbm.classic.lib.actions.WorkTickingActionHandler;
+import icbm.classic.lib.actions.status.ActionResponses;
 import icbm.classic.lib.transform.vector.Location;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -42,11 +39,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 /**
  * Prefab for any Explosion/Blast object created
  */
+@Deprecated
 public abstract class Blast extends Explosion implements IBlastInit, IBlastRestore
 {
     //Thread stuff
     private ThreadExplosion thread;
-    private ConcurrentLinkedQueue<BlockPos> threadResults;
+    protected ConcurrentLinkedQueue<BlockPos> threadResults;
     private boolean threadComplete = false;
 
     //TODO remove position as we are double storing location data
@@ -60,7 +58,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
     /**
      * Is the blast alive, if false the blast is dead
      */
-    public boolean isAlive = true;
+    private boolean isAlive = true;
 
     /**
      * The amount of times the explosion has been called
@@ -72,6 +70,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
     private boolean hasBuilt = false;
 
     private IExplosiveData explosiveData;
+    private IActionSource actionSource;
 
     /**
      * Only use the default if you plan to init required data
@@ -81,14 +80,38 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
         super(null, null, 0, 0, 0, 0, false, false);
     }
 
+    public Blast(World world, double x, double y, double z) {
+        this();
+        setBlastWorld(world);
+        setBlastPosition(x, y, z);
+    }
+
     @Override
-    public IExplosiveData getExplosiveData()
-    {
+    @Nonnull
+    public IActionSource getSource() {
+        return this.actionSource;
+    }
+
+    /**
+     * Gets data used to create this action
+     *
+     * @return data
+     */
+    @Override
+    @Nonnull
+    public IExplosiveData getActionData() {
         return explosiveData;
     }
 
     @Override
-    public BlastResponse runBlast()
+    public IBlastInit setActionSource(IActionSource source) {
+        this.actionSource = source;
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public IActionStatus doAction()
     {
         try
         {
@@ -97,7 +120,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
                 //Forge event, allows for interaction and canceling the explosion
                 if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(world, this))
                 {
-                    return BlastForgeResponses.EXPLOSION_EVENT.get();
+                    return ActionResponses.EXPLOSION_CANCELED;
                 }
 
                 //Play audio to confirm explosion triggered
@@ -109,16 +132,16 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
                     if (!this.world().spawnEntity(new EntityExplosion(this)))
                     {
                         isAlive = false;
-                        return BlastForgeResponses.ENTITY_SPAWNING.get();
+                        return ActionResponses.ENTITY_SPAWN_FAILED;
                     }
-                    return BlastState.TRIGGERED.genericResponse;
+                    return ActionResponses.COMPLETED;
                 }
                 else
                 {
                     //Do setup tasks
                     if (!this.doFirstSetup())
                     {
-                        return BlastState.CANCLED.genericResponse; //TODO specify why
+                        return BlastStatus.SETUP_ERROR; //TODO specify why we failed during setup
                     }
 
                     //Call explosive, only complete if true
@@ -132,12 +155,13 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
             {
                 clientRunBlast();
             }
-            return BlastState.TRIGGERED.genericResponse;
+            return ActionResponses.COMPLETED;
         }
         catch (Exception e)
         {
             ICBMClassic.logger().error(this + ": Unexpected error running blast", e);
-            return new BlastResponse(BlastState.ERROR, e.getMessage(), e);
+            endBlast();
+            return ActionResponses.UNKNOWN_ERROR; //TODO provide dynamic data
         }
     }
 
@@ -181,12 +205,13 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
      *
      * @return true if the blast should continue to run, false otherwhise
      */
+    @Deprecated // TODO inline with runBlast to provide proper feedback using IActionStatus
     public final boolean doFirstSetup()
     {
         if (isAlive && !hasSetupBlast)
         {
             hasSetupBlast = true;
-            ExplosiveHandler.add(this);
+            WorkTickingActionHandler.add(this);
             return this.setupBlast();
         }
 
@@ -219,11 +244,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
     {
         if (isAlive)
         {
-            //Mark as dead to prevent blast running
-            isAlive = false;
-
-            //Remove from tracker
-            ExplosiveHandler.remove(this);
+            this.endBlast();
 
             //Run post code
             this.onBlastCompleted();
@@ -363,7 +384,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
 
                 damage = (int) ((var36 * var36 + var36) / 2.0D * 8.0D * power + 1.0D);
 
-                entity.attackEntityFrom(DamageSource.causeExplosionDamage(this), damage);
+                entity.attackEntityFrom(getDamageSource(), damage);
 
                 entity.motionX += xDifference * var36;
                 entity.motionY += yDifference * var36;
@@ -372,6 +393,10 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
         }
 
         return true;
+    }
+
+    protected DamageSource getDamageSource() {
+        return DamageSource.causeExplosionDamage(this);
     }
 
     /**
@@ -417,6 +442,11 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
     @Override
     public World world()
     {
+        return world;
+    }
+
+    @Override
+    public World getWorld() {
         return world;
     }
 
@@ -620,6 +650,13 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
     @Override
     public void clearBlast()
     {
+       endBlast();
+    }
+
+    protected void endBlast() {
+        isAlive = false;
+        WorkTickingActionHandler.remove(this);
+
         if (getThread() != null)
         {
             getThread().kill();
@@ -628,6 +665,5 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
         {
             controller.setDead();
         }
-        isAlive = false;
     }
 }

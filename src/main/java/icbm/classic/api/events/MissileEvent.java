@@ -7,7 +7,9 @@ import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 1/7/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/7/19.
+ *
+ * @deprecated will be replaced by {@link icbm.classic.api.actions.IAction} event
  */
 public abstract class MissileEvent extends Event
 {
@@ -59,6 +61,33 @@ public abstract class MissileEvent extends Event
         {
             super(missile, entityMissile);
             this.hit = hit;
+        }
+    }
+
+    /**
+     * Called when the missile is about to enter the simulation queue. Use
+     * this to prevent simulation or capture the missile to send it to a different
+     * queue or system.
+     *
+     * Main purpose of this event is to block simulation. It does offer the option
+     * to change how simulation works or switch queues. The problem with this is
+     * cross dimension should be handled by other mechanics. As the missile may
+     * not be able to predict this behavior correctly. Resulting in strange
+     * interactions and broken expectations of the player.
+     *
+     * Instead, modify the flight/guidance system of the missile. Allowing it to
+     * deliberately switching dimensions and properly enter the other dimension as expected.
+     * Such as entering the bottom of a space dimension or orbit of a planet.
+     *
+     * For magic or disconnected dimensions please use a portal. This can easily be implemented
+     * on the portal's side or the block impact system of the missile.
+     */
+    @Cancelable
+    public static class EnteringSimQueue extends MissileEvent
+    {
+        public EnteringSimQueue(IMissile missile, Entity entityMissile)
+        {
+            super(missile, entityMissile);
         }
     }
 

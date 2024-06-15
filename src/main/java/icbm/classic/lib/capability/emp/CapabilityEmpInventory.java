@@ -1,9 +1,10 @@
 package icbm.classic.lib.capability.emp;
 
 import icbm.classic.ICBMClassic;
+import icbm.classic.api.actions.IAction;
 import icbm.classic.api.caps.IEMPReceiver;
-import icbm.classic.api.explosion.IBlast;
 import icbm.classic.config.ConfigEMP;
+import icbm.classic.content.actions.emp.ActionEmpArea;
 import icbm.classic.lib.InventoryUtility;
 import icbm.classic.lib.energy.system.EnergySystem;
 import net.minecraft.entity.Entity;
@@ -17,16 +18,16 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 /**
  * Used to wrapper an inventory capability to provide support to EMP the contents.
  * <p>
- * By default {@link icbm.classic.content.blast.BlastEMP} will generate this object
+ * By default {@link ActionEmpArea} will generate this object
  * for the target of the EMP.
  *
  *
- * Created by Dark(DarkGuardsman, Robert) on 3/12/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 3/12/2018.
  */
 public abstract class CapabilityEmpInventory<H extends Object> implements IEMPReceiver
 {
     @Override
-    public float applyEmpAction(World world, double x, double y, double z, IBlast emp_blast, float power, boolean doAction)
+    public float applyEmpAction(World world, double x, double y, double z, IAction emp_blast, float power, boolean doAction)
     {
         final IItemHandlerModifiable iItemHandler = getCapability();
         if (iItemHandler != null)
@@ -66,7 +67,7 @@ public abstract class CapabilityEmpInventory<H extends Object> implements IEMPRe
         return power;
     }
 
-    public static float empItemStack(ItemStack itemStack, World world, double x, double y, double z, Object container, IBlast emp_blast, float power, boolean doAction)
+    public static float empItemStack(ItemStack itemStack, World world, double x, double y, double z, Object container, IAction emp_blast, float power, boolean doAction)
     {
         boolean doInventory = ConfigEMP.ALLOW_ITEM_INVENTORY;
 

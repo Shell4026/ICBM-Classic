@@ -8,9 +8,10 @@ import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.caps.IExplosive;
 import icbm.classic.content.items.ItemMissile;
 import icbm.classic.content.missile.logic.flight.DeadFlightLogic;
-import icbm.classic.content.missile.logic.source.MissileSource;
+import icbm.classic.content.missile.logic.source.ActionSource;
 import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.content.reg.ItemReg;
+import icbm.classic.lib.projectile.InGroundData;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -58,6 +59,10 @@ public class EntityExplosiveMissileTest extends TestBase
         final World world = testManager.getWorld();
         final EntityExplosiveMissile missile = new EntityExplosiveMissile(world);
 
+        // TODO convert this to some type of snapshot test, as in reality we are basically doing a manual version of that
+        //     could use JSON to load java fields and types. Then match that to field/types on the loaded object.
+        //      Needs to be versioned as well so we can do v1 vs v1.x+ saves
+
         // Validate we have a test file
         Assertions.assertNotNull(rpgSave);
 
@@ -77,14 +82,11 @@ public class EntityExplosiveMissileTest extends TestBase
         entitySourceData.setName("Player890");
         entitySourceData.setId(new UUID(2454671487114819752L, -8122821596986775482L));
         entitySourceData.setPlayer(true);
-        Assertions.assertEquals(new MissileSource(world, new Vec3d(59.06195460480209, 75.15145375534576, 257.2760022607643), entitySourceData),
+        Assertions.assertEquals(new ActionSource(world, new Vec3d(59.06195460480209, 75.15145375534576, 257.2760022607643), entitySourceData),
             missile.getMissileCapability().getMissileSource());
 
         // Projectile
-        Assertions.assertEquals(new BlockPos(10, 5, 290), missile.tilePos);
-        Assertions.assertEquals(EnumFacing.EAST, missile.sideTile);
-        Assertions.assertEquals(Blocks.STONE.getDefaultState(), missile.blockInside);
-        Assertions.assertTrue(missile.inGround);
+        Assertions.assertEquals(new InGroundData(new BlockPos(10, 5, 290), EnumFacing.EAST, Blocks.STONE.getDefaultState()), missile.getInGroundData());
         Assertions.assertEquals(117, missile.ticksInAir);
         Assertions.assertEquals(45, missile.ticksInGround);
 

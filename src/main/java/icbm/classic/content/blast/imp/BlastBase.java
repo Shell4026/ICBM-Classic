@@ -1,34 +1,33 @@
 package icbm.classic.content.blast.imp;
 
-import icbm.classic.api.explosion.BlastState;
+import icbm.classic.api.actions.cause.IActionSource;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.explosion.IBlastInit;
-import icbm.classic.api.explosion.responses.BlastNullResponses;
-import icbm.classic.api.explosion.responses.BlastResponse;
+import icbm.classic.api.reg.IExplosiveData;
+import icbm.classic.lib.actions.status.ActionResponses;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 4/19/2020.
+ * Created by Dark(DarkGuardsman, Robin) on 4/19/2020.
  */
 public abstract class BlastBase implements IBlastInit
 {
     private World world;
     private double x, y, z;
     private boolean locked;
+
+    @Deprecated //TODO remove from base, not all explosives have a size
     private double blastSize;
 
-    @Override
-    public float getBlastRadius()
-    {
-        return (float) blastSize;
-    }
+    private IExplosiveData explosiveData;
+    private IActionSource actionSource;
 
-    @Override
-    public IBlastInit setBlastSize(double size) {
-        this.blastSize = size;
-        return this;
-    }
+    protected abstract IActionStatus triggerBlast();
+
+
 
     @Override
     public void clearBlast()
@@ -38,7 +37,7 @@ public abstract class BlastBase implements IBlastInit
 
     @Nonnull
     @Override
-    public BlastResponse runBlast()
+    public IActionStatus doAction()
     {
         final World world = world();
         if (world != null)
@@ -47,17 +46,44 @@ public abstract class BlastBase implements IBlastInit
             {
                 return triggerBlast();
             }
-            return BlastState.TRIGGERED.genericResponse;
+            return ActionResponses.COMPLETED;
         }
-        return BlastNullResponses.WORLD.get();
+        return ActionResponses.MISSING_WORLD;
     }
 
-    protected abstract BlastResponse triggerBlast();
+    @Override
+    public float getBlastRadius()
+    {
+        return (float) Math.min(blastSize, 1);
+    }
+
+    @Override
+    @Nonnull
+    public IActionSource getSource() {
+        return this.actionSource;
+    }
+
+    /**
+     * Gets data used to create this action
+     *
+     * @return data
+     */
+    @Override
+    @Nonnull
+    public IExplosiveData getActionData() {
+        return explosiveData;
+    }
+
 
     //<editor-fold desc="pos-data">
     @Override
     public World world()
     {
+        return world;
+    }
+
+    @Override
+    public World getWorld() {
         return world;
     }
 
@@ -78,9 +104,23 @@ public abstract class BlastBase implements IBlastInit
     {
         return y;
     }
+
+    @Override
+    public Vec3d getPosition() {
+        return new Vec3d(x, y, z);
+    }
     //</editor-fold>
 
     //<editor-fold desc="blast-init">
+
+    @Override
+    public IBlastInit setBlastSize(double size) {
+        if(!locked) {
+            this.blastSize = size;
+        }
+        return this;
+    }
+
     @Override
     public IBlastInit setBlastWorld(World world)
     {
@@ -99,6 +139,23 @@ public abstract class BlastBase implements IBlastInit
             this.x = x;
             this.y = y;
             this.z = z;
+        }
+        return this;
+    }
+
+    @Override
+    public IBlastInit setActionSource(IActionSource source) {
+        if(!locked) {
+            this.actionSource = source;
+        }
+        return this;
+    }
+
+    @Override
+    public IBlastInit setExplosiveData(IExplosiveData data)
+    {
+        if(!locked) {
+            this.explosiveData = data;
         }
         return this;
     }

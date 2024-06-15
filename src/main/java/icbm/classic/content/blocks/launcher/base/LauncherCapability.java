@@ -1,27 +1,30 @@
 package icbm.classic.content.blocks.launcher.base;
 
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.actions.cause.IActionCause;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.events.LauncherEvent;
-import icbm.classic.api.launcher.IActionStatus;
 import icbm.classic.api.launcher.ILauncherSolution;
 import icbm.classic.api.missiles.ICapabilityMissileStack;
 import icbm.classic.api.missiles.IMissile;
-import icbm.classic.api.missiles.cause.IMissileCause;
 import icbm.classic.api.missiles.parts.IMissileFlightLogic;
 import icbm.classic.api.missiles.parts.IMissileFlightLogicStep;
 import icbm.classic.api.missiles.parts.IMissileTarget;
 import icbm.classic.api.missiles.parts.IMissileTargetDelayed;
 import icbm.classic.config.machines.ConfigLauncher;
+import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.content.blocks.launcher.FiringPackage;
 import icbm.classic.content.blocks.launcher.LauncherBaseCapability;
+import icbm.classic.content.blocks.launcher.status.FiringWithDelay;
+import icbm.classic.content.blocks.launcher.status.LaunchedWithMissile;
+import icbm.classic.content.blocks.launcher.status.LauncherStatus;
 import icbm.classic.content.missile.logic.flight.ArcFlightLogic;
 import icbm.classic.content.missile.logic.flight.WarmupFlightLogic;
 import icbm.classic.content.missile.logic.flight.move.MoveByFacingLogic;
-import icbm.classic.content.missile.logic.source.MissileSource;
-import icbm.classic.content.missile.logic.source.cause.BlockCause;
+import icbm.classic.content.missile.logic.source.ActionSource;
+import icbm.classic.content.missile.logic.source.cause.CausedByBlock;
 import icbm.classic.content.missile.logic.targeting.BallisticTargetingData;
-import icbm.classic.lib.capability.launcher.data.FiringWithDelay;
-import icbm.classic.lib.capability.launcher.data.LauncherStatus;
+import icbm.classic.content.reg.ItemReg;
 import icbm.classic.lib.transform.rotation.EulerAngle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -78,7 +81,7 @@ public class LauncherCapability extends LauncherBaseCapability {
     }
 
     @Override
-    public IActionStatus preCheckLaunch(IMissileTarget targetData, @Nullable IMissileCause cause) {
+    public IActionStatus preCheckLaunch(IMissileTarget targetData, @Nullable IActionCause cause) {
         // Validate target data
         if(targetData == null || targetData.getPosition() == null) {
             return LauncherStatus.ERROR_TARGET_NULL;
@@ -96,22 +99,22 @@ public class LauncherCapability extends LauncherBaseCapability {
     }
 
     @Override
-    public IActionStatus launch(ILauncherSolution solution, @Nullable IMissileCause cause, boolean simulate) {
+    public IActionStatus launch(ILauncherSolution solution, @Nullable IActionCause cause, boolean simulate) { //TODO rework to intentionally used IActionSolution
 
         final IMissileTarget targetData = solution.getTarget(this);
 
         // Check current status, if blocking stop launch and return
         final IActionStatus preCheck = preCheckLaunch(targetData, cause);
-        if(preCheck.shouldBlockInteraction()) {
+        if(preCheck.isBlocking()) {
             return preCheck;
         }
 
         // Setup source and cause
-        final BlockCause selfCause = new BlockCause(host.getWorld(), host.getPos(), host.getBlockState()); // TODO add more information about launcher
+        final CausedByBlock selfCause = new CausedByBlock(host.getWorld(), host.getPos(), host.getBlockState()); // TODO add more information about launcher
         selfCause.setPreviousCause(cause);
 
         final Vec3d spawnPosition = SPAWN_OFFSETS[host.getLaunchDirection().ordinal()].addVector(host.getPos().getX() + 0.5, host.getPos().getY() + 0.5, host.getPos().getZ() + 0.5);
-        final MissileSource source = new MissileSource(host.getWorld(), spawnPosition, selfCause);
+        final ActionSource source = new ActionSource(host.getWorld(), spawnPosition, selfCause);
 
         //Allow canceling missile launches
         final LauncherEvent.PreLaunch event = new LauncherEvent.PreLaunch(source, this, host.missileHolder, targetData, simulate);
@@ -163,7 +166,7 @@ public class LauncherCapability extends LauncherBaseCapability {
         return LauncherStatus.ERROR_INVALID_STACK;
     }
 
-    private IActionStatus fireMissile(IMissile missile, MissileSource source, Vec3d target) {
+    private IActionStatus fireMissile(IMissile missile, ActionSource source, Vec3d target) {
 
         // Should always work but in rare cases capability might have failed
         if(!host.missileHolder.consumeMissile()) {
@@ -180,7 +183,7 @@ public class LauncherCapability extends LauncherBaseCapability {
         entity.setPosition(source.getPosition().x, source.getPosition().y, source.getPosition().z);
 
         //Trigger launch event
-        missile.setTargetData(new BallisticTargetingData(target, 1));
+        missile.setTargetData(new BallisticTargetingData(target, 2)); //TODO pull from targeting data
         missile.setFlightLogic(buildFLightPath());
         missile.setMissileSource(source); //TODO encode player that built launcher, firing method (laser, remote, redstone), and other useful data
         missile.launch();
@@ -206,7 +209,7 @@ public class LauncherCapability extends LauncherBaseCapability {
             });
         }
 
-        return LauncherStatus.LAUNCHED;
+        return new LaunchedWithMissile().setMissile(missile);
     }
 
     public IMissileFlightLogic buildFLightPath() {
@@ -287,7 +290,7 @@ public class LauncherCapability extends LauncherBaseCapability {
         angle.setYaw(host.getWorld().rand.nextFloat() * 360); //TODO fix to use a normal distribution from ICBM 2
 
         //Apply inaccuracy to target position and return
-        return new Vec3d(target.x + angle.x() * inaccuracy, 0, target.z + angle.z() * inaccuracy);
+        return new Vec3d(target.x + angle.x() * inaccuracy, target.y, target.z + angle.z() * inaccuracy);
     }
 
     /**
@@ -309,5 +312,12 @@ public class LauncherCapability extends LauncherBaseCapability {
         final double deltaX = Math.abs(target.x - (host.getPos().getX() + 0.5));
         final double  deltaZ = Math.abs(target.z - (host.getPos().getZ() + 0.5));
         return deltaX > ConfigLauncher.RANGE || deltaZ > ConfigLauncher.RANGE;
+    }
+
+    @Override
+    public float getPayloadVelocity() {
+        // TODO find a way to get this from the missile stack
+        return host.missileHolder.getMissileStack().getItem() == ItemReg.itemSAM
+            ? ConfigMissile.SAM_MISSILE.FLIGHT_SPEED : ConfigMissile.DIRECT_FLIGHT_SPEED;
     }
 }

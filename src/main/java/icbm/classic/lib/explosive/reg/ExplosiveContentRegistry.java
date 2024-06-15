@@ -14,7 +14,7 @@ import java.util.Set;
 
 /**
  *
- * Created by Dark(DarkGuardsman, Robert) on 1/4/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/4/19.
  */
 public abstract class ExplosiveContentRegistry implements IExplosiveContentRegistry
 {
@@ -52,16 +52,8 @@ public abstract class ExplosiveContentRegistry implements IExplosiveContentRegis
             throw new RuntimeException(this + ": No content can be registered after registry phase");
         }
         final IExplosiveData data = ICBMClassicAPI.EXPLOSIVE_REGISTRY.getExplosiveData(regName);
-        if (data != null)
+        if (!nameCache.contains(data))
         {
-            //Add to enable list on object itself
-            if (!data.onEnableContent(name, this))
-            {
-                //Explosive rejected the handler
-                return;
-            }
-
-            //Add ID to set of ids
             nameCache.add(regName);
         }
     }
@@ -82,16 +74,6 @@ public abstract class ExplosiveContentRegistry implements IExplosiveContentRegis
     public Set<IExplosiveData> getExplosives()
     {
         return dataCache;
-    }
-
-    @Override
-    public IExplosiveData getExplosive(ResourceLocation regName)
-    {
-        if(mapCache != null)
-        {
-            return mapCache.get(regName);
-        }
-        return null;
     }
 
     @Override

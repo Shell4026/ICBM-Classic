@@ -3,15 +3,18 @@ package icbm.classic.content.blocks.emptower;
 import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.explosion.BlastState;
-import icbm.classic.api.explosion.IBlast;
-import icbm.classic.api.refs.ICBMExplosives;
+import icbm.classic.api.actions.cause.IActionCause;
+import icbm.classic.api.actions.data.ActionFields;
+import icbm.classic.api.actions.status.ActionStatusTypes;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.client.ICBMSounds;
 import icbm.classic.config.ConfigMain;
 import icbm.classic.config.machines.ConfigEmpTower;
-import icbm.classic.content.blast.BlastEMP;
+import icbm.classic.content.actions.emp.ActionDataEmpArea;
 import icbm.classic.content.blocks.emptower.gui.ContainerEMPTower;
 import icbm.classic.content.blocks.emptower.gui.GuiEMPTower;
+import icbm.classic.lib.actions.PotentialActionKnown;
+import icbm.classic.lib.actions.fields.ActionFieldProvider;
 import icbm.classic.lib.data.IMachineInfo;
 import icbm.classic.lib.energy.storage.EnergyBuffer;
 import icbm.classic.lib.energy.system.EnergySystem;
@@ -81,6 +84,12 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
 
     public final RadioEmpTower radioCap = new RadioEmpTower(this);
 
+    public final PotentialActionKnown empAction = new PotentialActionKnown(ActionDataEmpArea.REG_NAME)
+        //TODO implement conditional preCheck to replace current checks
+        .withProvider(new ActionFieldProvider()
+            .field(ActionFields.AREA_SIZE, () -> (float)this.getRange())
+        );
+
     private final List<TileEmpTowerFake> subBlocks = new ArrayList<>();
 
     private final TickDoOnce descriptionPacketSender = new TickDoOnce((t) -> PACKET_DESCRIPTION.sendToAllAround(this));
@@ -96,6 +105,7 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
         }));
         tickActions.add(inventory);
         tickActions.add(new TickAction(5, (t) -> updateStructure()));
+        tickActions.add(empAction);
     }
 
     @Override
@@ -172,9 +182,9 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
                 world.playSound(null, getPos(), SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 0.5F, world.rand.nextFloat() * 0.15F + 0.6F);
             }
 
-            if (isReady() && world.getStrongPower(getPos()) > 0) //TODO convert to a state handler
+            if (isReady() && world.getStrongPower(getPos()) > 0) //TODO convert to action conditional
             {
-                fire();
+                fire(null); // TODO provide redstone cause by
             }
         }
 
@@ -269,24 +279,12 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
         this.range = Math.min(range, getMaxRadius());
     }
 
-    protected IBlast buildBlast()
-    {
-        return ((BlastEMP)ICBMExplosives.EMP.create()
-                .setBlastWorld(world)
-                .setBlastPosition(getPos().getX() + 0.5, getPos().getY() + 1.2, getPos().getZ() + 0.5)
-                .setBlastSize(range))
-                .clearSetEffectBlocksAndEntities()
-                .setEffectBlocks().setEffectEntities()
-                .buildBlast();
-    }
-
-    //@Callback(limit = 1) TODO add CC support
-    public boolean fire()
+    public boolean fire(IActionCause cause)
     {
         if (this.isReady())
         {
-            //Finish and trigger
-            if (buildBlast().runBlast().state == BlastState.TRIGGERED)
+            final IActionStatus response = empAction.doAction(world, getPos(), cause);
+            if (response.isType(ActionStatusTypes.GREEN))
             {
                 //Consume energy
                 this.energyStorage.consumePower(getFiringCost(), false);
@@ -389,6 +387,7 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
 
     private static final NbtSaveHandler<TileEMPTower> SAVE_LOGIC = new NbtSaveHandler<TileEMPTower>()
         .mainRoot()
+        /* */.nodeINBTSerializable("emp_action", tile -> tile.empAction)
         /* */.nodeINBTSerializable("inventory", tile -> tile.inventory)
         /* */.nodeINBTSerializable("radio", tile -> tile.radioCap)
         /* */.nodeInteger("range", tile -> tile.range, (tile, i) -> tile.range = i)
@@ -430,7 +429,7 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
     public static final PacketCodex<TileEMPTower, TileEMPTower> PACKET_FIRE = new PacketCodexTile<TileEMPTower, TileEMPTower>(REGISTRY_NAME, "fire")
         .fromClient()
         .onFinished((tile, target, player) -> {
-            tile.fire();
+            tile.fire(null); //TODO add GUI cause using player
             tile.markDirty();
         });
 

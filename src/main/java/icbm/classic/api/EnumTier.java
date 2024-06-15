@@ -6,7 +6,7 @@ import net.minecraft.util.text.TextFormatting;
 
 /**
  *
- * Created by Dark(DarkGuardsman, Robert) on 1/31/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 1/31/2018.
  */
 public enum EnumTier implements IStringSerializable
 {

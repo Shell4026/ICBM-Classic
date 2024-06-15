@@ -102,7 +102,6 @@ public class ParticleLauncherSmoke extends ParticleSmokeNormal
         return block != BlockReg.blockLaunchBase
             && block != BlockReg.blockLaunchSupport
             && block != BlockReg.blockLaunchScreen
-            && block != BlockReg.multiBlock
             && !blocksToIgnoreCollisions.contains(block);
     }
 }

@@ -1,6 +1,7 @@
 package icbm.classic.lib.explosive.reg;
 
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.ICBMClassicHelpers;
 import icbm.classic.api.data.BlockActivateFunction;
 import icbm.classic.api.data.WorldPosIntSupplier;
 import icbm.classic.api.data.WorldTickFunction;
@@ -15,7 +16,7 @@ import net.minecraft.world.World;
 import java.util.HashMap;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 1/7/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/7/19.
  */
 public class ExBlockContentReg extends ExplosiveContentRegistry implements IExBlockRegistry
 {
@@ -35,12 +36,7 @@ public class ExBlockContentReg extends ExplosiveContentRegistry implements IExBl
     @Override
     public ItemStack getDeviceStack(ResourceLocation regName)
     {
-        IExplosiveData ex = getExplosive(regName);
-        if(ex != null)
-        {
-            return new ItemStack(BlockReg.blockExplosive, 1, ex.getRegistryID());
-        }
-        return null;
+        return new ItemStack(BlockReg.blockExplosive, 1, ICBMClassicHelpers.getExplosive(regName, false).getRegistryID());
     }
 
     @Override

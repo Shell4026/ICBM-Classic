@@ -2,16 +2,18 @@ package icbm.classic.content.missile.logic.flight;
 
 import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
+import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.missiles.IMissile;
 import icbm.classic.api.missiles.parts.IMissileFlightLogic;
 import icbm.classic.api.missiles.parts.IMissileTarget;
+import icbm.classic.api.reg.obj.IBuilderRegistry;
 import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.content.missile.entity.EntityMissile;
 import icbm.classic.content.missile.entity.explosive.EntityExplosiveMissile;
 import icbm.classic.content.missile.tracker.MissileTrackerHandler;
+import icbm.classic.lib.buildable.BuildableObject;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -20,7 +22,8 @@ import net.minecraft.world.World;
  * @deprecated replaced with modular flight systems, kept for loading old save data
  */
 @Deprecated
-public class BallisticFlightLogicOld implements IMissileFlightLogic //TODO remove after we update to 1.12 or confident no more save data is using it
+public class BallisticFlightLogicOld extends BuildableObject<BallisticFlightLogicOld, IBuilderRegistry<IMissileFlightLogic>> implements IMissileFlightLogic
+//TODO remove after we update beyond 1.12 or confident no more save data is using it
 {
     //TODO recode to break apart movement into sub-logic
     //  Change silo startup to act as a delayed launch
@@ -73,12 +76,15 @@ public class BallisticFlightLogicOld implements IMissileFlightLogic //TODO remov
 
     private int ticksFlight = 0;
 
+    private boolean wasSimulationBlocked = false;
+
     public BallisticFlightLogicOld(int lockHeight) {
+        this();
         this.lockHeight = lockHeight;
     }
 
     public BallisticFlightLogicOld() {
-
+        super(REG_NAME, ICBMClassicAPI.MISSILE_FLIGHT_LOGIC_REGISTRY, SAVE_LOGIC);
     }
 
     @Override
@@ -217,7 +223,7 @@ public class BallisticFlightLogicOld implements IMissileFlightLogic //TODO remov
             // Sim system
             if (entity instanceof EntityExplosiveMissile && shouldSimulate(entity))
             {
-                MissileTrackerHandler.simulateMissile((EntityExplosiveMissile) entity); //TODO add ability to simulate any entity
+                wasSimulationBlocked = !MissileTrackerHandler.simulateMissile((EntityExplosiveMissile) entity); //TODO add ability to simulate any entity
             }
         }
     }
@@ -274,11 +280,11 @@ public class BallisticFlightLogicOld implements IMissileFlightLogic //TODO remov
 
     protected boolean shouldSimulate(Entity entity)
     {
-        if (EntityMissile.hasPlayerRiding(entity))
+        if (wasSimulationBlocked || EntityMissile.hasPlayerRiding(entity))
         {
             return false;
         }
-        else if (entity.posY >= ConfigMissile.SIMULATION_START_HEIGHT)
+        else if (entity.posY >= ConfigMissile.SIMULATION_EXIT_HEIGHT)
         {
             return true;
         }
@@ -310,28 +316,10 @@ public class BallisticFlightLogicOld implements IMissileFlightLogic //TODO remov
         return builder.apply(x, y, z);
     }
 
-    @Override
-    public ResourceLocation getRegistryName()
-    {
-        return REG_NAME;
-    }
-
     @Deprecated
     public int getPadWarmUpTimer()
     {
         return padWarmUpTimer;
-    }
-
-    @Override
-    public NBTTagCompound serializeNBT()
-    {
-        return SAVE_LOGIC.save(this, new NBTTagCompound());
-    }
-
-    @Override
-    public void deserializeNBT(NBTTagCompound nbt)
-    {
-        SAVE_LOGIC.load(this, nbt);
     }
 
     @Override
@@ -345,6 +333,7 @@ public class BallisticFlightLogicOld implements IMissileFlightLogic //TODO remov
         //Stuck in ground data
         .addRoot("flags")
         /* */.nodeBoolean("flight_started", (bl) -> bl.hasStartedFlight, (bl, data) -> bl.hasStartedFlight = data)
+        /* */.nodeBoolean("block_simulation", (bl) -> bl.wasSimulationBlocked, (bl, data) -> bl.wasSimulationBlocked = data)
         .base()
         .addRoot("inputs")
         /* */.nodeDouble("start_x", (bl) -> bl.startX, (bl, i) -> bl.startX = i)

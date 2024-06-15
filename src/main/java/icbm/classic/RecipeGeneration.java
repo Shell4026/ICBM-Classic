@@ -21,14 +21,14 @@ public class RecipeGeneration {
 
         ICBMClassicAPI.EX_MINECART_REGISTRY.getExplosives().forEach(ex -> {
 
-            final File file = new File(saveFolder, ex.getRegistryName().getResourcePath() + ".json");
+            final File file = new File(saveFolder, ex.getRegistryKey().getResourcePath() + ".json");
 
             final JsonObject recipeJson = new JsonObject();
             recipeJson.addProperty("type", "icbmclassic:explosive");
 
             // Result section
             final JsonObject resultJson = new JsonObject();
-            resultJson.addProperty("explosive", ex.getRegistryName().toString());
+            resultJson.addProperty("explosive", ex.getRegistryKey().toString());
             resultJson.addProperty("device", "icbmclassic:minecart");
             resultJson.addProperty("count", 1);
             recipeJson.add("result", resultJson);
@@ -49,7 +49,7 @@ public class RecipeGeneration {
 
             final JsonObject key2 = new JsonObject();
             key2.addProperty("type", "icbmclassic:explosive");
-            key2.addProperty("explosive", ex.getRegistryName().toString());
+            key2.addProperty("explosive", ex.getRegistryKey().toString());
             keyJson.add("a", key2);
 
             try (Writer writer = new FileWriter(file)) {
@@ -69,14 +69,14 @@ public class RecipeGeneration {
 
         ICBMClassicAPI.EX_GRENADE_REGISTRY.getExplosives().forEach(ex -> {
 
-            final File file = new File(saveFolder, ex.getRegistryName().getResourcePath() + ".json");
+            final File file = new File(saveFolder, ex.getRegistryKey().getResourcePath() + ".json");
 
             final JsonObject recipeJson = new JsonObject();
             recipeJson.addProperty("type", "icbmclassic:explosive");
 
             // Result section
             final JsonObject resultJson = new JsonObject();
-            resultJson.addProperty("explosive", ex.getRegistryName().toString());
+            resultJson.addProperty("explosive", ex.getRegistryKey().toString());
             resultJson.addProperty("device", "icbmclassic:grenade");
             resultJson.addProperty("count", 1);
             recipeJson.add("result", resultJson);
@@ -98,7 +98,7 @@ public class RecipeGeneration {
 
             final JsonObject key2 = new JsonObject();
             key2.addProperty("type", "icbmclassic:explosive");
-            key2.addProperty("explosive", ex.getRegistryName().toString());
+            key2.addProperty("explosive", ex.getRegistryKey().toString());
             keyJson.add("x", key2);
 
             try (Writer writer = new FileWriter(file)) {
@@ -118,14 +118,14 @@ public class RecipeGeneration {
 
         ICBMClassicAPI.EX_MISSILE_REGISTRY.getExplosives().forEach(ex -> {
 
-            final File file = new File(saveFolder, ex.getRegistryName().getResourcePath() + ".json");
+            final File file = new File(saveFolder, ex.getRegistryKey().getResourcePath() + ".json");
 
             final JsonObject recipeJson = new JsonObject();
             recipeJson.addProperty("type", "icbmclassic:explosive");
 
             // Result section
             final JsonObject resultJson = new JsonObject();
-            resultJson.addProperty("explosive", ex.getRegistryName().toString());
+            resultJson.addProperty("explosive", ex.getRegistryKey().toString());
             resultJson.addProperty("device", "icbmclassic:missile");
             resultJson.addProperty("count", 1);
             recipeJson.add("result", resultJson);
@@ -147,7 +147,7 @@ public class RecipeGeneration {
             final JsonObject key2 = new JsonObject();
             key2.addProperty("type", "icbmclassic:explosive");
             key2.addProperty("device", "icbmclassic:block");
-            key2.addProperty("explosive", ex.getRegistryName().toString());
+            key2.addProperty("explosive", ex.getRegistryKey().toString());
             keyJson.add("x", key2);
 
             try (Writer writer = new FileWriter(file)) {

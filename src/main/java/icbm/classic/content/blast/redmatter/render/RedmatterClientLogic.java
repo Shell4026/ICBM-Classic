@@ -5,7 +5,7 @@ import icbm.classic.content.blast.redmatter.EntityRedmatter;
 /**
  * Handles client size logic for the redmatter
  *
- * Created by Dark(DarkGuardsman, Robert) on 5/23/2020.
+ * Created by Dark(DarkGuardsman, Robin) on 5/23/2020.
  */
 public class RedmatterClientLogic
 {

@@ -7,7 +7,7 @@ import java.util.Collection;
 /**
  * Used to track players currently using an object. Primaryly used
  * for GUI handling.
- * Created by robert on 1/12/2015.
+ * Created by Robin on 1/12/2015.
  */
 public interface IPlayerUsing
 {

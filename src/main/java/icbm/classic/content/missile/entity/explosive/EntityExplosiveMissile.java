@@ -1,14 +1,13 @@
 package icbm.classic.content.missile.entity.explosive;
 
 import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.explosion.BlastState;
-import icbm.classic.api.explosion.responses.BlastResponse;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.content.missile.entity.EntityMissile;
 import icbm.classic.content.missile.logic.TargetRangeDet;
+import icbm.classic.content.missile.logic.source.ActionSource;
+import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.lib.capability.ex.CapabilityExplosiveEntity;
-import icbm.classic.lib.explosive.ExplosiveHandler;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import icbm.classic.lib.saving.NbtSaveNode;
 import io.netty.buffer.ByteBuf;
@@ -18,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
@@ -29,8 +29,7 @@ import javax.annotation.Nullable;
 
 /**
  * Entity version of the missile
- *
- * @Author - Calclavia, Darkguardsman
+ * @deprecated replacing with {@link EntityMissileActionable}
  */
 public class EntityExplosiveMissile extends EntityMissile<EntityExplosiveMissile>
 {
@@ -39,7 +38,6 @@ public class EntityExplosiveMissile extends EntityMissile<EntityExplosiveMissile
 
     /** Explosive data and settings */
     public final CapabilityExplosiveEntity explosive = new CapabilityExplosiveEntity(this);
-    public boolean isExploding = false; //TODO see if this should be in cap
 
     public EntityExplosiveMissile(World w)
     {
@@ -76,7 +74,7 @@ public class EntityExplosiveMissile extends EntityMissile<EntityExplosiveMissile
        // TODO add config
        // TODO add random chance modifier
        if(source.isExplosion() || source.isFireDamage()) {
-           doExplosion(this.getPositionVector());
+           explosive.doExplosion(posX, posY, posZ, new ActionSource(world, new Vec3d(posX, posY, posZ), new EntityCause(this)));
        }
     }
 
@@ -102,7 +100,7 @@ public class EntityExplosiveMissile extends EntityMissile<EntityExplosiveMissile
         final IExplosiveData data = explosive.getExplosiveData();
         if (data != null)
         {
-            return I18n.translateToLocal("missile." + data.getRegistryName().toString() + ".name");
+            return I18n.translateToLocal("missile." + data.getRegistryKey().toString() + ".name");
         }
         return I18n.translateToLocal("missile.icbmclassic:generic.name");
     }
@@ -142,32 +140,9 @@ public class EntityExplosiveMissile extends EntityMissile<EntityExplosiveMissile
     }
 
     @Override
-    protected void onImpact(Vec3d impactLocation) {
-        super.onImpact(impactLocation);
-        doExplosion(impactLocation);
-    }
-
-    public BlastResponse doExplosion(Vec3d impactLocation) //TODO move to capability
-    {
-        try
-        {
-            // Make sure the missile is not already exploding
-            if (!this.isExploding)
-            {
-                //Make sure to note we are currently exploding
-                this.isExploding = true;
-
-                if (!this.world.isRemote)
-                {
-                    return ExplosiveHandler.createExplosion(this, this.world, impactLocation.x, impactLocation.y, impactLocation.z, explosive);
-                }
-                return BlastState.TRIGGERED_CLIENT.genericResponse;
-            }
-            return BlastState.ALREADY_TRIGGERED.genericResponse;
-        } catch (Exception e)
-        {
-            return new BlastResponse(BlastState.ERROR, e.getMessage(), e);
-        }
+    protected void actionOnImpact(RayTraceResult impactLocation) {
+        super.actionOnImpact(impactLocation);
+        explosive.doExplosion(impactLocation.hitVec.x, impactLocation.hitVec.y, impactLocation.hitVec.z, new ActionSource(world, new Vec3d(posX, posY, posZ), new EntityCause(this)));
     }
 
     @Override

@@ -174,7 +174,7 @@ public class ItemBlockExplosive extends ItemBlockAbstract
         final IExplosiveData data = ICBMClassicAPI.EXPLOSIVE_REGISTRY.getExplosiveData(itemstack.getItemDamage());
         if (data != null)
         {
-            return "explosive." + data.getRegistryName();
+            return "explosive." + data.getRegistryKey();
         }
         return "explosive";
     }

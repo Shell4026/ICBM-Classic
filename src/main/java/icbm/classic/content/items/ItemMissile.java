@@ -1,6 +1,7 @@
 package icbm.classic.content.items;
 
 import icbm.classic.api.ICBMClassicAPI;
+import icbm.classic.api.ICBMClassicHelpers;
 import icbm.classic.api.caps.IExplosive;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.content.blocks.explosive.ItemBlockExplosive;
@@ -55,7 +56,7 @@ public class ItemMissile extends ItemBase
                 final IExplosiveData data = explosive.getExplosiveData();
                 if (data != null)
                 {
-                    return "missile." + data.getRegistryName();
+                    return "missile." + data.getRegistryKey();
                 }
             }
         }
@@ -92,5 +93,9 @@ public class ItemMissile extends ItemBase
     {
         //TODO add hook
         ((ItemBlockExplosive) Item.getItemFromBlock(BlockReg.blockExplosive)).getDetailedInfo(stack, player, list);
+        final IExplosive explosive = ICBMClassicHelpers.getExplosive(stack);
+        if(explosive != null) { //TODO make shift-key display?
+            explosive.collectInformation(list::add);
+        }
     }
 }

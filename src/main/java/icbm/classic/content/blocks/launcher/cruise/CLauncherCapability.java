@@ -1,21 +1,23 @@
 package icbm.classic.content.blocks.launcher.cruise;
 
 import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.launcher.IActionStatus;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.launcher.ILauncherSolution;
 import icbm.classic.api.missiles.ICapabilityMissileStack;
 import icbm.classic.api.missiles.IMissile;
-import icbm.classic.api.missiles.cause.IMissileCause;
-import icbm.classic.api.missiles.cause.IMissileSource;
+import icbm.classic.api.actions.cause.IActionCause;
+import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.missiles.parts.IMissileTarget;
 import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.content.blocks.launcher.FiringPackage;
 import icbm.classic.content.blocks.launcher.LauncherBaseCapability;
+import icbm.classic.content.blocks.launcher.status.LaunchedWithMissile;
 import icbm.classic.content.missile.logic.flight.DirectFlightLogic;
-import icbm.classic.content.missile.logic.source.MissileSource;
-import icbm.classic.content.missile.logic.source.cause.BlockCause;
-import icbm.classic.lib.capability.launcher.data.FiringWithDelay;
-import icbm.classic.lib.capability.launcher.data.LauncherStatus;
+import icbm.classic.content.missile.logic.source.ActionSource;
+import icbm.classic.content.missile.logic.source.cause.CausedByBlock;
+import icbm.classic.content.blocks.launcher.status.FiringWithDelay;
+import icbm.classic.content.blocks.launcher.status.LauncherStatus;
+import icbm.classic.content.reg.ItemReg;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -52,18 +54,18 @@ public class CLauncherCapability extends LauncherBaseCapability {
     }
 
     @Override
-    public IActionStatus preCheckLaunch(IMissileTarget target, @Nullable IMissileCause cause) {
+    public IActionStatus preCheckLaunch(IMissileTarget target, @Nullable IActionCause cause) {
         return getStatus();
     }
 
     @Override
-    public IActionStatus launch(ILauncherSolution solution, @Nullable IMissileCause cause, boolean simulate) {
+    public IActionStatus launch(ILauncherSolution solution, @Nullable IActionCause cause, boolean simulate) {
 
         final IMissileTarget target = solution.getTarget(this);
 
         // Do pre-checks
         final IActionStatus preCheck = preCheckLaunch(target, cause);
-        if(preCheck.shouldBlockInteraction()) {
+        if(preCheck.isBlocking()) {
             return preCheck;
         }
         else if(simulate) { //TODO handle better by checking if we are already aimed
@@ -79,9 +81,9 @@ public class CLauncherCapability extends LauncherBaseCapability {
             return LauncherStatus.FIRING_AIMING; // TODO return aiming status, with callback to check if did fire
         }
 
-        final BlockCause selfCause = new BlockCause(host.getWorld(), host.getPos(), host.getBlockState());
+        final CausedByBlock selfCause = new CausedByBlock(host.getWorld(), host.getPos(), host.getBlockState());
         selfCause.setPreviousCause(cause);
-        final IMissileSource missileSource = new MissileSource(getHost().getWorld(), new Vec3d(host.getPos().getX() + 0.5, host.getPos().getY() + TileCruiseLauncher.MISSILE__HOLDER_Y, host.getPos().getZ() + 0.5), selfCause);
+        final IActionSource missileSource = new ActionSource(getHost().getWorld(), new Vec3d(host.getPos().getX() + 0.5, host.getPos().getY() + TileCruiseLauncher.MISSILE__HOLDER_Y, host.getPos().getZ() + 0.5), selfCause);
 
         if (host.canLaunch()) //TODO update to mirror launch pad better
         {
@@ -116,11 +118,19 @@ public class CLauncherCapability extends LauncherBaseCapability {
                         if (!host.getWorld().spawnEntity(entity)) {
                             return LauncherStatus.ERROR_SPAWN;
                         }
+                        return new LaunchedWithMissile().setMissile(missile);
                     }
                     return LauncherStatus.LAUNCHED;
                 }
             }
         }
         return LauncherStatus.ERROR_GENERIC;
+    }
+
+    @Override
+    public float getPayloadVelocity() {
+        // TODO find a way to get this from the missile stack
+        return host.getMissileHolder().getMissileStack().getItem() == ItemReg.itemSAM
+            ? ConfigMissile.SAM_MISSILE.FLIGHT_SPEED : ConfigMissile.DIRECT_FLIGHT_SPEED;
     }
 }

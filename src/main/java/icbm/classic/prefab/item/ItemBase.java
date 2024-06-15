@@ -18,7 +18,7 @@ import java.util.List;
  * Generic prefab to use in all items providing common implementation
  * <p>
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 12/20/2016.
+ * Created by Dark(DarkGuardsman, Robin) on 12/20/2016.
  */
 public class ItemBase extends Item
 {

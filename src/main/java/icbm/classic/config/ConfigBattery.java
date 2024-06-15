@@ -5,7 +5,7 @@ import net.minecraftforge.common.config.Config;
 
 /**
  *
- * Created by Dark(DarkGuardsman, Robert) on 2/22/2018.
+ * Created by Dark(DarkGuardsman, Robin) on 2/22/2018.
  */
 @Config(modid = ICBMConstants.DOMAIN, name = "icbmclassic/battery")
 @Config.LangKey("config.icbmclassic:battery.title")

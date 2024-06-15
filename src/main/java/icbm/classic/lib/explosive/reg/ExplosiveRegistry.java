@@ -11,21 +11,20 @@ import com.google.gson.stream.JsonReader;
 import icbm.classic.ICBMClassic;
 import icbm.classic.api.EnumTier;
 import icbm.classic.api.explosion.IBlastFactory;
+import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.api.reg.IExplosiveRegistry;
 import icbm.classic.api.reg.content.IExplosiveContentRegistry;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 1/4/19.
+ * Created by Dark(DarkGuardsman, Robin) on 1/4/19.
  */
 public class ExplosiveRegistry implements IExplosiveRegistry
 {
@@ -87,7 +86,7 @@ public class ExplosiveRegistry implements IExplosiveRegistry
         setReg(name, assignedID);
 
         //Store factory
-        explosiveData.put(name, new ExplosiveData(name, assignedID, tier).blastFactory(blastFactory));
+        explosiveData.put(name, new ExplosiveData(name, assignedID, tier, blastFactory));
 
         //Return data
         return explosiveData.get(name);
@@ -98,7 +97,7 @@ public class ExplosiveRegistry implements IExplosiveRegistry
         if (!allExplosivesLocked)
         {
             allExplosivesLocked = true;
-            allExplosives = explosiveData.values().stream().filter(e -> e != null).collect(ImmutableSet.toImmutableSet());
+            allExplosives = explosiveData.values().stream().filter(Objects::nonNull).collect(ImmutableSet.toImmutableSet());
         }
         else
         {
@@ -132,9 +131,13 @@ public class ExplosiveRegistry implements IExplosiveRegistry
     }
 
     @Override
-    public IExplosiveData getExplosiveData(ResourceLocation name)
+    public IExplosiveData getExplosiveData(ResourceLocation name, boolean allowNull)
     {
-        return explosiveData.get(name);
+        final IExplosiveData data = explosiveData.get(name);
+        if(data == null && !allowNull) {
+            return ICBMExplosives.CONDENSED;
+        }
+        return data;
     }
 
     @Override

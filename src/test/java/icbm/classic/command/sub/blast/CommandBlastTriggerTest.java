@@ -5,11 +5,12 @@ import com.builtbroken.mc.testing.junit.testers.DummyCommandSender;
 import com.builtbroken.mc.testing.junit.testers.TestPlayer;
 import icbm.classic.api.EnumTier;
 import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.explosion.BlastState;
-import icbm.classic.api.explosion.responses.BlastResponse;
+import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.command.FakeBlast;
 import icbm.classic.command.ICBMCommands;
+import icbm.classic.lib.actions.status.ActionResponses;
+import icbm.classic.content.blast.BlastStatus;
 import icbm.classic.lib.explosive.reg.ExplosiveRegistry;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -39,7 +40,7 @@ public class CommandBlastTriggerTest
 
     private final CommandBlastTrigger command = new CommandBlastTrigger();
     private IExplosiveData fakeExData;
-    private BlastResponse triggerState = BlastState.TRIGGERED.genericResponse;
+    private IActionStatus triggerState = ActionResponses.COMPLETED;
 
     private final Queue<FakeBlast> blastsCreated = new LinkedList();
 
@@ -47,7 +48,7 @@ public class CommandBlastTriggerTest
     public void setupBeforeTest()
     {
         ICBMClassicAPI.EXPLOSIVE_REGISTRY = new ExplosiveRegistry();
-        fakeExData = ICBMClassicAPI.EXPLOSIVE_REGISTRY.register(new ResourceLocation("tree", "small"), EnumTier.ONE, () ->
+        fakeExData = ICBMClassicAPI.EXPLOSIVE_REGISTRY.register(new ResourceLocation("tree", "small"), EnumTier.ONE, (w, x, y, z, s) ->
         {
             FakeBlast fakeBlast = new FakeBlast(triggerState);
             blastsCreated.add(fakeBlast);
@@ -134,17 +135,15 @@ public class CommandBlastTriggerTest
     private static Stream<Arguments> provideBlastOutputTypes()
     {
         return Stream.of(
-                Arguments.of(BlastState.TRIGGERED.genericResponse, CommandBlastTrigger.TRANSLATION_TRIGGERED),
-                Arguments.of(BlastState.THREADING.genericResponse, CommandBlastTrigger.TRANSLATION_THREADING),
-                Arguments.of(BlastState.CANCLED.genericResponse, CommandBlastTrigger.TRANSLATION_ERROR_BLOCKED),
-                Arguments.of(BlastState.ERROR.genericResponse, CommandBlastTrigger.TRANSLATION_ERROR),
-                Arguments.of(BlastState.ALREADY_TRIGGERED.genericResponse, CommandBlastTrigger.TRANSLATION_ERROR_TRIGGERED)
+                Arguments.of(ActionResponses.COMPLETED, CommandBlastTrigger.TRANSLATION_TRIGGERED),
+                Arguments.of(BlastStatus.SETUP_ERROR, CommandBlastTrigger.TRANSLATION_ERROR_BLOCKED),
+                Arguments.of(ActionResponses.UNKNOWN_ERROR, CommandBlastTrigger.TRANSLATION_ERROR)
         );
     }
 
     @ParameterizedTest
     @MethodSource("provideBlastOutputTypes")
-    void command_short(BlastResponse stateToTest, String outputExpected) throws CommandException
+    void command_short(IActionStatus stateToTest, String outputExpected) throws CommandException
     {
         this.triggerState = stateToTest;
 
@@ -165,7 +164,7 @@ public class CommandBlastTriggerTest
 
     @ParameterizedTest
     @MethodSource("provideBlastOutputTypes")
-    void command_long(BlastResponse stateToTest, String outputExpected) throws CommandException
+    void command_long(IActionStatus stateToTest, String outputExpected) throws CommandException
     {
         this.triggerState = stateToTest;
 
@@ -213,7 +212,7 @@ public class CommandBlastTriggerTest
         Assertions.assertEquals(world, blast.world(), "World of the blast is incorrect");
 
         //Check explosive settings
-        Assertions.assertEquals(fakeExData, blast.getExplosiveData(), "Explosive data does not match");
+        Assertions.assertEquals(fakeExData, blast.getActionData(), "Explosive data does not match");
         Assertions.assertNull(blast.customData, "Explosive custom data should be empty");
         Assertions.assertEquals(size, (int) Math.floor(blast.getBlastRadius()), "Explosive radius should be 2");
     }
