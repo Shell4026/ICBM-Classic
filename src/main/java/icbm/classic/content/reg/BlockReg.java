@@ -1,12 +1,13 @@
 package icbm.classic.content.reg;
 
 import icbm.classic.ICBMConstants;
+import icbm.classic.api.refs.ICBMExplosives;
+import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.content.blocks.*;
 import icbm.classic.content.blocks.emptower.BlockEmpTower;
 import icbm.classic.content.blocks.emptower.TileEMPTower;
 import icbm.classic.content.blocks.emptower.TileEmpTowerFake;
 import icbm.classic.content.blocks.explosive.BlockExplosive;
-import icbm.classic.content.blocks.explosive.TileEntityExplosive;
 import icbm.classic.content.blocks.launcher.base.BlockLauncherBase;
 import icbm.classic.content.blocks.launcher.base.TileLauncherBase;
 import icbm.classic.content.blocks.launcher.connector.BlockLaunchConnector;
@@ -104,7 +105,29 @@ public class BlockReg
                 .hardnessAndResistance(10, 40)
         ).setRegistryName(ICBMConstants.PREFIX + "glass_reinforced"));
 
-        event.getRegistry().register(new BlockExplosive());
+        event.getRegistry().register(new BlockExplosive(ICBMExplosives.CONDENSED).setRegistryName(ICBMConstants.PREFIX + "explosive_condensed"));
+        event.getRegistry().register(new BlockExplosive(ICBMExplosives.SHRAPNEL).setRegistryName(ICBMConstants.PREFIX + "explosive_shrapnel"));
+        event.getRegistry().register(new BlockExplosive(ICBMExplosives.INCENDIARY).setRegistryName(ICBMConstants.PREFIX + "explosive_incendiary"));
+        event.getRegistry().register(new BlockExplosive(ICBMExplosives.DEBILITATION).setRegistryName(ICBMConstants.PREFIX + "explosive_debilitation"));
+        event.getRegistry().register(new BlockExplosive(ICBMExplosives.CHEMICAL).setRegistryName(ICBMConstants.PREFIX + "explosive_chemical"));
+        event.getRegistry().register(new BlockExplosive(ICBMExplosives.ANVIL).setRegistryName(ICBMConstants.PREFIX + "explosive_anvil"));
+        event.getRegistry().register(new BlockExplosive(ICBMExplosives.REPULSIVE).setRegistryName(ICBMConstants.PREFIX + "explosive_repulsive"));
+        event.getRegistry().register(new BlockExplosive(ICBMExplosives.ATTRACTIVE).setRegistryName(ICBMConstants.PREFIX + "explosive_attractive"));
+        event.getRegistry().register(new BlockExplosive(ICBMExplosives.COLOR).setRegistryName(ICBMConstants.PREFIX + "explosive_color"));
+        event.getRegistry().register(new BlockExplosive(ICBMExplosives.SMOKE).setRegistryName(ICBMConstants.PREFIX + "explosive_smoke"));
+        event.getRegistry().register(new BlockExplosive(ICBMExplosives.FRAGMENTATION).setRegistryName(ICBMConstants.PREFIX + "explosive_fragmentation"));
+        event.getRegistry().register(new BlockExplosive(ICBMExplosives.CONTAGIOUS).setRegistryName(ICBMConstants.PREFIX + "explosive_contagious"));
+        event.getRegistry().register(new BlockExplosive(ICBMExplosives.SONIC).setRegistryName(ICBMConstants.PREFIX + "explosive_sonic"));
+        event.getRegistry().register(new BlockExplosive(ICBMExplosives.BREACHING).setRegistryName(ICBMConstants.PREFIX + "explosive_breaching"));
+        event.getRegistry().register(new BlockExplosive(ICBMExplosives.THERMOBARIC).setRegistryName(ICBMConstants.PREFIX + "explosive_thermobaric"));
+        event.getRegistry().register(new BlockExplosive(ICBMExplosives.NUCLEAR).setRegistryName(ICBMConstants.PREFIX + "explosive_nuclear"));
+        event.getRegistry().register(new BlockExplosive(ICBMExplosives.EMP).setRegistryName(ICBMConstants.PREFIX + "explosive_emp"));
+        event.getRegistry().register(new BlockExplosive(ICBMExplosives.EXOTHERMIC).setRegistryName(ICBMConstants.PREFIX + "explosive_exothermic"));
+        event.getRegistry().register(new BlockExplosive(ICBMExplosives.ENDOTHERMIC).setRegistryName(ICBMConstants.PREFIX + "explosive_endothermic"));
+        event.getRegistry().register(new BlockExplosive(ICBMExplosives.ANTI_GRAVITATIONAL).setRegistryName(ICBMConstants.PREFIX + "explosive_antigravitational"));
+        event.getRegistry().register(new BlockExplosive(ICBMExplosives.ENDER).setRegistryName(ICBMConstants.PREFIX + "explosive_ender"));
+        event.getRegistry().register(new BlockExplosive(ICBMExplosives.ANTIMATTER).setRegistryName(ICBMConstants.PREFIX + "explosive_antimatter"));
+        event.getRegistry().register(new BlockExplosive(ICBMExplosives.REDMATTER).setRegistryName(ICBMConstants.PREFIX + "explosive_redmatter"));
 
         event.getRegistry().register(new BlockEmpTower());
         event.getRegistry().register(new BlockRadarStation());
@@ -117,7 +140,6 @@ public class BlockReg
 
         event.getRegistry().register(new BlockRadioactive());
 
-        GameRegistry.registerTileEntity(TileEntityExplosive.class, new ResourceLocation(ICBMConstants.DOMAIN, "explosive"));
         TileEMPTower.register();
         GameRegistry.registerTileEntity(TileEmpTowerFake.class, new ResourceLocation(ICBMConstants.DOMAIN, "emptower_fake"));
         TileRadarStation.register();

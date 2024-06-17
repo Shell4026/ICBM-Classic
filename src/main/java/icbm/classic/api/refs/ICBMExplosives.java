@@ -38,9 +38,6 @@ public final class ICBMExplosives
     public static IExplosiveData ANTI_GRAVITATIONAL;
     public static IExplosiveData ENDER;
 
-    /** @Deprecated for removal in next major MC version, currently placeholder to prevent game save errors */
-    @Deprecated
-    public static IExplosiveData HYPERSONIC;
 
     //=================== Tier 4
     public static IExplosiveData ANTIMATTER;

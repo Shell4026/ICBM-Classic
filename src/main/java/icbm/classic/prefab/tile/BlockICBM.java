@@ -3,6 +3,7 @@ package icbm.classic.prefab.tile;
 import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
 import icbm.classic.lib.InventoryUtility;
+import net.minecraft.block.Block;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
@@ -14,7 +15,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public abstract class BlockICBM extends ContainerBlock
+public abstract class BlockICBM extends Block
 {
     public static final PropertyDirection ROTATION_PROP = PropertyDirection.create("rotation");
 
@@ -38,6 +39,7 @@ public abstract class BlockICBM extends ContainerBlock
     @Override
     protected BlockStateContainer createBlockState()
     {
+        super.stateContainer
         return new BlockStateContainer(this, ROTATION_PROP);
     }
 
