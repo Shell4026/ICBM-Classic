@@ -18,7 +18,7 @@ import icbm.classic.lib.projectile.ProjectileStack;
 import icbm.classic.prefab.item.ItemBase;
 import icbm.classic.prefab.item.ItemStackCapProvider;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -169,7 +169,7 @@ public class ItemThrowableProjectile extends ItemBase {
     }
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items)
+    public void getSubItems(ItemGroup tab, NonNullList<ItemStack> items)
     {
         if (this.isInCreativeTab(tab))
         {

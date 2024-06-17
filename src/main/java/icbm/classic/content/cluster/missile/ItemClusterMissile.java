@@ -1,17 +1,15 @@
 package icbm.classic.content.cluster.missile;
 
-import icbm.classic.ICBMClassic;
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.missiles.projectile.IProjectileStack;
 import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.content.cargo.parachute.ParachuteProjectileData;
 import icbm.classic.content.reg.ItemReg;
 import icbm.classic.lib.LanguageUtility;
-import icbm.classic.lib.explosive.reg.ExplosiveRegistry;
 import icbm.classic.lib.projectile.ProjectileStack;
 import icbm.classic.prefab.item.ItemBase;
 import icbm.classic.prefab.item.ItemStackCapProvider;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -44,8 +42,8 @@ public class ItemClusterMissile extends ItemBase {
     }
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if (tab == getCreativeTab() || tab == CreativeTabs.SEARCH) {
+    public void getSubItems(ItemGroup tab, NonNullList<ItemStack> items) {
+        if (tab == getCreativeTab() || tab == ItemGroup.SEARCH) {
             items.add(new ItemStack(this));
             items.add(createStack(new ItemStack(Items.ARROW), 200));
             items.add(createStack(new ItemStack(ItemReg.itemBombletExplosive, 1, ICBMExplosives.CONDENSED.getRegistryID()), 100));

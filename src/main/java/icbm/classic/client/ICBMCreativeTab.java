@@ -7,8 +7,8 @@ import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.content.reg.BlockReg;
 import icbm.classic.content.reg.ItemReg;
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -24,7 +24,7 @@ import java.util.Optional;
  * need to make a more complex tab
  * Created by Robin on 11/25/2014.
  */
-public class ICBMCreativeTab extends CreativeTabs
+public class ICBMCreativeTab extends ItemGroup
 {
     private final List<Item> definedTabItemsInOrder = new ArrayList();
 
@@ -70,7 +70,7 @@ public class ICBMCreativeTab extends CreativeTabs
         {
             if (item != null)
             {
-                for (CreativeTabs tab : item.getCreativeTabs())
+                for (ItemGroup tab : item.getCreativeTabs())
                 {
                     if (tab == this && !definedTabItemsInOrder.contains(item))
                     {

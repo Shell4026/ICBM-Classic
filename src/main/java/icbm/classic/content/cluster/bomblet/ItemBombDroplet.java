@@ -7,10 +7,9 @@ import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.content.blocks.explosive.ItemBlockExplosive;
 import icbm.classic.content.reg.BlockReg;
 import icbm.classic.lib.capability.ex.CapabilityExplosiveStack;
-import icbm.classic.lib.capability.ex.CapabilityExplosiveStatic;
 import icbm.classic.prefab.item.ItemBase;
 import icbm.classic.prefab.item.ItemStackCapProvider;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -64,9 +63,9 @@ public class ItemBombDroplet extends ItemBase {
     }
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items)
+    public void getSubItems(ItemGroup tab, NonNullList<ItemStack> items)
     {
-        if (tab == getCreativeTab() || tab == CreativeTabs.SEARCH)
+        if (tab == getCreativeTab() || tab == ItemGroup.SEARCH)
         {
             for (int id : ICBMClassicAPI.EX_GRENADE_REGISTRY.getExplosivesIDs())
             {

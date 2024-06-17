@@ -2,7 +2,7 @@ package icbm.classic.api.caps;
 
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldProvider;
+import net.minecraft.world.dimension.Dimension;
 import net.minecraftforge.common.DimensionManager;
 
 import javax.annotation.Nullable;
@@ -26,7 +26,7 @@ public interface IGPSData {
      * @param world to set, can be set to null to clear
      */
     default void setWorld(World world) {
-        setWorld(Optional.ofNullable(world).map(w -> w.provider).map(WorldProvider::getDimension).orElse(null));
+        setWorld(Optional.ofNullable(world).map(w -> w.provider).map(Dimension::getDimension).orElse(null));
     }
 
     /**

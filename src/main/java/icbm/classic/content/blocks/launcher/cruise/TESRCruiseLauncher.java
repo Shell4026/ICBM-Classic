@@ -1,13 +1,12 @@
 package icbm.classic.content.blocks.launcher.cruise;
 
-import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
 import icbm.classic.client.models.CruiseLauncherTopModel;
 import icbm.classic.client.render.entity.RenderMissile;
 import icbm.classic.content.blast.redmatter.render.RenderRedmatter;
 import icbm.classic.lib.transform.rotation.EulerAngle;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -18,7 +17,7 @@ import org.lwjgl.util.glu.Sphere;
  *
  * Created by Dark(DarkGuardsman, Robin) on 1/10/2017.
  */
-public class TESRCruiseLauncher extends TileEntitySpecialRenderer<TileCruiseLauncher>
+public class TESRCruiseLauncher extends TileEntityRenderer<TileCruiseLauncher>
 {
     public static final ResourceLocation TEXTURE_FILE = new ResourceLocation(ICBMConstants.DOMAIN, "textures/models/cruise_launcher_top.png");
 

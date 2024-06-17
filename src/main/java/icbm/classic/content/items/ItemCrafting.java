@@ -1,7 +1,7 @@
 package icbm.classic.content.items;
 
 import icbm.classic.prefab.item.ItemICBMBase;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
@@ -108,7 +108,7 @@ public class ItemCrafting extends ItemICBMBase
     }
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items)
+    public void getSubItems(ItemGroup tab, NonNullList<ItemStack> items)
     {
         if (this.isInCreativeTab(tab))
         {

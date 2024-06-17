@@ -3,7 +3,7 @@ package icbm.classic.lib.tracker;
 import icbm.classic.ICBMConstants;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldProvider;
+import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.storage.WorldInfo;
 
 import java.util.Optional;
@@ -31,7 +31,7 @@ public class EventTrackerHelpers {
     }
 
     public static Integer getWorldId(World world) {
-        return Optional.ofNullable(world).map(w -> w.provider).map(WorldProvider::getDimension).orElse(null);
+        return Optional.ofNullable(world).map(w -> w.provider).map(Dimension::getDimension).orElse(null);
     }
 
     public static String getWorldName(World world) {

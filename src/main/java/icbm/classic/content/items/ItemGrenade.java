@@ -7,12 +7,12 @@ import icbm.classic.content.entity.EntityGrenade;
 import icbm.classic.content.reg.BlockReg;
 import icbm.classic.lib.capability.ex.CapabilityExplosiveStack;
 import icbm.classic.prefab.item.ItemBase;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
@@ -126,9 +126,9 @@ public class ItemGrenade extends ItemBase
     }
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list)
+    public void getSubItems(ItemGroup tab, NonNullList<ItemStack> list)
     {
-        if (tab == getCreativeTab() || tab == CreativeTabs.SEARCH)
+        if (tab == getCreativeTab() || tab == ItemGroup.SEARCH)
         {
             for (int id : ICBMClassicAPI.EX_GRENADE_REGISTRY.getExplosivesIDs())
             {

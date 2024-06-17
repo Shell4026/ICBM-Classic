@@ -2,8 +2,8 @@ package icbm.classic.client.render.entity;
 
 import icbm.classic.client.render.entity.item.RenderItemImp;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.Render;
@@ -26,11 +26,11 @@ import java.util.Random;
 @SideOnly(Side.CLIENT)
 public class RenderEntityItem2 extends Render<EntityItem>
 {
-    private final RenderItem itemRenderer;
+    private final ItemRenderer itemRenderer;
     private final Random random = new Random();
     private final ItemCameraTransforms.TransformType transformType;
 
-    public RenderEntityItem2(RenderManager renderManagerIn, RenderItem p_i46167_2_, ItemCameraTransforms.TransformType transformType)
+    public RenderEntityItem2(RenderManager renderManagerIn, ItemRenderer p_i46167_2_, ItemCameraTransforms.TransformType transformType)
     {
         super(renderManagerIn);
         this.itemRenderer = p_i46167_2_;

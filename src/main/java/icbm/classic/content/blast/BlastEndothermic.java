@@ -1,9 +1,8 @@
 package icbm.classic.content.blast;
 
 import icbm.classic.config.blast.ConfigBlast;
-import icbm.classic.content.potion.CustomPotionEffect;
 import net.minecraft.block.BlockLiquid;
-import net.minecraft.block.BlockSnow;
+import net.minecraft.block.BlockSnowLayer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
@@ -15,7 +14,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.Iterator;
 import java.util.List;
 
 public class BlastEndothermic extends BlastBeam
@@ -64,7 +62,7 @@ public class BlastEndothermic extends BlastBeam
                 {
                     int level = Math.min(8, Math.max(1, blockState.getValue(BlockLiquid.LEVEL) / 2));
                     world.setBlockState(targetPosition, Blocks.SNOW_LAYER.getDefaultState()
-                            .withProperty(BlockSnow.LAYERS, level), 3);
+                            .withProperty(BlockSnowLayer.LAYERS, level), 3);
                 }
                 else if (blockState.getBlock() == Blocks.MAGMA)
                 {
@@ -120,7 +118,7 @@ public class BlastEndothermic extends BlastBeam
                     && blockStateUnder.isSideSolid(world, pos.down(), EnumFacing.UP))
             {
                 world.setBlockState(pos, Blocks.SNOW_LAYER.getDefaultState()
-                        .withProperty(BlockSnow.LAYERS, 1 + world.rand.nextInt(7)), 3);
+                        .withProperty(BlockSnowLayer.LAYERS, 1 + world.rand.nextInt(7)), 3);
 
             }
         }

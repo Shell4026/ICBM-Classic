@@ -10,7 +10,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -145,7 +145,7 @@ public class BlockRadioactive extends Block {
     }
 
     @Override
-    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> items) {
+    public void getSubBlocks(ItemGroup tab, NonNullList<ItemStack> items) {
         if (tab == this.getCreativeTabToDisplayOn()) {
             for (EnumType type : EnumType.values()) {
                 items.add(new ItemStack(this, 1, type.ordinal()));

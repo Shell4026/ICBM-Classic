@@ -9,7 +9,7 @@ import icbm.classic.lib.LanguageUtility;
 import icbm.classic.lib.capability.ex.CapabilityExplosiveStack;
 import icbm.classic.prefab.item.ItemBlockAbstract;
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -157,9 +157,9 @@ public class ItemBlockExplosive extends ItemBlockAbstract
     }
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items)
+    public void getSubItems(ItemGroup tab, NonNullList<ItemStack> items)
     {
-        if (tab == getCreativeTab() || tab == CreativeTabs.SEARCH)
+        if (tab == getCreativeTab() || tab == ItemGroup.SEARCH)
         {
             for (int id : ICBMClassicAPI.EX_BLOCK_REGISTRY.getExplosivesIDs())
             {

@@ -6,7 +6,7 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -136,7 +136,7 @@ public class BlockEmpTower extends BlockContainer
     }
 
     @Override
-    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> items)
+    public void getSubBlocks(ItemGroup tab, NonNullList<ItemStack> items)
     {
         items.add(new ItemStack(this, 1, 0));
         items.add(new ItemStack(this, 1, 1));

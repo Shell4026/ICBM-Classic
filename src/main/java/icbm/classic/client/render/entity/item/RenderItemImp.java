@@ -6,8 +6,8 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.Render;
@@ -36,7 +36,7 @@ import java.util.function.Supplier;
 @SideOnly(Side.CLIENT)
 public abstract class RenderItemImp<E extends Entity> extends Render<E>
 {
-    private final RenderItem itemRenderer;
+    private final ItemRenderer itemRenderer;
     private final Random random = new Random();
 
     private static final Supplier<ItemStack> BACKUP_RENDER_STACK = new LazyBuilder<>(() -> new ItemStack(Blocks.FIRE));
