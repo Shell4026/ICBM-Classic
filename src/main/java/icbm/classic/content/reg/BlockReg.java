@@ -22,6 +22,7 @@ import icbm.classic.content.blocks.radarstation.BlockRadarStation;
 import icbm.classic.content.blocks.radarstation.TileRadarStation;
 import icbm.classic.content.radioactive.BlockRadioactive;
 import net.minecraft.block.Block;
+import net.minecraft.block.GlassBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
@@ -98,7 +99,11 @@ public class BlockReg
                 .hardnessAndResistance(10, 2800)
         ).setRegistryName(ICBMConstants.PREFIX + "concrete_reinforced"));
 
-        event.getRegistry().register(new BlockReinforcedGlass());
+        event.getRegistry().register(new GlassBlock(
+            Block.Properties.create(Material.GLASS)
+                .hardnessAndResistance(10, 40)
+        ).setRegistryName(ICBMConstants.PREFIX + "glass_reinforced"));
+
         event.getRegistry().register(new BlockExplosive());
 
         event.getRegistry().register(new BlockEmpTower());
