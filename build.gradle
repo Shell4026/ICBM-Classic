@@ -2,7 +2,6 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'net.minecraftforge.gradle' version '5.1.+'
-    id 'wtf.gofancy.fancygradle' version '1.1.+'
 }
 
 import groovy.json.JsonSlurper
@@ -17,17 +16,7 @@ java {
 }
 
 version = "${version_major}.${version_minor}.${version_revise}"
-archivesBaseName = "ICBM-classic-${version_mc}"
-
-fancyGradle {
-    patches {
-        //https://gitlab.com/gofancy/fancygradle/-/wikis/IDE-Specific-Runs
-        resources
-        coremods
-        asm
-        mergetool
-    }
-}
+archivesBaseName = "ICBM-${version_mc}"
 
 idea {
     module {
@@ -40,7 +29,7 @@ idea {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2860'
+    minecraft 'net.minecraftforge:forge:1.14.4-28.2.26'
 
     // https://projectlombok.org/setup/gradle
     compileOnly 'org.projectlombok:lombok:1.18.24'
@@ -50,16 +39,15 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 
     //Mods
-    implementation files('libs/NBT-Exporter-1.0-forgelib.jar')
-    compileOnly "mezz.jei:jei_1.12.2:4.16.1.302:api"
+    //implementation files('libs/NBT-Exporter-1.0-forgelib.jar')
+    //compileOnly "mezz.jei:jei_1.12.2:4.16.1.302:api"
     //https://github.com/mekanism/Mekanism/tree/1.12
 
     //Junit 5
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
-    testImplementation files('libs/MinecraftJUnit-1.5.0-deobf.jar') //TODO use forge gradle to deobf for me testImplementation fg.deobf('whateveridc:MinecraftJUnit:1.4.0')
-    //TODO example  runtimeOnly(fg.deobf(group = "mezz.jei", name = "jei-1.16.5", version = "7.7.1.121"))
+    // testImplementation files('libs/MinecraftJUnit-1.5.0-deobf.jar')
 
     //Resource injector
     // https://hosuaby.github.io/inject-resources/0.3.2/asciidoc/#inject-resources-junit-jupiter
@@ -73,39 +61,46 @@ dependencies {
 
 
 minecraft {
-    mappings channel: 'snapshot', version: '20171003-1.12'
+    mappings channel: 'snapshot', version: '20190719-1.14.3'
 
     accessTransformer = file('src/main/resources/META-INF/ICBMClassic_at.cfg')
 
     runs {
         client {
-            workingDirectory project.file('run/client')
+            workingDirectory project.file('run')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
+            mods {
+                icbm {
+                    source sourceSets.main
+                }
+            }
         }
 
         server {
-            workingDirectory project.file('run/server')
+            workingDirectory project.file('run')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
+            mods {
+                icbm {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+            args '--mod', 'icbm', '--all', '--output', file('src/generated/resources/')
+            mods {
+                icbm {
+                    source sourceSets.main
+                }
+            }
         }
     }
 }
-
-task filterTokens(type: Sync) {
-    duplicatesStrategy = 'include'
-
-    // this will ensure that this task is redone when the versions change.
-    inputs.property 'version', version
-
-    from sourceSets.main.java
-    filter(ReplaceTokens, tokens: [VERSION: version.toString()])
-    into "$buildDir/sources"
-}
-
-/*compileJava {
-    source = filterTokens.outputs
-}*/
 
 test {
     useJUnitPlatform()
