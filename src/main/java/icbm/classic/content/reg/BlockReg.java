@@ -25,10 +25,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
+import net.minecraftforge.registries.ObjectHolder;
 
 /**
  * Created by Dark(DarkGuardsman, Robin) on 1/7/19.
@@ -83,7 +83,10 @@ public class BlockReg
     {
         event.getRegistry().register(new BlockGlassPressurePlate());
         event.getRegistry().register(new BlockGlassButton());
-        event.getRegistry().register(new BlockSpikes());
+
+        event.getRegistry().register(new BlockSpikes().setRegistryName(ICBMConstants.PREFIX + "spikes_normal"));
+        event.getRegistry().register(new BlockSpikes().setFire(true).setRegistryName(ICBMConstants.PREFIX + "spikes_fire"));
+        event.getRegistry().register(new BlockSpikes().setPoison(true).setRegistryName(ICBMConstants.PREFIX + "spikes_poison"));
 
         event.getRegistry().register(new Block(
             Block.Properties.create(Material.ROCK)
