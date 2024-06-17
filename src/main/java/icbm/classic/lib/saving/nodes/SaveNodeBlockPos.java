@@ -1,13 +1,13 @@
 package icbm.classic.lib.saving.nodes;
 
 import icbm.classic.lib.saving.NbtSaveNode;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public class SaveNodeBlockPos<E> extends NbtSaveNode<E, NBTTagCompound>
+public class SaveNodeBlockPos<E> extends NbtSaveNode<E, CompoundNBT>
 {
     public SaveNodeBlockPos(final String name, Function<E, BlockPos> save, BiConsumer<E, BlockPos> load) {
         super(name,
@@ -16,9 +16,9 @@ public class SaveNodeBlockPos<E> extends NbtSaveNode<E, NBTTagCompound>
         );
     }
 
-    public static NBTTagCompound save(BlockPos pos) {
+    public static CompoundNBT save(BlockPos pos) {
         if(pos != null) {
-            final NBTTagCompound compound = new NBTTagCompound();
+            final CompoundNBT compound = new CompoundNBT();
             compound.setInteger("x", pos.getX());
             compound.setInteger("y", pos.getY());
             compound.setInteger("z", pos.getZ());
@@ -27,7 +27,7 @@ public class SaveNodeBlockPos<E> extends NbtSaveNode<E, NBTTagCompound>
         return null;
     }
 
-    public static BlockPos load(NBTTagCompound data) {
+    public static BlockPos load(CompoundNBT data) {
         return new BlockPos(
             data.getInteger("x"),
             data.getInteger("y"),

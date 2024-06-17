@@ -2,8 +2,8 @@ package icbm.classic.content.blocks.emptower.gui;
 
 import icbm.classic.content.blocks.emptower.TileEMPTower;
 import icbm.classic.prefab.gui.ContainerBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 
@@ -13,7 +13,7 @@ import net.minecraftforge.items.SlotItemHandler;
  */
 public class ContainerEMPTower extends ContainerBase<TileEMPTower>
 {
-    public ContainerEMPTower(EntityPlayer player, TileEMPTower tileEMPTower)
+    public ContainerEMPTower(PlayerEntity player, TileEMPTower tileEMPTower)
     {
         super(player, tileEMPTower);
         // Battery Slot
@@ -23,10 +23,10 @@ public class ContainerEMPTower extends ContainerBase<TileEMPTower>
 
     /** Called to transfer a stack from one inventory to the other eg. when shift clicking. */
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int slotIndex)
+    public ItemStack transferStackInSlot(PlayerEntity par1EntityPlayer, int slotIndex)
     {
         ItemStack targetItemStackCopy = null;
-        Slot targetSlot = (Slot) this.inventorySlots.get(slotIndex);
+        Slot targetSlot = (net.minecraft.inventory.container.Slot) this.inventorySlots.get(slotIndex);
 
         if (targetSlot != null && targetSlot.getHasStack())
         {

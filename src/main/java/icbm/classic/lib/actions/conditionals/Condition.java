@@ -5,12 +5,12 @@ import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public abstract class Condition implements ICondition, INBTSerializable<NBTTagCompound> {
+public abstract class Condition implements ICondition, INBTSerializable<CompoundNBT> {
     /**
      * Display name
      */
@@ -22,18 +22,18 @@ public abstract class Condition implements ICondition, INBTSerializable<NBTTagCo
     @Override
     public ITextComponent getDisplayName() {
         if (name != null) {
-            return new TextComponentTranslation(getTranslationKey() + ".user_defined_name", name);
+            return new TranslationTextComponent(getTranslationKey() + ".user_defined_name", name);
         }
-        return new TextComponentTranslation(getTranslationKey());
+        return new TranslationTextComponent(getTranslationKey());
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
+    public CompoundNBT serializeNBT() {
         return SAVE_LOGIC.save(this);
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         SAVE_LOGIC.load(this, nbt);
     }
 

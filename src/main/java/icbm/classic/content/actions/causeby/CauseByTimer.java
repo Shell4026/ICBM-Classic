@@ -1,7 +1,6 @@
 package icbm.classic.content.actions.causeby;
 
 import icbm.classic.ICBMConstants;
-import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.content.missile.logic.source.cause.ActionCause;
 import icbm.classic.lib.actions.conditionals.timer.TimerCondition;
@@ -9,7 +8,7 @@ import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
@@ -37,12 +36,12 @@ public class CauseByTimer extends ActionCause implements IActionCause {
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
+    public CompoundNBT serializeNBT() {
         return SAVE_LOGIC.save(this, super.serializeNBT());
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         super.deserializeNBT(nbt);
         SAVE_LOGIC.load(this, nbt);
     }

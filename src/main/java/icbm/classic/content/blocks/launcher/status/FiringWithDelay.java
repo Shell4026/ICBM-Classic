@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class FiringWithDelay extends BuildableObject<FiringWithDelay, IBuilderRegistry<IActionStatus>> implements IActionStatus {
 
@@ -43,7 +43,7 @@ public class FiringWithDelay extends BuildableObject<FiringWithDelay, IBuilderRe
     @Override
     public ITextComponent message() {
         if(message == null) {
-            message = new TextComponentTranslation(LauncherLangs.STATUS_FIRING_DELAYED, delay);
+            message = new TranslationTextComponent(LauncherLangs.STATUS_FIRING_DELAYED, delay);
         }
         return message;
     }

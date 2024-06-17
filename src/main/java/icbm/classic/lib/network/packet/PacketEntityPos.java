@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -75,7 +75,7 @@ public class PacketEntityPos extends PacketBase<PacketEntityPos>
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void handleClientSide(Minecraft minecraft, EntityPlayer player)
+    public void handleClientSide(Minecraft minecraft, PlayerEntity player)
     {
         if (player != null && player.world.provider.getDimension() == world)
         {
@@ -92,7 +92,7 @@ public class PacketEntityPos extends PacketBase<PacketEntityPos>
     }
 
     @Override
-    public void handleServerSide(EntityPlayer player)
+    public void handleServerSide(PlayerEntity player)
     {
     }
 }

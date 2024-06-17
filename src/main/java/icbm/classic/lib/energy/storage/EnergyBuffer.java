@@ -4,7 +4,7 @@ import icbm.classic.config.ConfigMain;
 import icbm.classic.lib.energy.system.EnergySystem;
 import icbm.classic.lib.energy.system.IEnergySystem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagInt;
+import net.minecraft.nbt.IntNBT;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.IEnergyStorage;
 
@@ -16,7 +16,7 @@ import java.util.function.Supplier;
  *
  * Created by Dark on 8/15/2015.
  */
-public class EnergyBuffer implements IEnergyStorage, INBTSerializable<NBTTagInt>
+public class EnergyBuffer implements IEnergyStorage, INBTSerializable<IntNBT>
 {
     private final Supplier<Integer> storageLimit;
 
@@ -178,13 +178,13 @@ public class EnergyBuffer implements IEnergyStorage, INBTSerializable<NBTTagInt>
     }
 
     @Override
-    public NBTTagInt serializeNBT()
+    public IntNBT serializeNBT()
     {
-        return new NBTTagInt(getEnergyStored());
+        return new IntNBT(getEnergyStored());
     }
 
     @Override
-    public void deserializeNBT(NBTTagInt nbt)
+    public void deserializeNBT(IntNBT nbt)
     {
         setEnergyStored(nbt.getInt());
     }

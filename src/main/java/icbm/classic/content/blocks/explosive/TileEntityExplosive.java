@@ -6,20 +6,18 @@ import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.actions.data.ActionFields;
 import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.api.tile.IRotatable;
-import icbm.classic.content.blast.BlastBreach;
 import icbm.classic.content.entity.EntityExplosive;
 import icbm.classic.content.missile.logic.source.ActionSource;
-import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.lib.actions.fields.ActionFieldProvider;
 import icbm.classic.lib.capability.ex.CapabilityExplosiveStack;
 import icbm.classic.lib.transform.vector.Pos;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
 
@@ -40,11 +38,11 @@ public class TileEntityExplosive extends TileEntity implements IRotatable
      * Reads a tile entity from NBT.
      */
     @Override
-    public void readFromNBT(NBTTagCompound nbt)
+    public void readFromNBT(CompoundNBT nbt)
     {
         super.readFromNBT(nbt);
         if(nbt.hasKey(NBT_EXPLOSIVE_STACK, 10)) {
-            final NBTTagCompound itemStackTag = nbt.getCompoundTag(NBT_EXPLOSIVE_STACK);
+            final CompoundNBT itemStackTag = nbt.getCompoundTag(NBT_EXPLOSIVE_STACK);
             capabilityExplosive = new CapabilityExplosiveStack(new ItemStack(itemStackTag));
         }
     }
@@ -53,7 +51,7 @@ public class TileEntityExplosive extends TileEntity implements IRotatable
      * Writes a tile entity to NBT.
      */
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+    public CompoundNBT writeToNBT(CompoundNBT nbt)
     {
         if (capabilityExplosive != null && capabilityExplosive.toStack() != null)
         {
@@ -63,14 +61,14 @@ public class TileEntityExplosive extends TileEntity implements IRotatable
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+    public boolean hasCapability(Capability<?> capability, @Nullable Direction facing)
     {
         return capability == ICBMClassicAPI.EXPLOSIVE_CAPABILITY && capabilityExplosive != null || super.hasCapability(capability, facing);
     }
 
     @Override
     @Nullable
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+    public <T> T getCapability(Capability<T> capability, @Nullable Direction facing)
     {
         if (capability == ICBMClassicAPI.EXPLOSIVE_CAPABILITY)
         {
@@ -88,7 +86,7 @@ public class TileEntityExplosive extends TileEntity implements IRotatable
             // TODO handle this better in 1.13+ as this is a temp work around for direction being funky for breach
             if(capabilityExplosive.getExplosiveData() == ICBMExplosives.BREACHING) {
                 final IActionSource source = new ActionSource(world, new Vec3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5), null);
-                final EnumFacing direction = this.getDirection().getOpposite();
+                final Direction direction = this.getDirection().getOpposite();
                 capabilityExplosive.getExplosiveData()
                     .create(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, source, new ActionFieldProvider().field(ActionFields.HOST_DIRECTION, () -> direction))
                     .doAction();
@@ -111,33 +109,33 @@ public class TileEntityExplosive extends TileEntity implements IRotatable
     }
 
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket()
+    public SUpdateTileEntityPacket getUpdatePacket()
     {
-        return new SPacketUpdateTileEntity(pos, 0, getUpdateTag());
+        return new SUpdateTileEntityPacket(pos, 0, getUpdateTag());
     }
 
     @Override
-    public NBTTagCompound getUpdateTag()
+    public CompoundNBT getUpdateTag()
     {
-        return writeToNBT(new NBTTagCompound());
+        return writeToNBT(new CompoundNBT());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt)
     {
         readFromNBT(pkt.getNbtCompound());
     }
 
     @Override
-    public EnumFacing getDirection()
+    public Direction getDirection()
     {
-        return EnumFacing.getFront(this.getBlockMetadata());
+        return Direction.getFront(this.getBlockMetadata());
     }
 
     @Override
-    public void setDirection(EnumFacing facingDirection)
+    public void setDirection(Direction facingDirection)
     {
-        IBlockState state = world.getBlockState(pos);
+        BlockState state = world.getBlockState(pos);
         state = state.withProperty(BlockExplosive.ROTATION_PROP, facingDirection);
         this.world.setBlockState(pos, state, 2);
     }

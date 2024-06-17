@@ -3,7 +3,7 @@ package icbm.classic.datafix;
 import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.content.reg.BlockReg;
 import icbm.classic.content.reg.ItemReg;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.datafix.IFixableData;
 
 public class ItemStackDataFixer implements IFixableData
@@ -11,7 +11,7 @@ public class ItemStackDataFixer implements IFixableData
     private static final String ID = "id";
 
     @Override
-    public NBTTagCompound fixTagCompound(NBTTagCompound existingSave)
+    public CompoundNBT fixTagCompound(CompoundNBT existingSave)
     {
         if (existingSave.hasKey(ID))
         {
@@ -27,7 +27,7 @@ public class ItemStackDataFixer implements IFixableData
         return existingSave;
     }
 
-    private void fixExSave(NBTTagCompound stackSave) {
+    private void fixExSave(CompoundNBT stackSave) {
         if(stackSave.hasKey("Damage")) {
             final int damage = stackSave.getInteger("Damage");
 

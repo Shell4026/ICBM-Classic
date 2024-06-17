@@ -9,10 +9,10 @@ import icbm.classic.client.render.entity.layer.LayerChickenHelmet;
 import icbm.classic.config.ConfigClient;
 import icbm.classic.lib.transform.vector.Pos;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderChicken;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.ChickenRenderer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.EntityChicken;
+import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -29,9 +29,9 @@ public class ClientProxy extends CommonProxy
     public void init()
     {
         super.init();
-        final Render render = Minecraft.getMinecraft().getRenderManager().getEntityClassRenderObject(EntityChicken.class);
-        if(render instanceof RenderChicken) {
-            ((RenderChicken) render).addLayer(new LayerChickenHelmet((RenderChicken) render));
+        final EntityRenderer render = Minecraft.getMinecraft().getRenderManager().getEntityClassRenderObject(ChickenEntity.class);
+        if(render instanceof ChickenRenderer) {
+            ((ChickenRenderer) render).addLayer(new LayerChickenHelmet((ChickenRenderer) render));
         }
     }
 

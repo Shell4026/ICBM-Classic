@@ -10,8 +10,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
@@ -38,7 +38,7 @@ public class EntityCause extends ActionCause implements ICausedByEntity {
         entity = source;
         name = source.getName();
         id = source.getUniqueID();
-        isPlayer = source instanceof EntityPlayer;
+        isPlayer = source instanceof PlayerEntity;
     }
 
     @Override
@@ -59,12 +59,12 @@ public class EntityCause extends ActionCause implements ICausedByEntity {
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
+    public CompoundNBT serializeNBT() {
         return SAVE_LOGIC.save(this, super.serializeNBT());
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         super.deserializeNBT(nbt);
         SAVE_LOGIC.load(this, nbt);
     }

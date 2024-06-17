@@ -1,6 +1,6 @@
 package icbm.classic.prefab.tile;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 /**
  * Created by Robin on 1/8/2015.
@@ -14,7 +14,7 @@ public interface IGuiTile
      * @param player The player viewing the Gui
      * @return A GuiScreen/Container to be displayed to the user, null if none.
      */
-    default Object getServerGuiElement(int ID, EntityPlayer player)
+    default Object getServerGuiElement(int ID, PlayerEntity player)
     {
         return null;
     }
@@ -28,7 +28,7 @@ public interface IGuiTile
      * @param player The player viewing the Gui
      * @return A GuiScreen/Container to be displayed to the user, null if none.
      */
-    default Object getClientGuiElement(int ID, EntityPlayer player)
+    default Object getClientGuiElement(int ID, PlayerEntity player)
     {
         return null;
     }

@@ -11,12 +11,12 @@ import icbm.classic.lib.capability.ex.CapabilityExplosiveEntity;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import icbm.classic.lib.saving.NbtSaveNode;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.translation.I18n;
@@ -79,7 +79,7 @@ public class EntityExplosiveMissile extends EntityMissile<EntityExplosiveMissile
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+    public <T> T getCapability(Capability<T> capability, @Nullable Direction facing)
     {
         if(capability == ICBMClassicAPI.EXPLOSIVE_CAPABILITY) {
             return ICBMClassicAPI.EXPLOSIVE_CAPABILITY.cast(explosive);
@@ -88,7 +88,7 @@ public class EntityExplosiveMissile extends EntityMissile<EntityExplosiveMissile
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+    public boolean hasCapability(Capability<?> capability, @Nullable Direction facing)
     {
         return capability == ICBMClassicAPI.EXPLOSIVE_CAPABILITY
             || super.hasCapability(capability, facing);
@@ -108,7 +108,7 @@ public class EntityExplosiveMissile extends EntityMissile<EntityExplosiveMissile
     @Override
     public void writeSpawnData(ByteBuf additionalMissileData)
     {
-        final NBTTagCompound saveData = SAVE_LOGIC.save(this, new NBTTagCompound());
+        final CompoundNBT saveData = SAVE_LOGIC.save(this, new CompoundNBT());
         ByteBufUtils.writeTag(additionalMissileData, saveData);
         super.writeSpawnData(additionalMissileData);
     }
@@ -116,7 +116,7 @@ public class EntityExplosiveMissile extends EntityMissile<EntityExplosiveMissile
     @Override
     public void readSpawnData(ByteBuf additionalMissileData)
     {
-        final NBTTagCompound saveData = ByteBufUtils.readTag(additionalMissileData);
+        final CompoundNBT saveData = ByteBufUtils.readTag(additionalMissileData);
         SAVE_LOGIC.load(this, saveData);
         super.readSpawnData(additionalMissileData);
     }
@@ -129,7 +129,7 @@ public class EntityExplosiveMissile extends EntityMissile<EntityExplosiveMissile
     }
 
     @Override
-    public boolean processInitialInteract(@Nonnull EntityPlayer player, @Nonnull EnumHand hand)
+    public boolean processInitialInteract(@Nonnull PlayerEntity player, @Nonnull Hand hand)
     {
         //Allow missile to override interaction
         if (ICBMClassicAPI.EX_MISSILE_REGISTRY.onInteraction(this, player, hand))
@@ -151,14 +151,14 @@ public class EntityExplosiveMissile extends EntityMissile<EntityExplosiveMissile
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound nbt)
+    public void readEntityFromNBT(CompoundNBT nbt)
     {
         super.readEntityFromNBT(nbt);
         SAVE_LOGIC.load(this, nbt);
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound nbt)
+    public void writeEntityToNBT(CompoundNBT nbt)
     {
         super.writeEntityToNBT(nbt);
         SAVE_LOGIC.save(this, nbt);
@@ -166,7 +166,7 @@ public class EntityExplosiveMissile extends EntityMissile<EntityExplosiveMissile
 
     private static final NbtSaveHandler<EntityExplosiveMissile> SAVE_LOGIC = new NbtSaveHandler<EntityExplosiveMissile>()
         .mainRoot()
-        /* */.node(new NbtSaveNode<EntityExplosiveMissile, NBTTagCompound>("explosive",
+        /* */.node(new NbtSaveNode<EntityExplosiveMissile, CompoundNBT>("explosive",
             (missile) -> missile.explosive.serializeNBT(),
             (missile, data) -> missile.explosive.deserializeNBT(data))
         )

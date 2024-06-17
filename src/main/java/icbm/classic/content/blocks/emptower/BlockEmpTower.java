@@ -2,13 +2,14 @@ package icbm.classic.content.blocks.emptower;
 
 import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -21,11 +22,11 @@ import javax.annotation.Nullable;
  *
  * Created by Dark(DarkGuardsman, Robin) on 1/23/2018.
  */
-public class BlockEmpTower extends BlockContainer
+public class BlockEmpTower extends ContainerBlock
 {
     public static final PropertyTowerStates TOWER_MODELS = new PropertyTowerStates();
-    public static IBlockState COIL;
-    public static IBlockState ELECTRIC;
+    public static BlockState COIL;
+    public static BlockState ELECTRIC;
 
     public BlockEmpTower()
     {
@@ -47,19 +48,19 @@ public class BlockEmpTower extends BlockContainer
     }
 
     @Override
-    public int damageDropped(IBlockState state)
+    public int damageDropped(BlockState state)
     {
         return getMetaFromState(state);
     }
 
     @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand)
+    public BlockState getStateForPlacement(World world, BlockPos pos, Direction facing, float hitX, float hitY, float hitZ, int meta, LivingEntity placer, Hand hand)
     {
         return getStateFromMeta(meta);
     }
 
     @Override
-    public IBlockState getStateFromMeta(int meta)
+    public BlockState getStateFromMeta(int meta)
     {
         if(meta == 1) {
             return getDefaultState().withProperty(TOWER_MODELS, PropertyTowerStates.EnumTowerTypes.SPIN);
@@ -68,7 +69,7 @@ public class BlockEmpTower extends BlockContainer
     }
 
     @Override
-    public int getMetaFromState(IBlockState state)
+    public int getMetaFromState(BlockState state)
     {
         if(state.getValue(TOWER_MODELS) == PropertyTowerStates.EnumTowerTypes.SPIN) {
             return 1;
@@ -77,7 +78,7 @@ public class BlockEmpTower extends BlockContainer
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, BlockState state, PlayerEntity playerIn, Hand hand, Direction facing, float hitX, float hitY, float hitZ)
     {
         if (!worldIn.isRemote)
         {
@@ -87,37 +88,37 @@ public class BlockEmpTower extends BlockContainer
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state)
+    public boolean isOpaqueCube(BlockState state)
     {
         return false;
     }
 
     @Override
-    public boolean isFullCube(IBlockState state)
+    public boolean isFullCube(BlockState state)
     {
         return false;
     }
 
     @Override
-    public boolean hasComparatorInputOverride(IBlockState state)
+    public boolean hasComparatorInputOverride(BlockState state)
     {
         return false;
     }
 
     @Override
-    public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos)
+    public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos)
     {
         return 0; //TODO output charge amount
     }
 
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state)
+    public BlockRenderType getRenderType(BlockState state)
     {
-        return EnumBlockRenderType.MODEL;
+        return BlockRenderType.MODEL;
     }
 
     @Override
-    public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer)
+    public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer)
     {
         if(state == ELECTRIC) {
             return BlockRenderLayer.TRANSLUCENT == layer;

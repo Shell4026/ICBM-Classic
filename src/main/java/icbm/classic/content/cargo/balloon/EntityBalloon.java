@@ -1,6 +1,5 @@
 package icbm.classic.content.cargo.balloon;
 
-import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
 import icbm.classic.content.reg.ItemReg;
 import icbm.classic.lib.data.LazyBuilder;
@@ -11,9 +10,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -91,7 +90,7 @@ public class EntityBalloon extends EntityProjectile<EntityBalloon> implements IE
     {
         if (this.isPassenger(passenger))
         {
-            if(passenger instanceof EntityItem)
+            if(passenger instanceof ItemEntity)
             {
                 passenger.setPosition(this.posX, this.posY - 0.65, this.posZ);
             }
@@ -169,14 +168,14 @@ public class EntityBalloon extends EntityProjectile<EntityBalloon> implements IE
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound tag)
+    public void readEntityFromNBT(CompoundNBT tag)
     {
         super.readEntityFromNBT(tag);
         SAVE_LOGIC.load(this, tag);
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound tag)
+    public void writeEntityToNBT(CompoundNBT tag)
     {
         super.writeEntityToNBT(tag);
         SAVE_LOGIC.save(this, tag);

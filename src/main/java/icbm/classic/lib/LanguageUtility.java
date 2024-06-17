@@ -1,11 +1,11 @@
 package icbm.classic.lib;
 
 import icbm.classic.ICBMClassic;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.translation.I18n;
 
 import java.util.ArrayList;
@@ -130,7 +130,7 @@ public class LanguageUtility
      */
     public static ITextComponent getLocalChat(String key)
     {
-        return new TextComponentTranslation(key);
+        return new TranslationTextComponent(key);
     }
 
     /**
@@ -140,7 +140,7 @@ public class LanguageUtility
      * @param player - player who will receive the message
      * @param key    - - translation key, Example 'tile.sometile.name' or 'tile.modname:sometile.name'
      */
-    public static void addChatToPlayer(EntityPlayer player, String key)
+    public static void addChatToPlayer(PlayerEntity player, String key)
     {
         if (player != null)
         {

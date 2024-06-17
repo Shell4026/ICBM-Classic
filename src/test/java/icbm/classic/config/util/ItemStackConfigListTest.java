@@ -1,17 +1,15 @@
 package icbm.classic.config.util;
 
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Bootstrap;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Bootstrap;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.function.Consumer;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class ItemStackConfigListTest {
 
@@ -38,7 +36,7 @@ class ItemStackConfigListTest {
         void itemStackWithValue() {
             final StubbedList configList = new ItemStackConfigListTest.StubbedList("valueTest", (config) -> {});
             configList.setDefault(new ResourceLocation("minecraft:dirt"), 1, 0);
-            Assertions.assertEquals(1, configList.getValue(new ItemStack(Blocks.DIRT)));
+            Assertions.assertEquals(1, configList.getValue(new ItemStack(net.minecraft.block.Blocks.DIRT)));
         }
 
         @Test

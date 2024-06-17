@@ -9,10 +9,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.ItemBlock;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -105,7 +105,7 @@ public class EntityParachute extends EntityProjectile<EntityParachute> implement
     @Override
     public void addPassenger(Entity passenger) {
         super.addPassenger(passenger);
-        if(passenger instanceof EntityItem)
+        if(passenger instanceof ItemEntity)
         {
             this.setRenderScale(1);
         }
@@ -124,9 +124,9 @@ public class EntityParachute extends EntityProjectile<EntityParachute> implement
     {
         if (this.isPassenger(passenger))
         {
-            if(passenger instanceof EntityItem)
+            if(passenger instanceof ItemEntity)
             {
-                if(((EntityItem) passenger).getItem().getItem() instanceof ItemBlock)
+                if(((ItemEntity) passenger).getItem().getItem() instanceof BlockItem)
                 {
                     passenger.setPosition(this.posX, this.posY - 0.6, this.posZ);
                 }
@@ -188,7 +188,7 @@ public class EntityParachute extends EntityProjectile<EntityParachute> implement
         this.setDead(); //TODO have parachute drift away and then despawn with particles
 
         if(isServer() && this.dropItemStack != null && !this.dropItemStack.isEmpty()) {
-            final EntityItem entityitem = new EntityItem(this.world, this.posX, this.posY, this.posZ, this.dropItemStack.copy());
+            final ItemEntity entityitem = new ItemEntity(this.world, this.posX, this.posY, this.posZ, this.dropItemStack.copy());
             entityitem.setDefaultPickupDelay();
             world.spawnEntity(entityitem);
         }
@@ -199,14 +199,14 @@ public class EntityParachute extends EntityProjectile<EntityParachute> implement
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound tag)
+    public void readEntityFromNBT(CompoundNBT tag)
     {
         super.readEntityFromNBT(tag);
         SAVE_LOGIC.load(this, tag);
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound tag)
+    public void writeEntityToNBT(CompoundNBT tag)
     {
         super.writeEntityToNBT(tag);
         SAVE_LOGIC.save(this, tag);

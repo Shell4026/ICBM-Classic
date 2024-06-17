@@ -4,14 +4,14 @@ import icbm.classic.content.blocks.explosive.BlockExplosive;
 import icbm.classic.content.entity.EntityExplosive;
 import icbm.classic.content.reg.BlockReg;
 import icbm.classic.prefab.tile.BlockICBM;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -20,9 +20,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 
 @SideOnly(Side.CLIENT)
-public class RenderExBlock extends Render<EntityExplosive>
+public class RenderExBlock extends EntityRenderer<EntityExplosive>
 {
-    public RenderExBlock(RenderManager renderManager)
+    public RenderExBlock(EntityRendererManager renderManager)
     {
         super(renderManager);
     }
@@ -39,8 +39,8 @@ public class RenderExBlock extends Render<EntityExplosive>
 
     public void renderBlock(EntityExplosive entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
-        final IBlockState blockState = BlockReg.blockExplosive.getDefaultState()
-                .withProperty(BlockICBM.ROTATION_PROP, EnumFacing.UP) //TODO get direction from rotation
+        final BlockState blockState = BlockReg.blockExplosive.getDefaultState()
+                .withProperty(BlockICBM.ROTATION_PROP, Direction.UP) //TODO get direction from rotation
                 .withProperty(BlockExplosive.EX_PROP, entity.getExplosiveData());
         final BlockRendererDispatcher blockrendererdispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
 
@@ -56,7 +56,7 @@ public class RenderExBlock extends Render<EntityExplosive>
             GlStateManager.scale(f1, f1, f1);
         }
 
-        this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        this.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 
         GlStateManager.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
         GlStateManager.translate(-0.5F, -0.5F, 0.5F);
@@ -89,6 +89,6 @@ public class RenderExBlock extends Render<EntityExplosive>
     @Override
     protected ResourceLocation getEntityTexture(EntityExplosive entity)
     {
-        return TextureMap.LOCATION_BLOCKS_TEXTURE;
+        return AtlasTexture.LOCATION_BLOCKS_TEXTURE;
     }
 }

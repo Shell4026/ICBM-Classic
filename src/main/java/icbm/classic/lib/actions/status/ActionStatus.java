@@ -5,7 +5,7 @@ import icbm.classic.api.actions.status.IActionStatus;
 import lombok.NoArgsConstructor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nonnull;
 
@@ -58,7 +58,7 @@ public class ActionStatus implements IActionStatus {
     @Override
     public ITextComponent message() {
         if(textComponent == null) {
-            textComponent = new TextComponentTranslation(translationKey);
+            textComponent = new TranslationTextComponent(translationKey);
         }
         return textComponent;
     }

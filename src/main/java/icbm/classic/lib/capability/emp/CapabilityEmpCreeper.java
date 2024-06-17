@@ -3,9 +3,9 @@ package icbm.classic.lib.capability.emp;
 import icbm.classic.api.actions.IAction;
 import icbm.classic.api.caps.IEMPReceiver;
 import icbm.classic.config.ConfigEMP;
-import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.entity.effect.LightningBoltEntity;
+import net.minecraft.entity.monster.CreeperEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -19,9 +19,9 @@ import javax.annotation.Nullable;
  */
 public class CapabilityEmpCreeper implements IEMPReceiver, ICapabilityProvider
 {
-    public final EntityCreeper creeper;
+    public final CreeperEntity creeper;
 
-    public CapabilityEmpCreeper(EntityCreeper creeper)
+    public CapabilityEmpCreeper(CreeperEntity creeper)
     {
         this.creeper = creeper;
     }
@@ -32,19 +32,19 @@ public class CapabilityEmpCreeper implements IEMPReceiver, ICapabilityProvider
         if (ConfigEMP.ALLOW_LIGHTING_CREEPER)
         {
             //Attack creeper with lighting TODO replace with data manager call
-            creeper.onStruckByLightning(new EntityLightningBolt(world, creeper.posX, creeper.posY, creeper.posZ, true));
+            creeper.onStruckByLightning(new LightningBoltEntity(world, creeper.posX, creeper.posY, creeper.posZ, true));
         }
         return power;
     }
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
+    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction facing)
     {
         return capability == CapabilityEMP.EMP;
     }
 
     @Nullable
     @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
+    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing)
     {
         return capability == CapabilityEMP.EMP ? (T) this : null;
     }

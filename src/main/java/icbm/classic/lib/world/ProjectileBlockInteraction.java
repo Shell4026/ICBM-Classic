@@ -4,13 +4,13 @@ import icbm.classic.ICBMClassic;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityEndGateway;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.tileentity.EndGatewayTileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -23,13 +23,13 @@ import java.util.HashMap;
 @NoArgsConstructor(access = AccessLevel.NONE)
 public final class ProjectileBlockInteraction {
 
-    private static final HashMap<IBlockState, IProjectileBlockInteraction> stateToInteraction = new HashMap();
+    private static final HashMap<BlockState, IProjectileBlockInteraction> stateToInteraction = new HashMap();
     private static final HashMap<Block, IProjectileBlockInteraction> blockToInteraction = new HashMap();
     private static final HashMap<Material, IProjectileBlockInteraction> materialToInteraction = new HashMap();
 
     // TODO once on 1.19 use TAG system to easily ID blocks "CollisionBasedPortal"
 
-    public static void addBlockStateInteraction(IBlockState state, IProjectileBlockInteraction function) {
+    public static void addBlockStateInteraction(BlockState state, IProjectileBlockInteraction function) {
         if(stateToInteraction.containsKey(state)) {
             ICBMClassic.logger().warn("interaction already exists for " + state + " replacing", new RuntimeException());
         }
@@ -72,7 +72,7 @@ public final class ProjectileBlockInteraction {
         });
     }
 
-    private static boolean breakBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
+    private static boolean breakBlock(World world, BlockPos pos, BlockState state, Entity entity) {
         final Block block = state.getBlock();
         if (block.canEntityDestroy(state, world, pos, entity))
         {
@@ -83,7 +83,7 @@ public final class ProjectileBlockInteraction {
         return false;
     }
 
-    public static IProjectileBlockInteraction.EnumHitReactions handleSpecialInteraction(World world, BlockPos pos, Vec3d hit, EnumFacing side, IBlockState state, Entity entity) {
+    public static IProjectileBlockInteraction.EnumHitReactions handleSpecialInteraction(World world, BlockPos pos, Vec3d hit, Direction side, BlockState state, Entity entity) {
 
         IProjectileBlockInteraction func = stateToInteraction.get(state);
         if(func != null) {
@@ -112,12 +112,12 @@ public final class ProjectileBlockInteraction {
     public static void register() {
 
         // Portal handling
-        addCollisionInteraction(Blocks.PORTAL);
-        addCollisionInteraction(Blocks.END_PORTAL);
+        addCollisionInteraction(net.minecraft.block.Blocks.PORTAL);
+        addCollisionInteraction(net.minecraft.block.Blocks.END_PORTAL);
         addBlockInteraction(Blocks.END_GATEWAY, (world, pos, hit, side, state, entity) -> {
             final TileEntity tile = world.getTileEntity(pos);
-            if(tile instanceof TileEntityEndGateway) {
-                ((TileEntityEndGateway) tile).teleportEntity(entity);
+            if(tile instanceof EndGatewayTileEntity) {
+                ((EndGatewayTileEntity) tile).teleportEntity(entity);
                 return IProjectileBlockInteraction.EnumHitReactions.TELEPORTED;
             }
             return IProjectileBlockInteraction.EnumHitReactions.CONTINUE_NO_IMPACT;

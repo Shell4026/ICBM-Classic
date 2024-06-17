@@ -4,7 +4,7 @@ import icbm.classic.ICBMClassic;
 import icbm.classic.config.ConfigMain;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.Vec3i;
 
@@ -28,7 +28,7 @@ public class BlastChemical extends BlastGasBase
     }
 
     @Override
-    protected boolean canGasEffect(EntityLivingBase entity)
+    protected boolean canGasEffect(LivingEntity entity)
     {
         return super.canGasEffect(entity) && !entity.isEntityInvulnerable(CHEMICAL_DAMAGE);
     }
@@ -39,7 +39,7 @@ public class BlastChemical extends BlastGasBase
     }
 
     @Override
-    protected void applyEffect(final EntityLivingBase entity, final int hitCount)
+    protected void applyEffect(final LivingEntity entity, final int hitCount)
     {
         ICBMClassic.chemicalPotion.poisonEntity(location.toPos(), entity);
         if (hitCount > toxicityBuildup)

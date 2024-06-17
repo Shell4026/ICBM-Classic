@@ -8,9 +8,9 @@ import icbm.classic.lib.transform.vector.Pos;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.monster.EntityEnderman;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.entity.monster.EndermanEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -133,11 +133,11 @@ public class BlastEnder extends Blast implements IBlastTickable //TODO handle sa
                             this.teleportTarget = new Vec3d(checkX + 0.5, checkY + 0.5, checkZ + 0.5);
                         }
 
-                        this.world().playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                        this.world().playSound(null, entity.posX, entity.posY, entity.posZ, net.minecraft.util.SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
-                        if (entity instanceof EntityPlayerMP)
+                        if (entity instanceof ServerPlayerEntity)
                         {
-                            ((EntityPlayerMP) entity).connection.setPlayerLocation(this.teleportTarget.x, this.teleportTarget.y, this.teleportTarget.z, entity.rotationYaw, entity.rotationPitch);
+                            ((ServerPlayerEntity) entity).connection.setPlayerLocation(this.teleportTarget.x, this.teleportTarget.y, this.teleportTarget.z, entity.rotationYaw, entity.rotationPitch);
                         }
                         else
                         {
@@ -166,7 +166,7 @@ public class BlastEnder extends Blast implements IBlastTickable //TODO handle sa
         {
             for (int i = 0; i < 8; i++) //TODO check for safe location to spawn
             {
-                EntityEnderman enderman = new EntityEnderman(world());
+                EndermanEntity enderman = new EndermanEntity(world());
                 enderman.setPosition(this.location.x(), this.location.y(), this.location.z());
                 this.world().spawnEntity(enderman);
             }

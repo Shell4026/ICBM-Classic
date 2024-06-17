@@ -16,22 +16,15 @@ import icbm.classic.content.missile.logic.source.ActionSource;
 import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.content.missile.logic.targeting.BasicTargetData;
 import icbm.classic.prefab.item.ItemICBMElectrical;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.EnumAction;
-import net.minecraft.item.IItemPropertyGetter;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.entity.*;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.*;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -63,7 +56,7 @@ public class ItemRocketLauncher extends ItemICBMElectrical
         this.addPropertyOverride(new ResourceLocation("pulling"), new IItemPropertyGetter()
         {
             @SideOnly(Side.CLIENT)
-            public float apply(ItemStack stack, @Nullable World worldIn, @Nullable EntityLivingBase entityIn)
+            public float apply(ItemStack stack, @Nullable World worldIn, @Nullable LivingEntity entityIn)
             {
                 return entityIn != null && entityIn.isHandActive() && entityIn.getActiveItemStack() == stack ? 1.0F : 0.0F;
             }
@@ -83,17 +76,17 @@ public class ItemRocketLauncher extends ItemICBMElectrical
     }
 
     @Override
-    public EnumAction getItemUseAction(ItemStack par1ItemStack)
+    public UseAction getItemUseAction(ItemStack par1ItemStack)
     {
-        return EnumAction.BOW;
+        return UseAction.BOW;
     }
 
     @Override
-    public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase shooter, int timeLeft)
+    public void onPlayerStoppedUsing(ItemStack stack, World world, LivingEntity shooter, int timeLeft)
     {
-        if (shooter instanceof EntityPlayer)
+        if (shooter instanceof PlayerEntity)
         {
-            final EntityPlayer player = (EntityPlayer) shooter;
+            final PlayerEntity player = (PlayerEntity) shooter;
             if (this.getEnergy(stack) >= ENERGY || player.capabilities.isCreativeMode)
             {
                 // Check the player's inventory and look for missiles.
@@ -146,13 +139,13 @@ public class ItemRocketLauncher extends ItemICBMElectrical
                                     if(rayTraceResult != null && rayTraceResult.hitVec != null) {
 
                                         if(fireUpDown && rayTraceResult.hitVec.distanceTo(player.getPositionVector()) < minDistance) { //TODO customize
-                                            player.sendStatusMessage(new TextComponentTranslation("item.icbmclassic:rocketLauncher.error.distance.min", minDistance), true);
+                                            player.sendStatusMessage(new TranslationTextComponent("item.icbmclassic:rocketLauncher.error.distance.min", minDistance), true);
                                             return;
                                         }
                                         missile.setTargetData(new BasicTargetData(rayTraceResult.hitVec));
                                     }
                                     else if(fireUpDown) {
-                                        player.sendStatusMessage(new TextComponentTranslation("item.icbmclassic:rocketLauncher.error.targeting"), true);
+                                        player.sendStatusMessage(new TranslationTextComponent("item.icbmclassic:rocketLauncher.error.targeting"), true);
                                         return;
                                     }
 
@@ -176,13 +169,13 @@ public class ItemRocketLauncher extends ItemICBMElectrical
                                             player.setSneaking(false);
                                         }
 
-                                        else if(player.getHeldItem(EnumHand.OFF_HAND).getItem() == Items.LEAD) {
+                                        else if(player.getHeldItem(Hand.OFF_HAND).getItem() == Items.LEAD) {
 
                                             final double x = shooter.posX;
                                             final double y = shooter.posY;
                                             final double z = shooter.posZ;
 
-                                            for (EntityLiving victim : world.getEntitiesWithinAABB(EntityLiving.class, new AxisAlignedBB(
+                                            for (MobEntity victim : world.getEntitiesWithinAABB(MobEntity.class, new AxisAlignedBB(
                                                 x - 7.0D, y - 7.0D, z - 7.0D,
                                                 x + 7.0D, y + 7.0D, z + 7.0D))
                                             )
@@ -205,12 +198,12 @@ public class ItemRocketLauncher extends ItemICBMElectrical
                                     }
                                     else
                                     {
-                                        player.sendStatusMessage(new TextComponentTranslation("item.icbmclassic:rocketLauncher.error.spawning"), true);
+                                        player.sendStatusMessage(new TranslationTextComponent("item.icbmclassic:rocketLauncher.error.spawning"), true);
                                     }
                                 }
                                 else
                                 {
-                                    player.sendStatusMessage(new TextComponentTranslation("item.icbmclassic:rocketLauncher.error.IMissileAiming", inventoryStack), true);
+                                    player.sendStatusMessage(new TranslationTextComponent("item.icbmclassic:rocketLauncher.error.IMissileAiming", inventoryStack), true);
                                 }
 
                                 //Exit loop to prevent firing all missiles in inventory
@@ -227,7 +220,7 @@ public class ItemRocketLauncher extends ItemICBMElectrical
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand handIn)
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity player, Hand handIn)
     {
         ItemStack itemstack = player.getHeldItem(handIn);
 
@@ -237,11 +230,11 @@ public class ItemRocketLauncher extends ItemICBMElectrical
             if (clickMs - clickTimePlayer.get(player.getName()) < firingDelay)
             {
                 //TODO play weapon empty click audio to note the gun is reloading
-                return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
+                return new ActionResult<ItemStack>(ActionResultType.FAIL, itemstack);
             }
         }
 
         player.setActiveHand(handIn);
-        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
+        return new ActionResult<ItemStack>(ActionResultType.SUCCESS, itemstack);
     }
 }

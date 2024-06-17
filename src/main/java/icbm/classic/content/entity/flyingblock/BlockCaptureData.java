@@ -1,13 +1,12 @@
 package icbm.classic.content.entity.flyingblock;
 
 import icbm.classic.lib.saving.NbtSaveHandler;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -15,17 +14,17 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 @Data
 @NoArgsConstructor
-public class BlockCaptureData implements INBTSerializable<NBTTagCompound> {
+public class BlockCaptureData implements INBTSerializable<CompoundNBT> {
     //TODO maybe replace with BlockSnapshot?
 
     /** Pulled from {@link World#getBlockState(BlockPos)} */
-    private IBlockState blockState;
-    /** Pulled from {@link net.minecraft.block.Block#getItem(World, BlockPos, IBlockState)} */
+    private BlockState blockState;
+    /** Pulled from {@link net.minecraft.block.Block#getItem(World, BlockPos, BlockState)} */
     private ItemStack sourceStack;
     /** Saved tile data */
-    private NBTTagCompound tileEntityData;
+    private CompoundNBT tileEntityData;
 
-    public BlockCaptureData(IBlockState state, ItemStack stack) {
+    public BlockCaptureData(BlockState state, ItemStack stack) {
         this.blockState = state;
         this.sourceStack = stack;
     }
@@ -36,14 +35,14 @@ public class BlockCaptureData implements INBTSerializable<NBTTagCompound> {
 
         final TileEntity tileEntity = world.getTileEntity(blockPos); //TODO add config to disable this for specific blocks
         if(tileEntity != null) {
-            this.tileEntityData = new NBTTagCompound();
+            this.tileEntityData = new CompoundNBT();
             tileEntity.writeToNBT(this.tileEntityData);
         }
     }
 
-    public IBlockState getBlockState() {
+    public BlockState getBlockState() {
         if(blockState == null) {
-            this.blockState = Blocks.STONE.getDefaultState();
+            this.blockState = net.minecraft.block.Blocks.STONE.getDefaultState();
         }
         return blockState;
     }
@@ -56,12 +55,12 @@ public class BlockCaptureData implements INBTSerializable<NBTTagCompound> {
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
+    public CompoundNBT serializeNBT() {
         return SAVE_LOGIC.save(this);
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         SAVE_LOGIC.load(this, nbt);
     }
 

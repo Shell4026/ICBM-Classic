@@ -4,8 +4,8 @@ import icbm.classic.config.ConfigMain;
 import icbm.classic.config.util.ItemStackConfigList;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -39,9 +39,9 @@ public class ProtectiveArmorHandler {
         protectionValues.reload();
     }
 
-    public static float getProtectionRating(EntityLivingBase entityLivingBase) {
+    public static float getProtectionRating(LivingEntity entityLivingBase) {
 
-        if(ConfigMain.protectiveArmor.requireHelmet && entityLivingBase.getItemStackFromSlot(EntityEquipmentSlot.HEAD).isEmpty()) {
+        if(ConfigMain.protectiveArmor.requireHelmet && entityLivingBase.getItemStackFromSlot(EquipmentSlotType.HEAD).isEmpty()) {
             return 0;
         }
 

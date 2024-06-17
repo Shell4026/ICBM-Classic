@@ -3,7 +3,7 @@ package icbm.classic.lib.capability.gps;
 import icbm.classic.api.caps.IGPSData;
 import icbm.classic.lib.saving.nodes.SaveNodeVec3d;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nullable;
@@ -34,7 +34,7 @@ public class CapabilityGPSDataItem implements IGPSData {
 
         // Setup data
         if(stack.getTagCompound() == null) {
-            stack.setTagCompound(new NBTTagCompound());
+            stack.setTagCompound(new CompoundNBT());
         }
 
         stack.getTagCompound().setTag(POS_KEY, SaveNodeVec3d.save(position));
@@ -53,7 +53,7 @@ public class CapabilityGPSDataItem implements IGPSData {
 
         // Setup data
         if(stack.getTagCompound() == null) {
-            stack.setTagCompound(new NBTTagCompound());
+            stack.setTagCompound(new CompoundNBT());
         }
 
         stack.getTagCompound().setInteger(DIM_KEY, dimension);

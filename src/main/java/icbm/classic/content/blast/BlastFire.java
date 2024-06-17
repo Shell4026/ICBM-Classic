@@ -2,8 +2,8 @@ package icbm.classic.content.blast;
 
 import icbm.classic.client.ICBMSounds;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 
 public class BlastFire extends Blast
@@ -45,7 +45,7 @@ public class BlastFire extends Blast
                             {
                                 BlockPos targetPosition = new BlockPos(posX, posY, posZ);
                                 double distanceFromCenter = location.distance(targetPosition);
-                                IBlockState blockState = world().getBlockState(targetPosition);
+                                BlockState blockState = world().getBlockState(targetPosition);
                                 Block block = blockState.getBlock();
 
                                 if (!block.isAir(blockState, world, targetPosition))
@@ -62,7 +62,7 @@ public class BlastFire extends Blast
                                     {
                                         boolean canReplace = block.isReplaceable(world(), targetPosition) || block.isAir(blockState, world(), targetPosition);
 
-                                        if (canReplace && Blocks.FIRE.canPlaceBlockAt(world(), targetPosition))
+                                        if (canReplace && net.minecraft.block.Blocks.FIRE.canPlaceBlockAt(world(), targetPosition))
                                         {
                                             world.setBlockState(targetPosition, Blocks.FIRE.getDefaultState(), 3);
                                         }

@@ -3,7 +3,7 @@ package icbm.classic.content.entity;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -99,13 +99,13 @@ public class EntitySmoke extends Entity implements IEntityAdditionalSpawnData
     }
 
     @Override
-    protected void readEntityFromNBT(NBTTagCompound tag)
+    protected void readEntityFromNBT(CompoundNBT tag)
     {
         SAVE_LOGIC.load(this, tag);
     }
 
     @Override
-    protected void writeEntityToNBT(NBTTagCompound tag)
+    protected void writeEntityToNBT(CompoundNBT tag)
     {
         SAVE_LOGIC.save(this, tag);
     }

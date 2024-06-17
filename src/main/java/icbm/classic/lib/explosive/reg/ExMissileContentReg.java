@@ -8,9 +8,9 @@ import icbm.classic.api.missiles.IMissile;
 import icbm.classic.api.reg.content.IExMissileRegistry;
 import icbm.classic.content.reg.ItemReg;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -58,7 +58,7 @@ public class ExMissileContentReg extends ExplosiveContentRegistry implements IEx
     }
 
     @Override
-    public boolean onInteraction(Entity entity, EntityPlayer player, EnumHand hand)
+    public boolean onInteraction(Entity entity, PlayerEntity player, Hand hand)
     {
         return false;
     }

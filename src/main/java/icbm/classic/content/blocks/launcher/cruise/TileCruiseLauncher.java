@@ -36,19 +36,19 @@ import icbm.classic.prefab.tile.TileMachine;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -113,7 +113,7 @@ public class TileCruiseLauncher extends TileMachine implements IGuiTile, ILaunch
     private final TickDoOnce descriptionPacketSender = new TickDoOnce((t) -> PACKET_DESCRIPTION.sendToAllAround(this));
 
     @Getter
-    private final List<EntityPlayer> playersUsing = new LinkedList<>();
+    private final List<PlayerEntity> playersUsing = new LinkedList<>();
 
     public TileCruiseLauncher() {
         tickActions.add(descriptionPacketSender);
@@ -178,29 +178,29 @@ public class TileCruiseLauncher extends TileMachine implements IGuiTile, ILaunch
     {
         if (!hasChargeToFire())
         {
-            return new TextComponentTranslation(LauncherLangs.ERROR_NO_POWER);
+            return new TranslationTextComponent(LauncherLangs.ERROR_NO_POWER);
         }
         // Checks for empty slot
         else if (!missileHolder.hasMissile())
         {
-            return new TextComponentTranslation(LauncherLangs.ERROR_MISSILE_NONE);
+            return new TranslationTextComponent(LauncherLangs.ERROR_MISSILE_NONE);
         }
         else if (!hasTarget())
         {
-            return new TextComponentTranslation(LauncherLangs.ERROR_TARGET_NONE);
+            return new TranslationTextComponent(LauncherLangs.ERROR_TARGET_NONE);
         }
         else if (this.isTooClose(getTarget()))
         {
-           return new TextComponentTranslation(LauncherLangs.ERROR_TARGET_MIN);
+           return new TranslationTextComponent(LauncherLangs.ERROR_TARGET_MIN);
         }
         else if (!canSpawnMissileWithNoCollision())
         {
-            return new TextComponentTranslation(LauncherLangs.ERROR_MISSILE_SPACE);
+            return new TranslationTextComponent(LauncherLangs.ERROR_MISSILE_SPACE);
         }
 
         // TODO check angle limits
 
-        return new TextComponentTranslation(LauncherLangs.STATUS_READY);
+        return new TranslationTextComponent(LauncherLangs.STATUS_READY);
     }
 
     @Override
@@ -222,7 +222,7 @@ public class TileCruiseLauncher extends TileMachine implements IGuiTile, ILaunch
 
             // Check redstone
             if (this.ticks % REDSTONE_CHECK_RATE == 0) {
-                for (EnumFacing side : EnumFacing.VALUES) {
+                for (Direction side : Direction.VALUES) {
                     final int power = world.getRedstonePower(getPos().offset(side), side);
                     if (power > 1) {
                         firingPackage = new FiringPackage(new BasicTargetData(getTarget()), new RedstoneCause(getWorld(), getPos(), getBlockState(), side), 0);
@@ -289,7 +289,7 @@ public class TileCruiseLauncher extends TileMachine implements IGuiTile, ILaunch
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt)
     {
         super.onDataPacket(net, pkt);
         initFromLoad();
@@ -324,7 +324,7 @@ public class TileCruiseLauncher extends TileMachine implements IGuiTile, ILaunch
              for (int x = -1; x < 2; x++) {
                  for (int z = -1; z < 2; z++) {
                      final BlockPos pos = getPos().add(x, y, z);
-                     final IBlockState state = world.getBlockState(pos);
+                     final BlockState state = world.getBlockState(pos);
                      final Block block = state.getBlock();
                      if (!block.isAir(state, world, pos)) {
                          final AxisAlignedBB box = block.getCollisionBoundingBox(state, world, pos);
@@ -349,19 +349,19 @@ public class TileCruiseLauncher extends TileMachine implements IGuiTile, ILaunch
     }
 
     @Override
-    public Object getServerGuiElement(int id, EntityPlayer player)
+    public Object getServerGuiElement(int id, PlayerEntity player)
     {
         return new ContainerCruiseLauncher(player, this);
     }
 
     @Override
-    public Object getClientGuiElement(int id, EntityPlayer player)
+    public Object getClientGuiElement(int id, PlayerEntity player)
     {
         return new GuiCruiseLauncher(player, this);
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+    public boolean hasCapability(Capability<?> capability, @Nullable Direction facing)
     {
         return super.hasCapability(capability, facing)
             || capability == CapabilityEnergy.ENERGY && ConfigMain.REQUIRES_POWER
@@ -373,7 +373,7 @@ public class TileCruiseLauncher extends TileMachine implements IGuiTile, ILaunch
 
     @Override
     @Nullable
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+    public <T> T getCapability(Capability<T> capability, @Nullable Direction facing)
     {
         if(capability == CapabilityEnergy.ENERGY) {
             return (T) energyStorage;
@@ -405,7 +405,7 @@ public class TileCruiseLauncher extends TileMachine implements IGuiTile, ILaunch
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt)
+    public void readFromNBT(CompoundNBT nbt)
     {
         super.readFromNBT(nbt);
         SAVE_LOGIC.load(this, nbt);
@@ -416,7 +416,7 @@ public class TileCruiseLauncher extends TileMachine implements IGuiTile, ILaunch
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+    public CompoundNBT writeToNBT(CompoundNBT nbt)
     {
         SAVE_LOGIC.save(this, nbt);
         return super.writeToNBT(nbt);

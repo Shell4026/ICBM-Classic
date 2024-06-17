@@ -2,9 +2,8 @@ package icbm.classic.content.missile.logic.targeting;
 
 import icbm.classic.ICBMConstants;
 import lombok.NoArgsConstructor;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nonnull;
@@ -36,14 +35,14 @@ public class BallisticTargetingData extends BasicTargetData {
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
-        final NBTTagCompound saveData = super.serializeNBT();
+    public CompoundNBT serializeNBT() {
+        final CompoundNBT saveData = super.serializeNBT();
         saveData.setDouble(NBT_IMPACT_HEIGHT, impactHeightOffset);
         return saveData;
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         super.deserializeNBT(nbt);
         impactHeightOffset = nbt.getDouble(NBT_IMPACT_HEIGHT);
     }

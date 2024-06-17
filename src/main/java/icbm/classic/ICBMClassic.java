@@ -58,19 +58,18 @@ import icbm.classic.lib.thread.WorkerThreadManager;
 import icbm.classic.lib.tracker.EventTracker;
 import icbm.classic.lib.world.ProjectileBlockInteraction;
 import icbm.classic.prefab.item.LootEntryItemStack;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockDispenser;
+import net.minecraft.block.DispenserBlock;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.init.MobEffects;
+import net.minecraft.block.Blocks;
+import net.minecraft.item.Items;
+import net.minecraft.potion.Effects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.datafix.FixTypes;
 import net.minecraft.world.storage.loot.LootPool;
-import net.minecraft.world.storage.loot.LootTableList;
+import net.minecraft.world.storage.loot.LootTables;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ModFixs;
 import net.minecraftforge.event.LootTableLoadEvent;
@@ -161,7 +160,7 @@ public class ICBMClassic
     {
         ///setblock ~ ~ ~ minecraft:chest 0 replace {LootTable:"minecraft:chests/simple_dungeon"}
         final String VANILLA_LOOT_POOL_ID = "main";
-        if (event.getName().equals(LootTableList.CHESTS_ABANDONED_MINESHAFT) || event.getName().equals(LootTableList.CHESTS_SIMPLE_DUNGEON))
+        if (event.getName().equals(LootTables.CHESTS_ABANDONED_MINESHAFT) || event.getName().equals(LootTables.CHESTS_SIMPLE_DUNGEON))
         {
             if (ConfigItems.ENABLE_LOOT_DROPS)
             {
@@ -190,7 +189,7 @@ public class ICBMClassic
                     }
                 }
             }
-        } else if (event.getName().equals(LootTableList.ENTITIES_CREEPER) || event.getName().equals(LootTableList.ENTITIES_BLAZE))
+        } else if (event.getName().equals(LootTables.ENTITIES_CREEPER) || event.getName().equals(LootTables.ENTITIES_BLAZE))
         {
             if (ConfigItems.ENABLE_SULFUR_LOOT_DROPS)
             {
@@ -376,12 +375,12 @@ public class ICBMClassic
         /** Dispenser Handler */
         if (ItemReg.itemGrenade != null)
         {
-            BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ItemReg.itemGrenade, new GrenadeDispenseBehavior());
+            DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY.putObject(ItemReg.itemGrenade, new GrenadeDispenseBehavior());
         }
 
         if (ItemReg.itemBombCart != null)
         {
-            BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ItemReg.itemBombCart, new BombCartDispenseBehavior());
+            DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY.putObject(ItemReg.itemBombCart, new BombCartDispenseBehavior());
         }
 
         // Generate defaults

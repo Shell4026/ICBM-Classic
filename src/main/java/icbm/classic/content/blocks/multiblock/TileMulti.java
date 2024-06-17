@@ -1,7 +1,7 @@
 package icbm.classic.content.blocks.multiblock;
 
 import icbm.classic.lib.NBTConstants;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
@@ -21,7 +21,7 @@ public class TileMulti extends TileEntity
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound)
+    public void readFromNBT(CompoundNBT compound)
     {
         super.readFromNBT(compound);
         if (compound.hasKey(NBTConstants.HOST_POS))
@@ -32,7 +32,7 @@ public class TileMulti extends TileEntity
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound)
+    public CompoundNBT writeToNBT(CompoundNBT compound)
     {
         if (hostPosition != null)
         {

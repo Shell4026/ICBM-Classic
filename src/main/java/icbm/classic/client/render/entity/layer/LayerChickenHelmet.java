@@ -4,24 +4,24 @@ import icbm.classic.ICBMConstants;
 import icbm.classic.client.models.ModelChickenHelmet;
 import icbm.classic.lib.capability.chicken.CapSpaceChicken;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.RenderChicken;
+import net.minecraft.client.renderer.entity.ChickenRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.entity.passive.EntityChicken;
+import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.util.ResourceLocation;
 
-public class LayerChickenHelmet implements LayerRenderer<EntityChicken> {
+public class LayerChickenHelmet implements LayerRenderer<ChickenEntity> {
 
     final ModelChickenHelmet helmet = new ModelChickenHelmet();
     final ResourceLocation texture = new ResourceLocation(ICBMConstants.DOMAIN, "textures/entity/space_chicken.png");
 
-    private final RenderChicken renderChicken;
+    private final ChickenRenderer renderChicken;
 
-    public LayerChickenHelmet(RenderChicken renderChicken) {
+    public LayerChickenHelmet(ChickenRenderer renderChicken) {
         this.renderChicken = renderChicken;
     }
 
     @Override
-    public void doRenderLayer(EntityChicken entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void doRenderLayer(ChickenEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         if(entity.hasCapability(CapSpaceChicken.INSTANCE, null)) {
 
             final CapSpaceChicken cap = entity.getCapability(CapSpaceChicken.INSTANCE, null);

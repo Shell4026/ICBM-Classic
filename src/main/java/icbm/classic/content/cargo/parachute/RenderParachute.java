@@ -2,11 +2,11 @@ package icbm.classic.content.cargo.parachute;
 
 import icbm.classic.client.render.entity.item.RenderItemImp;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.item.ItemStack;
 
 public class RenderParachute extends RenderItemImp<EntityParachute> {
-    public RenderParachute(RenderManager renderManagerIn) {
+    public RenderParachute(EntityRendererManager renderManagerIn) {
         super(renderManagerIn);
     }
 

@@ -7,16 +7,16 @@ import icbm.classic.content.blocks.launcher.network.ILauncherComponent;
 import icbm.classic.content.blocks.launcher.network.LauncherNetwork;
 import icbm.classic.lib.capability.gps.GPSDataHelpers;
 import icbm.classic.prefab.tile.BlockICBM;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -34,13 +34,13 @@ public class BlockLaunchScreen extends BlockICBM
     }
 
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state)
+    public BlockRenderType getRenderType(BlockState state)
     {
-        return EnumBlockRenderType.MODEL;
+        return BlockRenderType.MODEL;
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World world, BlockPos pos, BlockState state, PlayerEntity player, Hand hand, Direction facing, float hitX, float hitY, float hitZ)
     {
         if (!world.isRemote)
         {
@@ -56,8 +56,8 @@ public class BlockLaunchScreen extends BlockICBM
                 }
                 else if(stack.getItem() == Items.STONE_AXE) {
                     final LauncherNetwork network = screen.getNetworkNode().getNetwork();
-                    player.sendMessage(new TextComponentString("Network: " + network));
-                    player.sendMessage(new TextComponentString("L: " + network.getLaunchers().size()));
+                    player.sendMessage(new StringTextComponent("Network: " + network));
+                    player.sendMessage(new StringTextComponent("L: " + network.getLaunchers().size()));
                 }
                 else
                 {
@@ -76,7 +76,7 @@ public class BlockLaunchScreen extends BlockICBM
     }
 
     @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state)
+    public void breakBlock(World world, BlockPos pos, BlockState state)
     {
         TileEntity tile = world.getTileEntity(pos);
         if (tile instanceof ILauncherComponent)

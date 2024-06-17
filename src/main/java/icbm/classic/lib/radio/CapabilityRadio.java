@@ -3,7 +3,7 @@ package icbm.classic.lib.radio;
 import icbm.classic.api.data.IBoundBox;
 import icbm.classic.api.radio.IRadio;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -34,12 +34,12 @@ public class CapabilityRadio implements IRadio {
             {
                 @Nullable
                 @Override
-                public NBTBase writeNBT(Capability<IRadio> capability, IRadio instance, EnumFacing side) {
+                public NBTBase writeNBT(Capability<IRadio> capability, IRadio instance, Direction side) {
                     return null;
                 }
 
                 @Override
-                public void readNBT(Capability<IRadio> capability, IRadio instance, EnumFacing side, NBTBase nbt) {
+                public void readNBT(Capability<IRadio> capability, IRadio instance, Direction side, NBTBase nbt) {
 
                 }
             },

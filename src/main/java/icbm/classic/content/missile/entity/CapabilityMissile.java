@@ -13,8 +13,8 @@ import icbm.classic.lib.radar.RadarRegistry;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -27,7 +27,7 @@ import java.util.Optional;
 /**
  * Created by Dark(DarkGuardsman, Robin) on 1/7/19.
  */
-public class CapabilityMissile implements IMissile, INBTSerializable<NBTTagCompound>
+public class CapabilityMissile implements IMissile, INBTSerializable<CompoundNBT>
 {
     private final EntityMissile missile;
     private IMissileTarget targetData;
@@ -170,13 +170,13 @@ public class CapabilityMissile implements IMissile, INBTSerializable<NBTTagCompo
                 {
                     @Nullable
                     @Override
-                    public NBTBase writeNBT(Capability<IMissile> capability, IMissile instance, EnumFacing side)
+                    public NBTBase writeNBT(Capability<IMissile> capability, IMissile instance, Direction side)
                     {
                         return null;
                     }
 
                     @Override
-                    public void readNBT(Capability<IMissile> capability, IMissile instance, EnumFacing side, NBTBase nbt)
+                    public void readNBT(Capability<IMissile> capability, IMissile instance, Direction side, NBTBase nbt)
                     {
 
                     }
@@ -185,14 +185,14 @@ public class CapabilityMissile implements IMissile, INBTSerializable<NBTTagCompo
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
-        final NBTTagCompound saveData = new NBTTagCompound();
+    public CompoundNBT serializeNBT() {
+        final CompoundNBT saveData = new CompoundNBT();
         SAVE_LOGIC.save(this, saveData);
         return saveData;
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
        SAVE_LOGIC.load(this, nbt);
     }
 

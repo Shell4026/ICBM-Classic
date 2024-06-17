@@ -4,7 +4,7 @@ import icbm.classic.lib.network.IPacketIDReceiver;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -30,7 +30,7 @@ public class PacketPlayerItem extends PacketBase<PacketPlayerItem>
         this.slotId = slotId;
     }
 
-    public PacketPlayerItem(EntityPlayer player)
+    public PacketPlayerItem(PlayerEntity player)
     {
         this(player.inventory.currentItem);
     }
@@ -53,13 +53,13 @@ public class PacketPlayerItem extends PacketBase<PacketPlayerItem>
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void handleClientSide(Minecraft minecraft, EntityPlayer player)
+    public void handleClientSide(Minecraft minecraft, PlayerEntity player)
     {
         handleServerSide(player);
     }
 
     @Override
-    public void handleServerSide(EntityPlayer player)
+    public void handleServerSide(PlayerEntity player)
     {
         if (slotId < 0)
         {

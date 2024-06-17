@@ -11,18 +11,15 @@ import icbm.classic.lib.NBTConstants;
 import icbm.classic.lib.capability.ex.CapabilityExplosiveEntity;
 import icbm.classic.prefab.tile.BlockICBM;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityMinecartTNT;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.item.minecart.TNTMinecartEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -30,7 +27,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 import java.util.Optional;
 
-public class EntityBombCart extends EntityMinecartTNT implements IEntityAdditionalSpawnData
+public class EntityBombCart extends TNTMinecartEntity implements IEntityAdditionalSpawnData
 {
     public final CapabilityExplosiveEntity explosive = new CapabilityExplosiveEntity(this);
 
@@ -105,13 +102,13 @@ public class EntityBombCart extends EntityMinecartTNT implements IEntityAddition
 
             if (!this.isSilent())
             {
-                this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                this.world.playSound((PlayerEntity) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 1.0F, 1.0F);
             }
         }
     }
 
     @Override
-    public EntityItem entityDropItem(ItemStack stack, float offsetY)
+    public ItemEntity entityDropItem(ItemStack stack, float offsetY)
     {
         if (stack.getItem() == Item.getItemFromBlock(Blocks.TNT))
         {
@@ -127,14 +124,14 @@ public class EntityBombCart extends EntityMinecartTNT implements IEntityAddition
     }
 
     @Override
-    protected void writeEntityToNBT(NBTTagCompound nbt)
+    protected void writeEntityToNBT(CompoundNBT nbt)
     {
         super.writeEntityToNBT(nbt);
         nbt.setTag("explosive", explosive.serializeNBT());
     }
 
     @Override
-    protected void readEntityFromNBT(NBTTagCompound nbt)
+    protected void readEntityFromNBT(CompoundNBT nbt)
     {
         super.readEntityFromNBT(nbt);
 
@@ -148,10 +145,10 @@ public class EntityBombCart extends EntityMinecartTNT implements IEntityAddition
     }
 
     @Override
-    public IBlockState getDefaultDisplayTile()
+    public BlockState getDefaultDisplayTile()
     {
         return BlockReg.blockExplosive.getDefaultState()
                 .withProperty(BlockExplosive.EX_PROP, Optional.ofNullable(explosive.getExplosiveData()).orElse(ICBMExplosives.CONDENSED))
-                .withProperty(BlockICBM.ROTATION_PROP, EnumFacing.UP);
+                .withProperty(BlockICBM.ROTATION_PROP, Direction.UP);
     }
 }

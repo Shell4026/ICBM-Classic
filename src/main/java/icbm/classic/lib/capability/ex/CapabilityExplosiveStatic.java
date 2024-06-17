@@ -5,7 +5,7 @@ import icbm.classic.api.explosion.IBlast;
 import icbm.classic.api.reg.IExplosiveCustomization;
 import icbm.classic.api.reg.IExplosiveData;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
@@ -15,11 +15,11 @@ import java.util.function.Supplier;
  * Used by any item that has an explosive capability
  * Created by Dark(DarkGuardsman, Robin) on 1/7/19.
  */
-public class CapabilityExplosiveStatic implements IExplosive, INBTSerializable<NBTTagCompound>
+public class CapabilityExplosiveStatic implements IExplosive, INBTSerializable<CompoundNBT>
 {
     private final IExplosiveData data;
     private final Supplier<ItemStack> itemStackSupplier;
-    private NBTTagCompound custom_ex_data;
+    private CompoundNBT custom_ex_data;
 
     public CapabilityExplosiveStatic(IExplosiveData data, Supplier<ItemStack> itemStackSupplier) {
         this.data = data;
@@ -51,14 +51,14 @@ public class CapabilityExplosiveStatic implements IExplosive, INBTSerializable<N
     }
 
     @Override
-    public NBTTagCompound serializeNBT()
+    public CompoundNBT serializeNBT()
     {
         //TODO save customizations
-        return new NBTTagCompound();
+        return new CompoundNBT();
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt)
+    public void deserializeNBT(CompoundNBT nbt)
     {
 
     }

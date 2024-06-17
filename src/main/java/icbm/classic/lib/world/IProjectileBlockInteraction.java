@@ -1,8 +1,8 @@
 package icbm.classic.lib.world;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -24,7 +24,7 @@ public interface IProjectileBlockInteraction {
      * @param hit position exact, normally raytrace driven
      * @return desired result for interaction
      */
-    EnumHitReactions apply(World world, BlockPos pos, Vec3d hit, EnumFacing side, IBlockState state, Entity projectile);
+    EnumHitReactions apply(World world, BlockPos pos, Vec3d hit, Direction side, BlockState state, Entity projectile);
 
 
     enum EnumHitReactions {

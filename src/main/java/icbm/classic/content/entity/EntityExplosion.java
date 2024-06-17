@@ -14,15 +14,13 @@ import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-
-import java.lang.reflect.Constructor;
 
 /**
  * The Entity handler responsible for entity explosions.
@@ -152,11 +150,11 @@ public class EntityExplosion extends Entity implements IEntityAdditionalSpawnDat
 
     /** (abstract) Protected helper method to read subclass entity data from NBT. */
     @Override
-    protected void readEntityFromNBT(NBTTagCompound nbt)
+    protected void readEntityFromNBT(CompoundNBT nbt)
     {
         try
         {
-            NBTTagCompound blastSave = nbt.getCompoundTag(NBTConstants.BLAST);
+            CompoundNBT blastSave = nbt.getCompoundTag(NBTConstants.BLAST);
             this.blastYOffset = nbt.getDouble(NBTConstants.BLAST_POS_Y);
             if (getBlast() == null)
             {
@@ -184,7 +182,7 @@ public class EntityExplosion extends Entity implements IEntityAdditionalSpawnDat
 
     /** (abstract) Protected helper method to write subclass entity data to NBT. */
     @Override
-    protected void writeEntityToNBT(NBTTagCompound nbt)
+    protected void writeEntityToNBT(CompoundNBT nbt)
     {
         if (getBlast() != null) //TODO add save/load mechanic to bypass need for ex data
         {
@@ -192,7 +190,7 @@ public class EntityExplosion extends Entity implements IEntityAdditionalSpawnDat
             nbt.setDouble(NBTConstants.BLAST_POS_Y, blastYOffset);
 
             //Save explosive data
-            NBTTagCompound blastSave = new NBTTagCompound();
+            CompoundNBT blastSave = new CompoundNBT();
             if (getBlast() instanceof IBlastRestore)
             {
                 ((IBlastRestore) getBlast()).save(blastSave);

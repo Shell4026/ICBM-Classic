@@ -11,9 +11,9 @@ import icbm.classic.api.reg.IExplosiveCustomization;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.lib.actions.status.ActionResponses;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 import javax.annotation.Nonnull;
 
@@ -32,12 +32,12 @@ public class CapabilityExplosiveEntity implements IExplosive
         this.entity = entity;
     }
 
-    public NBTTagCompound serializeNBT()
+    public CompoundNBT serializeNBT()
     {
         return toStack().serializeNBT();
     }
 
-    public void deserializeNBT(@Nonnull NBTTagCompound nbt)
+    public void deserializeNBT(@Nonnull CompoundNBT nbt)
     {
         if (nbt.getSize() == 0)
         {
@@ -121,7 +121,7 @@ public class CapabilityExplosiveEntity implements IExplosive
     @Override
     public void onDefuse()
     {
-        entity.world.spawnEntity(new EntityItem(entity.world, entity.posX, entity.posY, entity.posZ, toStack().copy()));
+        entity.world.spawnEntity(new ItemEntity(entity.world, entity.posX, entity.posY, entity.posZ, toStack().copy()));
         entity.setDead();
     }
 

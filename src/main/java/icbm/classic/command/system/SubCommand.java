@@ -3,7 +3,7 @@ package icbm.classic.command.system;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -60,7 +60,7 @@ public abstract class SubCommand implements ISubCommand
 
     private void sendHelpMessage(ICommandSender sender, String message)
     {
-        sender.sendMessage(new TextComponentString((getUsage(sender) + " " + message).trim()));
+        sender.sendMessage(new StringTextComponent((getUsage(sender) + " " + message).trim()));
     }
 
     /**

@@ -7,7 +7,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.INetHandler;
-import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -33,7 +33,7 @@ public class PacketInboundHandler extends SimpleChannelInboundHandler<IPacket>
                     handleClientSide(packet);
                     break;
                 case SERVER:
-                    packet.handleServerSide(((NetHandlerPlayServer) netHandler).player);
+                    packet.handleServerSide(((ServerPlayNetHandler) netHandler).player);
                     break;
                 default:
                     break;

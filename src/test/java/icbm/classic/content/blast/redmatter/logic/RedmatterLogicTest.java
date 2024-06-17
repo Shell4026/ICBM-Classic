@@ -2,7 +2,7 @@ package icbm.classic.content.blast.redmatter.logic;
 
 import com.builtbroken.mc.testing.junit.TestManager;
 import icbm.classic.content.blast.redmatter.EntityRedmatter;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -82,7 +82,7 @@ public class RedmatterLogicTest
             final World world = testManager.getWorld();
 
             //Build world
-            world.setBlockState(new BlockPos(8, 0, 8), Blocks.STONE.getDefaultState());
+            world.setBlockState(new BlockPos(8, 0, 8), net.minecraft.block.Blocks.STONE.getDefaultState());
 
             //Create redmatter
             final EntityRedmatter redmatter = new EntityRedmatter(world);
@@ -158,13 +158,13 @@ public class RedmatterLogicTest
             final EntityRedmatter redmatter = new EntityRedmatter(world);
             final RedmatterLogic logic = redmatter.redmatterLogic;
             logic.currentBlockDestroyRadius = 5;
-            world.setBlockState(new BlockPos(2, 0, 0), Blocks.STONE.getDefaultState());
+            world.setBlockState(new BlockPos(2, 0, 0), net.minecraft.block.Blocks.STONE.getDefaultState());
 
             //Invoke method
             logic.rayTraceTowardsBlock(new Vec3d(0.5, 0.5, 0.5), new BlockPos(3, 0, 0));
 
             //Validate we passed the ray hit to the next method
-            Assertions.assertEquals(Blocks.AIR, world.getBlockState(new BlockPos(2, 0, 0)).getBlock());
+            Assertions.assertEquals(net.minecraft.block.Blocks.AIR, world.getBlockState(new BlockPos(2, 0, 0)).getBlock());
         }
     }
 }

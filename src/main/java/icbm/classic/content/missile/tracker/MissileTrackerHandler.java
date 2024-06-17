@@ -4,7 +4,7 @@ import icbm.classic.ICBMConstants;
 import icbm.classic.api.events.MissileEvent;
 import icbm.classic.content.missile.entity.EntityMissile;
 import icbm.classic.content.missile.entity.explosive.EntityExplosiveMissile;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
@@ -57,7 +57,7 @@ public class MissileTrackerHandler
 
     private static boolean noPlayer(EntityMissile missile) {
         // TODO check for riding chains
-        return missile.getPassengers().stream().noneMatch(e -> e instanceof EntityPlayer);
+        return missile.getPassengers().stream().noneMatch(e -> e instanceof PlayerEntity);
     }
 
     /**

@@ -1,7 +1,7 @@
 package icbm.classic.lib;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
@@ -11,20 +11,20 @@ import javax.annotation.Nullable;
 /**
  * Created by Dark(DarkGuardsman, Robin) on 1/9/19.
  */
-public abstract class CapabilityPrefab implements ICapabilitySerializable<NBTTagCompound>
+public abstract class CapabilityPrefab implements ICapabilitySerializable<CompoundNBT>
 {
 
     public abstract boolean isCapability(@Nonnull Capability<?> capability);
 
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
+    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction facing)
     {
         return isCapability(capability);
     }
 
     @Nullable
     @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
+    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing)
     {
         if (isCapability(capability))
         {
@@ -35,15 +35,15 @@ public abstract class CapabilityPrefab implements ICapabilitySerializable<NBTTag
 
 
     @Override
-    public final NBTTagCompound serializeNBT()
+    public final CompoundNBT serializeNBT()
     {
-        NBTTagCompound tagCompound = new NBTTagCompound();
+        CompoundNBT tagCompound = new CompoundNBT();
         save(tagCompound);
         return tagCompound;
     }
 
     @Override
-    public final void deserializeNBT(NBTTagCompound nbt)
+    public final void deserializeNBT(CompoundNBT nbt)
     {
         if (nbt != null && !nbt.hasNoTags())
         {
@@ -51,12 +51,12 @@ public abstract class CapabilityPrefab implements ICapabilitySerializable<NBTTag
         }
     }
 
-    protected void save(NBTTagCompound tag)
+    protected void save(CompoundNBT tag)
     {
 
     }
 
-    protected void load(NBTTagCompound tag)
+    protected void load(CompoundNBT tag)
     {
 
     }

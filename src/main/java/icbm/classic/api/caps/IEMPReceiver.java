@@ -1,6 +1,9 @@
 package icbm.classic.api.caps;
 
 import icbm.classic.api.actions.IAction;
+import net.minecraft.entity.item.minecart.ChestMinecartEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.world.World;
 
 /**
@@ -54,9 +57,9 @@ public interface IEMPReceiver
      * in case addition effects are required.
      * <p>
      * Common example is containers that are ItemHandlers or Inventories
-     * Ex: {@link net.minecraft.entity.player.EntityPlayer},
-     * {@link net.minecraft.tileentity.TileEntityChest},
-     * {@link net.minecraft.entity.item.EntityMinecartChest}
+     * Ex: {@link PlayerEntity},
+     * {@link ChestTileEntity},
+     * {@link ChestMinecartEntity}
      *
      * @param container - object containing this sub-object
      */

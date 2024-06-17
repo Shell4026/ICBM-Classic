@@ -9,10 +9,10 @@ import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
@@ -21,7 +21,7 @@ import java.util.Collection;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TimerTickingStatus implements IActionStatus, INBTSerializable<NBTTagCompound> {
+public class TimerTickingStatus implements IActionStatus, INBTSerializable<CompoundNBT> {
 
     public static final ResourceLocation REG_NAME = new ResourceLocation(ICBMConstants.DOMAIN, "conditional.timer.ticking");
     public static final ImmutableList<MetaTag> TAGS = ImmutableList.of(ActionStatusTypes.WAITING, ActionStatusTypes.BLOCKING);
@@ -38,7 +38,7 @@ public class TimerTickingStatus implements IActionStatus, INBTSerializable<NBTTa
 
     @Override
     public ITextComponent message() {
-        return new TextComponentTranslation(getTranslationKey(), tickCurrent, tickTarget);
+        return new TranslationTextComponent(getTranslationKey(), tickCurrent, tickTarget);
     }
 
     @Nonnull
@@ -48,12 +48,12 @@ public class TimerTickingStatus implements IActionStatus, INBTSerializable<NBTTa
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
+    public CompoundNBT serializeNBT() {
         return SAVE_LOGIC.save(this);
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         SAVE_LOGIC.load(this, nbt);
     }
 

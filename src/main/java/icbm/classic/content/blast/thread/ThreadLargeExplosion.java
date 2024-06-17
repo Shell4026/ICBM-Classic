@@ -6,7 +6,7 @@ import icbm.classic.config.ConfigDebug;
 import icbm.classic.content.blast.Blast;
 import icbm.classic.lib.transform.vector.Location;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -95,7 +95,7 @@ public class ThreadLargeExplosion extends ThreadExplosion
                             continue;
 
                         //Get block state and block from position
-                        final IBlockState state = world.getBlockState(blockPos);
+                        final BlockState state = world.getBlockState(blockPos);
                         final Block block = state.getBlock();
 
                         //Ignore air blocks && Only break block that can be broken

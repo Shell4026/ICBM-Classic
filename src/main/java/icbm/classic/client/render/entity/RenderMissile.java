@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -20,7 +20,7 @@ public class RenderMissile extends RenderItemImp<EntityMissile>
 {
     public static RenderMissile INSTANCE;
 
-    public RenderMissile(RenderManager renderManager)
+    public RenderMissile(EntityRendererManager renderManager)
     {
         super(renderManager);
     }

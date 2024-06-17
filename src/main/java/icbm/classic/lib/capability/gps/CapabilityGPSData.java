@@ -3,8 +3,8 @@ package icbm.classic.lib.capability.gps;
 import icbm.classic.api.caps.IGPSData;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -12,7 +12,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 
-public class CapabilityGPSData implements IGPSData, INBTSerializable<NBTTagCompound> {
+public class CapabilityGPSData implements IGPSData, INBTSerializable<CompoundNBT> {
 
     private Vec3d position;
     private Integer dimension;
@@ -40,12 +40,12 @@ public class CapabilityGPSData implements IGPSData, INBTSerializable<NBTTagCompo
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
+    public CompoundNBT serializeNBT() {
         return SAVE_LOGIC.save(this);
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         SAVE_LOGIC.load(this, nbt);
     }
 
@@ -61,14 +61,14 @@ public class CapabilityGPSData implements IGPSData, INBTSerializable<NBTTagCompo
             {
                 @Nullable
                 @Override
-                public NBTBase writeNBT(Capability<IGPSData> capability, IGPSData instance, EnumFacing side) {
+                public NBTBase writeNBT(Capability<IGPSData> capability, IGPSData instance, Direction side) {
                     return SAVE_LOGIC.save(instance);
                 }
 
                 @Override
-                public void readNBT(Capability<IGPSData> capability, IGPSData instance, EnumFacing side, NBTBase nbt) {
-                    if(nbt instanceof NBTTagCompound) {
-                        SAVE_LOGIC.load(instance, (NBTTagCompound) nbt);
+                public void readNBT(Capability<IGPSData> capability, IGPSData instance, Direction side, NBTBase nbt) {
+                    if(nbt instanceof CompoundNBT) {
+                        SAVE_LOGIC.load(instance, (CompoundNBT) nbt);
                     }
                 }
             },

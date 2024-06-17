@@ -1,9 +1,9 @@
 package icbm.classic.prefab.gui;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
@@ -12,7 +12,7 @@ public class ContainerBase<H extends Object> extends Container
     protected int slotCount = 0;
 
     protected IInventory inventory;
-    protected EntityPlayer player;
+    protected PlayerEntity player;
     protected H host;
 
     public ContainerBase(IInventory inventory)
@@ -22,7 +22,7 @@ public class ContainerBase<H extends Object> extends Container
     }
 
     @Deprecated
-    public ContainerBase(EntityPlayer player, IInventory inventory)
+    public ContainerBase(PlayerEntity player, IInventory inventory)
     {
         this(inventory);
 
@@ -33,7 +33,7 @@ public class ContainerBase<H extends Object> extends Container
         }
     }
 
-    public ContainerBase(EntityPlayer player, H node)
+    public ContainerBase(PlayerEntity player, H node)
     {
         if (node instanceof IInventory)
         {
@@ -48,7 +48,7 @@ public class ContainerBase<H extends Object> extends Container
     }
 
     @Override
-    public void onContainerClosed(EntityPlayer entityplayer)
+    public void onContainerClosed(PlayerEntity entityplayer)
     {
         if (host instanceof IPlayerUsing && entityplayer.openContainer != this)
         {
@@ -57,12 +57,12 @@ public class ContainerBase<H extends Object> extends Container
         super.onContainerClosed(entityplayer);
     }
 
-    public void addPlayerInventory(EntityPlayer player)
+    public void addPlayerInventory(PlayerEntity player)
     {
         addPlayerInventory(player, 8, 84);
     }
 
-    public void addPlayerInventory(EntityPlayer player, int x, int y)
+    public void addPlayerInventory(PlayerEntity player, int x, int y)
     {
         if (this.inventory instanceof IPlayerUsing)
         {
@@ -74,7 +74,7 @@ public class ContainerBase<H extends Object> extends Container
         {
             for (int slot = 0; slot < 9; ++slot)
             {
-                this.addSlotToContainer(new Slot(player.inventory, slot + row * 9 + 9, slot * 18 + x, row * 18 + y));
+                this.addSlotToContainer(new net.minecraft.inventory.container.Slot(player.inventory, slot + row * 9 + 9, slot * 18 + x, row * 18 + y));
             }
         }
 
@@ -86,7 +86,7 @@ public class ContainerBase<H extends Object> extends Container
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer entityplayer)
+    public boolean canInteractWith(PlayerEntity entityplayer)
     {
         if(this.inventory != null) {
             return this.inventory.isUsableByPlayer(entityplayer);

@@ -5,7 +5,7 @@ import icbm.classic.config.ConfigMain;
 import icbm.classic.content.blast.BlastMutation;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.Vec3i;
 
@@ -31,7 +31,7 @@ public class BlastContagious extends BlastGasBase
     }
 
     @Override
-    protected boolean canGasEffect(EntityLivingBase entity)
+    protected boolean canGasEffect(LivingEntity entity)
     {
         return super.canGasEffect(entity) && !entity.isEntityInvulnerable(CONTAGIOUS_DAMAGE);
     }
@@ -42,7 +42,7 @@ public class BlastContagious extends BlastGasBase
     }
 
     @Override
-    protected void applyEffect(final EntityLivingBase entity, final int hitCount)
+    protected void applyEffect(final LivingEntity entity, final int hitCount)
     {
         ICBMClassic.contagiousPotion.poisonEntity(location.toPos(), entity, 3);
 

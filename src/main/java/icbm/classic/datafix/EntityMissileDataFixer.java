@@ -1,7 +1,6 @@
 package icbm.classic.datafix;
 
 import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.caps.IExplosive;
 import icbm.classic.api.refs.ICBMEntities;
 import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.api.reg.IExplosiveData;
@@ -12,9 +11,9 @@ import icbm.classic.content.missile.logic.targeting.BallisticTargetingData;
 import icbm.classic.content.missile.logic.targeting.BasicTargetData;
 import icbm.classic.lib.NBTConstants;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.datafix.IFixableData;
 
@@ -27,7 +26,7 @@ public class EntityMissileDataFixer implements IFixableData
     // TODO wrap everything in optionals in case any field is null
 
     @Override
-    public NBTTagCompound fixTagCompound(NBTTagCompound existingSave)
+    public CompoundNBT fixTagCompound(CompoundNBT existingSave)
     {
         // Missile rewrite [v4.2.0] changed registry name and with it the entire save/load, save is based on [v4.0.1] code
         if (existingSave.hasKey(ENTITY_ID) && existingSave.getString(ENTITY_ID).equalsIgnoreCase(ICBMClassicAPI.ID + ":missile"))
@@ -60,7 +59,7 @@ public class EntityMissileDataFixer implements IFixableData
             // Move hypersonic to sonic
             if(existingSave.hasKey("explosive")) {
 
-                final NBTTagCompound stackSave = existingSave.getCompoundTag(NBTConstants.EXPLOSIVE_STACK);
+                final CompoundNBT stackSave = existingSave.getCompoundTag(NBTConstants.EXPLOSIVE_STACK);
                 if(stackSave.hasKey("Damage")) {
                     final int damage = stackSave.getInteger("Damage");
 
@@ -78,7 +77,7 @@ public class EntityMissileDataFixer implements IFixableData
         }
         return existingSave;
     }
-    private void convertEntityMissileTags(NBTTagCompound existingSave) {
+    private void convertEntityMissileTags(CompoundNBT existingSave) {
 
         // missileType -> int
         // 0 -> launcher
@@ -88,11 +87,11 @@ public class EntityMissileDataFixer implements IFixableData
         // 4 -> dead_aim
         final int missileType = existingSave.getInteger("missileType");
 
-        final NBTTagCompound missile = new NBTTagCompound();
+        final CompoundNBT missile = new CompoundNBT();
         existingSave.setTag("missile", missile);
 
         // Set doFlight to true as it can be assumed any missile in world is moving
-        final NBTTagCompound missileFlags = new NBTTagCompound();
+        final CompoundNBT missileFlags = new CompoundNBT();
         missile.setTag("flags", missileFlags);
         missileFlags.setByte("doFlight", (byte)1);
 
@@ -101,7 +100,7 @@ public class EntityMissileDataFixer implements IFixableData
         convertMissileSource(existingSave, missile, missileType);
     }
 
-    private void convertExplosiveData(NBTTagCompound existingSave) {
+    private void convertExplosiveData(CompoundNBT existingSave) {
         //additionalMissileData -> compound
         //explosiveID -> int
         final int explosiveId = existingSave.getInteger("explosiveID");
@@ -111,12 +110,12 @@ public class EntityMissileDataFixer implements IFixableData
         existingSave.setTag("explosive", stack.serializeNBT());
     }
 
-    private void convertTargetData(NBTTagCompound existingSave, NBTTagCompound missile, int missileType) {
+    private void convertTargetData(CompoundNBT existingSave, CompoundNBT missile, int missileType) {
         if(existingSave.hasKey("target")) {
-            final NBTTagCompound targetData = new NBTTagCompound();
+            final CompoundNBT targetData = new CompoundNBT();
             missile.setTag("target", targetData);
 
-            final NBTTagCompound data = new NBTTagCompound();
+            final CompoundNBT data = new CompoundNBT();
             targetData.setTag("data", data);
 
             // Set id, old saves would have used missile type for this
@@ -134,11 +133,11 @@ public class EntityMissileDataFixer implements IFixableData
         }
     }
 
-    private void convertFlightLogic(NBTTagCompound existingSave, NBTTagCompound missile, int missileType) {
-        final NBTTagCompound targetData = new NBTTagCompound();
+    private void convertFlightLogic(CompoundNBT existingSave, CompoundNBT missile, int missileType) {
+        final CompoundNBT targetData = new CompoundNBT();
         missile.setTag("flight", targetData);
 
-        final NBTTagCompound data = new NBTTagCompound();
+        final CompoundNBT data = new CompoundNBT();
         targetData.setTag("data", data);
 
         // Set id, old saves would have used missile type for this
@@ -151,12 +150,12 @@ public class EntityMissileDataFixer implements IFixableData
             double lockHeight = existingSave.getDouble("lockHeight");
 
             // Assume always false so we force reset calculations
-            final NBTTagCompound flags = new NBTTagCompound();
+            final CompoundNBT flags = new CompoundNBT();
             data.setTag("flags", flags);
             flags.setByte("flight_started",  (byte)0);
 
 
-            final NBTTagCompound inputs = new NBTTagCompound();
+            final CompoundNBT inputs = new CompoundNBT();
             data.setTag("inputs", inputs);
 
             // Use vanilla Pos as start to keep missiles from completely missing targets
@@ -172,7 +171,7 @@ public class EntityMissileDataFixer implements IFixableData
 
             // lockHeight -> double
             // preLaunchSmokeTimer -> int
-            final NBTTagCompound timers = new NBTTagCompound();
+            final CompoundNBT timers = new CompoundNBT();
             data.setTag("timers", timers);
             timers.setInteger("engine_warm_up", preLauncherTime);
             timers.setDouble("lock_height", lockHeight);
@@ -187,15 +186,15 @@ public class EntityMissileDataFixer implements IFixableData
         }
     }
 
-    private void convertMissileSource(NBTTagCompound existingSave, NBTTagCompound missile, int missileType) {
+    private void convertMissileSource(CompoundNBT existingSave, CompoundNBT missile, int missileType) {
 
         // Ballistic
         if(missileType == 0) {
 
-            final NBTTagCompound missileSource = new NBTTagCompound();
+            final CompoundNBT missileSource = new CompoundNBT();
             missile.setTag("source", missileSource);
 
-            final NBTTagCompound pos = new NBTTagCompound();
+            final CompoundNBT pos = new CompoundNBT();
             missileSource.setTag("pos", pos);
 
             // launcherPos -> compound with x y z
@@ -207,10 +206,10 @@ public class EntityMissileDataFixer implements IFixableData
         }
         // cruise missiles || rpg missile
         else  if(missileType == 1 || missileType == 2) {
-            final NBTTagCompound missileSource = new NBTTagCompound();
+            final CompoundNBT missileSource = new CompoundNBT();
             missile.setTag("source", missileSource);
 
-            final NBTTagCompound pos = new NBTTagCompound();
+            final CompoundNBT pos = new CompoundNBT();
             missileSource.setTag("pos", pos);
 
             // launcherPos -> compound with x y z
@@ -222,10 +221,10 @@ public class EntityMissileDataFixer implements IFixableData
         }
     }
 
-    private void convertProjectileTags(NBTTagCompound existingSave) {
+    private void convertProjectileTags(CompoundNBT existingSave) {
 
         // inGround -> byte
-        final NBTTagCompound flags = new NBTTagCompound();
+        final CompoundNBT flags = new CompoundNBT();
         existingSave.setTag("flags", flags);
         flags.setByte("ground", existingSave.getByte("inGround"));
         existingSave.removeTag("inGround");
@@ -235,10 +234,10 @@ public class EntityMissileDataFixer implements IFixableData
         // yTilePos -> int
         // zTilePos -> int
         // sideTilePos -> byte
-        final NBTTagCompound ground = new NBTTagCompound();
+        final CompoundNBT ground = new CompoundNBT();
         existingSave.setTag("ground", ground);
 
-        final NBTTagCompound tilePos = new NBTTagCompound();
+        final CompoundNBT tilePos = new CompoundNBT();
         tilePos.setInteger("x", existingSave.getInteger("xTilePos"));
         tilePos.setInteger("y", existingSave.getInteger("yTilePos"));
         tilePos.setInteger("z", existingSave.getInteger("zTilePos"));
@@ -246,12 +245,12 @@ public class EntityMissileDataFixer implements IFixableData
 
         ground.setByte("side", existingSave.getByte("sideTilePos"));
         final int oldBlockState = existingSave.getInteger("inTileState");
-        final IBlockState blockState = Block.getStateById(oldBlockState);
-        ground.setTag("state", NBTUtil.writeBlockState(new NBTTagCompound(), blockState));
+        final BlockState blockState = Block.getStateById(oldBlockState);
+        ground.setTag("state", NBTUtil.writeBlockState(new CompoundNBT(), blockState));
 
         // life -> short
         // ticksInAir -> int
-        final NBTTagCompound ticks = new NBTTagCompound();
+        final CompoundNBT ticks = new CompoundNBT();
         existingSave.setTag("ticks", ticks);
         ticks.setInteger("air", existingSave.getInteger("ticksInAir"));
         ticks.setInteger("ground", existingSave.getInteger("life"));

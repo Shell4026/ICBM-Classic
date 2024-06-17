@@ -9,10 +9,10 @@ import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.lib.radio.imp.RadioTile;
 import icbm.classic.lib.radio.messages.TextMessage;
 import icbm.classic.prefab.FakeRadioSender;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public class RadioEmpTower extends RadioTile<TileEMPTower> implements IRadioReceiver, INBTSerializable<NBTTagCompound> {
+public class RadioEmpTower extends RadioTile<TileEMPTower> implements IRadioReceiver, INBTSerializable<CompoundNBT> {
 
     public static final String SUCCESS = "tile.emptower.radio.success";
 

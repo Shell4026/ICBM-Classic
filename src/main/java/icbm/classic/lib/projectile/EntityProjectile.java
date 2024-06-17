@@ -1,6 +1,5 @@
 package icbm.classic.lib.projectile;
 
-import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.data.D3Consumer;
@@ -18,13 +17,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IProjectile;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ITeleporter;
@@ -124,7 +123,7 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
      * @return this
      */
     @Deprecated
-    public PROJECTILE init(EntityLivingBase shooter, EntityLivingBase target, float multiplier, float random) {
+    public PROJECTILE init(LivingEntity shooter, LivingEntity target, float multiplier, float random) {
         this.shootingEntity = shooter;
         this.sourceOfProjectile = new Pos(shooter);
 
@@ -302,7 +301,7 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
     protected void checkInGround() {
         //Check if in ground TODO do we need to run this every tick?
         final BlockPos tilePos = inGroundData != null ? inGroundData.getPos() : this.getPos();
-        final IBlockState state = this.world.getBlockState(tilePos);
+        final BlockState state = this.world.getBlockState(tilePos);
         final InGroundData prevInGround = this.inGroundData;
 
         // Only run logic if we don't have an existing collision or detected block has changed TODO use events to trigger this on block edits
@@ -313,7 +312,7 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
                 //Check if what we hit can be collided with
                 final AxisAlignedBB axisalignedbb = state.getCollisionBoundingBox(this.world, tilePos);
                 if (axisalignedbb != null && axisalignedbb.offset(tilePos).contains(new Vec3d(this.posX, this.posY, this.posZ))) {
-                    final EnumFacing side = EnumFacing.UP; //TODO calculate side based on position
+                    final Direction side = Direction.UP; //TODO calculate side based on position
                     this.inGroundData = new InGroundData(tilePos, side, state);
                 }
             }
@@ -467,7 +466,7 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
             final DamageSource damageSource = getImpactDamageSource(entityHit, velocity, hit);
 
             if (damageSource != null && entityHit.attackEntityFrom(damageSource, damage)
-                && entityHit instanceof EntityLivingBase) {
+                && entityHit instanceof LivingEntity) {
                 applyKnockBack(entityHit);
             }
             onImpact(hit);
@@ -707,13 +706,13 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound nbt) {
+    public void writeEntityToNBT(CompoundNBT nbt) {
         SAVE_LOGIC.save(this, nbt);
         super.writeEntityToNBT(nbt);
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound nbt) {
+    public void readEntityFromNBT(CompoundNBT nbt) {
         super.readEntityFromNBT(nbt);
         SAVE_LOGIC.load(this, nbt);
     }

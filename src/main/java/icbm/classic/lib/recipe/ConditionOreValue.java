@@ -2,7 +2,7 @@ package icbm.classic.lib.recipe;
 
 import com.google.gson.JsonObject;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.JsonUtils;
+import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.crafting.IConditionFactory;
 import net.minecraftforge.common.crafting.JsonContext;
@@ -27,8 +27,8 @@ public class ConditionOreValue implements IConditionFactory
     @Override
     public BooleanSupplier parse(JsonContext context, JsonObject json)
     {
-        final boolean condition = Boolean.parseBoolean(JsonUtils.getString(json, "condition").toLowerCase());
-        final String value = JsonUtils.getString(json, "value");
+        final boolean condition = Boolean.parseBoolean(JSONUtils.getString(json, "condition").toLowerCase());
+        final String value = JSONUtils.getString(json, "value");
         return () -> hasOreValue(value, condition);
     }
 

@@ -7,8 +7,8 @@ import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.content.missile.entity.explosive.EntityExplosiveMissile;
 import icbm.classic.content.missile.logic.flight.DeadFlightLogic;
 import icbm.classic.lib.NBTConstants;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldSavedData;
@@ -254,13 +254,13 @@ public class MissileTrackerWorld extends WorldSavedData
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt)
+    public void readFromNBT(CompoundNBT nbt)
     {
         //Load missiles
-        NBTTagList list = nbt.getTagList(NBTConstants.MISSILES, 10);
+        ListNBT list = nbt.getTagList(NBTConstants.MISSILES, 10);
         for (int i = 0; i < list.tagCount(); i++)
         {
-            NBTTagCompound missileSave = list.getCompoundTagAt(i);
+            CompoundNBT missileSave = list.getCompoundTagAt(i);
             MissileTrackerData mtd = new MissileTrackerData(missileSave);
             missileList.add(mtd);
         }
@@ -269,30 +269,30 @@ public class MissileTrackerWorld extends WorldSavedData
         list = nbt.getTagList(NBTConstants.SPAWNS, 10);
         for (int i = 0; i < list.tagCount(); i++)
         {
-            NBTTagCompound missileSave = list.getCompoundTagAt(i);
+            CompoundNBT missileSave = list.getCompoundTagAt(i);
             MissileTrackerData mtd = new MissileTrackerData(missileSave);
             missileSpawnList.add(mtd);
         }
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+    public CompoundNBT writeToNBT(CompoundNBT nbt)
     {
         //Save missiles
-        NBTTagList list = new NBTTagList();
+        ListNBT list = new ListNBT();
         for (MissileTrackerData mtd : missileList)
         {
-            NBTTagCompound compound = new NBTTagCompound();
+            CompoundNBT compound = new CompoundNBT();
             mtd.writeToNBT(compound);
             list.appendTag(compound);
         }
         nbt.setTag(NBTConstants.MISSILES, list);
 
         //Save missiles that will spawn
-        list = new NBTTagList();
+        list = new ListNBT();
         for (MissileTrackerData mtd : missileSpawnList)
         {
-            NBTTagCompound compound = new NBTTagCompound();
+            CompoundNBT compound = new CompoundNBT();
             mtd.writeToNBT(compound);
             list.appendTag(compound);
         }

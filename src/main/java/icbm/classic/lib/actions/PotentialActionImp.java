@@ -18,7 +18,7 @@ import icbm.classic.lib.tile.ITick;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
 /**
  * Pre-built action for general purpose implementation where all components are known.
  */
-public abstract class PotentialActionImp<SELF extends PotentialActionImp<SELF>> implements IPotentialAction, ITick, INBTSerializable<NBTTagCompound> {
+public abstract class PotentialActionImp<SELF extends PotentialActionImp<SELF>> implements IPotentialAction, ITick, INBTSerializable<CompoundNBT> {
 
     @Getter @Setter(AccessLevel.PRIVATE)
     private ICondition preCheck;
@@ -112,12 +112,12 @@ public abstract class PotentialActionImp<SELF extends PotentialActionImp<SELF>> 
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
+    public CompoundNBT serializeNBT() {
         return SAVE_LOGIC.save(this);
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         SAVE_LOGIC.load(this, nbt);
     }
 

@@ -4,7 +4,7 @@ import icbm.classic.ICBMClassic;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -21,7 +21,7 @@ public class EnergySystemFE implements IEnergySystem
     private boolean failedEnergyStorageField;
 
     @Override
-    public boolean canSupport(Object object, EnumFacing side)
+    public boolean canSupport(Object object, Direction side)
     {
         if (object instanceof TileEntity)
         {
@@ -38,7 +38,7 @@ public class EnergySystemFE implements IEnergySystem
         return false;
     }
 
-    public IEnergyStorage getCapability(Object object, EnumFacing side)
+    public IEnergyStorage getCapability(Object object, Direction side)
     {
         if (object instanceof TileEntity)
         {
@@ -56,7 +56,7 @@ public class EnergySystemFE implements IEnergySystem
     }
 
     @Override
-    public int setEnergy(Object object, EnumFacing side, int energy, boolean simulate)
+    public int setEnergy(Object object, Direction side, int energy, boolean simulate)
     {
         IEnergyStorage storage = getCapability(object, side);
 
@@ -91,13 +91,13 @@ public class EnergySystemFE implements IEnergySystem
     }
 
     @Override
-    public boolean canSetEnergyDirectly(Object object, EnumFacing side)
+    public boolean canSetEnergyDirectly(Object object, Direction side)
     {
         return !failedEnergyStorageField && getCapability(object, side) instanceof EnergyStorage;
     }
 
     @Override
-    public int getEnergy(Object object, EnumFacing side)
+    public int getEnergy(Object object, Direction side)
     {
         IEnergyStorage storage = getCapability(object, side);
         if (storage != null)
@@ -108,7 +108,7 @@ public class EnergySystemFE implements IEnergySystem
     }
 
     @Override
-    public int getCapacity(Object object, EnumFacing side)
+    public int getCapacity(Object object, Direction side)
     {
         IEnergyStorage storage = getCapability(object, side);
         if (storage != null)
@@ -119,7 +119,7 @@ public class EnergySystemFE implements IEnergySystem
     }
 
     @Override
-    public int addEnergy(Object object, EnumFacing side, int energyToAdd, boolean simulate)
+    public int addEnergy(Object object, Direction side, int energyToAdd, boolean simulate)
     {
         IEnergyStorage storage = getCapability(object, side);
         if (storage != null)
@@ -130,7 +130,7 @@ public class EnergySystemFE implements IEnergySystem
     }
 
     @Override
-    public int removeEnergy(Object object, EnumFacing side, int energyToRemove, boolean simulate)
+    public int removeEnergy(Object object, Direction side, int energyToRemove, boolean simulate)
     {
         IEnergyStorage storage = getCapability(object, side);
         if (storage != null)

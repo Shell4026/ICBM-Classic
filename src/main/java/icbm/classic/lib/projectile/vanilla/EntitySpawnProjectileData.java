@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.EntityEntry;
@@ -26,7 +26,7 @@ public class EntitySpawnProjectileData extends BuildableObject<EntitySpawnProjec
     @Getter @Setter @Accessors(chain = true)
     private String entityDisplayTag;
     @Getter @Setter @Accessors(chain = true)
-    private NBTTagCompound entityData;
+    private CompoundNBT entityData;
 
     public EntitySpawnProjectileData() {
         super(NAME, ICBMClassicAPI.PROJECTILE_DATA_REGISTRY, SAVE_LOGIC);
@@ -52,7 +52,7 @@ public class EntitySpawnProjectileData extends BuildableObject<EntitySpawnProjec
                         entity.setCustomNameTag(entityDisplayTag);
                     }
                     if(entityData != null) {
-                        final NBTTagCompound entityExistingSave = entity.writeToNBT(new NBTTagCompound());
+                        final CompoundNBT entityExistingSave = entity.writeToNBT(new CompoundNBT());
                         final UUID uuid = entity.getUniqueID();
                         entityExistingSave.merge(entityData);
                         entity.setUniqueId(uuid);

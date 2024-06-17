@@ -6,10 +6,10 @@ import icbm.classic.lib.LanguageUtility;
 import icbm.classic.prefab.gui.button.GuiButtonBase;
 import icbm.classic.prefab.gui.tooltip.IToolTip;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.inventory.Container;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public abstract class GuiContainerBase extends GuiContainer
+public abstract class GuiContainerBase extends ContainerScreen
 {
     public static final ResourceLocation COMPONENTS_TEXTURE = new ResourceLocation(ICBMConstants.DOMAIN, ICBMConstants.GUI_DIRECTORY + "gui_components.png");
 
@@ -54,7 +54,7 @@ public abstract class GuiContainerBase extends GuiContainer
      * @return
      */
     @Deprecated
-    protected <E extends GuiButton> E addButton(E button)
+    protected <E extends Button> E addButton(E button)
     {
         if(button instanceof IGuiComponent) {
             addComponent((IGuiComponent) button);
@@ -76,8 +76,8 @@ public abstract class GuiContainerBase extends GuiContainer
     }
 
     protected <T extends IGuiComponent> T addComponent(T field) {
-        if(field instanceof GuiButton) {
-            buttonList.add((GuiButton) field);
+        if(field instanceof Button) {
+            buttonList.add((Button) field);
         }
         components.add(field);
         field.onAddedToHost(this);
@@ -178,14 +178,14 @@ public abstract class GuiContainerBase extends GuiContainer
     {
         super.mouseClicked(mouseX, mouseY, mouseButton);
         components.forEach(component -> {
-            if(!(component instanceof GuiButton)) {
+            if(!(component instanceof Button)) {
                 component.onMouseClick(mouseX, mouseY, mouseButton);
             }
         });
     }
 
     @Override
-    protected void actionPerformed(GuiButton button) throws IOException
+    protected void actionPerformed(Button button) throws IOException
     {
         if(button instanceof GuiButtonBase) {
             ((GuiButtonBase) button).triggerAction();

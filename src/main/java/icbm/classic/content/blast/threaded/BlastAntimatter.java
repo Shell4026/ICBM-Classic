@@ -4,17 +4,16 @@ import icbm.classic.ICBMClassic;
 import icbm.classic.client.ICBMSounds;
 import icbm.classic.config.ConfigDebug;
 import icbm.classic.config.blast.ConfigBlast;
-import icbm.classic.config.blast.types.ConfigAntimatter;
 import icbm.classic.content.blast.BlastHelpers;
 import icbm.classic.content.blast.redmatter.EntityRedmatter;
 import icbm.classic.lib.transform.BlockEditHandler;
-import net.minecraft.block.BlockFalling;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.FallingBlock;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.ServerWorld;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 
 public class BlastAntimatter extends BlastThreaded
 {
-    private final IBlockState replaceState = Blocks.AIR.getDefaultState();
+    private final BlockState replaceState = Blocks.AIR.getDefaultState();
 
     @Override
     public boolean setupBlast()
@@ -35,7 +34,7 @@ public class BlastAntimatter extends BlastThreaded
     @Override
     public void destroyBlock(BlockPos blockPos)
     {
-        final IBlockState blockState = world.getBlockState(blockPos);
+        final BlockState blockState = world.getBlockState(blockPos);
         if (!blockState.getBlock().isAir(blockState, world, blockPos))
         {
             if (blockState.getBlockHardness(world, blockPos) >= 0 || ConfigBlast.antimatter.damageUnbreakable)
@@ -67,7 +66,7 @@ public class BlastAntimatter extends BlastThreaded
     {
         //TODO have threads take a copy of chunks for use before running
         //      OR replace thread system with an entity that ticks over time to collect data
-        if (world instanceof WorldServer)
+        if (world instanceof ServerWorld)
         {
             long time = System.currentTimeMillis();
 
@@ -93,7 +92,7 @@ public class BlastAntimatter extends BlastThreaded
             }
 
             //Schedule edits to run in the world
-            ((WorldServer) world).addScheduledTask(() -> scheduledTask(removeFirst, edits));
+            ((ServerWorld) world).addScheduledTask(() -> scheduledTask(removeFirst, edits));
         }
     }
 
@@ -125,8 +124,8 @@ public class BlastAntimatter extends BlastThreaded
 
     protected boolean isFluid(BlockPos blockPos)
     {
-        IBlockState state = world.getBlockState(blockPos);
-        return state.getMaterial() == Material.WATER || state.getBlock() instanceof BlockFalling;
+        BlockState state = world.getBlockState(blockPos);
+        return state.getMaterial() == Material.WATER || state.getBlock() instanceof FallingBlock;
     }
 
     protected boolean shouldEditPos(int x, int y, int z)

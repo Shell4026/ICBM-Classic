@@ -3,7 +3,7 @@ package icbm.classic.content.blast.thread;
 import icbm.classic.content.blast.Blast;
 import icbm.classic.lib.transform.vector.Location;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -55,7 +55,7 @@ public class ThreadSmallExplosion extends ThreadExplosion
                             if(!position.world().isBlockLoaded(targetPosition)) //TODO: find better fix for non main thread loading
                                 continue;
 
-                            IBlockState state = this.position.world().getBlockState(targetPosition);
+                            BlockState state = this.position.world().getBlockState(targetPosition);
                             Block block = state.getBlock();
 
                             if (!block.isAir(state, world, targetPosition))

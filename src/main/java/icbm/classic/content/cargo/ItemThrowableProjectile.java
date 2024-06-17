@@ -18,21 +18,18 @@ import icbm.classic.lib.projectile.ProjectileStack;
 import icbm.classic.prefab.item.ItemBase;
 import icbm.classic.prefab.item.ItemStackCapProvider;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.EnumAction;
+import net.minecraft.block.Blocks;
+import net.minecraft.item.UseAction;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -43,8 +40,8 @@ public class ItemThrowableProjectile extends ItemBase {
     public static final int MAX_USE_DURATION = 3 * 20; //TODO config
     public static final float THROW_VELOCITY = 0.5f;
 
-    public static final TextComponentTranslation ERROR_THROWING_INTERFACE = new TextComponentTranslation("error.icbmclassic:projectile.throwing.interface", IProjectileThrowable.class.getSimpleName());
-    public static final TextComponentTranslation ERROR_THROWING_TYPE = new TextComponentTranslation("error.icbmclassic:projectile.throwing.type", ProjectileTypes.TYPE_THROWABLE.getKey());
+    public static final TranslationTextComponent ERROR_THROWING_INTERFACE = new TranslationTextComponent("error.icbmclassic:projectile.throwing.interface", IProjectileThrowable.class.getSimpleName());
+    public static final TranslationTextComponent ERROR_THROWING_TYPE = new TranslationTextComponent("error.icbmclassic:projectile.throwing.type", ProjectileTypes.TYPE_THROWABLE.getKey());
 
     // TODO split into empty crafting item and version holding item
     // TODO add a damaged/used version to drop after deploying cargo
@@ -57,15 +54,15 @@ public class ItemThrowableProjectile extends ItemBase {
 
     @Override
     @Nullable
-    public net.minecraftforge.common.capabilities.ICapabilityProvider initCapabilities(@Nonnull ItemStack stack, @Nullable NBTTagCompound nbt) {
+    public net.minecraftforge.common.capabilities.ICapabilityProvider initCapabilities(@Nonnull ItemStack stack, @Nullable CompoundNBT nbt) {
         final ItemStackCapProvider provider = new ItemStackCapProvider(stack);
         provider.add("projectile", ICBMClassicAPI.PROJECTILE_STACK_CAPABILITY, new ProjectileStack());
         return provider;
     }
 
     @Override
-    public EnumAction getItemUseAction(@Nonnull ItemStack stack) {
-        return EnumAction.BOW;
+    public UseAction getItemUseAction(@Nonnull ItemStack stack) {
+        return UseAction.BOW;
     }
 
     @Override
@@ -74,23 +71,23 @@ public class ItemThrowableProjectile extends ItemBase {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, EntityPlayer playerIn, @Nonnull EnumHand handIn) {
+    public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, PlayerEntity playerIn, @Nonnull Hand handIn) {
         final ItemStack itemstack = playerIn.getHeldItem(handIn);
         playerIn.setActiveHand(handIn);
-        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
+        return new ActionResult<ItemStack>(ActionResultType.SUCCESS, itemstack);
     }
 
     @Override
-    public void onPlayerStoppedUsing(@Nonnull ItemStack stack, @Nonnull World world, @Nonnull EntityLivingBase entityLiving, int timeLeft) {
-        if (!world.isRemote && throwProjectile(stack, world, entityLiving) && !(entityLiving instanceof EntityPlayer) || !((EntityPlayer) entityLiving).isCreative()) {
+    public void onPlayerStoppedUsing(@Nonnull ItemStack stack, @Nonnull World world, @Nonnull LivingEntity entityLiving, int timeLeft) {
+        if (!world.isRemote && throwProjectile(stack, world, entityLiving) && !(entityLiving instanceof PlayerEntity) || !((PlayerEntity) entityLiving).isCreative()) {
             stack.shrink(1);
         }
     }
 
     // TODO move logic to common helper called `throwProjectile` to better reuse common spawn logic
     public static boolean throwProjectile(@Nonnull ItemStack stack, @Nonnull World world, @Nonnull Entity thrower) {
-        final boolean isCreative = thrower instanceof EntityPlayer && ((EntityPlayer) thrower).isCreative();
-        final EnumHand hand = thrower instanceof EntityLivingBase ? ((EntityLivingBase) thrower).getActiveHand() : EnumHand.MAIN_HAND;
+        final boolean isCreative = thrower instanceof PlayerEntity && ((PlayerEntity) thrower).isCreative();
+        final Hand hand = thrower instanceof LivingEntity ? ((LivingEntity) thrower).getActiveHand() : Hand.MAIN_HAND;
         if (!stack.hasCapability(ICBMClassicAPI.PROJECTILE_STACK_CAPABILITY, null)) {
             return false;
         }
@@ -106,8 +103,8 @@ public class ItemThrowableProjectile extends ItemBase {
 
         final Entity parachute = projectileData.newEntity(world, !isCreative);
         if (!projectileData.isType(ProjectileTypes.TYPE_THROWABLE)) {
-            if(thrower instanceof EntityPlayer) {
-                ((EntityPlayer) thrower).sendStatusMessage(ERROR_THROWING_TYPE, true);
+            if(thrower instanceof PlayerEntity) {
+                ((PlayerEntity) thrower).sendStatusMessage(ERROR_THROWING_TYPE, true);
             }
             ICBMClassic.logger().warn("ItemParachute: Couldn't throw projectile as type(s) isn't supported. " +
                 "This is likely missing implementation on the projectile. " +
@@ -116,7 +113,7 @@ public class ItemThrowableProjectile extends ItemBase {
         }
 
         if (parachute instanceof IProjectileThrowable) {
-            final float yaw = thrower instanceof EntityLivingBase ? ((EntityLivingBase) thrower).rotationYawHead : thrower.rotationYaw;
+            final float yaw = thrower instanceof LivingEntity ? ((LivingEntity) thrower).rotationYawHead : thrower.rotationYaw;
             final float pitch = thrower.rotationPitch;
             final double x = thrower.posX;
             final double y = thrower.posY + thrower.getEyeHeight()  ;
@@ -126,8 +123,8 @@ public class ItemThrowableProjectile extends ItemBase {
             ((IProjectileThrowable<Entity>) parachute).throwProjectile(parachute, source, x, y, z, yaw, pitch, THROW_VELOCITY, 0);
 
         } else {
-            if(thrower instanceof EntityPlayer) {
-                ((EntityPlayer) thrower).sendStatusMessage(ERROR_THROWING_INTERFACE, true);
+            if(thrower instanceof PlayerEntity) {
+                ((PlayerEntity) thrower).sendStatusMessage(ERROR_THROWING_INTERFACE, true);
             }
             ICBMClassic.logger().warn("ItemParachute: Couldn't throw projectile as it doesn't support IProjectileThrowable." +
                 "Stack: {}, Data: {}, Entity: {}", projectileStack, projectileData, thrower);
@@ -159,7 +156,7 @@ public class ItemThrowableProjectile extends ItemBase {
             final String key = getUnlocalizedName(stack) + ".info";
             final float gravity = -EntityParachute.GRAVITY * 20;
             final float air = (1 - EntityParachute.AIR_RESISTANCE) * 100;
-            LanguageUtility.outputLines(new TextComponentTranslation(key, String.format("%.2f", air) + " %", String.format("%.2f", gravity)), list::add);
+            LanguageUtility.outputLines(new TranslationTextComponent(key, String.format("%.2f", air) + " %", String.format("%.2f", gravity)), list::add);
         }
 
         // Show projectile information
@@ -176,8 +173,8 @@ public class ItemThrowableProjectile extends ItemBase {
             items.add(new ItemStack(this));
 
             if(this == ItemReg.itemParachute) {
-                items.add(parachuteWith(new ParachuteProjectileData().setHeldItem(new ItemStack(Items.EGG)).setParachuteMode(ProjectileCargoMode.ITEM)));
-                items.add(parachuteWith(new ParachuteProjectileData().setHeldItem(new ItemStack(Blocks.FURNACE)).setParachuteMode(ProjectileCargoMode.BLOCK)));
+                items.add(parachuteWith(new ParachuteProjectileData().setHeldItem(new ItemStack(net.minecraft.item.Items.EGG)).setParachuteMode(ProjectileCargoMode.ITEM)));
+                items.add(parachuteWith(new ParachuteProjectileData().setHeldItem(new ItemStack(net.minecraft.block.Blocks.FURNACE)).setParachuteMode(ProjectileCargoMode.BLOCK)));
                 items.add(parachuteWith(new ParachuteProjectileData().setHeldItem(new ItemStack(Blocks.TNT)).setParachuteMode(ProjectileCargoMode.BLOCK)));
             }
             else if(this == ItemReg.itemBalloon) {

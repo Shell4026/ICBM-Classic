@@ -1,6 +1,6 @@
 package icbm.classic.lib.saving.nodes;
 
-import net.minecraft.nbt.NBTTagDouble;
+import net.minecraft.nbt.DoubleNBT;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +17,7 @@ class SaveNodeDoubleTest
         final DoubleSaveThing thing = new DoubleSaveThing();
         thing.d = 245.23;
 
-        final NBTTagDouble save = node.save(thing);
+        final DoubleNBT save = node.save(thing);
 
         Assertions.assertEquals(245.23, save.getDouble());
     }
@@ -25,7 +25,7 @@ class SaveNodeDoubleTest
     @Test
     void load() {
         final DoubleSaveThing thing = new DoubleSaveThing();
-        final NBTTagDouble save = new NBTTagDouble(123.23);
+        final DoubleNBT save = new DoubleNBT(123.23);
 
         node.load(thing, save);
 

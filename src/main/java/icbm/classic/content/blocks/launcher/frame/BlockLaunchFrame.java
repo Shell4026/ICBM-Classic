@@ -5,16 +5,16 @@ import icbm.classic.content.blocks.launcher.network.LauncherNetwork;
 import icbm.classic.content.reg.BlockReg;
 import icbm.classic.prefab.tile.BlockICBM;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -36,10 +36,10 @@ public class BlockLaunchFrame extends BlockICBM
     }
 
     @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
+    public BlockState getActualState(BlockState state, IBlockAccess worldIn, BlockPos pos)
     {
-        final boolean frameAbove = isConnection(worldIn, pos.offset(EnumFacing.UP));
-        final boolean frameUnder = isConnection(worldIn, pos.offset(EnumFacing.DOWN));
+        final boolean frameAbove = isConnection(worldIn, pos.offset(Direction.UP));
+        final boolean frameUnder = isConnection(worldIn, pos.offset(Direction.DOWN));
         if(frameAbove && frameUnder) {
             return state.withProperty(FRAME_STATE, EnumFrameState.MIDDLE);
         }
@@ -53,12 +53,12 @@ public class BlockLaunchFrame extends BlockICBM
     }
 
     private boolean isConnection(IBlockAccess worldIn, BlockPos pos) {
-        final IBlockState state = worldIn.getBlockState(pos);
+        final BlockState state = worldIn.getBlockState(pos);
         return state.getBlock() == this || state.getBlock() == BlockReg.blockLaunchScreen;
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, BlockState state, PlayerEntity playerIn, Hand hand, Direction facing, float hitX, float hitY, float hitZ)
     {
         final TileEntity tile = worldIn.getTileEntity(pos);
         if (tile instanceof TileLauncherFrame)
@@ -66,8 +66,8 @@ public class BlockLaunchFrame extends BlockICBM
             if(playerIn.getHeldItem(hand).getItem() == Items.STONE_AXE) {
                 if(!worldIn.isRemote) {
                     final LauncherNetwork network = ((TileLauncherFrame) tile).getNetworkNode().getNetwork();
-                    playerIn.sendMessage(new TextComponentString("Network: " + network));
-                    playerIn.sendMessage(new TextComponentString("L: " + network.getLaunchers().size()));
+                    playerIn.sendMessage(new StringTextComponent("Network: " + network));
+                    playerIn.sendMessage(new StringTextComponent("L: " + network.getLaunchers().size()));
                 }
                 return true;
             }
@@ -76,7 +76,7 @@ public class BlockLaunchFrame extends BlockICBM
     }
 
     @Deprecated
-    public boolean isOpaqueCube(IBlockState state)
+    public boolean isOpaqueCube(BlockState state)
     {
         return false;
     }
@@ -88,9 +88,9 @@ public class BlockLaunchFrame extends BlockICBM
     }
 
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state)
+    public BlockRenderType getRenderType(BlockState state)
     {
-        return EnumBlockRenderType.MODEL;
+        return BlockRenderType.MODEL;
     }
 
     @Override
@@ -108,7 +108,7 @@ public class BlockLaunchFrame extends BlockICBM
     }
 
     @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state)
+    public void breakBlock(World world, BlockPos pos, BlockState state)
     {
         final TileEntity tile = world.getTileEntity(pos);
         if (tile instanceof ILauncherComponent)

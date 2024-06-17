@@ -4,15 +4,14 @@ import icbm.classic.api.actions.IActionData;
 import icbm.classic.api.actions.data.ActionField;
 import icbm.classic.api.actions.data.IActionFieldProvider;
 import icbm.classic.api.actions.data.IActionFieldReceiver;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class ActionDataBase implements IActionData, IActionFieldProvider, IActionFieldReceiver, INBTSerializable<NBTTagCompound> {
+public abstract class ActionDataBase implements IActionData, IActionFieldProvider, IActionFieldReceiver, INBTSerializable<CompoundNBT> {
 
     private final Map<ActionField, Object> fieldValueMap = new HashMap<>();
 
@@ -29,12 +28,12 @@ public abstract class ActionDataBase implements IActionData, IActionFieldProvide
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
-        final NBTTagCompound tag = new NBTTagCompound();
+    public CompoundNBT serializeNBT() {
+        final CompoundNBT tag = new CompoundNBT();
         if(!fieldValueMap.isEmpty()) {
-            final NBTTagList list = new NBTTagList();
+            final ListNBT list = new ListNBT();
             for(Map.Entry<ActionField, Object> entry : fieldValueMap.entrySet()) {
-                final NBTTagCompound entryTag = new NBTTagCompound();
+                final CompoundNBT entryTag = new CompoundNBT();
                 entryTag.setString("key", entry.getKey().getKey()); //save key even if value is null
                 //TODO see if we can save ActionField#type
                 if(entry.getValue() != null) {
@@ -51,12 +50,12 @@ public abstract class ActionDataBase implements IActionData, IActionFieldProvide
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         if(nbt.hasKey("fields")) {
             this.fieldValueMap.clear();
-            final NBTTagList list = nbt.getTagList("fields", 10);
+            final ListNBT list = nbt.getTagList("fields", 10);
             for(int i = 0; i < list.tagCount(); i++) {
-                final NBTTagCompound entryTag = list.getCompoundTagAt(i);
+                final CompoundNBT entryTag = list.getCompoundTagAt(i);
                 final String key = entryTag.getString("key");
                 final ActionField actionField = ActionField.find(key, null);
                 if(actionField != null && entryTag.hasKey("value")) {

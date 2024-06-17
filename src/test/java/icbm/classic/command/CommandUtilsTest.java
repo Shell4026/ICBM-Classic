@@ -12,11 +12,11 @@ import icbm.classic.content.entity.EntityGrenade;
 import icbm.classic.content.missile.entity.explosive.EntityExplosiveMissile;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.monster.EntityEnderman;
-import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.entity.passive.EntityBat;
-import net.minecraft.entity.passive.EntitySheep;
-import net.minecraft.util.EntitySelectors;
+import net.minecraft.entity.monster.EndermanEntity;
+import net.minecraft.entity.monster.ZombieEntity;
+import net.minecraft.entity.passive.BatEntity;
+import net.minecraft.entity.passive.SheepEntity;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import org.junit.jupiter.api.*;
@@ -81,10 +81,10 @@ public class CommandUtilsTest
     {
         final FakeWorld world = FakeWorld.newWorld("isICBMEntity");
         return Stream.of(
-                Arguments.of(new EntityZombie(world), false),
-                Arguments.of(new EntityBat(world), false),
-                Arguments.of(new EntityEnderman(world), false),
-                Arguments.of(new EntitySheep(world), false),
+                Arguments.of(new ZombieEntity(world), false),
+                Arguments.of(new BatEntity(world), false),
+                Arguments.of(new EndermanEntity(world), false),
+                Arguments.of(new SheepEntity(world), false),
                 Arguments.of(new EntityGrenade(world), true),
                 Arguments.of(new EntityExplosiveMissile(world), true),
                 Arguments.of(new EntityExplosive(world), true),
@@ -106,10 +106,10 @@ public class CommandUtilsTest
     {
         final FakeWorld world = FakeWorld.newWorld("isMissile");
         return Stream.of(
-                Arguments.of(new EntityZombie(world), false),
-                Arguments.of(new EntityBat(world), false),
-                Arguments.of(new EntityEnderman(world), false),
-                Arguments.of(new EntitySheep(world), false),
+                Arguments.of(new ZombieEntity(world), false),
+                Arguments.of(new BatEntity(world), false),
+                Arguments.of(new EndermanEntity(world), false),
+                Arguments.of(new SheepEntity(world), false),
                 Arguments.of(new EntityGrenade(world), false),
                 Arguments.of(new EntityExplosiveMissile(world), true),
                 Arguments.of(new EntityExplosive(world), false),
@@ -174,39 +174,39 @@ public class CommandUtilsTest
         final World world = testManager.getWorld();
 
         //Sheep in range
-        EntitySheep sheep = new EntitySheep(world);
+        SheepEntity sheep = new SheepEntity(world);
         sheep.forceSpawn = true;
         sheep.setPosition(100, 10, 100);
         world.spawnEntity(sheep);
 
-        sheep = new EntitySheep(world);
+        sheep = new SheepEntity(world);
         sheep.forceSpawn = true;
         sheep.setPosition(100, 11, 100);
         world.spawnEntity(sheep);
 
-        sheep = new EntitySheep(world);
+        sheep = new SheepEntity(world);
         sheep.forceSpawn = true;
         sheep.setPosition(100, 12, 100);
         world.spawnEntity(sheep);
 
         //Sheep not in range
-        sheep = new EntitySheep(world);
+        sheep = new SheepEntity(world);
         sheep.forceSpawn = true;
         sheep.setPosition(200, 12, 100);
         world.spawnEntity(sheep);
 
-        sheep = new EntitySheep(world);
+        sheep = new SheepEntity(world);
         sheep.forceSpawn = true;
         sheep.setPosition(100, 12, 300);
         world.spawnEntity(sheep);
 
-        sheep = new EntitySheep(world);
+        sheep = new SheepEntity(world);
         sheep.forceSpawn = true;
         sheep.setPosition(100, 12, 500);
         world.spawnEntity(sheep);
 
         //Should find 3 sheep
-        List<Entity> list = CommandUtils.getEntities(world, 100, 11, 100, 5, EntitySelectors.NOT_SPECTATING::test);
+        List<Entity> list = CommandUtils.getEntities(world, 100, 11, 100, 5, EntityPredicates.NOT_SPECTATING::test);
         Assertions.assertEquals(3, list.size());
     }
 
@@ -216,40 +216,40 @@ public class CommandUtilsTest
         final World world = testManager.getWorld();
 
         //Sheep in range
-        EntitySheep sheep = new EntitySheep(world);
+        SheepEntity sheep = new SheepEntity(world);
         sheep.forceSpawn = true;
         sheep.setPosition(100, 10, 100);
         world.spawnEntity(sheep);
 
-        sheep = new EntitySheep(world);
+        sheep = new SheepEntity(world);
         sheep.forceSpawn = true;
         sheep.setPosition(100, 11, 100);
         world.spawnEntity(sheep);
 
-        sheep = new EntitySheep(world);
+        sheep = new SheepEntity(world);
         sheep.forceSpawn = true;
         sheep.setPosition(100, 12, 100);
         world.spawnEntity(sheep);
 
         //Sheep not in range
 
-        sheep = new EntitySheep(world);
+        sheep = new SheepEntity(world);
         sheep.forceSpawn = true;
         sheep.setPosition(200, 12, 100);
         world.spawnEntity(sheep);
 
-        sheep = new EntitySheep(world);
+        sheep = new SheepEntity(world);
         sheep.forceSpawn = true;
         sheep.setPosition(100, 12, 300);
         world.spawnEntity(sheep);
 
-        sheep = new EntitySheep(world);
+        sheep = new SheepEntity(world);
         sheep.forceSpawn = true;
         sheep.setPosition(100, 12, 500);
         world.spawnEntity(sheep);
 
         //Should find 3 sheep
-        List<Entity> list = CommandUtils.getEntities(world, 0, 0, 0, -1, EntitySelectors.NOT_SPECTATING::test);
+        List<Entity> list = CommandUtils.getEntities(world, 0, 0, 0, -1, EntityPredicates.NOT_SPECTATING::test);
         Assertions.assertEquals(6, list.size());
     }
 
@@ -258,7 +258,7 @@ public class CommandUtilsTest
     {
         final World world = testManager.getWorld();
 
-        List<Entity> list = CommandUtils.getEntities(world, 100, 11, 100, 5, EntitySelectors.NOT_SPECTATING::test);
+        List<Entity> list = CommandUtils.getEntities(world, 100, 11, 100, 5, EntityPredicates.NOT_SPECTATING::test);
         Assertions.assertEquals(0, list.size());
     }
 
@@ -268,7 +268,7 @@ public class CommandUtilsTest
         final World world = testManager.getWorld();
 
         //Should find 3 sheep
-        List<Entity> list = CommandUtils.getEntities(world, 0, 0, 0, -1, EntitySelectors.NOT_SPECTATING::test);
+        List<Entity> list = CommandUtils.getEntities(world, 0, 0, 0, -1, EntityPredicates.NOT_SPECTATING::test);
         Assertions.assertEquals(0, list.size());
     }
 

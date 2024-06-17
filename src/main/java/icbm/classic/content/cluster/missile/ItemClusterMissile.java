@@ -10,12 +10,12 @@ import icbm.classic.lib.projectile.ProjectileStack;
 import icbm.classic.prefab.item.ItemBase;
 import icbm.classic.prefab.item.ItemStackCapProvider;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -30,7 +30,7 @@ public class ItemClusterMissile extends ItemBase {
 
     @Override
     @Nullable
-    public net.minecraftforge.common.capabilities.ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
+    public net.minecraftforge.common.capabilities.ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
         final ItemStackCapProvider provider = new ItemStackCapProvider(stack);
         provider.add("missile", ICBMClassicAPI.MISSILE_STACK_CAPABILITY, new CapabilityClusterMissileStack(stack));
         return provider;
@@ -45,7 +45,7 @@ public class ItemClusterMissile extends ItemBase {
     public void getSubItems(ItemGroup tab, NonNullList<ItemStack> items) {
         if (tab == getCreativeTab() || tab == ItemGroup.SEARCH) {
             items.add(new ItemStack(this));
-            items.add(createStack(new ItemStack(Items.ARROW), 200));
+            items.add(createStack(new ItemStack(net.minecraft.item.Items.ARROW), 200));
             items.add(createStack(new ItemStack(ItemReg.itemBombletExplosive, 1, ICBMExplosives.CONDENSED.getRegistryID()), 100));
 
             final ItemStack parachute = new ItemStack(ItemReg.itemParachute);
@@ -77,12 +77,12 @@ public class ItemClusterMissile extends ItemBase {
     }
 
     @Override
-    protected boolean hasDetailedInfo(ItemStack stack, EntityPlayer player) {
+    protected boolean hasDetailedInfo(ItemStack stack, PlayerEntity player) {
         return true;
     }
 
     @Override
-    protected void getDetailedInfo(ItemStack stack, EntityPlayer player, List list) {
+    protected void getDetailedInfo(ItemStack stack, PlayerEntity player, List list) {
         StringBuilder contents = new StringBuilder("\n");
 
         CapabilityClusterMissileStack cap = (CapabilityClusterMissileStack) stack.getCapability(ICBMClassicAPI.MISSILE_STACK_CAPABILITY, null);
@@ -102,7 +102,7 @@ public class ItemClusterMissile extends ItemBase {
         }
 
 
-        final TextComponentTranslation translation = new TextComponentTranslation(getUnlocalizedName() + ".contents", contents.toString());
+        final TranslationTextComponent translation = new TranslationTextComponent(getUnlocalizedName() + ".contents", contents.toString());
         LanguageUtility.outputLines(translation, list::add);
     }
 }

@@ -3,8 +3,8 @@ package icbm.classic.content.potion;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import icbm.classic.lib.transform.vector.Pos;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 
 import java.util.HashMap;
@@ -65,7 +65,7 @@ public abstract class Poison
      * @param amplifier
      * @param emitPosition
      */
-    public void poisonEntity(Pos emitPosition, EntityLivingBase entity, int amplifier)
+    public void poisonEntity(Pos emitPosition, LivingEntity entity, int amplifier)
     {
         if (!isEntityProtected(emitPosition, entity, amplifier))
         {
@@ -73,14 +73,14 @@ public abstract class Poison
         }
     }
 
-    public void poisonEntity(Pos emitPosition, EntityLivingBase entity)
+    public void poisonEntity(Pos emitPosition, LivingEntity entity)
     {
         this.poisonEntity(emitPosition, entity, 0);
     }
 
-    public boolean isEntityProtected(Pos emitPosition, EntityLivingBase entity, int amplifier)
+    public boolean isEntityProtected(Pos emitPosition, LivingEntity entity, int amplifier)
     {
-        if(entity instanceof EntityPlayer && ((EntityPlayer) entity).capabilities.isCreativeMode)
+        if(entity instanceof PlayerEntity && ((PlayerEntity) entity).capabilities.isCreativeMode)
         {
             return true;
         }
@@ -148,5 +148,5 @@ public abstract class Poison
         return 0;
     }
 
-    protected abstract void doPoisonEntity(Pos emitPosition, EntityLivingBase entity, int amplifier);
+    protected abstract void doPoisonEntity(Pos emitPosition, LivingEntity entity, int amplifier);
 }

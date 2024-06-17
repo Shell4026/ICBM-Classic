@@ -7,8 +7,8 @@ import com.builtbroken.jlib.data.vector.ITransform;
 import icbm.classic.lib.NBTConstants;
 import icbm.classic.lib.transform.vector.Pos;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 
 /**
  * This object is not immutable like other vector objects. It is designed to take the player of storing 3 separate variables for rotation. Thus it will
@@ -55,7 +55,7 @@ public class EulerAngle implements Cloneable, ITransform, IByteBufWriter, IByteB
      *
      * @param tag - save
      */
-    public EulerAngle(NBTTagCompound tag)
+    public EulerAngle(CompoundNBT tag)
     {
         readFromNBT(tag);
     }
@@ -71,11 +71,11 @@ public class EulerAngle implements Cloneable, ITransform, IByteBufWriter, IByteB
     }
 
     /**
-     * Creates a new EulerAngle from a {@link EnumFacing}
+     * Creates a new EulerAngle from a {@link Direction}
      *
      * @param direction - direction
      */
-    public EulerAngle(EnumFacing direction)
+    public EulerAngle(Direction direction)
     {
         switch (direction)
         {
@@ -525,7 +525,7 @@ public class EulerAngle implements Cloneable, ITransform, IByteBufWriter, IByteB
         return this;
     }
 
-    public NBTTagCompound writeNBT(NBTTagCompound nbt)
+    public CompoundNBT writeNBT(CompoundNBT nbt)
     {
         nbt.setDouble(NBTConstants.YAW, yaw);
         nbt.setDouble(NBTConstants.PITCH, pitch);
@@ -533,12 +533,12 @@ public class EulerAngle implements Cloneable, ITransform, IByteBufWriter, IByteB
         return nbt;
     }
 
-    public NBTTagCompound toNBT()
+    public CompoundNBT toNBT()
     {
-        return writeNBT(new NBTTagCompound());
+        return writeNBT(new CompoundNBT());
     }
 
-    public EulerAngle readFromNBT(NBTTagCompound nbt)
+    public EulerAngle readFromNBT(CompoundNBT nbt)
     {
         yaw = nbt.getDouble(NBTConstants.YAW);
         pitch = nbt.getDouble(NBTConstants.PITCH);

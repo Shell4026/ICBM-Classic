@@ -8,7 +8,6 @@ import icbm.classic.api.explosion.IBlastIgnore;
 import icbm.classic.api.explosion.redmatter.IBlastVelocity;
 import icbm.classic.client.ICBMSounds;
 import icbm.classic.config.blast.ConfigBlast;
-import icbm.classic.config.blast.types.ConfigRedmatter;
 import icbm.classic.content.blast.helpers.BlastBlockHelpers;
 import icbm.classic.content.blast.redmatter.DamageSourceRedmatter;
 import icbm.classic.content.blast.redmatter.EntityRedmatter;
@@ -20,12 +19,12 @@ import icbm.classic.content.missile.logic.source.ActionSource;
 import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.lib.CalculationHelpers;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.block.Blocks;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.*;
 
 import java.util.Collections;
@@ -299,13 +298,13 @@ public class RedmatterLogic
 
     private void freezeWaterAround(BlockPos pos) //TODO convert to map<Block, Action> to allow introducing more effects
     {
-        for (EnumFacing side : EnumFacing.values())
+        for (Direction side : Direction.values())
         {
             final BlockPos blockPos = pos.add(side.getDirectionVec());
-            final IBlockState blockState = host.world.getBlockState(blockPos);
+            final BlockState blockState = host.world.getBlockState(blockPos);
             if (blockState.getBlock() == Blocks.WATER || blockState.getBlock() == Blocks.FLOWING_WATER)
             {
-                host.world.setBlockState(blockPos, Blocks.ICE.getDefaultState(), 3); //TODO turn into fake ice that melts randomly
+                host.world.setBlockState(blockPos, net.minecraft.block.Blocks.ICE.getDefaultState(), 3); //TODO turn into fake ice that melts randomly
             }
         }
     }
@@ -324,7 +323,7 @@ public class RedmatterLogic
      * @param blockState - state of the block
      * @return true to remove
      */
-    protected boolean shouldRemoveBlock(BlockPos blockPos, IBlockState blockState)
+    protected boolean shouldRemoveBlock(BlockPos blockPos, BlockState blockState)
     {
         final Block block = blockState.getBlock();
         final boolean isFluid = BlastBlockHelpers.isFluid(blockState);
@@ -334,7 +333,7 @@ public class RedmatterLogic
 
     }
 
-    protected boolean canTurnIntoFlyingBlock(IBlockState blockState)
+    protected boolean canTurnIntoFlyingBlock(BlockState blockState)
     {
         return ConfigBlast.redmatter.SPAWN_FLYING_BLOCKS && !BlastBlockHelpers.isFluid(blockState);
     }
@@ -382,7 +381,7 @@ public class RedmatterLogic
         }
 
         //Ignore players that are in creative mode or can't be harmed TODO may need to check for spectator?
-        if (entity instanceof EntityPlayer && (((EntityPlayer) entity).capabilities.isCreativeMode || ((EntityPlayer) entity).capabilities.disableDamage))
+        if (entity instanceof PlayerEntity && (((PlayerEntity) entity).capabilities.isCreativeMode || ((PlayerEntity) entity).capabilities.disableDamage))
         {
             return false;
         }
@@ -476,7 +475,7 @@ public class RedmatterLogic
                 explosive.getExplosiveData().create(entity.world, entity.posX, entity.posY, entity.posZ, actionSource, null).doAction();
                 entity.setDead();
             }
-            else if (entity instanceof EntityLivingBase)
+            else if (entity instanceof LivingEntity)
             {
                 entity.attackEntityFrom(new DamageSourceRedmatter(this), ConfigBlast.redmatter.damage);
             }

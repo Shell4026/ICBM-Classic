@@ -29,18 +29,17 @@ import icbm.classic.prefab.tile.IGuiTile;
 import icbm.classic.prefab.tile.TileMachine;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.*;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -106,7 +105,7 @@ public class TileLauncherBase extends TileMachine implements ILauncherComponent,
     private int groupIndex = -1;
 
     @Setter
-    private EnumFacing seatSide = null;
+    private Direction seatSide = null;
 
     @Getter @Setter
     private FiringPackage firingPackage;
@@ -114,7 +113,7 @@ public class TileLauncherBase extends TileMachine implements ILauncherComponent,
     private final TickDoOnce descriptionPacketSender = new TickDoOnce((t) -> PACKET_DESCRIPTION.sendToAllAround(this));
 
     @Getter
-    private final List<EntityPlayer> playersUsing = new LinkedList<>();
+    private final List<PlayerEntity> playersUsing = new LinkedList<>();
 
     public TileLauncherBase() {
         tickActions.add(descriptionPacketSender);
@@ -152,24 +151,24 @@ public class TileLauncherBase extends TileMachine implements ILauncherComponent,
      *
      * @return direction
      */
-    public EnumFacing getLaunchDirection() {
-        IBlockState state = getBlockState();
+    public Direction getLaunchDirection() {
+        BlockState state = getBlockState();
         if (state.getProperties().containsKey(BlockLauncherBase.ROTATION_PROP))
         {
             return state.getValue(BlockLauncherBase.ROTATION_PROP);
         }
-        return EnumFacing.UP;
+        return Direction.UP;
     }
 
-    public EnumFacing getSeatSide() {
+    public Direction getSeatSide() {
         if(seatSide == null) {
             switch (getLaunchDirection()) {
-                case UP: seatSide = EnumFacing.NORTH; break;
-                case DOWN: seatSide = EnumFacing.NORTH; break;
-                case EAST: seatSide = EnumFacing.UP; break;
-                case WEST: seatSide = EnumFacing.UP; break;
-                case NORTH: seatSide = EnumFacing.UP; break;
-                case SOUTH: seatSide = EnumFacing.UP; break;
+                case UP: seatSide = Direction.NORTH; break;
+                case DOWN: seatSide = Direction.NORTH; break;
+                case EAST: seatSide = Direction.UP; break;
+                case WEST: seatSide = Direction.UP; break;
+                case NORTH: seatSide = Direction.UP; break;
+                case SOUTH: seatSide = Direction.UP; break;
             }
         }
         return seatSide;
@@ -260,7 +259,7 @@ public class TileLauncherBase extends TileMachine implements ILauncherComponent,
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+    public boolean hasCapability(Capability<?> capability, @Nullable Direction facing)
     {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
             || capability == ICBMClassicAPI.MISSILE_HOLDER_CAPABILITY
@@ -271,7 +270,7 @@ public class TileLauncherBase extends TileMachine implements ILauncherComponent,
 
     @Override
     @Nullable
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+    public <T> T getCapability(Capability<T> capability, @Nullable Direction facing)
     {
         if(capability == CapabilityEnergy.ENERGY) {
             return (T) energyStorage;
@@ -307,7 +306,7 @@ public class TileLauncherBase extends TileMachine implements ILauncherComponent,
     @Override
     public ITextComponent getDisplayName()
     {
-        return new TextComponentTranslation("gui.icbmclassic:launcherbase.name");
+        return new TranslationTextComponent("gui.icbmclassic:launcherbase.name");
     }
 
     public ItemStack getMissileStack()
@@ -319,7 +318,7 @@ public class TileLauncherBase extends TileMachine implements ILauncherComponent,
         return missileHolder.getMissileStack();
     }
 
-    public boolean tryInsertMissile(EntityPlayer player, EnumHand hand, ItemStack heldItem) // TODO consider moving to inventory code as a generic insert/extract slot logic
+    public boolean tryInsertMissile(PlayerEntity player, Hand hand, ItemStack heldItem) // TODO consider moving to inventory code as a generic insert/extract slot logic
     {
         // Add missile
         if (this.getMissileStack().isEmpty() && missileHolder.canSupportMissile(heldItem))
@@ -329,7 +328,7 @@ public class TileLauncherBase extends TileMachine implements ILauncherComponent,
                 final ItemStack stackLeft = inventory.insertItem(0, heldItem, false);
                 if (!player.capabilities.isCreativeMode)
                 {
-                    player.setItemStackToSlot(hand == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, stackLeft);
+                    player.setItemStackToSlot(hand == Hand.MAIN_HAND ? EquipmentSlotType.MAINHAND : EquipmentSlotType.OFFHAND, stackLeft);
                     player.inventoryContainer.detectAndSendChanges();
                 }
             }
@@ -341,7 +340,7 @@ public class TileLauncherBase extends TileMachine implements ILauncherComponent,
             if (isServer())
             {
 
-                player.setItemStackToSlot(hand == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, this.getMissileStack());
+                player.setItemStackToSlot(hand == Hand.MAIN_HAND ? EquipmentSlotType.MAINHAND : EquipmentSlotType.OFFHAND, this.getMissileStack());
                 inventory.extractItem(0, 1, false);
                 player.inventoryContainer.detectAndSendChanges();
             }
@@ -357,26 +356,26 @@ public class TileLauncherBase extends TileMachine implements ILauncherComponent,
     }
 
     @Override
-    public Object getServerGuiElement(int ID, EntityPlayer player)
+    public Object getServerGuiElement(int ID, PlayerEntity player)
     {
         return new ContainerLaunchBase(player, this);
     }
 
     @Override
-    public Object getClientGuiElement(int ID, EntityPlayer player)
+    public Object getClientGuiElement(int ID, PlayerEntity player)
     {
         return new GuiLauncherBase(player, this);
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt)
+    public void readFromNBT(CompoundNBT nbt)
     {
         super.readFromNBT(nbt);
         SAVE_LOGIC.load(this, nbt);
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+    public CompoundNBT writeToNBT(CompoundNBT nbt)
     {
         SAVE_LOGIC.save(this, nbt);
         return super.writeToNBT(nbt);

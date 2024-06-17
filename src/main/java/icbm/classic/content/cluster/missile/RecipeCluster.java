@@ -2,14 +2,11 @@ package icbm.classic.content.cluster.missile;
 
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.missiles.ICapabilityMissileStack;
-import icbm.classic.api.missiles.projectile.IProjectileStack;
 import icbm.classic.config.missile.ConfigMissile;
-import icbm.classic.content.cargo.CargoProjectileData;
-import icbm.classic.lib.projectile.ProjectileStack;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
@@ -18,7 +15,6 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 
 /**
@@ -37,13 +33,13 @@ public class RecipeCluster extends IForgeRegistryEntry.Impl<IRecipe> implements 
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
+    public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv) {
         // Don't leave container items, since we store the entire item
         return NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
     }
 
     @Override
-    public boolean matches(InventoryCrafting inv, World worldIn) {
+    public boolean matches(CraftingInventory inv, World worldIn) {
         ItemStack cluster = ItemStack.EMPTY;
         int newItemSize = 0;
 
@@ -80,7 +76,7 @@ public class RecipeCluster extends IForgeRegistryEntry.Impl<IRecipe> implements 
     }
 
     @Override
-    public ItemStack getCraftingResult(InventoryCrafting inv) {
+    public ItemStack getCraftingResult(CraftingInventory inv) {
         ItemStack cluster = ItemStack.EMPTY;
         List<ItemStack> newItems = new ArrayList<>();
 

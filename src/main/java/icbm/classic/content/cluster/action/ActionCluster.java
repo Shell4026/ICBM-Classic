@@ -6,13 +6,11 @@ import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.lib.actions.ActionBase;
 import icbm.classic.lib.actions.status.ActionResponses;
-import icbm.classic.content.cluster.bomblet.EntityBombDroplet;
-import icbm.classic.content.reg.ItemReg;
 import icbm.classic.lib.transform.RotationHelper;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.MathHelper;
@@ -180,7 +178,7 @@ public class ActionCluster extends ActionBase {
 
         // Spawn item to prevent loss
         if(entity == null) {
-            final EntityItem entityItem = new EntityItem(getWorld());
+            final ItemEntity entityItem = new ItemEntity(getWorld());
             entityItem.setPosition(getPosition().x + x, getPosition().y+ y, getPosition().z + z);
             entityItem.setItem(stackToSpawn.copy());
             entityItem.setDefaultPickupDelay();

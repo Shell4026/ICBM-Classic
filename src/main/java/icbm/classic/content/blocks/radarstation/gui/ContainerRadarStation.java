@@ -2,8 +2,8 @@ package icbm.classic.content.blocks.radarstation.gui;
 
 import icbm.classic.content.blocks.radarstation.TileRadarStation;
 import icbm.classic.prefab.gui.ContainerBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 
@@ -13,7 +13,7 @@ import net.minecraftforge.items.SlotItemHandler;
  */
 public class ContainerRadarStation extends ContainerBase<TileRadarStation>
 {
-    public ContainerRadarStation(EntityPlayer player, TileRadarStation node)
+    public ContainerRadarStation(PlayerEntity player, TileRadarStation node)
     {
         super(player, node);
 
@@ -26,10 +26,10 @@ public class ContainerRadarStation extends ContainerBase<TileRadarStation>
 
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int slotIndex)
+    public ItemStack transferStackInSlot(PlayerEntity par1EntityPlayer, int slotIndex)
     {
         ItemStack targetItemStackCopy = null;
-        Slot targetSlot = (Slot) this.inventorySlots.get(slotIndex);
+        Slot targetSlot = (net.minecraft.inventory.container.Slot) this.inventorySlots.get(slotIndex);
 
         if (targetSlot != null && targetSlot.getHasStack())
         {

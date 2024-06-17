@@ -3,7 +3,7 @@ package icbm.classic.lib.network;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -54,7 +54,7 @@ public interface IPacket<P extends IPacket>
     }
 
     @SideOnly(Side.CLIENT)
-    default void handleClientSide(final Minecraft minecraft, final EntityPlayer player)
+    default void handleClientSide(final Minecraft minecraft, final PlayerEntity player)
     {
         throw new UnsupportedOperationException("Unsupported operation for Packet: " + getClass().getSimpleName());
     }
@@ -64,7 +64,7 @@ public interface IPacket<P extends IPacket>
      *
      * @param player the player reference
      */
-    default void handleServerSide(EntityPlayer player)
+    default void handleServerSide(PlayerEntity player)
     {
         throw new UnsupportedOperationException("Unsupported operation for Packet: " + getClass().getSimpleName());
     }

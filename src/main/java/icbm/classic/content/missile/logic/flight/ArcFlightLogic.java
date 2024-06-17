@@ -17,8 +17,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraft.world.gen.ChunkProviderServer;
+import net.minecraft.world.ServerWorld;
+import net.minecraft.world.chunk.ServerChunkProvider;
 
 /**
  * Flight path that moves in a ballistic arc from start position to target position
@@ -227,14 +227,14 @@ public class ArcFlightLogic extends BuildableObject<ArcFlightLogic, IBuilderRegi
 
         final BlockPos futurePos = predictPosition(entity, BlockPos::new, 2);
 
-        if(entity.world instanceof WorldServer) {
+        if(entity.world instanceof ServerWorld) {
 
             int xStart = (int) Math.floor(entity.posX) >> 4;
             int zStart = (int) Math.floor(entity.posZ) >> 4;
             int xEnd = futurePos.getX() >> 4;
             int zEnd = futurePos.getZ() >> 4;
 
-            final ChunkProviderServer chunkProviderServer = ((WorldServer) entity.world).getChunkProvider();
+            final ServerChunkProvider chunkProviderServer = ((ServerWorld) entity.world).getChunkProvider();
 
             for (int i = xStart; i <= xEnd; ++i) {
                 for (int j = zStart; j <= zEnd; ++j) {

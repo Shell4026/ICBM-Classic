@@ -1,6 +1,6 @@
 package icbm.classic.datafix;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 public class DataFixerHelpers { //TODO consider moving to a nbt helper class?
 
@@ -10,7 +10,7 @@ public class DataFixerHelpers { //TODO consider moving to a nbt helper class?
      * @param compound to edit
      * @param tags to remove
      */
-    public static void removeTags(NBTTagCompound compound, String... tags) {
+    public static void removeTags(CompoundNBT compound, String... tags) {
         for(String str : tags) {
             compound.removeTag(str);
         }
@@ -22,8 +22,8 @@ public class DataFixerHelpers { //TODO consider moving to a nbt helper class?
      * @param compound to edit
      * @param tags set to remove, EX: ["firstLayer", "secondLayer", "target"]
      */
-    public static void removeNestedTag(final NBTTagCompound compound, final String... tags) {
-        NBTTagCompound current = compound;
+    public static void removeNestedTag(final CompoundNBT compound, final String... tags) {
+        CompoundNBT current = compound;
 
         // Loop through nested levels, ignore last tag as that is our remove target
         for(int i = 0; i < (tags.length - 1); i++) {

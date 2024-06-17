@@ -2,15 +2,14 @@ package icbm.classic.content.missile.logic.flight.move;
 
 import icbm.classic.ICBMConstants;
 import icbm.classic.api.missiles.IMissile;
-import icbm.classic.content.missile.logic.flight.prefab.AccelerateByFacingLogic;
 import icbm.classic.content.missile.logic.flight.prefab.AccelerateByVec3Logic;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
@@ -71,12 +70,12 @@ public class MoveByVec3Logic extends AccelerateByVec3Logic {
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
+    public CompoundNBT serializeNBT() {
         return SAVE_LOGIC.save(this, super.serializeNBT());
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         super.deserializeNBT(nbt);
         SAVE_LOGIC.load(this, nbt);
     }

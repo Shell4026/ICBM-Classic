@@ -6,7 +6,7 @@ import icbm.classic.ICBMClassic;
 import icbm.classic.TestBase;
 import icbm.classic.content.items.ItemMissile;
 import net.minecraft.item.Item;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,10 +17,10 @@ import org.junit.jupiter.api.Test;
 public class TileLauncherBaseTest extends TestBase {
 
     @GivenJsonResource("data/saves/4.0.0/tileEntity_launcherbase.json")
-    NBTTagCompound version400save;
+    CompoundNBT version400save;
 
     @GivenJsonResource("data/saves/4.2.0/tileEntity_launcherbase.json")
-    NBTTagCompound version420save;
+    CompoundNBT version420save;
 
     private static Item item;
 
@@ -39,14 +39,14 @@ public class TileLauncherBaseTest extends TestBase {
         Assertions.assertNotNull(version400save);
 
         // Update itemMissile registry name, mapping event changes this as start of game for us
-        ((NBTTagCompound) version400save.getCompoundTag("inventory").getTagList("Items", 10).get(0)).setString("id", "icbmclassic:explosive_missile");
+        ((CompoundNBT) version400save.getCompoundTag("inventory").getTagList("Items", 10).get(0)).setString("id", "icbmclassic:explosive_missile");
 
         // Load tile
         final TileLauncherBase launcher = new TileLauncherBase();
         launcher.readFromNBT(version400save);
 
         // Confirm we still have a missile in inventory
-        assertExplosive(launcher.getMissileStack(), "icbmclassic:shrapnel", new NBTTagCompound());
+        assertExplosive(launcher.getMissileStack(), "icbmclassic:shrapnel", new CompoundNBT());
     }
 
     @Test
@@ -61,6 +61,6 @@ public class TileLauncherBaseTest extends TestBase {
         launcher.readFromNBT(version420save);
 
         // Confirm we still have a missile in inventory
-        assertExplosive(launcher.getMissileStack(), "icbmclassic:shrapnel", new NBTTagCompound());
+        assertExplosive(launcher.getMissileStack(), "icbmclassic:shrapnel", new CompoundNBT());
     }
 }

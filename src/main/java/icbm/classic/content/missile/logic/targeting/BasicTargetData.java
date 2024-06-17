@@ -7,7 +7,7 @@ import icbm.classic.api.missiles.parts.IMissileTargetDelayed;
 import icbm.classic.api.reg.obj.IBuilderRegistry;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -19,7 +19,7 @@ import java.util.Objects;
 /**
  * Simple 3D position targeting data
  */
-public class BasicTargetData implements IMissileTarget, IMissileTargetDelayed, INBTSerializable<NBTTagCompound> {
+public class BasicTargetData implements IMissileTarget, IMissileTargetDelayed, INBTSerializable<CompoundNBT> {
 
     public static final ResourceLocation REG_NAME = new ResourceLocation(ICBMConstants.DOMAIN, "basic");
     @Getter @Setter
@@ -94,8 +94,8 @@ public class BasicTargetData implements IMissileTarget, IMissileTargetDelayed, I
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
-        final NBTTagCompound saveData = new NBTTagCompound();
+    public CompoundNBT serializeNBT() {
+        final CompoundNBT saveData = new CompoundNBT();
         saveData.setDouble("x", position.x);
         saveData.setDouble("y", position.y);
         saveData.setDouble("z", position.z);
@@ -104,7 +104,7 @@ public class BasicTargetData implements IMissileTarget, IMissileTargetDelayed, I
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         double x = nbt.getDouble("x");
         double y = nbt.getDouble("y");
         double z = nbt.getDouble("z");

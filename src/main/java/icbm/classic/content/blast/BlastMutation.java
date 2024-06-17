@@ -1,11 +1,11 @@
 package icbm.classic.content.blast;
 
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityPigZombie;
-import net.minecraft.entity.monster.EntityZombieVillager;
-import net.minecraft.entity.passive.EntityPig;
-import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.monster.ZombiePigmanEntity;
+import net.minecraft.entity.monster.ZombieVillagerEntity;
+import net.minecraft.entity.passive.PigEntity;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 
 import java.util.List;
@@ -18,9 +18,9 @@ public class BlastMutation extends Blast
         if (!this.world().isRemote)
         {
             final AxisAlignedBB bounds = new AxisAlignedBB(location.x() - this.getBlastRadius(), location.y() - this.getBlastRadius(), location.z() - this.getBlastRadius(), location.x() + this.getBlastRadius(), location.y() + this.getBlastRadius(), location.z() + this.getBlastRadius());
-            final List<EntityLiving> entitiesNearby = world().getEntitiesWithinAABB(EntityLiving.class, bounds);
+            final List<MobEntity> entitiesNearby = world().getEntitiesWithinAABB(MobEntity.class, bounds);
 
-            for (EntityLiving entity : entitiesNearby)
+            for (MobEntity entity : entitiesNearby)
             {
                 applyMutationEffect(entity);
             }
@@ -28,23 +28,23 @@ public class BlastMutation extends Blast
         return false;
     }
 
-    public static boolean applyMutationEffect(final EntityLivingBase entity)
+    public static boolean applyMutationEffect(final LivingEntity entity)
     {
-        if (entity instanceof EntityPig)
+        if (entity instanceof PigEntity)
         {
-            final EntityPigZombie newEntity = new EntityPigZombie(entity.world);
+            final ZombiePigmanEntity newEntity = new ZombiePigmanEntity(entity.world);
             newEntity.preventEntitySpawning = true;
             newEntity.setPosition(entity.posX, entity.posY, entity.posZ);
             entity.setDead();
             entity.world.spawnEntity(newEntity);
             return true;
         }
-        else if (entity instanceof EntityVillager)
+        else if (entity instanceof VillagerEntity)
         {
-            final EntityZombieVillager newEntity = new EntityZombieVillager(entity.world);
+            final ZombieVillagerEntity newEntity = new ZombieVillagerEntity(entity.world);
             newEntity.preventEntitySpawning = true;
             newEntity.setPosition(entity.posX, entity.posY, entity.posZ);
-            newEntity.setForgeProfession(((EntityVillager) entity).getProfessionForge());
+            newEntity.setForgeProfession(((VillagerEntity) entity).getProfessionForge());
             entity.setDead();
             entity.world.spawnEntity(newEntity);
             return true;

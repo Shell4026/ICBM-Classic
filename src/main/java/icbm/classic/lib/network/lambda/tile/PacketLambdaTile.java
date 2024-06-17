@@ -10,11 +10,11 @@ import io.netty.channel.ChannelHandlerContext;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -75,7 +75,7 @@ public class PacketLambdaTile<TARGET> implements IPacket<PacketLambdaTile<TARGET
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void handleClientSide(final Minecraft minecraft, final EntityPlayer player)
+    public void handleClientSide(final Minecraft minecraft, final PlayerEntity player)
     {
         final int playerDim = player.world.provider.getDimension();
 
@@ -91,7 +91,7 @@ public class PacketLambdaTile<TARGET> implements IPacket<PacketLambdaTile<TARGET
     }
 
     @Override
-    public void handleServerSide(EntityPlayer player)
+    public void handleServerSide(PlayerEntity player)
     {
         final int playerDim = player.world.provider.getDimension();
 
@@ -102,16 +102,16 @@ public class PacketLambdaTile<TARGET> implements IPacket<PacketLambdaTile<TARGET
         }
 
         // Issue, should never happen
-        if(!(player.world instanceof WorldServer)) {
+        if(!(player.world instanceof ServerWorld)) {
             PacketEvents.onNotServerWorld(codex, getDimensionId());
             return;
         }
 
-        final WorldServer world = (WorldServer) player.world;
+        final ServerWorld world = (ServerWorld) player.world;
         world.addScheduledTask(() -> loadDataIntoTile(world, player));
     }
 
-    private void loadDataIntoTile(World world, EntityPlayer player) {
+    private void loadDataIntoTile(World world, PlayerEntity player) {
 
         // Area is no longer loaded, this is normal in most cases
         if(!world.isBlockLoaded(pos)) {

@@ -4,20 +4,19 @@ import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
 import icbm.classic.content.blocks.launcher.network.ILauncherComponent;
 import icbm.classic.content.blocks.launcher.network.LauncherNetwork;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.*;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -31,7 +30,7 @@ import javax.annotation.Nullable;
  *
  * Created by Dark(DarkGuardsman, Robin) on 1/16/2018.
  */
-public class BlockLaunchConnector extends BlockContainer
+public class BlockLaunchConnector extends ContainerBlock
 {
     public static final PropertyBool UP = PropertyBool.create("up");
     public static final PropertyBool DOWN = PropertyBool.create("down");
@@ -51,14 +50,14 @@ public class BlockLaunchConnector extends BlockContainer
     }
 
     @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
+    public BlockState getActualState(BlockState state, IBlockAccess worldIn, BlockPos pos)
     {
-        final boolean upConnection = isConnection(worldIn, pos, EnumFacing.UP);
-        final boolean downConnection = isConnection(worldIn, pos, EnumFacing.DOWN);
-        final boolean northConnection = isConnection(worldIn, pos, EnumFacing.NORTH);
-        final boolean eastConnection = isConnection(worldIn, pos, EnumFacing.EAST);
-        final boolean southConnection = isConnection(worldIn, pos, EnumFacing.SOUTH);
-        final boolean westConnection = isConnection(worldIn, pos, EnumFacing.WEST);
+        final boolean upConnection = isConnection(worldIn, pos, Direction.UP);
+        final boolean downConnection = isConnection(worldIn, pos, Direction.DOWN);
+        final boolean northConnection = isConnection(worldIn, pos, Direction.NORTH);
+        final boolean eastConnection = isConnection(worldIn, pos, Direction.EAST);
+        final boolean southConnection = isConnection(worldIn, pos, Direction.SOUTH);
+        final boolean westConnection = isConnection(worldIn, pos, Direction.WEST);
 
         return state
             .withProperty(UP, upConnection)
@@ -69,7 +68,7 @@ public class BlockLaunchConnector extends BlockContainer
             .withProperty(WEST, westConnection);
     }
 
-    private boolean isConnection(IBlockAccess worldIn, BlockPos selfPos, EnumFacing side) {
+    private boolean isConnection(IBlockAccess worldIn, BlockPos selfPos, Direction side) {
         final BlockPos pos = selfPos.offset(side);
         final TileEntity tile = worldIn.getTileEntity(pos);
         if(tile != null) {
@@ -81,19 +80,19 @@ public class BlockLaunchConnector extends BlockContainer
 
 
     @Override
-    public IBlockState getStateFromMeta(int meta)
+    public BlockState getStateFromMeta(int meta)
     {
         return getDefaultState();
     }
 
     @Override
-    public int getMetaFromState(IBlockState state)
+    public int getMetaFromState(BlockState state)
     {
         return 0;
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, BlockState state, PlayerEntity playerIn, Hand hand, Direction facing, float hitX, float hitY, float hitZ)
     {
         final TileEntity tile = worldIn.getTileEntity(pos);
         if (tile instanceof icbm.classic.content.blocks.launcher.frame.TileLauncherFrame)
@@ -101,8 +100,8 @@ public class BlockLaunchConnector extends BlockContainer
             if(playerIn.getHeldItem(hand).getItem() == Items.STONE_AXE) {
                 if(!worldIn.isRemote) {
                     final LauncherNetwork network = ((icbm.classic.content.blocks.launcher.frame.TileLauncherFrame) tile).getNetworkNode().getNetwork();
-                    playerIn.sendMessage(new TextComponentString("Network: " + network));
-                    playerIn.sendMessage(new TextComponentString("L: " + network.getLaunchers().size()));
+                    playerIn.sendMessage(new StringTextComponent("Network: " + network));
+                    playerIn.sendMessage(new StringTextComponent("L: " + network.getLaunchers().size()));
                 }
                 return true;
             }
@@ -111,7 +110,7 @@ public class BlockLaunchConnector extends BlockContainer
     }
 
     @Deprecated
-    public boolean isOpaqueCube(IBlockState state)
+    public boolean isOpaqueCube(BlockState state)
     {
         return false;
     }
@@ -123,9 +122,9 @@ public class BlockLaunchConnector extends BlockContainer
     }
 
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state)
+    public BlockRenderType getRenderType(BlockState state)
     {
-        return EnumBlockRenderType.MODEL;
+        return BlockRenderType.MODEL;
     }
 
     @Override
@@ -143,7 +142,7 @@ public class BlockLaunchConnector extends BlockContainer
     }
 
     @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state)
+    public void breakBlock(World world, BlockPos pos, BlockState state)
     {
         TileEntity tile = world.getTileEntity(pos);
         if (tile instanceof ILauncherComponent)

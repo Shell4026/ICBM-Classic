@@ -4,9 +4,9 @@ import icbm.classic.api.actions.IAction;
 import icbm.classic.api.caps.IEMPReceiver;
 import icbm.classic.config.ConfigEMP;
 import icbm.classic.lib.InventoryUtility;
-import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -15,16 +15,16 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Wrapper to trigger EMP calls on ItemStack contained inside of {@link EntityItem}
+ * Wrapper to trigger EMP calls on ItemStack contained inside of {@link ItemEntity}
  *
  *
  * Created by Dark(DarkGuardsman, Robin) on 3/12/2018.
  */
 public class CapabilityEmpEntityItem implements IEMPReceiver, ICapabilityProvider
 {
-    public final EntityItem entityItem;
+    public final ItemEntity entityItem;
 
-    public CapabilityEmpEntityItem(EntityItem entityItem)
+    public CapabilityEmpEntityItem(ItemEntity entityItem)
     {
         this.entityItem = entityItem;
     }
@@ -54,14 +54,14 @@ public class CapabilityEmpEntityItem implements IEMPReceiver, ICapabilityProvide
     }
 
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
+    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction facing)
     {
         return capability == CapabilityEMP.EMP;
     }
 
     @Nullable
     @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
+    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing)
     {
         return capability == CapabilityEMP.EMP ? (T) this : null;
     }

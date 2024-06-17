@@ -10,7 +10,7 @@ import icbm.classic.content.missile.logic.source.ActionSource;
 import icbm.classic.lib.actions.fields.ActionFieldProvider;
 import net.minecraft.command.*;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -71,7 +71,7 @@ public class CommandBlastSpread extends SubCommand
 
         final int expectedSpawnCount = (int)Math.floor(Math.pow((count * 2) + 1, 2));
 
-        sender.sendMessage(new TextComponentTranslation(TRANSLATION_SPREAD_START,
+        sender.sendMessage(new TranslationTextComponent(TRANSLATION_SPREAD_START,
                 explosiveData.getRegistryKey(), scale,
                 world.provider.getDimension(), world.getWorldType().getName(),
                 xInput, yInput, zInput,

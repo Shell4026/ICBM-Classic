@@ -4,12 +4,12 @@ import icbm.classic.lib.transform.region.Rectangle;
 import icbm.classic.prefab.gui.GuiContainerBase;
 import icbm.classic.prefab.gui.IGuiComponent;
 import icbm.classic.prefab.gui.tooltip.IToolTip;
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.ITextComponent;
 
 import java.util.function.Supplier;
 
-public class GuiButtonBase<B extends GuiButtonBase> extends GuiButton implements IGuiComponent, IToolTip {
+public class GuiButtonBase<B extends GuiButtonBase> extends Button implements IGuiComponent, IToolTip {
 
     private ActionTrigger action;
 

@@ -5,7 +5,7 @@ import icbm.classic.content.missile.logic.source.cause.CausedByBlock;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -19,7 +19,7 @@ public class BlockScreenCause extends CausedByBlock {
 
     public static final ResourceLocation REG_NAME = new ResourceLocation(ICBMConstants.DOMAIN, "block.screen");
 
-    public BlockScreenCause(World world, BlockPos pos, IBlockState state) {
+    public BlockScreenCause(World world, BlockPos pos, BlockState state) {
         super(world, pos, state);
     }
 

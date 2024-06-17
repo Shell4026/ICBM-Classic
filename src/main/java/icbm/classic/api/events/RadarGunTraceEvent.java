@@ -1,6 +1,6 @@
 package icbm.classic.api.events;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
@@ -16,10 +16,10 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 public class RadarGunTraceEvent extends Event
 {
     public final World world;
-    public final EntityPlayer player;
+    public final PlayerEntity player;
     public Vec3d pos;
 
-    public RadarGunTraceEvent(World world, Vec3d pos, EntityPlayer player)
+    public RadarGunTraceEvent(World world, Vec3d pos, PlayerEntity player)
     {
         this.world = world;
         this.pos = pos;

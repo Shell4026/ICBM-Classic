@@ -1,8 +1,8 @@
 package icbm.classic.content.missile.logic.flight;
 
 import com.builtbroken.mc.testing.junit.TestManager;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.entity.projectile.EntityTippedArrow;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.world.World;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -33,7 +33,7 @@ class DeadFlightLogicTest
     {
         final DeadFlightLogic deadFlightLogic = new DeadFlightLogic(1000);
 
-        EntityArrow entityArrow = new EntityTippedArrow(world);
+        AbstractArrowEntity entityArrow = new ArrowEntity(world);
         entityArrow.ticksExisted = 0;
 
         Assertions.assertFalse(deadFlightLogic.shouldDecreaseMotion(entityArrow));
@@ -44,7 +44,7 @@ class DeadFlightLogicTest
     {
         final DeadFlightLogic deadFlightLogic = new DeadFlightLogic(1000);
 
-        EntityArrow entityArrow = new EntityTippedArrow(world);
+        AbstractArrowEntity entityArrow = new ArrowEntity(world);
         entityArrow.ticksExisted = 999;
 
         Assertions.assertFalse(deadFlightLogic.shouldDecreaseMotion(entityArrow));
@@ -55,7 +55,7 @@ class DeadFlightLogicTest
     {
         final DeadFlightLogic deadFlightLogic = new DeadFlightLogic(1000);
 
-        EntityArrow entityArrow = new EntityTippedArrow(world);
+        AbstractArrowEntity entityArrow = new ArrowEntity(world);
         entityArrow.ticksExisted = 1000;
 
         Assertions.assertFalse(deadFlightLogic.shouldDecreaseMotion(entityArrow));
@@ -66,7 +66,7 @@ class DeadFlightLogicTest
     {
         final DeadFlightLogic deadFlightLogic = new DeadFlightLogic(0);
 
-        EntityArrow entityArrow = new EntityTippedArrow(world);
+        AbstractArrowEntity entityArrow = new ArrowEntity(world);
 
         Assertions.assertTrue(deadFlightLogic.shouldDecreaseMotion(entityArrow));
     }

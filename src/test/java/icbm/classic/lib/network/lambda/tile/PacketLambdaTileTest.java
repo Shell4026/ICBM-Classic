@@ -9,7 +9,7 @@ import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -146,7 +146,7 @@ class PacketLambdaTileTest {
             (tile) -> tile.setField3("cat")
         ));
 
-        final EntityPlayer player = testManager.getPlayer();
+        final PlayerEntity player = testManager.getPlayer();
 
         final Minecraft minecraft = Mockito.mock(Minecraft.class);
         Mockito.when(minecraft.addScheduledTask((Runnable) Mockito.any())).then((answer) -> {
@@ -182,7 +182,7 @@ class PacketLambdaTileTest {
             (tile) -> tile.setField3("cat")
         ));
 
-        final EntityPlayer player = testManager.getPlayer();
+        final PlayerEntity player = testManager.getPlayer();
 
         Mockito.doAnswer((answer) -> {
             ((Runnable) answer.getArgument(0)).run();

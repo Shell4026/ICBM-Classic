@@ -2,10 +2,10 @@ package icbm.classic.lib;
 
 import com.builtbroken.jlib.data.vector.IPos3D;
 import icbm.classic.lib.transform.vector.Pos;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.item.EntityItem;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -31,12 +31,12 @@ public class InventoryUtility
      * @param pos
      * @param destroy - will break the block
      */
-    public static List<EntityItem> dropBlockAsItem(World world, BlockPos pos, boolean destroy)
+    public static List<ItemEntity> dropBlockAsItem(World world, BlockPos pos, boolean destroy)
     {
-        List<EntityItem> entities = new ArrayList();
+        List<ItemEntity> entities = new ArrayList();
         if (!world.isRemote)
         {
-            IBlockState state = world.getBlockState(pos);
+            BlockState state = world.getBlockState(pos);
 
             if (state != null && !state.getBlock().isAir(state, world, pos))
             {
@@ -44,7 +44,7 @@ public class InventoryUtility
 
                 for (ItemStack itemStack : items)
                 {
-                    EntityItem entityItem = dropItemStack(world, new Pos(pos), itemStack, 10);
+                    ItemEntity entityItem = dropItemStack(world, new Pos(pos), itemStack, 10);
                     if (entityItem != null)
                     {
                         entities.add(entityItem);
@@ -59,12 +59,12 @@ public class InventoryUtility
         return entities;
     }
 
-    public static EntityItem dropItemStack(World world, IPos3D position, ItemStack itemStack, int delay)
+    public static ItemEntity dropItemStack(World world, IPos3D position, ItemStack itemStack, int delay)
     {
         return dropItemStack(world, position, itemStack, delay, 0f);
     }
 
-    public static EntityItem dropItemStack(World world, IPos3D position, ItemStack itemStack, int delay, float randomAmount)
+    public static ItemEntity dropItemStack(World world, IPos3D position, ItemStack itemStack, int delay, float randomAmount)
     {
         return dropItemStack(world, position.x(), position.y(), position.z(), itemStack, delay, randomAmount);
     }
@@ -91,7 +91,7 @@ public class InventoryUtility
         }
     }
 
-    public static EntityItem dropItemStack(World world, double x, double y, double z, ItemStack itemStack, int delay, float randomAmount)
+    public static ItemEntity dropItemStack(World world, double x, double y, double z, ItemStack itemStack, int delay, float randomAmount)
     {
         //TODO fire drop events if not already done by forge
         //TODO add banned item filtering, prevent creative mode only items from being dropped
@@ -108,7 +108,7 @@ public class InventoryUtility
                 randomZ = world.rand.nextFloat() * randomAmount + (1.0F - randomAmount) * 0.5D;
             }
 
-            EntityItem entityitem = new EntityItem(world, x + randomX, y + randomY, z + randomZ, itemStack);
+            ItemEntity entityitem = new ItemEntity(world, x + randomX, y + randomY, z + randomZ, itemStack);
 
             if (randomAmount <= 0)
             {
@@ -174,7 +174,7 @@ public class InventoryUtility
         return doTagsMatch(stackA.getTagCompound(), stackB.getTagCompound());
     }
 
-    public static boolean doTagsMatch(final NBTTagCompound tag, final NBTTagCompound tag2)
+    public static boolean doTagsMatch(final CompoundNBT tag, final CompoundNBT tag2)
     {
         boolean firstTagEmpty = tag == null || tag.hasNoTags();
         boolean firstTagEmpty2 = tag2 == null || tag2.hasNoTags();

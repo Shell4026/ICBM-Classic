@@ -4,10 +4,10 @@ import icbm.classic.ICBMConstants;
 import icbm.classic.client.render.entity.RenderEntityItem2;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -17,16 +17,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 
 @SideOnly(Side.CLIENT)
-public class RenderBombDroplet extends Render<EntityBombDroplet>
+public class RenderBombDroplet extends EntityRenderer<EntityBombDroplet>
 {
     public static final ResourceLocation TEXTURE = new ResourceLocation(ICBMConstants.DOMAIN, "textures/entity/fragments/fragment.png");
 
-    private final EntityItem entityItem;
+    private final ItemEntity entityItem;
     private final RenderEntityItem2 renderEntityItem;
-    public RenderBombDroplet(RenderManager renderManager)
+    public RenderBombDroplet(EntityRendererManager renderManager)
     {
         super(renderManager);
-        entityItem = new EntityItem(null);
+        entityItem = new ItemEntity(null);
         renderEntityItem = new RenderEntityItem2(renderManager, Minecraft.getMinecraft().getRenderItem(), ItemCameraTransforms.TransformType.NONE);
     }
 

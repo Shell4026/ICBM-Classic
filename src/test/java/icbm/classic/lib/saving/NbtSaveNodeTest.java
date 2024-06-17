@@ -1,6 +1,6 @@
 package icbm.classic.lib.saving;
 
-import net.minecraft.nbt.NBTTagString;
+import net.minecraft.nbt.StringNBT;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -23,19 +23,19 @@ public class NbtSaveNodeTest
     void save() {
         final SimpleTestObject simpleTestObject = new SimpleTestObject();
         simpleTestObject.someField = "123454";
-        final NbtSaveNode<SimpleTestObject, NBTTagString> node
-            = new NbtSaveNode<SimpleTestObject, NBTTagString>("test", (obj) -> new NBTTagString(obj.someField), null);
+        final NbtSaveNode<SimpleTestObject, StringNBT> node
+            = new NbtSaveNode<SimpleTestObject, StringNBT>("test", (obj) -> new StringNBT(obj.someField), null);
 
-        Assertions.assertEquals(new NBTTagString("123454"), node.save(simpleTestObject));
+        Assertions.assertEquals(new StringNBT("123454"), node.save(simpleTestObject));
     }
 
     @Test
     void load() {
         final SimpleTestObject simpleTestObject = new SimpleTestObject();
-        final NBTTagString saveData = new NBTTagString("56789");
+        final StringNBT saveData = new StringNBT("56789");
 
-        final NbtSaveNode<SimpleTestObject, NBTTagString> node
-            = new NbtSaveNode<SimpleTestObject, NBTTagString>("test", null, (obj, data) -> simpleTestObject.someField = data.getString());
+        final NbtSaveNode<SimpleTestObject, StringNBT> node
+            = new NbtSaveNode<SimpleTestObject, StringNBT>("test", null, (obj, data) -> simpleTestObject.someField = data.getString());
 
         node.load(simpleTestObject, saveData);
         Assertions.assertEquals("56789", simpleTestObject.someField);

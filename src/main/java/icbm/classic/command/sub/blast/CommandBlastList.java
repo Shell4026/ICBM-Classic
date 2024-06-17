@@ -7,7 +7,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 
 import javax.annotation.Nonnull;
 import java.util.stream.Collectors;
@@ -33,6 +33,6 @@ public class CommandBlastList extends SubCommand
                 .collect(Collectors.joining(", "));
 
         //Output message TODO translate if possible?
-        sender.sendMessage(new TextComponentString("Explosive Types: " + names));
+        sender.sendMessage(new StringTextComponent("Explosive Types: " + names));
     }
 }

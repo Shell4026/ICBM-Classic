@@ -6,19 +6,19 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 
 import java.util.function.Consumer;
 
 /**
- * Flight logic to move in a direction matching {@link EnumFacing} until a set distance is meet
+ * Flight logic to move in a direction matching {@link Direction} until a set distance is meet
  */
 public abstract class AccelerateByFacingLogic extends FlightLogic {
 
     /** Direction to move */
     @Getter @Setter @Accessors(chain = true)
-    private EnumFacing direction;
+    private Direction direction;
 
     /** Acceleration to move at per tick */
     @Getter @Setter @Accessors(chain = true)
@@ -54,12 +54,12 @@ public abstract class AccelerateByFacingLogic extends FlightLogic {
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
+    public CompoundNBT serializeNBT() {
         return SAVE_LOGIC.save(this, super.serializeNBT());
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         super.deserializeNBT(nbt);
         SAVE_LOGIC.load(this, nbt);
     }

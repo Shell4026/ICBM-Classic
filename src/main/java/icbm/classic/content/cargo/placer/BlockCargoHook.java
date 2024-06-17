@@ -1,12 +1,12 @@
 package icbm.classic.content.cargo.placer;
 
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
  * Logic block that is placed by parachute, or other cargo projectile, to act as a cargo hook and trigger
  * mechanism.
  */
-public class BlockCargoHook extends BlockContainer {
+public class BlockCargoHook extends ContainerBlock {
 
     public static final PropertyBool TICKING_PROPERTY = PropertyBool.create("ticking");
 
@@ -30,9 +30,9 @@ public class BlockCargoHook extends BlockContainer {
     }
 
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state)
+    public BlockRenderType getRenderType(BlockState state)
     {
-        return EnumBlockRenderType.MODEL;
+        return BlockRenderType.MODEL;
     }
 
     @Nullable

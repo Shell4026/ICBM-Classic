@@ -1,16 +1,16 @@
 package icbm.classic.content.blocks;
 
 import icbm.classic.ICBMConstants;
-import net.minecraft.block.BlockPressurePlate;
+import net.minecraft.block.PressurePlateBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockGlassPressurePlate extends BlockPressurePlate
+public class BlockGlassPressurePlate extends PressurePlateBlock
 {
     public BlockGlassPressurePlate()
     {
@@ -33,7 +33,7 @@ public class BlockGlassPressurePlate extends BlockPressurePlate
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state)
+    public boolean isOpaqueCube(BlockState state)
     {
         return false;
     }

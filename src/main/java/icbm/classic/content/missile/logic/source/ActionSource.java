@@ -7,7 +7,7 @@ import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -15,19 +15,19 @@ import net.minecraftforge.common.util.INBTSerializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public final class ActionSource implements IActionSource, INBTSerializable<NBTTagCompound> {
+public final class ActionSource implements IActionSource, INBTSerializable<CompoundNBT> {
 
     private World world;
     private Vec3d position;
     private IActionCause cause;
 
     @Override
-    public NBTTagCompound serializeNBT() {
-        return SAVE_LOGIC.save(this, new NBTTagCompound());
+    public CompoundNBT serializeNBT() {
+        return SAVE_LOGIC.save(this, new CompoundNBT());
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound save) {
+    public void deserializeNBT(CompoundNBT save) {
         SAVE_LOGIC.load(this, save);
     }
 

@@ -9,7 +9,7 @@ import icbm.classic.prefab.gui.TextInput;
 import icbm.classic.prefab.gui.button.DisableButton;
 import icbm.classic.prefab.gui.components.SlotEnergyBar;
 import icbm.classic.prefab.gui.tooltip.TooltipTranslations;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiCruiseLauncher extends GuiContainerBase
@@ -24,7 +24,7 @@ public class GuiCruiseLauncher extends GuiContainerBase
     // Launcher
     private final TileCruiseLauncher tileEntity;
 
-    public GuiCruiseLauncher(EntityPlayer player, TileCruiseLauncher tileEntity)
+    public GuiCruiseLauncher(PlayerEntity player, TileCruiseLauncher tileEntity)
     {
         super(new ContainerCruiseLauncher(player, tileEntity));
         this.tileEntity = tileEntity;

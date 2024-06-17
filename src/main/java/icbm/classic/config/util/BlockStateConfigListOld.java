@@ -5,8 +5,8 @@ import icbm.classic.ICBMClassic;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
@@ -42,9 +42,9 @@ public class BlockStateConfigListOld {
     final Map<String, List<Function<Block, Boolean>>> fuzzyBlockChecks = new HashMap<>();
 
     // Block lists
-    final HashSet<IBlockState> blockStates = new HashSet();
+    final HashSet<BlockState> blockStates = new HashSet();
     final HashSet<Block> blocks = new HashSet();
-    final Map<Block, List<Function<IBlockState, Boolean>>> blockStateMatchers = new HashMap();
+    final Map<Block, List<Function<BlockState, Boolean>>> blockStateMatchers = new HashMap();
 
     // States
     @Getter
@@ -102,7 +102,7 @@ public class BlockStateConfigListOld {
         lock();
     }
 
-    public boolean contains(IBlockState state) {
+    public boolean contains(BlockState state) {
         if (state == null) {
             return false;
         }
@@ -245,7 +245,7 @@ public class BlockStateConfigListOld {
 
         // Get state from meta value
         final int desiredMetadata = Integer.parseInt(metaSplit[1]);
-        final IBlockState state = block.getStateFromMeta(desiredMetadata);
+        final BlockState state = block.getStateFromMeta(desiredMetadata);
 
         // Null state is a sign of a buggy mod-block
         if (state == null) {
@@ -338,7 +338,7 @@ public class BlockStateConfigListOld {
         return blockStateMatchers.get(block).add((blockState) -> matchesFuzzyState(blockState, matchers));
     }
 
-    boolean matchesFuzzyState(IBlockState state, Map<IProperty, Function<Comparable, Boolean>> matchers) {
+    boolean matchesFuzzyState(BlockState state, Map<IProperty, Function<Comparable, Boolean>> matchers) {
         final ImmutableMap<IProperty<?>, Comparable<?>> stateProps = state.getProperties();
         for(IProperty propKey: matchers.keySet()) {
             if(!stateProps.containsKey(propKey)) {

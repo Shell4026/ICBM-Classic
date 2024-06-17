@@ -1,8 +1,8 @@
 package icbm.classic.prefab.item;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -18,7 +18,7 @@ import java.util.Map;
  *
  * Created by Dark(DarkGuardsman, Robin) on 3/21/2018.
  */
-public class ItemStackCapProvider implements ICapabilityProvider, INBTSerializable<NBTTagCompound>
+public class ItemStackCapProvider implements ICapabilityProvider, INBTSerializable<CompoundNBT>
 {
     public final ItemStack host;
     public HashMap<Capability, Object> capTypeToCap = new HashMap();
@@ -36,14 +36,14 @@ public class ItemStackCapProvider implements ICapabilityProvider, INBTSerializab
     }
 
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
+    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction facing)
     {
         return capTypeToCap.containsKey(capability);
     }
 
     @Nullable
     @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
+    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing)
     {
         if (capTypeToCap.containsKey(capability))
         {
@@ -53,9 +53,9 @@ public class ItemStackCapProvider implements ICapabilityProvider, INBTSerializab
     }
 
     @Override
-    public NBTTagCompound serializeNBT()
+    public CompoundNBT serializeNBT()
     {
-        NBTTagCompound tag = new NBTTagCompound();
+        CompoundNBT tag = new CompoundNBT();
         for (Map.Entry<String, Object> entry : keyToCap.entrySet())
         {
             if (entry.getValue() instanceof INBTSerializable)
@@ -67,7 +67,7 @@ public class ItemStackCapProvider implements ICapabilityProvider, INBTSerializab
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt)
+    public void deserializeNBT(CompoundNBT nbt)
     {
         for (Map.Entry<String, Object> entry : keyToCap.entrySet())
         {

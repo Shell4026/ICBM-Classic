@@ -1,6 +1,6 @@
 package icbm.classic.api.actions.cause;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -16,7 +16,7 @@ import net.minecraftforge.common.util.INBTSerializable;
  * That said ICBM team will not stop anyone from using the data. As there are valid interaction uses. Such as showing
  * missiles on an interactive map or exposing the player's own missile launch position to themselves.
  */
-public interface IActionSource extends INBTSerializable<NBTTagCompound>
+public interface IActionSource extends INBTSerializable<CompoundNBT>
 {
     /**
      * World source of the action

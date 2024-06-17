@@ -4,7 +4,7 @@ import icbm.classic.ICBMConstants;
 import icbm.classic.lib.LanguageUtility;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -35,7 +35,7 @@ public class ItemBase extends Item
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag flag)
     {
-        EntityPlayer player = Minecraft.getMinecraft().player;
+        PlayerEntity player = Minecraft.getMinecraft().player;
 
         //Generic info, shared by item group
         splitAdd(getUnlocalizedName(stack) + ".info", list, false, true);
@@ -66,7 +66,7 @@ public class ItemBase extends Item
      * @param player
      * @param list
      */
-    protected void getDetailedInfo(ItemStack stack, EntityPlayer player, List<String> list)
+    protected void getDetailedInfo(ItemStack stack, PlayerEntity player, List<String> list)
     {
         //Per item detailed info
         splitAdd(getUnlocalizedName(stack) + ".info", list, true, true);
@@ -82,7 +82,7 @@ public class ItemBase extends Item
      * @param player
      * @param list
      */
-    protected void getShiftDetailedInfo(ItemStack stack, EntityPlayer player, List<String> list)
+    protected void getShiftDetailedInfo(ItemStack stack, PlayerEntity player, List<String> list)
     {
         //Per item detailed info
         splitAdd(getUnlocalizedName(stack) + ".info.detailed", list, true, true);
@@ -104,7 +104,7 @@ public class ItemBase extends Item
      * @param player
      * @return
      */
-    protected boolean hasDetailedInfo(ItemStack stack, EntityPlayer player)
+    protected boolean hasDetailedInfo(ItemStack stack, PlayerEntity player)
     {
         return false;
     }
@@ -117,7 +117,7 @@ public class ItemBase extends Item
      * @param player
      * @return
      */
-    protected boolean hasShiftInfo(ItemStack stack, EntityPlayer player)
+    protected boolean hasShiftInfo(ItemStack stack, PlayerEntity player)
     {
         return false;
     }

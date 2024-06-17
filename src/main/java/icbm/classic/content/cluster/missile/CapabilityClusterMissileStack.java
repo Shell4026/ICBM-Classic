@@ -12,11 +12,11 @@ import icbm.classic.content.missile.entity.explosive.EntityMissileActionable;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.Getter;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public class CapabilityClusterMissileStack implements ICapabilityMissileStack, INBTSerializable<NBTTagCompound> {
+public class CapabilityClusterMissileStack implements ICapabilityMissileStack, INBTSerializable<CompoundNBT> {
     private final ItemStack stack;
 
     @Getter
@@ -53,12 +53,12 @@ public class CapabilityClusterMissileStack implements ICapabilityMissileStack, I
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
+    public CompoundNBT serializeNBT() {
         return SAVE_LOGIC.save(this);
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         SAVE_LOGIC.load(this, nbt);
     }
 

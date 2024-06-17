@@ -6,21 +6,19 @@ import icbm.classic.api.radio.IRadioChannelAccess;
 import icbm.classic.lib.LanguageUtility;
 import icbm.classic.lib.NBTConstants;
 import icbm.classic.lib.radio.RadioRegistry;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
 public class ItemRadio extends ItemBase {
 
     @Override
-    public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
+    public ActionResultType onItemUseFirst(PlayerEntity player, World world, BlockPos pos, Direction side, float hitX, float hitY, float hitZ, Hand hand)
     {
         final ItemStack heldItem = player.getHeldItem(hand);
         final TileEntity tile = world.getTileEntity(pos);
@@ -30,12 +28,12 @@ public class ItemRadio extends ItemBase {
                 if(radio instanceof IRadioChannelAccess) {
                     final String channel = ((IRadioChannelAccess) radio).getChannel();
                     setRadioChannel(heldItem, channel);
-                    player.sendMessage(new TextComponentString(LanguageUtility.getLocal("chat.launcher.toolFrequencySet").replace("%s", "" + channel)));
+                    player.sendMessage(new StringTextComponent(LanguageUtility.getLocal("chat.launcher.toolFrequencySet").replace("%s", "" + channel)));
                 }
             }
-            return EnumActionResult.SUCCESS;
+            return ActionResultType.SUCCESS;
         }
-        return EnumActionResult.PASS;
+        return ActionResultType.PASS;
     }
 
     /**
@@ -68,7 +66,7 @@ public class ItemRadio extends ItemBase {
     {
         if (stack.getTagCompound() == null)
         {
-            stack.setTagCompound(new NBTTagCompound());
+            stack.setTagCompound(new CompoundNBT());
         }
         if(stack.getTagCompound().hasKey(NBTConstants.HZ)) {
             stack.getTagCompound().removeTag(NBTConstants.HZ);

@@ -2,12 +2,12 @@ package icbm.classic.lib.saving.nodes;
 
 import icbm.classic.lib.saving.NbtSaveNode;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public class SaveNodeItemStack<E> extends NbtSaveNode<E, NBTTagCompound>
+public class SaveNodeItemStack<E> extends NbtSaveNode<E, CompoundNBT>
 {
     public SaveNodeItemStack(final String name, Function<E, ItemStack> getter, BiConsumer<E, ItemStack> setter) {
         super(name,
@@ -15,7 +15,7 @@ public class SaveNodeItemStack<E> extends NbtSaveNode<E, NBTTagCompound>
                 final ItemStack itemStack = getter.apply(obj);
                 if (itemStack != null && !itemStack.isEmpty())
                 {
-                    return itemStack.writeToNBT(new NBTTagCompound());
+                    return itemStack.writeToNBT(new CompoundNBT());
                 }
                 return null;
             },

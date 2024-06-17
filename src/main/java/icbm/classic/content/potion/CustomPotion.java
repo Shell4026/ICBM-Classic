@@ -1,10 +1,10 @@
 package icbm.classic.content.potion;
 
 import icbm.classic.ICBMConstants;
-import net.minecraft.potion.Potion;
+import net.minecraft.potion.Effect;
 import net.minecraft.util.ResourceLocation;
 
-public abstract class CustomPotion extends Potion
+public abstract class CustomPotion extends Effect
 {
     /**
      * Creates a new type of potion
@@ -21,14 +21,14 @@ public abstract class CustomPotion extends Potion
     }
 
     @Override
-    public Potion setIconIndex(int par1, int par2)
+    public Effect setIconIndex(int par1, int par2)
     {
         super.setIconIndex(par1, par2);
         return this;
     }
 
     @Override
-    protected Potion setEffectiveness(double par1)
+    protected Effect setEffectiveness(double par1)
     {
         super.setEffectiveness(par1);
         return this;

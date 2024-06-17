@@ -1,15 +1,13 @@
 package icbm.classic.content.blast;
 
 import icbm.classic.config.blast.ConfigBlast;
-import net.minecraft.block.BlockLiquid;
-import net.minecraft.block.BlockSnowLayer;
+import net.minecraft.block.*;
+import net.minecraft.block.SnowBlock;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.MobEffects;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.potion.Effects;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -39,7 +37,7 @@ public class BlastEndothermic extends BlastBeam
             final double distance = Math.sqrt(delta_x * delta_x + delta_y * delta_y + delta_z * delta_z);
             final double distanceScale = 1 - (distance / radius);
 
-            IBlockState blockState = world.getBlockState(targetPosition);
+            BlockState blockState = world.getBlockState(targetPosition);
 
             //Closer to center the better the chance of spawning blocks
             if (distance <= radiusDecay || Math.random() < distanceScale)
@@ -47,40 +45,40 @@ public class BlastEndothermic extends BlastBeam
                 //Turn fluids and liquid like blocks to air
                 if (blockState.getMaterial() == Material.WATER)
                 {
-                    this.world().setBlockState(targetPosition, Blocks.ICE.getDefaultState(), 3);
+                    this.world().setBlockState(targetPosition, net.minecraft.block.Blocks.ICE.getDefaultState(), 3);
                 }
 
-                else if (blockState.getBlock() == Blocks.FIRE)
+                else if (blockState.getBlock() == net.minecraft.block.Blocks.FIRE)
                 {
                     world.setBlockToAir(targetPosition);
                 }
-                else if (blockState.getBlock() == Blocks.LAVA)
+                else if (blockState.getBlock() == net.minecraft.block.Blocks.LAVA)
                 {
                     world.setBlockState(targetPosition, Blocks.OBSIDIAN.getDefaultState());
                 }
-                else if (blockState.getBlock() == Blocks.FLOWING_LAVA)
+                else if (blockState.getBlock() == net.minecraft.block.Blocks.FLOWING_LAVA)
                 {
                     int level = Math.min(8, Math.max(1, blockState.getValue(BlockLiquid.LEVEL) / 2));
-                    world.setBlockState(targetPosition, Blocks.SNOW_LAYER.getDefaultState()
-                            .withProperty(BlockSnowLayer.LAYERS, level), 3);
+                    world.setBlockState(targetPosition, net.minecraft.block.Blocks.SNOW_LAYER.getDefaultState()
+                            .withProperty(SnowBlock.LAYERS, level), 3);
                 }
-                else if (blockState.getBlock() == Blocks.MAGMA)
+                else if (blockState.getBlock() == net.minecraft.block.Blocks.MAGMA)
                 {
-                    world.setBlockState(targetPosition, Blocks.STONE.getDefaultState(), 3);
+                    world.setBlockState(targetPosition, net.minecraft.block.Blocks.STONE.getDefaultState(), 3);
                 }
-                else if (blockState.getBlock() == Blocks.NETHERRACK)
+                else if (blockState.getBlock() == net.minecraft.block.Blocks.NETHERRACK)
                 {
-                    world.setBlockState(targetPosition, Blocks.DIRT.getDefaultState(), 3);
+                    world.setBlockState(targetPosition, net.minecraft.block.Blocks.DIRT.getDefaultState(), 3);
                 }
-                else if (blockState.getBlock() == Blocks.SOUL_SAND)
+                else if (blockState.getBlock() == net.minecraft.block.Blocks.SOUL_SAND)
                 {
                     if (world.rand.nextBoolean())
                     {
-                        world.setBlockState(targetPosition, Blocks.SAND.getDefaultState(), 3);
+                        world.setBlockState(targetPosition, net.minecraft.block.Blocks.SAND.getDefaultState(), 3);
                     }
                     else
                     {
-                        world.setBlockState(targetPosition, Blocks.GRAVEL.getDefaultState(), 3);
+                        world.setBlockState(targetPosition, net.minecraft.block.Blocks.GRAVEL.getDefaultState(), 3);
                     }
                 }
 
@@ -89,11 +87,11 @@ public class BlastEndothermic extends BlastBeam
                 {
                     if (world.rand.nextBoolean())
                     {
-                        this.world().setBlockState(targetPosition, Blocks.ICE.getDefaultState(), 3);
+                        this.world().setBlockState(targetPosition, net.minecraft.block.Blocks.ICE.getDefaultState(), 3);
                     }
                     else
                     {
-                        this.world().setBlockState(targetPosition, Blocks.SNOW.getDefaultState(), 3);
+                        this.world().setBlockState(targetPosition, net.minecraft.block.Blocks.SNOW.getDefaultState(), 3);
                     }
                 }
 
@@ -111,14 +109,14 @@ public class BlastEndothermic extends BlastBeam
         if (!random || world.rand.nextBoolean())
         {
             //Place fire
-            final IBlockState blockState = world.getBlockState(pos);
-            final IBlockState blockStateUnder = world.getBlockState(pos.down());
+            final BlockState blockState = world.getBlockState(pos);
+            final BlockState blockStateUnder = world.getBlockState(pos.down());
             if (blockState.getBlock().isReplaceable(world, pos)
-                    && Blocks.SNOW_LAYER.canPlaceBlockAt(world, pos)
-                    && blockStateUnder.isSideSolid(world, pos.down(), EnumFacing.UP))
+                    && net.minecraft.block.Blocks.SNOW_LAYER.canPlaceBlockAt(world, pos)
+                    && blockStateUnder.isSideSolid(world, pos.down(), Direction.UP))
             {
-                world.setBlockState(pos, Blocks.SNOW_LAYER.getDefaultState()
-                        .withProperty(BlockSnowLayer.LAYERS, 1 + world.rand.nextInt(7)), 3);
+                world.setBlockState(pos, net.minecraft.block.Blocks.SNOW_LAYER.getDefaultState()
+                        .withProperty(SnowBlock.LAYERS, 1 + world.rand.nextInt(7)), 3);
 
             }
         }
@@ -130,16 +128,16 @@ public class BlastEndothermic extends BlastBeam
         super.onBlastCompleted();
 
         //Freeze all nearby entities.
-        final List<EntityLiving> livingEntities = world().getEntitiesWithinAABB(EntityLiving.class, new AxisAlignedBB(location.x() - getBlastRadius(), location.y() - getBlastRadius(), location.z() - getBlastRadius(), location.x() + getBlastRadius(), location.y() + getBlastRadius(), location.z() + getBlastRadius()));
+        final List<MobEntity> livingEntities = world().getEntitiesWithinAABB(MobEntity.class, new AxisAlignedBB(location.x() - getBlastRadius(), location.y() - getBlastRadius(), location.z() - getBlastRadius(), location.x() + getBlastRadius(), location.y() + getBlastRadius(), location.z() + getBlastRadius()));
 
         if (livingEntities != null && !livingEntities.isEmpty())
         {
-            for (EntityLiving entity : livingEntities) {
+            for (MobEntity entity : livingEntities) {
                 if (entity != null && entity.isEntityAlive()) {
                     //entity.addPotionEffect(new CustomPotionEffect(PoisonFrostBite.INSTANCE, 60 * 20, 1, null));
-                    entity.addPotionEffect(new PotionEffect(MobEffects.POISON, 10 * 20, 2));
-                    entity.addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 120 * 20, 2));
-                    entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 120 * 20, 4));
+                    entity.addPotionEffect(new EffectInstance(Effects.POISON, 10 * 20, 2));
+                    entity.addPotionEffect(new EffectInstance(Effects.MINING_FATIGUE, 120 * 20, 2));
+                    entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 120 * 20, 4));
                 }
             }
         }

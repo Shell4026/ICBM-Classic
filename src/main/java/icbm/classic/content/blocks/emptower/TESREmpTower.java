@@ -1,13 +1,13 @@
 package icbm.classic.content.blocks.emptower;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelRenderer;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -50,7 +50,7 @@ public class TESREmpTower extends TileEntityRenderer<TileEntity>
         GlStateManager.pushMatrix();
         GlStateManager.translate((float) x + 0.5, (float) y + 0.5, (float) z + 0.5);
 
-        this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        this.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
         GlStateManager.disableLighting();
 
         GlStateManager.rotate(rotation, 0.0F, 1.0F, 0.0F);
@@ -67,7 +67,7 @@ public class TESREmpTower extends TileEntityRenderer<TileEntity>
             GlStateManager.pushMatrix();
             GlStateManager.translate((float) x + 0.5, (float) y + 0.5, (float) z + 0.5);
 
-            this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+            this.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
             GlStateManager.disableLighting();
             GlStateManager.enableBlend();
 
@@ -83,7 +83,7 @@ public class TESREmpTower extends TileEntityRenderer<TileEntity>
         }
     }
 
-    private void renderBlock(BlockRendererDispatcher blockRendererDispatcher, World world, BlockPos pos, IBlockState state) {
+    private void renderBlock(BlockRendererDispatcher blockRendererDispatcher, World world, BlockPos pos, BlockState state) {
         final BlockModelRenderer blockModelRenderer = blockRendererDispatcher.getBlockModelRenderer();
         final IBakedModel model = blockRendererDispatcher.getModelForState(state);
         final float brightness = 1f;

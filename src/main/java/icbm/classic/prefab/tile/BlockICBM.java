@@ -3,18 +3,18 @@ package icbm.classic.prefab.tile;
 import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
 import icbm.classic.lib.InventoryUtility;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public abstract class BlockICBM extends BlockContainer
+public abstract class BlockICBM extends ContainerBlock
 {
     public static final PropertyDirection ROTATION_PROP = PropertyDirection.create("rotation");
 
@@ -42,25 +42,25 @@ public abstract class BlockICBM extends BlockContainer
     }
 
     @Override
-    public IBlockState getStateFromMeta(int meta)
+    public BlockState getStateFromMeta(int meta)
     {
-        return getDefaultState().withProperty(ROTATION_PROP, EnumFacing.getFront(meta));
+        return getDefaultState().withProperty(ROTATION_PROP, Direction.getFront(meta));
     }
 
     @Override
-    public int getMetaFromState(IBlockState state)
+    public int getMetaFromState(BlockState state)
     {
         return state.getValue(ROTATION_PROP).ordinal();
     }
 
     @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand)
+    public BlockState getStateForPlacement(World world, BlockPos pos, Direction facing, float hitX, float hitY, float hitZ, int meta, LivingEntity placer, Hand hand)
     {
         return getDefaultState().withProperty(ROTATION_PROP, placer.getHorizontalFacing());
     }
 
     @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state)
+    public void breakBlock(World world, BlockPos pos, BlockState state)
     {
         if(dropInventory) {
             InventoryUtility.dropInventory(world, pos);

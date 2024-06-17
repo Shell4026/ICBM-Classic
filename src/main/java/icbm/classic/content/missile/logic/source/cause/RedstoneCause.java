@@ -5,9 +5,9 @@ import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -21,9 +21,9 @@ public class RedstoneCause extends CausedByBlock {
 
     public static final ResourceLocation REG_NAME = new ResourceLocation(ICBMConstants.DOMAIN, "block.redstone");
 
-    private EnumFacing side;
+    private Direction side;
 
-    public RedstoneCause(World world, BlockPos pos, IBlockState state, EnumFacing side) {
+    public RedstoneCause(World world, BlockPos pos, BlockState state, Direction side) {
         super(world, pos, state);
         this.side = side;
     }
@@ -35,12 +35,12 @@ public class RedstoneCause extends CausedByBlock {
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
+    public CompoundNBT serializeNBT() {
         return SAVE_LOGIC.save(this, super.serializeNBT());
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         super.deserializeNBT(nbt);
         SAVE_LOGIC.load(this, nbt);
     }

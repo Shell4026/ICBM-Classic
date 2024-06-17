@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 
 @NoArgsConstructor
-public class BombletProjectileData implements IProjectileData<EntityBombDroplet>, INBTSerializable<NBTTagCompound> {
+public class BombletProjectileData implements IProjectileData<EntityBombDroplet>, INBTSerializable<CompoundNBT> {
 
     public static final ResourceLocation NAME = new ResourceLocation(ICBMConstants.DOMAIN, "bomblet");
     public static final ImmutableList<MetaTag> TYPES = ImmutableList.of(ProjectileTypes.TYPE_EXPLOSIVE);
@@ -54,14 +54,14 @@ public class BombletProjectileData implements IProjectileData<EntityBombDroplet>
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
-        final NBTTagCompound save = new NBTTagCompound();
+    public CompoundNBT serializeNBT() {
+        final CompoundNBT save = new CompoundNBT();
         save.setTag("explosive", explosiveStack.serializeNBT());
         return save;
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound save) {
+    public void deserializeNBT(CompoundNBT save) {
         explosiveStack = new ItemStack(save.getCompoundTag("explosive"));
     }
 }

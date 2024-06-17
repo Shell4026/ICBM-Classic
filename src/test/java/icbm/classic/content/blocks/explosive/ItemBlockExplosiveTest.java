@@ -2,16 +2,12 @@ package icbm.classic.content.blocks.explosive;
 
 import com.adelean.inject.resources.junit.jupiter.GivenJsonResource;
 import com.adelean.inject.resources.junit.jupiter.TestWithResources;
-import icbm.classic.ICBMClassic;
 import icbm.classic.TestBase;
-import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.caps.IExplosive;
-import icbm.classic.lib.capability.ex.CapabilityExplosive;
 import net.minecraft.block.Block;
-import net.minecraft.init.Bootstrap;
+import net.minecraft.util.registry.Bootstrap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -22,7 +18,7 @@ import org.junit.jupiter.api.Test;
 class ItemBlockExplosiveTest extends TestBase {
 
     @GivenJsonResource("data/saves/4.0.0/itemstack_ContagiousExplosives.json")
-    NBTTagCompound version4save;
+    CompoundNBT version4save;
 
     private static Item item;
 
@@ -56,6 +52,6 @@ class ItemBlockExplosiveTest extends TestBase {
         Assertions.assertTrue(ItemStack.areItemsEqual(expected, stack));
 
         // Confirm capability returns the correct explosive
-        assertExplosive(stack, "icbmclassic:contagious", new NBTTagCompound());
+        assertExplosive(stack, "icbmclassic:contagious", new CompoundNBT());
     }
 }

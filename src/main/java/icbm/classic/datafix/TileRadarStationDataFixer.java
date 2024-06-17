@@ -4,13 +4,13 @@ import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
 import icbm.classic.content.blocks.radarstation.TileRadarStation;
 import icbm.classic.lib.NBTConstants;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.datafix.IFixableData;
 
 public class TileRadarStationDataFixer implements IFixableData
 {
     @Override
-    public NBTTagCompound fixTagCompound(NBTTagCompound tag)
+    public CompoundNBT fixTagCompound(CompoundNBT tag)
     {
         if(tag.hasKey(NBTConstants.ID) && tag.getString(NBTConstants.ID).equalsIgnoreCase(ICBMConstants.PREFIX + "radarstation"))
         {

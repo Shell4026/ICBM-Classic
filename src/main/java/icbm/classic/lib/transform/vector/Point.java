@@ -6,7 +6,7 @@ import com.builtbroken.jlib.data.vector.IPos3D;
 import com.builtbroken.jlib.data.vector.Pos2D;
 import icbm.classic.lib.NBTConstants;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 /**
  * 2D position/point on a plane. Used to traction the location data of something.
@@ -46,17 +46,17 @@ public class Point extends Pos2D<Point> implements IByteBufWriter, IPos2D
         this(data.readDouble(), data.readDouble());
     }
 
-    public Point(NBTTagCompound nbt)
+    public Point(CompoundNBT nbt)
     {
         this(nbt.getDouble(NBTConstants.X), nbt.getDouble(NBTConstants.Y));
     }
 
-    public NBTTagCompound toNBT()
+    public CompoundNBT toNBT()
     {
-        return save(new NBTTagCompound());
+        return save(new CompoundNBT());
     }
 
-    public NBTTagCompound save(NBTTagCompound nbt)
+    public CompoundNBT save(CompoundNBT nbt)
     {
         nbt.setDouble(NBTConstants.X, x());
         nbt.setDouble(NBTConstants.Y, y());

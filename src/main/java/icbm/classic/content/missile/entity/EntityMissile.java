@@ -24,13 +24,12 @@ import icbm.classic.lib.projectile.EntityProjectile;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.EntityChicken;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.passive.ChickenEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.*;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
@@ -74,7 +73,7 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
     }
 
     @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
+    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing)
     {
         if (capability == CapabilityEMP.EMP)
         {
@@ -87,7 +86,7 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+    public boolean hasCapability(Capability<?> capability, @Nullable Direction facing)
     {
         return capability == CapabilityEMP.EMP
             || capability == ICBMClassicAPI.MISSILE_CAPABILITY
@@ -143,7 +142,7 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
     @Override
     protected void handleEntityCollision(RayTraceResult hit, Entity entityHit)
     {
-        if(entityHit instanceof EntityChicken) { //TODO baby zombie for lolz?
+        if(entityHit instanceof ChickenEntity) { //TODO baby zombie for lolz?
             if(getRidingEntity() == null) {
                 ICBMSounds.MEEP.play(entityHit, 2, 1, true);
                 entityHit.startRiding(this, true);
@@ -220,7 +219,7 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
     }
 
     @Override
-    public boolean processInitialInteract(@Nonnull EntityPlayer player, @Nonnull EnumHand hand)
+    public boolean processInitialInteract(@Nonnull PlayerEntity player, @Nonnull Hand hand)
     {
         //Handle player riding missile
         if (!this.world.isRemote && (this.getRidingEntity() == null || this.getRidingEntity() == player) && !MinecraftForge.EVENT_BUS.post(new MissileRideEvent.Start(getMissileCapability(), player)))
@@ -273,7 +272,7 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
     }
 
     public static boolean hasPlayerRiding(Entity entity) {
-        return entity.getPassengers().stream().anyMatch(e -> e instanceof EntityPlayer || hasPlayerRiding(e));
+        return entity.getPassengers().stream().anyMatch(e -> e instanceof PlayerEntity || hasPlayerRiding(e));
     }
 
     @Override
@@ -317,7 +316,7 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
     }
 
     @Override
-    public boolean read(ByteBuf buf, int id, EntityPlayer player, IPacket type) {
+    public boolean read(ByteBuf buf, int id, PlayerEntity player, IPacket type) {
         if(id == 1) {
             readSpawnData(buf);
             return true;
@@ -329,7 +328,7 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
     public void writeSpawnData(ByteBuf additionalMissileData)
     {
         super.writeSpawnData(additionalMissileData);
-        final NBTTagCompound saveData = SAVE_LOGIC.save(this, new NBTTagCompound());
+        final CompoundNBT saveData = SAVE_LOGIC.save(this, new CompoundNBT());
         ByteBufUtils.writeTag(additionalMissileData, saveData);
     }
 
@@ -337,7 +336,7 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
     public void readSpawnData(ByteBuf additionalMissileData)
     {
         super.readSpawnData(additionalMissileData);
-        final NBTTagCompound saveData = ByteBufUtils.readTag(additionalMissileData);
+        final CompoundNBT saveData = ByteBufUtils.readTag(additionalMissileData);
         SAVE_LOGIC.load(this, saveData);
     }
 
@@ -345,7 +344,7 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
      * (abstract) Protected helper method to read subclass entity additionalMissileData from NBT.
      */
     @Override
-    public void readEntityFromNBT(NBTTagCompound nbt)
+    public void readEntityFromNBT(CompoundNBT nbt)
     {
         super.readEntityFromNBT(nbt);
         SAVE_LOGIC.load(this, nbt);
@@ -355,7 +354,7 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
      * (abstract) Protected helper method to write subclass entity additionalMissileData to NBT.
      */
     @Override
-    public void writeEntityToNBT(NBTTagCompound nbt)
+    public void writeEntityToNBT(CompoundNBT nbt)
     {
         super.writeEntityToNBT(nbt);
         SAVE_LOGIC.save(this, nbt);
@@ -363,7 +362,7 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
 
     private static final NbtSaveHandler<EntityMissile> SAVE_LOGIC = new NbtSaveHandler<EntityMissile>()
         .mainRoot()
-        /* */.node(new NbtSaveNode<EntityMissile, NBTTagCompound>("missile",
+        /* */.node(new NbtSaveNode<EntityMissile, CompoundNBT>("missile",
             (missile) -> missile.getMissileCapability().serializeNBT(),
             (missile, data) -> missile.getMissileCapability().deserializeNBT(data)
         ))

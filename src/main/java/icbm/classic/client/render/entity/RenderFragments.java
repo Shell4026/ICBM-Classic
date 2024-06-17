@@ -2,19 +2,18 @@ package icbm.classic.client.render.entity;
 
 import icbm.classic.ICBMConstants;
 import icbm.classic.content.entity.EntityFragments;
-import net.minecraft.block.BlockAnvil;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.AnvilBlock;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -23,11 +22,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 
 @SideOnly(Side.CLIENT)
-public class RenderFragments extends Render<EntityFragments>
+public class RenderFragments extends EntityRenderer<EntityFragments>
 {
     public static final ResourceLocation TEXTURE = new ResourceLocation(ICBMConstants.DOMAIN, "textures/entity/fragments/fragment.png");
 
-    public RenderFragments(RenderManager renderManager)
+    public RenderFragments(EntityRendererManager renderManager)
     {
         super(renderManager);
     }
@@ -38,9 +37,9 @@ public class RenderFragments extends Render<EntityFragments>
         this.bindEntityTexture(entity);
         if (entity.isAnvil)
         {
-            final IBlockState blockState = Blocks.ANVIL.getDefaultState()
-                    .withProperty(BlockAnvil.DAMAGE, entity.world.rand.nextInt(2))
-                    .withProperty(BlockAnvil.FACING, EnumFacing.Plane.HORIZONTAL.facings()[entity.world.rand.nextInt(3)]);
+            final BlockState blockState = Blocks.ANVIL.getDefaultState()
+                    .withProperty(AnvilBlock.DAMAGE, entity.world.rand.nextInt(2))
+                    .withProperty(AnvilBlock.FACING, Plane.HORIZONTAL.facings()[entity.world.rand.nextInt(3)]);
             //TODO store rotation and damage in entity to reduce random nature
 
 
@@ -50,7 +49,7 @@ public class RenderFragments extends Render<EntityFragments>
             GlStateManager.translate((float) x, (float) y + 0.5F, (float) z);
 
 
-            this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+            this.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 
             GlStateManager.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
             GlStateManager.translate(-0.5F, -0.5F, 0.5F);

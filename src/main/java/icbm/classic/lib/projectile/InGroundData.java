@@ -4,10 +4,10 @@ import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -19,7 +19,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class InGroundData implements INBTSerializable<NBTTagCompound> {
+public class InGroundData implements INBTSerializable<CompoundNBT> {
     /**
      * Block position projectile is stuck inside
      */
@@ -28,12 +28,12 @@ public class InGroundData implements INBTSerializable<NBTTagCompound> {
     /**
      * Face of tile we are stuck inside
      */
-    private EnumFacing side;
+    private Direction side;
 
     /**
      * Block state we are stuck inside
      */
-    private IBlockState state;
+    private BlockState state;
 
     public InGroundData(World world, RayTraceResult hit) {
         this.pos = hit.getBlockPos();
@@ -46,12 +46,12 @@ public class InGroundData implements INBTSerializable<NBTTagCompound> {
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
+    public CompoundNBT serializeNBT() {
         return SAVE_LOGIC.save(this);
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         SAVE_LOGIC.load(this, nbt);
     }
 

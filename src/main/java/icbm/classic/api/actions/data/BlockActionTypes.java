@@ -3,6 +3,7 @@ package icbm.classic.api.actions.data;
 import icbm.classic.api.data.meta.MetaTag;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import net.minecraft.block.BlockState;
 
 @NoArgsConstructor(access = AccessLevel.NONE)
 public final class BlockActionTypes {
@@ -17,7 +18,7 @@ public final class BlockActionTypes {
     public static final MetaTag BLOCK_REPLACE = MetaTag.getOrCreateSubTag(BLOCK_EDIT, "replace");
 
     /** Block being modified but staying consistent as the same {@link net.minecraft.block.Block} instance.
-     *  Maybe {@link net.minecraft.block.state.IBlockState} property or data on the {@link net.minecraft.tileentity.TileEntity} */
+     *  Maybe {@link BlockState} property or data on the {@link net.minecraft.tileentity.TileEntity} */
     public static final MetaTag BLOCK_CHANGE = MetaTag.getOrCreateSubTag(BLOCK_EDIT, "change");
 
     /** Block being removed from the world, setAir is counted as removed */

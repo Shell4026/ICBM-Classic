@@ -7,7 +7,7 @@ import icbm.classic.api.data.meta.MetaTag;
 import lombok.Getter;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nonnull;
 
@@ -44,7 +44,7 @@ public class ImmutableStatus implements IActionStatus {
     @Override
     public ITextComponent message() {
         if(textComponent == null) {
-            textComponent = new TextComponentTranslation(translationKey);
+            textComponent = new TranslationTextComponent(translationKey);
         }
         return textComponent;
     }

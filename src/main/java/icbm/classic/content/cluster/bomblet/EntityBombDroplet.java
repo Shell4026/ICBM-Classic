@@ -2,7 +2,6 @@ package icbm.classic.content.cluster.bomblet;
 
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.reg.IExplosiveData;
-import icbm.classic.config.missile.ConfigBomblet;
 import icbm.classic.config.missile.ConfigMissile;
 import icbm.classic.content.missile.logic.source.ActionSource;
 import icbm.classic.content.missile.logic.source.cause.EntityCause;
@@ -13,9 +12,9 @@ import icbm.classic.lib.projectile.EntityProjectile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -86,7 +85,7 @@ public class EntityBombDroplet extends EntityProjectile<EntityBombDroplet> imple
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+    public <T> T getCapability(Capability<T> capability, @Nullable Direction facing)
     {
         if(capability == ICBMClassicAPI.EXPLOSIVE_CAPABILITY) {
             return ICBMClassicAPI.EXPLOSIVE_CAPABILITY.cast(explosive);
@@ -95,7 +94,7 @@ public class EntityBombDroplet extends EntityProjectile<EntityBombDroplet> imple
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+    public boolean hasCapability(Capability<?> capability, @Nullable Direction facing)
     {
         return capability == ICBMClassicAPI.EXPLOSIVE_CAPABILITY
             || super.hasCapability(capability, facing);
@@ -131,7 +130,7 @@ public class EntityBombDroplet extends EntityProjectile<EntityBombDroplet> imple
     public void writeSpawnData(ByteBuf additionalMissileData)
     {
         super.writeSpawnData(additionalMissileData);
-        final NBTTagCompound saveData = SAVE_LOGIC.save(this, new NBTTagCompound());
+        final CompoundNBT saveData = SAVE_LOGIC.save(this, new CompoundNBT());
         ByteBufUtils.writeTag(additionalMissileData, saveData);
     }
 
@@ -139,19 +138,19 @@ public class EntityBombDroplet extends EntityProjectile<EntityBombDroplet> imple
     public void readSpawnData(ByteBuf additionalMissileData)
     {
         super.readSpawnData(additionalMissileData);
-        final NBTTagCompound saveData = ByteBufUtils.readTag(additionalMissileData);
+        final CompoundNBT saveData = ByteBufUtils.readTag(additionalMissileData);
         SAVE_LOGIC.load(this, saveData);
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound nbt)
+    public void readEntityFromNBT(CompoundNBT nbt)
     {
         super.readEntityFromNBT(nbt);
         SAVE_LOGIC.load(this, nbt);
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound nbt)
+    public void writeEntityToNBT(CompoundNBT nbt)
     {
         super.writeEntityToNBT(nbt);
         SAVE_LOGIC.save(this, nbt);
@@ -159,7 +158,7 @@ public class EntityBombDroplet extends EntityProjectile<EntityBombDroplet> imple
 
     private static final NbtSaveHandler<EntityBombDroplet> SAVE_LOGIC = new NbtSaveHandler<EntityBombDroplet>()
         .mainRoot()
-        /* */.node(new NbtSaveNode<EntityBombDroplet, NBTTagCompound>("explosive",
+        /* */.node(new NbtSaveNode<EntityBombDroplet, CompoundNBT>("explosive",
             (missile) -> missile.explosive.serializeNBT(),
             (missile, data) -> missile.explosive.deserializeNBT(data))
         )

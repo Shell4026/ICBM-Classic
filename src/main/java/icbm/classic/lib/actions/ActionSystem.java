@@ -36,9 +36,9 @@ import icbm.classic.lib.saving.nodes.SaveNodeVec3d;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagFloat;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.FloatNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.MinecraftForge;
@@ -60,17 +60,17 @@ public final class ActionSystem {
     }
 
     private static void setupActionFields() {
-        ActionFields.AREA_SIZE = ActionField.getOrCreate("area.size", Float.class, NBTTagFloat::new, NBTTagFloat::getFloat);
+        ActionFields.AREA_SIZE = ActionField.getOrCreate("area.size", Float.class, FloatNBT::new, FloatNBT::getFloat);
         ActionFields.HOST_ENTITY = ActionField.getOrCreate("host.entity", Entity.class, null, null);
         ActionFields.HOST_POSITION = ActionField.getOrCreate("host.vec3d", Vec3d.class, SaveNodeVec3d::save, SaveNodeVec3d::load);
-        ActionFields.HOST_DIRECTION = ActionField.getOrCreate("host.direction", EnumFacing.class, SaveNodeFacing::save, SaveNodeFacing::load);
+        ActionFields.HOST_DIRECTION = ActionField.getOrCreate("host.direction", Direction.class, SaveNodeFacing::save, SaveNodeFacing::load);
         ActionFields.IMPACTED = ActionField.getOrCreate("impacted", Boolean.class, SaveNodeBoolean::save, SaveNodeBoolean::load);
         ActionFields.TARGET_POSITION = ActionField.getOrCreate("target.vec3d", Vec3d.class, SaveNodeVec3d::save, SaveNodeVec3d::load);
         ActionFields.MOTION_VECTOR = ActionField.getOrCreate("motion.vec3d", Vec3d.class, SaveNodeVec3d::save, SaveNodeVec3d::load);
-        ActionFields.YAW = ActionField.getOrCreate("yaw", Float.class, NBTTagFloat::new, NBTTagFloat::getFloat);
-        ActionFields.PITCH = ActionField.getOrCreate("pitch", Float.class, NBTTagFloat::new, NBTTagFloat::getFloat);
+        ActionFields.YAW = ActionField.getOrCreate("yaw", Float.class, FloatNBT::new, FloatNBT::getFloat);
+        ActionFields.PITCH = ActionField.getOrCreate("pitch", Float.class, FloatNBT::new, FloatNBT::getFloat);
         ActionFields.ENTITY_REG_NAME = ActionField.getOrCreate("entity.regName", ResourceLocation.class, SaveNodeResourceLocation::save, SaveNodeResourceLocation::load);
-        ActionFields.ENTITY_DATA = ActionField.getOrCreate("entity.data", NBTTagCompound.class, (v) -> v, (t) -> t);
+        ActionFields.ENTITY_DATA = ActionField.getOrCreate("entity.data", CompoundNBT.class, (v) -> v, (t) -> t);
     }
 
     private static void setupConditionalRegistry() {

@@ -5,7 +5,7 @@ import icbm.classic.api.caps.IMissileHolder;
 import icbm.classic.api.missiles.ICapabilityMissileStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -62,13 +62,13 @@ public class CapabilityMissileHolder implements IMissileHolder
             {
                 @Nullable
                 @Override
-                public NBTBase writeNBT(Capability<IMissileHolder> capability, IMissileHolder instance, EnumFacing side)
+                public NBTBase writeNBT(Capability<IMissileHolder> capability, IMissileHolder instance, Direction side)
                 {
                     return null;
                 }
 
                 @Override
-                public void readNBT(Capability<IMissileHolder> capability, IMissileHolder instance, EnumFacing side, NBTBase nbt)
+                public void readNBT(Capability<IMissileHolder> capability, IMissileHolder instance, Direction side, NBTBase nbt)
                 {
 
                 }

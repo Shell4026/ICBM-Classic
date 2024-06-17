@@ -7,18 +7,15 @@ import icbm.classic.content.entity.EntityBombCart;
 import icbm.classic.content.reg.BlockReg;
 import icbm.classic.lib.capability.ex.CapabilityExplosiveStack;
 import icbm.classic.prefab.item.ItemBase;
-import net.minecraft.block.BlockRailBase;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.AbstractRailBlock;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.entity.item.EntityMinecart;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -36,7 +33,7 @@ public class ItemBombCart extends ItemBase
 
     @Override
     @Nullable
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt)
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt)
     {
         CapabilityExplosiveStack capabilityExplosive = new CapabilityExplosiveStack(stack);
         if(nbt != null)
@@ -52,13 +49,13 @@ public class ItemBombCart extends ItemBase
      * BLOCKS
      */
     @Override
-    public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+    public ActionResultType onItemUse(PlayerEntity player, World worldIn, BlockPos pos, Hand hand, Direction facing, float hitX, float hitY, float hitZ)
     {
-        IBlockState iblockstate = worldIn.getBlockState(pos);
+        BlockState iblockstate = worldIn.getBlockState(pos);
 
-        if (!BlockRailBase.isRailBlock(iblockstate))
+        if (!AbstractRailBlock.isRailBlock(iblockstate))
         {
-            return EnumActionResult.FAIL;
+            return ActionResultType.FAIL;
         }
         else
         {
@@ -66,7 +63,7 @@ public class ItemBombCart extends ItemBase
 
             if (!worldIn.isRemote)
             {
-                BlockRailBase.EnumRailDirection railBlock = iblockstate.getBlock() instanceof BlockRailBase ? ((BlockRailBase) iblockstate.getBlock()).getRailDirection(worldIn, pos, iblockstate, null) : BlockRailBase.EnumRailDirection.NORTH_SOUTH;
+                AbstractRailBlock.EnumRailDirection railBlock = iblockstate.getBlock() instanceof AbstractRailBlock ? ((AbstractRailBlock) iblockstate.getBlock()).getRailDirection(worldIn, pos, iblockstate, null) : AbstractRailBlock.EnumRailDirection.NORTH_SOUTH;
                 double d0 = 0.0D;
 
                 if (railBlock.isAscending())
@@ -74,7 +71,7 @@ public class ItemBombCart extends ItemBase
                     d0 = 0.5D;
                 }
 
-                EntityMinecart entityminecart = new EntityBombCart(worldIn, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.0625D + d0, (double) pos.getZ() + 0.5D, itemstack);
+                AbstractMinecartEntity entityminecart = new EntityBombCart(worldIn, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.0625D + d0, (double) pos.getZ() + 0.5D, itemstack);
 
                 if (itemstack.hasDisplayName())
                 {
@@ -85,7 +82,7 @@ public class ItemBombCart extends ItemBase
             }
 
             itemstack.shrink(1);
-            return EnumActionResult.SUCCESS;
+            return ActionResultType.SUCCESS;
         }
     }
 
@@ -125,13 +122,13 @@ public class ItemBombCart extends ItemBase
     }
 
     @Override
-    protected boolean hasDetailedInfo(ItemStack stack, EntityPlayer player)
+    protected boolean hasDetailedInfo(ItemStack stack, PlayerEntity player)
     {
         return true;
     }
 
     @Override
-    protected void getDetailedInfo(ItemStack stack, EntityPlayer player, List list)
+    protected void getDetailedInfo(ItemStack stack, PlayerEntity player, List list)
     {
         //TODO change over to a hook
         ((ItemBlockExplosive) Item.getItemFromBlock(BlockReg.blockExplosive)).getDetailedInfo(stack, player, list);

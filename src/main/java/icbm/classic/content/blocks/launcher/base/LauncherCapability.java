@@ -31,7 +31,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -214,7 +214,7 @@ public class LauncherCapability extends LauncherBaseCapability {
 
     public IMissileFlightLogic buildFLightPath() {
 
-        if(host.getLaunchDirection() != EnumFacing.UP) {
+        if(host.getLaunchDirection() != Direction.UP) {
 
             IMissileFlightLogicStep stepLockHeight = new MoveByFacingLogic()
                 .setDistance(host.getLockHeight())

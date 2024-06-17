@@ -10,10 +10,10 @@ import icbm.classic.lib.capability.ex.CapabilityExplosiveStack;
 import icbm.classic.prefab.item.ItemBase;
 import icbm.classic.prefab.item.ItemStackCapProvider;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 
 import javax.annotation.Nonnull;
@@ -31,7 +31,7 @@ public class ItemBombDroplet extends ItemBase {
 
     @Override
     @Nullable
-    public net.minecraftforge.common.capabilities.ICapabilityProvider initCapabilities(@Nonnull ItemStack stack, @Nullable NBTTagCompound nbt) {
+    public net.minecraftforge.common.capabilities.ICapabilityProvider initCapabilities(@Nonnull ItemStack stack, @Nullable CompoundNBT nbt) {
         final ItemStackCapProvider provider = new ItemStackCapProvider(stack);
         provider.add("explosive", ICBMClassicAPI.EXPLOSIVE_CAPABILITY, new CapabilityExplosiveStack(stack));
         provider.add("projectile", ICBMClassicAPI.PROJECTILE_STACK_CAPABILITY, new BombletProjectileStack(stack::copy));
@@ -75,13 +75,13 @@ public class ItemBombDroplet extends ItemBase {
     }
 
     @Override
-    protected boolean hasDetailedInfo(ItemStack stack, EntityPlayer player)
+    protected boolean hasDetailedInfo(ItemStack stack, PlayerEntity player)
     {
         return true;
     }
 
     @Override
-    protected void getDetailedInfo(ItemStack stack, EntityPlayer player, List list)
+    protected void getDetailedInfo(ItemStack stack, PlayerEntity player, List list)
     {
         //TODO add hook
         ((ItemBlockExplosive) Item.getItemFromBlock(BlockReg.blockExplosive)).getDetailedInfo(stack, player, list);

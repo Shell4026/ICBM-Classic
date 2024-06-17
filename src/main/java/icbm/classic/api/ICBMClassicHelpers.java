@@ -7,11 +7,11 @@ import icbm.classic.api.launcher.IMissileLauncher;
 import icbm.classic.api.missiles.IMissile;
 import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.api.reg.IExplosiveData;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -106,12 +106,12 @@ public final class ICBMClassicHelpers
         return entity.getCapability(ICBMClassicAPI.EXPLOSIVE_CAPABILITY, null);
     }
 
-    public static boolean isLauncher(TileEntity tileEntity, EnumFacing side)
+    public static boolean isLauncher(TileEntity tileEntity, Direction side)
     {
         return tileEntity != null && tileEntity.hasCapability(ICBMClassicAPI.MISSILE_LAUNCHER_CAPABILITY, side);
     }
 
-    public static IMissileLauncher getLauncher(TileEntity tileEntity, EnumFacing side)
+    public static IMissileLauncher getLauncher(TileEntity tileEntity, Direction side)
     {
         return tileEntity.getCapability(ICBMClassicAPI.MISSILE_LAUNCHER_CAPABILITY, side);
     }
@@ -126,7 +126,7 @@ public final class ICBMClassicHelpers
     }
 
     @Deprecated //Will be placed in a registry/handler
-    public static boolean hasEmpHandler(IBlockState iBlockState)
+    public static boolean hasEmpHandler(BlockState iBlockState)
     {
         return false; //TODO implement
     }

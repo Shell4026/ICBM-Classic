@@ -1,12 +1,12 @@
 package icbm.classic.prefab.tile;
 
 import icbm.classic.lib.tile.ITick;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -41,26 +41,26 @@ public class TileMachine extends TileEntity implements ITickable
     }
 
     @Override
-    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
+    public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newSate)
     {
         return oldState.getBlock() != newSate.getBlock();
     }
 
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket()
+    public SUpdateTileEntityPacket getUpdatePacket()
     {
-        return new SPacketUpdateTileEntity(pos, 0, getUpdateTag());
+        return new SUpdateTileEntityPacket(pos, 0, getUpdateTag());
     }
 
     @Override
-    public NBTTagCompound getUpdateTag()
+    public CompoundNBT getUpdateTag()
     {
-        return writeToNBT(new NBTTagCompound());
+        return writeToNBT(new CompoundNBT());
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt)
     {
         readFromNBT(pkt.getNbtCompound());
     }
@@ -76,17 +76,17 @@ public class TileMachine extends TileEntity implements ITickable
     }
 
     @Deprecated
-    public EnumFacing getRotation()
+    public Direction getRotation()
     {
-        IBlockState state = getBlockState();
+        BlockState state = getBlockState();
         if (state.getProperties().containsKey(BlockICBM.ROTATION_PROP))
         {
             return state.getValue(BlockICBM.ROTATION_PROP);
         }
-        return EnumFacing.NORTH;
+        return Direction.NORTH;
     }
 
-    public IBlockState getBlockState()
+    public BlockState getBlockState()
     {
         return world.getBlockState(getPos());
     }

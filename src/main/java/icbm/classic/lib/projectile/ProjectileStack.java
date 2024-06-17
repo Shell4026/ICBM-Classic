@@ -8,22 +8,22 @@ import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public class ProjectileStack implements IProjectileStack<EntityParachute>, INBTSerializable<NBTTagCompound> {
+public class ProjectileStack implements IProjectileStack<EntityParachute>, INBTSerializable<CompoundNBT> {
 
     @Getter @Setter @Accessors(chain = true)
     private IProjectileData projectileData;
 
 
     @Override
-    public NBTTagCompound serializeNBT() {
+    public CompoundNBT serializeNBT() {
         return SAVE_LOGIC.save(this);
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound save) {
+    public void deserializeNBT(CompoundNBT save) {
         SAVE_LOGIC.load(this, save);
     }
 

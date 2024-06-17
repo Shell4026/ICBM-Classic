@@ -2,25 +2,17 @@ package icbm.classic.content.items;
 
 import com.adelean.inject.resources.junit.jupiter.GivenJsonResource;
 import com.adelean.inject.resources.junit.jupiter.TestWithResources;
-import com.builtbroken.mc.testing.junit.TestManager;
 import icbm.classic.ICBMClassic;
 import icbm.classic.TestBase;
-import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.caps.IExplosive;
 import icbm.classic.content.entity.EntityGrenade;
-import icbm.classic.lib.capability.ex.CapabilityExplosive;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Bootstrap;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.util.*;
+import net.minecraft.util.registry.Bootstrap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.junit.jupiter.api.*;
@@ -40,7 +32,7 @@ import static org.mockito.Mockito.verify;
 public class ItemGrenadeTest extends TestBase
 {
     @GivenJsonResource("data/saves/4.0.0/itemstack_Greande_shrapnel.json")
-    NBTTagCompound version4save;
+    CompoundNBT version4save;
 
     private static Item item;
 
@@ -54,31 +46,31 @@ public class ItemGrenadeTest extends TestBase
     @Test
     void onItemRightClick_normal()
     {
-        final EntityPlayer player = spy(testManager.getPlayer());
+        final PlayerEntity player = spy(testManager.getPlayer());
         final World world = testManager.getWorld();
         final ItemStack stack = new ItemStack(item, 1, 0);
 
         //Set player inventory and held
-        player.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, stack);
+        player.setItemStackToSlot(EquipmentSlotType.MAINHAND, stack);
 
         //Prevent normal set active logic as this will crash if run
-        doNothing().when(player).setActiveHand(EnumHand.MAIN_HAND);
+        doNothing().when(player).setActiveHand(Hand.MAIN_HAND);
 
         //Trigger action
-        final ActionResult<ItemStack> result = item.onItemRightClick(world, player, EnumHand.MAIN_HAND);
+        final ActionResult<ItemStack> result = item.onItemRightClick(world, player, Hand.MAIN_HAND);
 
         //Main hand should be set
-        verify(player, times(1)).setActiveHand(EnumHand.MAIN_HAND);
+        verify(player, times(1)).setActiveHand(Hand.MAIN_HAND);
 
         //Check result
         Assertions.assertEquals(item, result.getResult().getItem());
-        Assertions.assertEquals(EnumActionResult.SUCCESS, result.getType());
+        Assertions.assertEquals(ActionResultType.SUCCESS, result.getType());
     }
 
     @Test
     void onPlayerStoppedUsing_normal()
     {
-        final EntityPlayer player = testManager.getPlayer();
+        final PlayerEntity player = testManager.getPlayer();
         final World world = spy(testManager.getWorld());
 
         ItemStack stack = new ItemStack(item, 2, 0);
@@ -120,6 +112,6 @@ public class ItemGrenadeTest extends TestBase
         Assertions.assertTrue(ItemStack.areItemsEqual(expected, stack));
 
         // Confirm capability returns the correct explosive
-        assertExplosive(stack, "icbmclassic:shrapnel", new NBTTagCompound());
+        assertExplosive(stack, "icbmclassic:shrapnel", new CompoundNBT());
     }
 }

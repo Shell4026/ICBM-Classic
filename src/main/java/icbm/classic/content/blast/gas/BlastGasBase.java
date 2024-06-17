@@ -8,11 +8,11 @@ import icbm.classic.content.gas.ProtectiveArmorHandler;
 import icbm.classic.lib.NBTConstants;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
@@ -42,7 +42,7 @@ public abstract class BlastGasBase extends Blast implements IBlastTickable
     private final Queue<BlockPos> edgeBlocks = new LinkedList();
 
     /** Entities impacted by gas */
-    private final HashMap<EntityLivingBase, Integer> impactedEntityMap = new HashMap();
+    private final HashMap<LivingEntity, Integer> impactedEntityMap = new HashMap();
     //TODO turn into entity capability to prevent damage stacking of several explosives
     //TODO use weak refs to not hold instances
 
@@ -79,11 +79,11 @@ public abstract class BlastGasBase extends Blast implements IBlastTickable
                         location.x() - radius, location.y() - radius, location.z() - radius,
                         location.x() + radius, location.y() + radius, location.z() + radius);
 
-                final List<EntityLivingBase> entityList = world()
-                        .getEntitiesWithinAABB(EntityLivingBase.class, bounds, this::canGasEffect);
+                final List<LivingEntity> entityList = world()
+                        .getEntitiesWithinAABB(LivingEntity.class, bounds, this::canGasEffect);
 
                 //Loop all entities
-                for (EntityLivingBase entity : entityList)
+                for (LivingEntity entity : entityList)
                 {
                     final float protection = getProtectionRating(entity);
                     if(protection < minGasProtection() || protection < world.rand.nextFloat()) {
@@ -114,7 +114,7 @@ public abstract class BlastGasBase extends Blast implements IBlastTickable
         return 0.5f;
     }
 
-    protected float getProtectionRating(EntityLivingBase entityLivingBase) {
+    protected float getProtectionRating(LivingEntity entityLivingBase) {
         return ProtectiveArmorHandler.getProtectionRating(entityLivingBase);
     }
 
@@ -131,7 +131,7 @@ public abstract class BlastGasBase extends Blast implements IBlastTickable
      * @param entity   to impact
      * @param hitCount level of impact
      */
-    protected void applyEffect(final EntityLivingBase entity, final int hitCount)
+    protected void applyEffect(final LivingEntity entity, final int hitCount)
     {
 
     }
@@ -142,13 +142,13 @@ public abstract class BlastGasBase extends Blast implements IBlastTickable
      * @param entity
      * @return true to effect entity
      */
-    protected boolean canGasEffect(EntityLivingBase entity)
+    protected boolean canGasEffect(LivingEntity entity)
     {
         //Ignore dead things
         if (entity.isEntityAlive())
         {
             //Always ignore non-gameplay characters
-            if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())
+            if (entity instanceof PlayerEntity && ((PlayerEntity) entity).isCreative())
             {
                 return false;
             }
@@ -212,7 +212,7 @@ public abstract class BlastGasBase extends Blast implements IBlastTickable
             final BlockPos edge = edgeBlocks.poll();
 
             //Loop all 6 sides of the edge
-            for (EnumFacing facing : EnumFacing.values())
+            for (Direction facing : Direction.values())
             {
                 //Move our check pos to current target
                 checkPos.setPos(edge);
@@ -247,9 +247,9 @@ public abstract class BlastGasBase extends Blast implements IBlastTickable
         edgeBlocks.addAll(nextSet);
     }
 
-    private boolean isValidPath(final BlockPos pos, final EnumFacing direction)
+    private boolean isValidPath(final BlockPos pos, final Direction direction)
     {
-        final IBlockState blockState = world.getBlockState(pos);
+        final BlockState blockState = world.getBlockState(pos);
         final AxisAlignedBB aabb = blockState.getCollisionBoundingBox(world, pos);
         if (aabb == null) // if there is no bounding box, its pass through, so its a valid path
         {
@@ -262,15 +262,15 @@ public abstract class BlastGasBase extends Blast implements IBlastTickable
         boolean zFull = aabb.minZ == 0 && aabb.maxZ == 1;
 
         boolean isImpassable = false;
-        if (direction == EnumFacing.UP || direction == EnumFacing.DOWN)
+        if (direction == Direction.UP || direction == Direction.DOWN)
         {
             isImpassable = xFull && zFull;
         }
-        else if (direction == EnumFacing.NORTH || direction == EnumFacing.SOUTH)
+        else if (direction == Direction.NORTH || direction == Direction.SOUTH)
         {
             isImpassable = xFull && yFull;
         }
-        else if (direction == EnumFacing.WEST || direction == EnumFacing.EAST)
+        else if (direction == Direction.WEST || direction == Direction.EAST)
         {
             isImpassable = zFull && yFull;
         }
@@ -314,7 +314,7 @@ public abstract class BlastGasBase extends Blast implements IBlastTickable
     }
 
     @Override
-    public void load(NBTTagCompound nbt)
+    public void load(CompoundNBT nbt)
     {
         super.load(nbt);
         this.duration = nbt.getInteger(NBTConstants.DURATION);
@@ -322,7 +322,7 @@ public abstract class BlastGasBase extends Blast implements IBlastTickable
     }
 
     @Override
-    public void save(NBTTagCompound nbt)
+    public void save(CompoundNBT nbt)
     {
         super.save(nbt);
         nbt.setInteger(NBTConstants.DURATION, this.duration);

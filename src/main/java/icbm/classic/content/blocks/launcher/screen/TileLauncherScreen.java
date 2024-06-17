@@ -33,14 +33,14 @@ import icbm.classic.prefab.inventory.InventoryWithSlots;
 import icbm.classic.prefab.tile.IGuiTile;
 import icbm.classic.prefab.tile.TileMachine;
 import lombok.Getter;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -78,7 +78,7 @@ public class TileLauncherScreen extends TileMachine implements ILauncherComponen
     private boolean refreshStatus = false;
 
     @Getter
-    private final List<EntityPlayer> playersUsing = new LinkedList<>();
+    private final List<PlayerEntity> playersUsing = new LinkedList<>();
 
     public TileLauncherScreen() {
         tickActions.add(new TickAction(3, true, (t) -> PACKET_GUI.sendPacketToGuiUsers(this, playersUsing)));
@@ -158,10 +158,10 @@ public class TileLauncherScreen extends TileMachine implements ILauncherComponen
         .nodeFloat(t -> t.launcherInaccuracy, (t, f) -> t.launcherInaccuracy = f)
         .nodeVec3d(TileLauncherScreen::getTarget, TileLauncherScreen::setTarget)
         .nodeNbtCompound(t -> {
-            final NBTTagCompound tag = new NBTTagCompound(); //TODO find a way to send bytes
-            final NBTTagList list = new NBTTagList();
+            final CompoundNBT tag = new CompoundNBT(); //TODO find a way to send bytes
+            final ListNBT list = new ListNBT();
             t.statusList.forEach((pair) -> {
-                final NBTTagCompound save = new NBTTagCompound();
+                final CompoundNBT save = new CompoundNBT();
                 save.setInteger("g", pair.getGroup());
                 save.setInteger("i", pair.getIndex());
                 save.setTag("p", ICBMClassicAPI.ACTION_STATUS_REGISTRY.save(pair.getStatus()));
@@ -170,13 +170,13 @@ public class TileLauncherScreen extends TileMachine implements ILauncherComponen
             tag.setTag("p", list);
             return tag;
         }, (t, tag) -> {
-            final NBTTagList list = tag.getTagList("p", 10);
+            final ListNBT list = tag.getTagList("p", 10);
             final List<LauncherPair> status = new ArrayList<>(list.tagCount());
             for(int i = 0; i < list.tagCount(); i++) {
-                final NBTTagCompound save = (NBTTagCompound) list.get(i);
+                final CompoundNBT save = (CompoundNBT) list.get(i);
                 final int group = save.getInteger("g");
                 final int index = save.getInteger("i");
-                final NBTTagCompound partSave = save.getCompoundTag("p");
+                final CompoundNBT partSave = save.getCompoundTag("p");
                 final IActionStatus part = ICBMClassicAPI.ACTION_STATUS_REGISTRY.load(partSave);
                 if(part != null) {
                     status.add(new LauncherPair(group, index, part));
@@ -276,7 +276,7 @@ public class TileLauncherScreen extends TileMachine implements ILauncherComponen
         if(errors.isEmpty()) {
             return LauncherLangs.TRANSLATION_READY;
         }
-        final ITextComponent status = new TextComponentTranslation(LauncherLangs.ERROR_MISSILE_MULTI, errors.size(), statusList.size());
+        final ITextComponent status = new TranslationTextComponent(LauncherLangs.ERROR_MISSILE_MULTI, errors.size(), statusList.size());
         for(int i = 0; i < errors.size() && i < 5; i++) {
             status.appendText(" \n \t ");
             status.appendSibling(errors.get(i).getStatus().message());
@@ -285,13 +285,13 @@ public class TileLauncherScreen extends TileMachine implements ILauncherComponen
     }
 
     @Override
-    public Object getServerGuiElement(int ID, EntityPlayer player)
+    public Object getServerGuiElement(int ID, PlayerEntity player)
     {
         return new ContainerLaunchScreen(player, this);
     }
 
     @Override
-    public Object getClientGuiElement(int ID, EntityPlayer player)
+    public Object getClientGuiElement(int ID, PlayerEntity player)
     {
         return new GuiLauncherScreen(player, this);
     }
@@ -347,7 +347,7 @@ public class TileLauncherScreen extends TileMachine implements ILauncherComponen
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+    public boolean hasCapability(Capability<?> capability, @Nullable Direction facing)
     {
         return super.hasCapability(capability, facing)
             || capability == ICBMClassicAPI.RADIO_CAPABILITY
@@ -356,7 +356,7 @@ public class TileLauncherScreen extends TileMachine implements ILauncherComponen
 
     @Override
     @Nullable
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+    public <T> T getCapability(Capability<T> capability, @Nullable Direction facing)
     {
         //TODO add IEnergyStorage wrapper to ensure this tile and the network both get power
         if(capability == ICBMClassicAPI.RADIO_CAPABILITY) {
@@ -373,7 +373,7 @@ public class TileLauncherScreen extends TileMachine implements ILauncherComponen
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt)
+    public void readFromNBT(CompoundNBT nbt)
     {
         super.readFromNBT(nbt);
         SAVE_LOGIC.load(this, nbt);
@@ -385,7 +385,7 @@ public class TileLauncherScreen extends TileMachine implements ILauncherComponen
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+    public CompoundNBT writeToNBT(CompoundNBT nbt)
     {
         SAVE_LOGIC.save(this, nbt);
         return super.writeToNBT(nbt);

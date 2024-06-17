@@ -1,8 +1,8 @@
 package icbm.classic;
 
 import icbm.classic.content.missile.entity.explosive.EntityExplosiveMissile;
-import net.minecraft.entity.passive.EntitySheep;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.passive.SheepEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
 import org.junit.jupiter.api.Assertions;
 
@@ -11,9 +11,9 @@ import org.junit.jupiter.api.Assertions;
  */
 public class TestUtils
 {
-    public static EntitySheep sheep(World world, int x, int y, int z)
+    public static SheepEntity sheep(World world, int x, int y, int z)
     {
-        final EntitySheep sheep = new EntitySheep(world);
+        final SheepEntity sheep = new SheepEntity(world);
         sheep.forceSpawn = true;
         sheep.setPosition(x, y, z);
         world.spawnEntity(sheep);
@@ -29,7 +29,7 @@ public class TestUtils
         return missile;
     }
 
-    public static void assertContains(NBTTagCompound expected, NBTTagCompound actual) { //TODO move to testing library
+    public static void assertContains(CompoundNBT expected, CompoundNBT actual) { //TODO move to testing library
         expected.getKeySet().forEach(key -> {
             Assertions.assertTrue(actual.hasKey(key), String.format("Missing key '%s'", key));
             Assertions.assertEquals(expected.getTagId(key), actual.getTagId(key), String.format("Tag type for key '%s' didn't match", key));

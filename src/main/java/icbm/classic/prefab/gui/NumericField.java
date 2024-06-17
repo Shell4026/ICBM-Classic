@@ -1,12 +1,12 @@
 package icbm.classic.prefab.gui;
 
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NumericField extends GuiTextField
+public class NumericField extends TextFieldWidget
 {
     NumericType type = NumericType.INT;
     static List charsA = new ArrayList();

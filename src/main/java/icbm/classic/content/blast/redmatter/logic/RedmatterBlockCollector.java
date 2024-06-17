@@ -1,7 +1,7 @@
 package icbm.classic.content.blast.redmatter.logic;
 
 import icbm.classic.api.data.Int3Consumer;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 
 /**
  * Created by Robin Seifert on 8/7/2021.
@@ -11,13 +11,13 @@ public class RedmatterBlockCollector
     public static void collectBlocksOnWallEdges(int size, Int3Consumer consumer)
     {
         //Loop all wall faces
-        for (EnumFacing facing : EnumFacing.values())
+        for (Direction facing : Direction.values())
         {
             collectBlocksOnWall(size, facing, consumer);
         }
     }
 
-    public static void collectBlocksOnWall(int size, EnumFacing wall, Int3Consumer consumer) {
+    public static void collectBlocksOnWall(int size, Direction wall, Int3Consumer consumer) {
         //Loop wall face from negative corner to positive corner (-a,-b) to (+a,+b)
         for (int stepA = -size; stepA <= size; stepA++)
         {
@@ -29,17 +29,17 @@ public class RedmatterBlockCollector
                 int rz = wall.getFrontOffsetZ() * size;
 
                 //Offset by step position on the wall based on facing
-                if (wall == EnumFacing.DOWN || wall == EnumFacing.UP)
+                if (wall == Direction.DOWN || wall == Direction.UP)
                 {
                     rx += stepA;
                     rz += stepB;
                 }
-                else if (wall == EnumFacing.EAST || wall == EnumFacing.WEST)
+                else if (wall == Direction.EAST || wall == Direction.WEST)
                 {
                     ry += stepA;
                     rz += stepB;
                 }
-                else if (wall == EnumFacing.NORTH || wall == EnumFacing.SOUTH)
+                else if (wall == Direction.NORTH || wall == Direction.SOUTH)
                 {
                     ry += stepA;
                     rx += stepB;

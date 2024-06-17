@@ -3,7 +3,7 @@ package icbm.classic.content.entity;
 import com.builtbroken.jlib.data.vector.IPos3D;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -160,13 +160,13 @@ public class EntityLightBeam extends Entity implements IEntityAdditionalSpawnDat
     }
 
     @Override
-    protected void readEntityFromNBT(NBTTagCompound var1)
+    protected void readEntityFromNBT(CompoundNBT var1)
     {
 
     }
 
     @Override
-    protected void writeEntityToNBT(NBTTagCompound var1)
+    protected void writeEntityToNBT(CompoundNBT var1)
     {
 
     }

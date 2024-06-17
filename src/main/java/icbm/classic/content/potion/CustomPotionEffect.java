@@ -1,16 +1,16 @@
 package icbm.classic.content.potion;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomPotionEffect extends PotionEffect
+public class CustomPotionEffect extends EffectInstance
 {
 
-    public CustomPotionEffect(Potion potion, int duration, int amplifier)
+    public CustomPotionEffect(Effect potion, int duration, int amplifier)
     {
         super(potion, duration, amplifier);
     }
@@ -18,7 +18,7 @@ public class CustomPotionEffect extends PotionEffect
     /** Creates a potion effect with custom curable items.
      *
      * @param curativeItems - ItemStacks that can cure this potion effect */
-    public CustomPotionEffect(Potion potionID, int duration, int amplifier, List<ItemStack> curativeItems)
+    public CustomPotionEffect(Effect potionID, int duration, int amplifier, List<ItemStack> curativeItems)
     {
         super(potionID, duration, amplifier);
 

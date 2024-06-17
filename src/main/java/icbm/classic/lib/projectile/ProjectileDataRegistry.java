@@ -7,12 +7,12 @@ import icbm.classic.api.missiles.projectile.IProjectileStack;
 import icbm.classic.lib.buildable.BuildableObjectRegistry;
 import icbm.classic.lib.projectile.vanilla.*;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.init.Items;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.item.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
@@ -46,14 +46,14 @@ public class ProjectileDataRegistry extends BuildableObjectRegistry<IProjectileD
             this.register(EntitySpawnProjectileData.NAME, EntitySpawnProjectileData::new);
 
             // Basic arrow
-            final IProjectileData<EntityArrow> arrowData = new ArrowProjectileData();
+            final IProjectileData<AbstractArrowEntity> arrowData = new ArrowProjectileData();
             this.register(ArrowProjectileData.NAME, () -> arrowData);
             registerItemStackConversation(new ItemStack(Items.ARROW), (itemStack) -> arrowData);
 
             // Spectral arrow
-            final IProjectileData<EntityArrow> spectralArrowData = new SpectralArrowProjectileData();
+            final IProjectileData<AbstractArrowEntity> spectralArrowData = new SpectralArrowProjectileData();
             this.register(SpectralArrowProjectileData.NAME, () -> spectralArrowData);
-            registerItemStackConversation(new ItemStack(Items.SPECTRAL_ARROW), (itemStack) -> spectralArrowData);
+            registerItemStackConversation(new ItemStack(net.minecraft.item.Items.SPECTRAL_ARROW), (itemStack) -> spectralArrowData);
 
             // Tipped arrow
             this.register(TippedArrowProjectileData.NAME, TippedArrowProjectileData::new);
@@ -61,10 +61,10 @@ public class ProjectileDataRegistry extends BuildableObjectRegistry<IProjectileD
 
             //Items
             registerItemStackConversation(new ItemStack(Items.SNOWBALL), new CachedProjectileData(() -> new EntitySpawnProjectileData("minecraft:snowball")));
-            registerItemStackConversation(new ItemStack(Items.EGG), new CachedProjectileData(() -> new EntitySpawnProjectileData("minecraft:egg")));
+            registerItemStackConversation(new ItemStack(net.minecraft.item.Items.EGG), new CachedProjectileData(() -> new EntitySpawnProjectileData("minecraft:egg")));
 
             // Spawn eggs
-            registerItemStackConversation(new ItemStack(Items.SPAWN_EGG), (itemStack) -> {
+            registerItemStackConversation(new ItemStack(net.minecraft.item.Items.SPAWN_EGG), (itemStack) -> {
                 final EntitySpawnProjectileData projectileData = new EntitySpawnProjectileData(ItemMonsterPlacer.getNamedIdFrom(itemStack));
                 if(itemStack.hasDisplayName()) {
                     projectileData.setEntityDisplayTag(itemStack.getDisplayName());
@@ -133,7 +133,7 @@ public class ProjectileDataRegistry extends BuildableObjectRegistry<IProjectileD
             preSpawnCallback.accept(entity);
         }
         if (world.spawnEntity(entity)) {
-            data.onEntitySpawned(entity, source, EnumHand.MAIN_HAND);
+            data.onEntitySpawned(entity, source, Hand.MAIN_HAND);
             return entity;
         }
         return null;

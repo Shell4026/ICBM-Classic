@@ -8,12 +8,12 @@ import icbm.classic.lib.NBTConstants;
 import icbm.classic.lib.transform.rotation.EulerAngle;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.dispenser.IPosition;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.*;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
@@ -62,7 +62,7 @@ public abstract class AbstractPos<R extends AbstractPos> extends Pos3D<R> implem
         this(vec.x(), vec.y(), vec.z());
     }
 
-    public AbstractPos(NBTTagCompound nbt)
+    public AbstractPos(CompoundNBT nbt)
     {
         this(nbt.getDouble(NBTConstants.X), nbt.getDouble(NBTConstants.Y), nbt.getDouble(NBTConstants.Z));
     }
@@ -77,7 +77,7 @@ public abstract class AbstractPos<R extends AbstractPos> extends Pos3D<R> implem
         this(par1.getX(), par1.getY(), par1.getZ());
     }
 
-    public AbstractPos(EnumFacing dir)
+    public AbstractPos(Direction dir)
     {
         this(dir.getFrontOffsetX(), dir.getFrontOffsetY(), dir.getFrontOffsetZ());
     }
@@ -111,10 +111,10 @@ public abstract class AbstractPos<R extends AbstractPos> extends Pos3D<R> implem
         return new Point(x(), z());
     }
 
-    public EnumFacing toDirection()
+    public Direction toDirection()
     {
         //TODO maybe add a way to convert convert any vector into a direction from origin
-        for (EnumFacing dir : EnumFacing.values())
+        for (Direction dir : Direction.values())
         {
             if (xi() == dir.getFrontOffsetX() && yi() == dir.getFrontOffsetY() && zi() == dir.getFrontOffsetZ())
             {
@@ -168,7 +168,7 @@ public abstract class AbstractPos<R extends AbstractPos> extends Pos3D<R> implem
         return add(other.getX(), other.getY(), other.getZ());
     }
 
-    public R add(EnumFacing face)
+    public R add(Direction face)
     {
         return add(face.getFrontOffsetX(), face.getFrontOffsetY(), face.getFrontOffsetZ());
     }
@@ -178,7 +178,7 @@ public abstract class AbstractPos<R extends AbstractPos> extends Pos3D<R> implem
         return add(vec.x, vec.y, vec.z);
     }
 
-    public R sub(EnumFacing face)
+    public R sub(Direction face)
     {
         return sub(face.getFrontOffsetX(), face.getFrontOffsetY(), face.getFrontOffsetZ());
     }
@@ -203,7 +203,7 @@ public abstract class AbstractPos<R extends AbstractPos> extends Pos3D<R> implem
         return distance(entity.posX, entity.posY, entity.posZ);
     }
 
-    public R multiply(EnumFacing face)
+    public R multiply(Direction face)
     {
         return multiply(face.getFrontOffsetX(), face.getFrontOffsetY(), face.getFrontOffsetZ());
     }
@@ -213,7 +213,7 @@ public abstract class AbstractPos<R extends AbstractPos> extends Pos3D<R> implem
         return multiply(vec.x, vec.y, vec.z);
     }
 
-    public R divide(EnumFacing face)
+    public R divide(Direction face)
     {
         return divide(face.getFrontOffsetX(), face.getFrontOffsetY(), face.getFrontOffsetZ());
     }
@@ -233,17 +233,17 @@ public abstract class AbstractPos<R extends AbstractPos> extends Pos3D<R> implem
     //========NBT==============
     //=========================
 
-    public NBTTagCompound toNBT()
+    public CompoundNBT toNBT()
     {
-        return writeNBT(new NBTTagCompound());
+        return writeNBT(new CompoundNBT());
     }
 
-    public NBTTagCompound toIntNBT()
+    public CompoundNBT toIntNBT()
     {
-        return writeIntNBT(new NBTTagCompound());
+        return writeIntNBT(new CompoundNBT());
     }
 
-    public NBTTagCompound writeNBT(NBTTagCompound nbt)
+    public CompoundNBT writeNBT(CompoundNBT nbt)
     {
         nbt.setDouble(NBTConstants.X, x());
         nbt.setDouble(NBTConstants.Y, y());
@@ -252,7 +252,7 @@ public abstract class AbstractPos<R extends AbstractPos> extends Pos3D<R> implem
     }
 
 
-    public NBTTagCompound writeIntNBT(NBTTagCompound nbt)
+    public CompoundNBT writeIntNBT(CompoundNBT nbt)
     {
         nbt.setInteger(NBTConstants.X, xi());
         nbt.setInteger(NBTConstants.Y, yi());
@@ -370,12 +370,12 @@ public abstract class AbstractPos<R extends AbstractPos> extends Pos3D<R> implem
         return setBlock(world, block.getDefaultState());
     }
 
-    public boolean setBlock(World world, IBlockState state)
+    public boolean setBlock(World world, BlockState state)
     {
         return setBlock(world, state, 3);
     }
 
-    public boolean setBlock(World world, IBlockState block, int notify)
+    public boolean setBlock(World world, BlockState block, int notify)
     {
         if (world != null && block != null)
         {
@@ -419,7 +419,7 @@ public abstract class AbstractPos<R extends AbstractPos> extends Pos3D<R> implem
     public boolean isReplaceable(World world)
     {
         BlockPos pos = toBlockPos();
-        IBlockState block = world.getBlockState(pos);
+        BlockState block = world.getBlockState(pos);
         return block == null || block.getBlock().isAir(block, world, pos) || block.getBlock().isAir(block, world, toBlockPos()) || block.getBlock().isReplaceable(world, toBlockPos());
     }
 
@@ -441,7 +441,7 @@ public abstract class AbstractPos<R extends AbstractPos> extends Pos3D<R> implem
 
     public Block getBlock(IBlockAccess world)
     {
-        IBlockState state = getBlockState(world);
+        BlockState state = getBlockState(world);
         if (world != null && state != null) //TODO check if chunk is loaded
         {
             return state.getBlock();
@@ -452,7 +452,7 @@ public abstract class AbstractPos<R extends AbstractPos> extends Pos3D<R> implem
         }
     }
 
-    public IBlockState getBlockState(IBlockAccess world)
+    public BlockState getBlockState(IBlockAccess world)
     {
         if (world != null) //TODO check if chunk is loaded
         {
@@ -475,7 +475,7 @@ public abstract class AbstractPos<R extends AbstractPos> extends Pos3D<R> implem
 
     public float getHardness(World world)
     {
-        IBlockState state = getBlockState(world);
+        BlockState state = getBlockState(world);
         if (state != null && !state.getBlock().isAir(state, world, toBlockPos()))
         {
             return state.getBlock().getBlockHardness(state, world, toBlockPos());
@@ -559,7 +559,7 @@ public abstract class AbstractPos<R extends AbstractPos> extends Pos3D<R> implem
     public void markForUpdate(World world)
     {
         BlockPos pos = toBlockPos();
-        IBlockState state = world.getBlockState(pos);
+        BlockState state = world.getBlockState(pos);
         if (state != null && !state.getBlock().isAir(state, world, toBlockPos()))
         {
             world.notifyBlockUpdate(pos, state, state, 3);

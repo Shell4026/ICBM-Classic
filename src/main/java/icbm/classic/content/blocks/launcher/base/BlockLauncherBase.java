@@ -5,21 +5,21 @@ import icbm.classic.ICBMConstants;
 import icbm.classic.content.blocks.launcher.network.ILauncherComponent;
 import icbm.classic.content.blocks.launcher.network.LauncherNetwork;
 import icbm.classic.lib.InventoryUtility;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
  *
  * Created by Dark(DarkGuardsman, Robin) on 1/8/2018.
  */
-public class BlockLauncherBase extends BlockContainer
+public class BlockLauncherBase extends ContainerBlock
 {
     public static final PropertyDirection ROTATION_PROP = PropertyDirection.create("facing");
 
@@ -46,22 +46,22 @@ public class BlockLauncherBase extends BlockContainer
     }
 
     @Deprecated
-    public boolean isOpaqueCube(IBlockState state)
+    public boolean isOpaqueCube(BlockState state)
     {
         // Needed to prevent render lighting issues for missiles
         return false;
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, BlockState state, PlayerEntity playerIn, Hand hand, Direction facing, float hitX, float hitY, float hitZ)
     {
         final TileEntity tile = worldIn.getTileEntity(pos);
         if (tile instanceof TileLauncherBase && !worldIn.isRemote)
         {
             if(playerIn.getHeldItem(hand).getItem() == Items.STONE_AXE) {
                     final LauncherNetwork network = ((TileLauncherBase) tile).getNetworkNode().getNetwork();
-                    playerIn.sendMessage(new TextComponentString("Network: " + network));
-                    playerIn.sendMessage(new TextComponentString("L: " + network.getLaunchers().size()));
+                    playerIn.sendMessage(new StringTextComponent("Network: " + network));
+                    playerIn.sendMessage(new StringTextComponent("L: " + network.getLaunchers().size()));
                 return true;
             }
             if(!((TileLauncherBase) tile).tryInsertMissile(playerIn, hand, playerIn.getHeldItem(hand))) {
@@ -73,7 +73,7 @@ public class BlockLauncherBase extends BlockContainer
     }
 
     @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state)
+    public void breakBlock(World world, BlockPos pos, BlockState state)
     {
         TileEntity tile = world.getTileEntity(pos);
         if (tile instanceof ILauncherComponent)
@@ -85,9 +85,9 @@ public class BlockLauncherBase extends BlockContainer
     }
 
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state)
+    public BlockRenderType getRenderType(BlockState state)
     {
-        return EnumBlockRenderType.MODEL;
+        return BlockRenderType.MODEL;
     }
 
     @Override
@@ -111,23 +111,23 @@ public class BlockLauncherBase extends BlockContainer
     }
 
     @Override
-    public IBlockState getStateFromMeta(int meta)
+    public BlockState getStateFromMeta(int meta)
     {
         if(meta == 0) {
-            return getDefaultState().withProperty(ROTATION_PROP, EnumFacing.UP);
+            return getDefaultState().withProperty(ROTATION_PROP, Direction.UP);
         }
-        return getDefaultState().withProperty(ROTATION_PROP, EnumFacing.getFront(meta - 1));
+        return getDefaultState().withProperty(ROTATION_PROP, Direction.getFront(meta - 1));
     }
 
     @Override
-    public int getMetaFromState(IBlockState state)
+    public int getMetaFromState(BlockState state)
     {
         // Shifting by one due to older tiles not having rotation, default should be UP
         return state.getValue(ROTATION_PROP).ordinal() + 1;
     }
 
     @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand)
+    public BlockState getStateForPlacement(World world, BlockPos pos, Direction facing, float hitX, float hitY, float hitZ, int meta, LivingEntity placer, Hand hand)
     {
         return getDefaultState().withProperty(ROTATION_PROP, facing);
     }

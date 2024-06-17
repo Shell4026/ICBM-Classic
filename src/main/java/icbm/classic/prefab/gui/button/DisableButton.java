@@ -4,7 +4,7 @@ import icbm.classic.prefab.gui.GuiContainerBase;
 import icbm.classic.prefab.gui.IGuiComponent;
 import icbm.classic.prefab.gui.tooltip.IToolTip;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.function.Supplier;
@@ -38,7 +38,7 @@ public class DisableButton extends GuiButtonBase<DisableButton> implements IGuiC
             //TODO add disabled state
 
             // Hover state
-            if (this.hovered && GuiContainer.isAltKeyDown()) {
+            if (this.hovered && ContainerScreen.isAltKeyDown()) {
                 this.drawTexturedModalRect(this.x, this.y, UV_X + WIDTH, UV_Y, this.width, this.height);
             }
             // Default state
@@ -54,6 +54,6 @@ public class DisableButton extends GuiButtonBase<DisableButton> implements IGuiC
     @Override
     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY)
     {
-        return super.mousePressed(mc, mouseX, mouseY) && GuiContainer.isAltKeyDown();
+        return super.mousePressed(mc, mouseX, mouseY) && ContainerScreen.isAltKeyDown();
     }
 }

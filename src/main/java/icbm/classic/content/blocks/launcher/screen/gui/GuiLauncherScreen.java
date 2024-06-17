@@ -10,10 +10,10 @@ import icbm.classic.prefab.gui.TextInput;
 import icbm.classic.prefab.gui.button.DisableButton;
 import icbm.classic.prefab.gui.components.SlotEnergyBar;
 import icbm.classic.prefab.gui.tooltip.TooltipTranslations;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -21,11 +21,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GuiLauncherScreen extends GuiContainerBase
 {
     public static final ResourceLocation TEXTURE = new ResourceLocation(ICBMConstants.DOMAIN, ICBMConstants.GUI_DIRECTORY + "gui_silo_screen.png");
-    public static final ITextComponent ACCURACY_TOOLTIP = new TextComponentTranslation("gui.launcherscreen.inaccuracy.info");
+    public static final ITextComponent ACCURACY_TOOLTIP = new TranslationTextComponent("gui.launcherscreen.inaccuracy.info");
 
     private final TileLauncherScreen tileEntity;
 
-    public GuiLauncherScreen(EntityPlayer player, TileLauncherScreen tileEntity)
+    public GuiLauncherScreen(PlayerEntity player, TileLauncherScreen tileEntity)
     {
         super(new ContainerLaunchScreen(player, tileEntity));
         this.tileEntity = tileEntity;

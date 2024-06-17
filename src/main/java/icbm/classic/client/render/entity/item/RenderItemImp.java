@@ -10,12 +10,12 @@ import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -34,7 +34,7 @@ import java.util.function.Supplier;
  * @param <E> to render
  */
 @SideOnly(Side.CLIENT)
-public abstract class RenderItemImp<E extends Entity> extends Render<E>
+public abstract class RenderItemImp<E extends Entity> extends EntityRenderer<E>
 {
     private final ItemRenderer itemRenderer;
     private final Random random = new Random();
@@ -45,7 +45,7 @@ public abstract class RenderItemImp<E extends Entity> extends Render<E>
     @Accessors(chain = true)
     protected boolean billboard = false;
 
-    public RenderItemImp(RenderManager renderManagerIn)
+    public RenderItemImp(EntityRendererManager renderManagerIn)
     {
         super(renderManagerIn);
         this.itemRenderer = Minecraft.getMinecraft().getRenderItem();
@@ -106,7 +106,7 @@ public abstract class RenderItemImp<E extends Entity> extends Render<E>
 
     protected net.minecraft.client.renderer.model.IBakedModel getBakedModel(@Nullable E entity, World world, ItemStack stack) {
         // TODO may need optimization, upcraft suggests caching model as doing the lookup per frame is slow.. could do per entity? or tree(item -> key -> model)
-        return this.itemRenderer.getItemModelWithOverrides(stack, world, (EntityLivingBase) null);
+        return this.itemRenderer.getItemModelWithOverrides(stack, world, (LivingEntity) null);
     }
 
     public void renderItem(ItemStack missileStack, World world, double x, double y, double z, float entityYaw, float entityPitch, float partialTicks)
@@ -171,6 +171,6 @@ public abstract class RenderItemImp<E extends Entity> extends Render<E>
     @Nonnull
     protected ResourceLocation getEntityTexture(@Nullable E entity)
     {
-        return TextureMap.LOCATION_BLOCKS_TEXTURE;
+        return AtlasTexture.LOCATION_BLOCKS_TEXTURE;
     }
 }

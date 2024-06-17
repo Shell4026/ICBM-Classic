@@ -4,12 +4,12 @@ import icbm.classic.api.launcher.IMissileLauncher;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.AccessLevel;
 import lombok.Setter;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.UUID;
 
-public abstract class LauncherBaseCapability implements IMissileLauncher, INBTSerializable<NBTTagCompound> {
+public abstract class LauncherBaseCapability implements IMissileLauncher, INBTSerializable<CompoundNBT> {
 
     @Setter(value = AccessLevel.PRIVATE)
     private UUID uniqueId;
@@ -23,12 +23,12 @@ public abstract class LauncherBaseCapability implements IMissileLauncher, INBTSe
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
+    public CompoundNBT serializeNBT() {
         return SAVE_LOGIC.save(this);
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
        SAVE_LOGIC.load(this, nbt);
     }
 

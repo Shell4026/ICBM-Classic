@@ -3,10 +3,10 @@ package icbm.classic.prefab.gui.components;
 import icbm.classic.prefab.gui.GuiContainerBase;
 import icbm.classic.prefab.gui.IGuiComponent;
 import icbm.classic.prefab.gui.tooltip.IToolTip;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -71,7 +71,7 @@ public class SlotEnergyBar implements IGuiComponent, IToolTip {
         final int maxEnergy = energyMaxGetter.get();
         final int tickingCost = Optional.ofNullable(tickingCostGetter).map(Supplier::get).orElse(0);
         final int actionCost = Optional.ofNullable(actionCostGetter).map(Supplier::get).orElse(0);
-        final boolean shift = GuiScreen.isShiftKeyDown();
+        final boolean shift = Screen.isShiftKeyDown();
 
         if(energy != prevEnergy || maxEnergy != prevMaxEnergy || shift != prevShift) {
             prevEnergy = energy;
@@ -92,10 +92,10 @@ public class SlotEnergyBar implements IGuiComponent, IToolTip {
             }
 
             if(shift) {
-                tooltip = new TextComponentTranslation(translationToUse, energy, maxEnergy, -tickingCost, -actionCost);
+                tooltip = new TranslationTextComponent(translationToUse, energy, maxEnergy, -tickingCost, -actionCost);
             }
             else {
-                tooltip = new TextComponentTranslation(translationToUse, formatEnergy(energy), formatEnergy(maxEnergy), formatEnergy(-tickingCost),formatEnergy(-actionCost));
+                tooltip = new TranslationTextComponent(translationToUse, formatEnergy(energy), formatEnergy(maxEnergy), formatEnergy(-tickingCost),formatEnergy(-actionCost));
             }
         }
     }

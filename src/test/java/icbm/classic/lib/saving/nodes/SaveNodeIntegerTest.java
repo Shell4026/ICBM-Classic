@@ -1,6 +1,6 @@
 package icbm.classic.lib.saving.nodes;
 
-import net.minecraft.nbt.NBTTagInt;
+import net.minecraft.nbt.IntNBT;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +16,7 @@ public class SaveNodeIntegerTest
        final IntSaveThing thing = new IntSaveThing();
        thing.i = 245;
 
-       final NBTTagInt save = node.save(thing);
+       final IntNBT save = node.save(thing);
 
         Assertions.assertEquals(245, save.getInt());
     }
@@ -24,7 +24,7 @@ public class SaveNodeIntegerTest
     @Test
     void load() {
         final IntSaveThing thing = new IntSaveThing();
-        final NBTTagInt save = new NBTTagInt(123);
+        final IntNBT save = new IntNBT(123);
 
         node.load(thing, save);
 

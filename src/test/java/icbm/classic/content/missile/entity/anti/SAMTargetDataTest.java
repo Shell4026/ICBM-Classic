@@ -3,8 +3,8 @@ package icbm.classic.content.missile.entity.anti;
 import com.builtbroken.mc.testing.junit.TestManager;
 import icbm.classic.content.missile.entity.explosive.EntityExplosiveMissile;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.entity.passive.EntitySheep;
+import net.minecraft.entity.monster.ZombieEntity;
+import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.world.World;
 import org.junit.jupiter.api.*;
 
@@ -49,15 +49,15 @@ public class SAMTargetDataTest {
     @Test
     void vanillaMobs_noTarget() {
 
-        final EntityZombie zombie = new EntityZombie(world);
+        final ZombieEntity zombie = new ZombieEntity(world);
         zombie.setPosition(100, 100, 104);
         world.spawnEntity(zombie);
 
-        final EntityZombie zombie2 = new EntityZombie(world);
+        final ZombieEntity zombie2 = new ZombieEntity(world);
         zombie2.setPosition(102, 100, 104);
         world.spawnEntity(zombie2);
 
-        final EntitySheep sheep = new EntitySheep(world);
+        final SheepEntity sheep = new SheepEntity(world);
         sheep.setPosition(101, 99, 101);
         world.spawnEntity(sheep);
 

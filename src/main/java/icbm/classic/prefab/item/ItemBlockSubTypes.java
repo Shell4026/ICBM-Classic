@@ -2,7 +2,7 @@ package icbm.classic.prefab.item;
 
 import icbm.classic.lib.LanguageUtility;
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -38,7 +38,7 @@ public class ItemBlockSubTypes extends ItemBlockAbstract
     }
 
     @Override
-    protected boolean hasShiftInfo(ItemStack stack, EntityPlayer player)
+    protected boolean hasShiftInfo(ItemStack stack, PlayerEntity player)
     {
         final String translationKey = getUnlocalizedName(stack) + ".info.detailed";
         final String translation = LanguageUtility.getLocal(translationKey);

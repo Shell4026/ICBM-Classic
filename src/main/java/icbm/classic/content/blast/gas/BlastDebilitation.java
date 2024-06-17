@@ -2,8 +2,8 @@ package icbm.classic.content.blast.gas;
 
 import icbm.classic.config.ConfigMain;
 import icbm.classic.content.potion.CustomPotionEffect;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.MobEffects;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.math.Vec3i;
 
 /**
@@ -32,11 +32,11 @@ public class BlastDebilitation extends BlastGasBase
     }
 
     @Override
-    protected void applyEffect(final EntityLivingBase entity, final int hitCount)
+    protected void applyEffect(final LivingEntity entity, final int hitCount)
     {
-        entity.addPotionEffect(new CustomPotionEffect(MobEffects.POISON, 18 * 20, 0)); //TODO scale and make configurable
-        entity.addPotionEffect(new CustomPotionEffect(MobEffects.MINING_FATIGUE, 20 * 60, 0));
-        entity.addPotionEffect(new CustomPotionEffect(MobEffects.SLOWNESS, 20 * 60, 2));
+        entity.addPotionEffect(new CustomPotionEffect(Effects.POISON, 18 * 20, 0)); //TODO scale and make configurable
+        entity.addPotionEffect(new CustomPotionEffect(Effects.MINING_FATIGUE, 20 * 60, 0));
+        entity.addPotionEffect(new CustomPotionEffect(Effects.SLOWNESS, 20 * 60, 2));
     }
 
     @Override

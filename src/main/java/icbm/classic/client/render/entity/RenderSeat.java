@@ -1,16 +1,16 @@
 package icbm.classic.client.render.entity;
 
 import icbm.classic.content.entity.EntityPlayerSeat;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderSeat extends Render<EntityPlayerSeat>
+public class RenderSeat extends EntityRenderer<EntityPlayerSeat>
 {
-    public RenderSeat(RenderManager renderManager)
+    public RenderSeat(EntityRendererManager renderManager)
     {
         super(renderManager);
         this.shadowSize = 0.0F;

@@ -3,7 +3,7 @@ package icbm.classic.api.explosion;
 import icbm.classic.api.actions.cause.IActionSource;
 import icbm.classic.api.reg.IExplosiveData;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -91,7 +91,7 @@ public interface IBlastInit extends IBlast
      * @return this
      */
     @Deprecated
-    default IBlastInit setCustomData(@Nonnull NBTTagCompound customData) {
+    default IBlastInit setCustomData(@Nonnull CompoundNBT customData) {
         return this;
     }
 

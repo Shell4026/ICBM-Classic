@@ -5,7 +5,7 @@ import icbm.classic.api.refs.ICBMExplosives;
 import icbm.classic.content.blocks.explosive.TileEntityExplosive;
 import icbm.classic.content.reg.BlockReg;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.datafix.IFixableData;
 
 public class TileExplosivesDataFixer implements IFixableData
@@ -13,7 +13,7 @@ public class TileExplosivesDataFixer implements IFixableData
     private static final String TILE_ID = ICBMConstants.PREFIX + "explosive";
     private static final String EXPLOSIVE_ID = "explosiveID";
     @Override
-    public NBTTagCompound fixTagCompound(NBTTagCompound existingSave)
+    public CompoundNBT fixTagCompound(CompoundNBT existingSave)
     {
         if (existingSave.hasKey("id") && existingSave.getString("id").equalsIgnoreCase(TILE_ID))
         {
@@ -38,7 +38,7 @@ public class TileExplosivesDataFixer implements IFixableData
 
             // Move hypersonc to sonic
             else if(existingSave.hasKey(TileEntityExplosive.NBT_EXPLOSIVE_STACK)) {
-                final NBTTagCompound stackSave = existingSave.getCompoundTag(TileEntityExplosive.NBT_EXPLOSIVE_STACK);
+                final CompoundNBT stackSave = existingSave.getCompoundTag(TileEntityExplosive.NBT_EXPLOSIVE_STACK);
                 final int damage = stackSave.getInteger("Damage");
 
                 if(damage == ICBMExplosives.HYPERSONIC.getRegistryID()) {

@@ -3,7 +3,7 @@ package icbm.classic.content.blast;
 import icbm.classic.api.explosion.IBlastTickable;
 import icbm.classic.content.blast.threaded.BlastThreaded;
 import icbm.classic.content.radioactive.RadioactiveHandler;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -27,8 +27,8 @@ public class BlastRadioactiveBlockSwaps extends BlastThreaded implements IBlastT
     @Override
     public void destroyBlock(BlockPos targetPosition)
     {
-        final IBlockState blockState = world.getBlockState(targetPosition);
-        final Pair<IBlockState, Float> replacement = RadioactiveHandler.radioactiveBlockSwaps.getValue(blockState);
+        final BlockState blockState = world.getBlockState(targetPosition);
+        final Pair<BlockState, Float> replacement = RadioactiveHandler.radioactiveBlockSwaps.getValue(blockState);
         if(replacement != null && (replacement.getValue() == null || replacement.getValue() < world.rand.nextFloat())) {
             world.setBlockState(targetPosition, replacement.getKey(), 3);
         }

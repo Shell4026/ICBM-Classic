@@ -6,11 +6,11 @@ import icbm.classic.lib.radio.RadioRegistry;
 import icbm.classic.lib.radio.messages.TriggerActionMessage;
 import icbm.classic.prefab.FakeRadioSender;
 import icbm.classic.prefab.item.ItemRadio;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -34,7 +34,7 @@ public class ItemRemoteDetonator extends ItemRadio
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand handIn)
+    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand handIn)
     {
         ItemStack stack = player.getHeldItem(handIn);
         if (!world.isRemote)
@@ -45,11 +45,11 @@ public class ItemRemoteDetonator extends ItemRadio
                 RadioRegistry.popMessage(world, new FakeRadioSender(player, stack, null), new TriggerActionMessage(channel));
             }
         }
-        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
+        return new ActionResult<ItemStack>(ActionResultType.SUCCESS, stack);
     }
 
     @Override
-    public boolean doesSneakBypassUse(ItemStack stack, net.minecraft.world.IBlockAccess world, BlockPos pos, EntityPlayer player)
+    public boolean doesSneakBypassUse(ItemStack stack, net.minecraft.world.IBlockAccess world, BlockPos pos, PlayerEntity player)
     {
         return true;
     }

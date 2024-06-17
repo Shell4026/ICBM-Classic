@@ -5,9 +5,8 @@ import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.explosion.IBlastInit;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.content.missile.logic.source.ActionSource;
-import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -26,7 +25,7 @@ public class FakeBlast implements IBlastInit
     public double z;
     public double size = 1;
 
-    public NBTTagCompound customData;
+    public CompoundNBT customData;
 
     public IExplosiveData data;
 
@@ -77,7 +76,7 @@ public class FakeBlast implements IBlastInit
     }
 
     @Override
-    public IBlastInit setCustomData(@Nonnull NBTTagCompound customData)
+    public IBlastInit setCustomData(@Nonnull CompoundNBT customData)
     {
         this.customData = customData;
         return this;

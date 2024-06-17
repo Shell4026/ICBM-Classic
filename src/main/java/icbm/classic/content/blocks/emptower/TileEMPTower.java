@@ -31,14 +31,10 @@ import icbm.classic.prefab.inventory.InventoryWithSlots;
 import icbm.classic.prefab.tile.IGuiTile;
 import icbm.classic.prefab.tile.TileMachine;
 import lombok.Getter;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.*;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
@@ -95,7 +91,7 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
     private final TickDoOnce descriptionPacketSender = new TickDoOnce((t) -> PACKET_DESCRIPTION.sendToAllAround(this));
 
     @Getter
-    private final List<EntityPlayer> playersUsing = new LinkedList<>();
+    private final List<PlayerEntity> playersUsing = new LinkedList<>();
 
     public TileEMPTower() {
         tickActions.add(descriptionPacketSender);
@@ -333,19 +329,19 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
     }
 
     @Override
-    public Object getServerGuiElement(int ID, EntityPlayer player)
+    public Object getServerGuiElement(int ID, PlayerEntity player)
     {
         return new ContainerEMPTower(player, this);
     }
 
     @Override
-    public Object getClientGuiElement(int ID, EntityPlayer player)
+    public Object getClientGuiElement(int ID, PlayerEntity player)
     {
         return new GuiEMPTower(player, this);
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+    public boolean hasCapability(Capability<?> capability, @Nullable Direction facing)
     {
         return super.hasCapability(capability, facing)
             || capability == CapabilityEnergy.ENERGY && ConfigMain.REQUIRES_POWER
@@ -355,7 +351,7 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
 
     @Override
     @Nullable
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+    public <T> T getCapability(Capability<T> capability, @Nullable Direction facing)
     {
         if(capability == CapabilityEnergy.ENERGY) {
             return (T) energyStorage;
@@ -372,14 +368,14 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt)
+    public void readFromNBT(CompoundNBT nbt)
     {
         super.readFromNBT(nbt);
         SAVE_LOGIC.load(this, nbt);
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+    public CompoundNBT writeToNBT(CompoundNBT nbt)
     {
         SAVE_LOGIC.save(this, nbt);
         return super.writeToNBT(nbt);

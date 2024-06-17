@@ -5,7 +5,7 @@ import icbm.classic.api.reg.obj.IBuilderRegistry;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.AccessLevel;
 import lombok.Getter;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
@@ -38,11 +38,11 @@ public abstract class BuildableObject<T extends IBuildableObject, B extends IBui
     }
 
 
-    public NBTTagCompound serializeNBT() {
+    public CompoundNBT serializeNBT() {
         return saveHandler != null ? saveHandler.save((T) this) : null;
     }
 
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         if(saveHandler != null) {
             saveHandler.load((T) this, nbt);
         }

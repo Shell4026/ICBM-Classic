@@ -9,7 +9,7 @@ import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.content.missile.entity.explosive.EntityExplosiveMissile;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -53,13 +53,13 @@ public class CapabilityMissileStack implements ICapabilityMissileStack
             {
                 @Nullable
                 @Override
-                public NBTBase writeNBT(Capability<ICapabilityMissileStack> capability, ICapabilityMissileStack instance, EnumFacing side)
+                public NBTBase writeNBT(Capability<ICapabilityMissileStack> capability, ICapabilityMissileStack instance, Direction side)
                 {
                     return null;
                 }
 
                 @Override
-                public void readNBT(Capability<ICapabilityMissileStack> capability, ICapabilityMissileStack instance, EnumFacing side, NBTBase nbt)
+                public void readNBT(Capability<ICapabilityMissileStack> capability, ICapabilityMissileStack instance, Direction side, NBTBase nbt)
                 {
                 }
             },

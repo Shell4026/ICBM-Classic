@@ -19,7 +19,7 @@ import icbm.classic.lib.energy.system.IEnergySystem;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.tileentity.TileEntity;
@@ -100,7 +100,7 @@ public class ActionEmpArea extends ActionBase
                                     getWorld().spawnParticle(EnumParticleTypes.SMOKE_LARGE, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5, 0, 0, 0);
                                 }
 
-                                IBlockState iBlockState = getWorld().getBlockState(blockPos);
+                                BlockState iBlockState = getWorld().getBlockState(blockPos);
                                 float powerEntity = 1f;
 
                                 //Fire event to allow canceling action on entity

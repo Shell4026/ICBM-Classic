@@ -4,13 +4,13 @@ import icbm.classic.client.render.entity.item.RenderItemImp;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
+import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -24,13 +24,13 @@ import java.util.Random;
  */
 @Deprecated
 @SideOnly(Side.CLIENT)
-public class RenderEntityItem2 extends Render<EntityItem>
+public class RenderEntityItem2 extends EntityRenderer<ItemEntity>
 {
     private final ItemRenderer itemRenderer;
     private final Random random = new Random();
     private final ItemCameraTransforms.TransformType transformType;
 
-    public RenderEntityItem2(RenderManager renderManagerIn, ItemRenderer p_i46167_2_, net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType transformType)
+    public RenderEntityItem2(EntityRendererManager renderManagerIn, ItemRenderer p_i46167_2_, net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType transformType)
     {
         super(renderManagerIn);
         this.itemRenderer = p_i46167_2_;
@@ -40,7 +40,7 @@ public class RenderEntityItem2 extends Render<EntityItem>
     }
 
     @Override
-    public void doRender(EntityItem entity, double x, double y, double z, float entityYaw, float partialTicks)
+    public void doRender(ItemEntity entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
         ItemStack itemstack = entity.getItem();
         int seed = itemstack.isEmpty() ? 187 : Item.getIdFromItem(itemstack.getItem()) + itemstack.getMetadata();
@@ -59,7 +59,7 @@ public class RenderEntityItem2 extends Render<EntityItem>
         RenderHelper.enableStandardItemLighting();
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         GlStateManager.pushMatrix();
-        IBakedModel ibakedmodel = this.itemRenderer.getItemModelWithOverrides(itemstack, entity.world, (EntityLivingBase) null);
+        IBakedModel ibakedmodel = this.itemRenderer.getItemModelWithOverrides(itemstack, entity.world, (LivingEntity) null);
 
         if (this.renderOutlines)
         {
@@ -94,8 +94,8 @@ public class RenderEntityItem2 extends Render<EntityItem>
     /**
      * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
      */
-    protected ResourceLocation getEntityTexture(EntityItem entity)
+    protected ResourceLocation getEntityTexture(ItemEntity entity)
     {
-        return TextureMap.LOCATION_BLOCKS_TEXTURE;
+        return AtlasTexture.LOCATION_BLOCKS_TEXTURE;
     }
 }

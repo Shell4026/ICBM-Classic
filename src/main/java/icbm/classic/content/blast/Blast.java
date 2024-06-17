@@ -16,19 +16,19 @@ import icbm.classic.lib.actions.WorkTickingActionHandler;
 import icbm.classic.lib.actions.status.ActionResponses;
 import icbm.classic.lib.transform.vector.Location;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Explosion;
+import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nonnull;
@@ -316,7 +316,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
 
     protected void playExplodeSound()
     {
-        this.world.playSound((EntityPlayer) null,
+        this.world.playSound((PlayerEntity) null,
                 this.x, this.y, this.z,
                 SoundEvents.ENTITY_GENERIC_EXPLODE,
                 SoundCategory.BLOCKS,
@@ -361,7 +361,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
                 continue;
             }
 
-            if (entity instanceof EntityItem && !destroyItem) {
+            if (entity instanceof ItemEntity && !destroyItem) {
                 continue;
             }
 
@@ -411,24 +411,24 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
     }
 
     @Override
-    public void load(NBTTagCompound nbt)
+    public void load(CompoundNBT nbt)
     {
         this.callCount = nbt.getInteger(NBTConstants.CALL_COUNT);
         this.size = nbt.getFloat(NBTConstants.EXPLOSION_SIZE);
 
-        if (world instanceof WorldServer && nbt.hasUniqueId(NBTConstants.BLAST_EXPLODER_ENT_ID)) //don't load the exploder if it hasn't been saved
+        if (world instanceof ServerWorld && nbt.hasUniqueId(NBTConstants.BLAST_EXPLODER_ENT_ID)) //don't load the exploder if it hasn't been saved
         {
-            exploder = ((WorldServer) world).getEntityFromUuid(nbt.getUniqueId(NBTConstants.BLAST_EXPLODER_ENT_ID));
+            exploder = ((ServerWorld) world).getEntityFromUuid(nbt.getUniqueId(NBTConstants.BLAST_EXPLODER_ENT_ID));
         }
     }
 
     @Override
-    public void save(NBTTagCompound nbt)
+    public void save(CompoundNBT nbt)
     {
         nbt.setInteger(NBTConstants.CALL_COUNT, this.callCount);
         nbt.setFloat(NBTConstants.EXPLOSION_SIZE, this.size);
 
-        if (world instanceof WorldServer && exploder != null) //don't save the exploder if there is none to save. TODO: do we even need to save it at all?
+        if (world instanceof ServerWorld && exploder != null) //don't save the exploder if there is none to save. TODO: do we even need to save it at all?
         {
             nbt.setUniqueId(NBTConstants.BLAST_EXPLODER_ENT_ID, this.exploder.getUniqueID());
         }
@@ -602,7 +602,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
     }
 
     @Override
-    public IBlastInit setCustomData(@Nonnull NBTTagCompound customData)
+    public IBlastInit setCustomData(@Nonnull CompoundNBT customData)
     {
         return this;
     }

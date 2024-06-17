@@ -2,13 +2,13 @@ package icbm.classic.lib.saving.nodes;
 
 import icbm.classic.lib.saving.NbtSaveNode;
 import icbm.classic.lib.transform.vector.Pos;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 @Deprecated
-public class SaveNodePos<E> extends NbtSaveNode<E, NBTTagCompound>
+public class SaveNodePos<E> extends NbtSaveNode<E, CompoundNBT>
 {
     public SaveNodePos(final String name, Function<E, Pos> save, BiConsumer<E, Pos> load) {
         super(name,
@@ -16,7 +16,7 @@ public class SaveNodePos<E> extends NbtSaveNode<E, NBTTagCompound>
                 final Pos pos = save.apply(obj);
                 if (pos != null)
                 {
-                    final NBTTagCompound compound = new NBTTagCompound();
+                    final CompoundNBT compound = new CompoundNBT();
                     compound.setDouble("x", pos.getX());
                     compound.setDouble("y", pos.getY());
                     compound.setDouble("z", pos.getZ());

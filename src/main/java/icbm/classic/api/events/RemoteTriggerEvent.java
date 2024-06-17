@@ -1,6 +1,6 @@
 package icbm.classic.api.events;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
@@ -15,10 +15,10 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 public class RemoteTriggerEvent extends Event
 {
     public final World world;
-    public final EntityPlayer player;
+    public final PlayerEntity player;
     public final ItemStack stack;
 
-    public RemoteTriggerEvent(World world, EntityPlayer player, ItemStack stack)
+    public RemoteTriggerEvent(World world, PlayerEntity player, ItemStack stack)
     {
         this.world = world;
         this.stack = stack;

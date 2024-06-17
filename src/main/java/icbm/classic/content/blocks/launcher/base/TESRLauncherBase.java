@@ -2,7 +2,7 @@ package icbm.classic.content.blocks.launcher.base;
 
 import icbm.classic.client.render.entity.RenderMissile;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.Arrays;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class TESRLauncherBase extends TileEntityRenderer<TileLauncherBase>
 {
     private static final float missileOffset = 2f; //TODO add custom render type for missiles as static blocks so offset can be driven by model
-    private static final List<Vec3d> FACE_OFFSETS = Arrays.stream(EnumFacing.values())
+    private static final List<Vec3d> FACE_OFFSETS = Arrays.stream(Direction.values())
         .map(direction -> new Vec3d(
             0.5 + direction.getFrontOffsetX() * missileOffset,
             0.5 + direction.getFrontOffsetY() * missileOffset,

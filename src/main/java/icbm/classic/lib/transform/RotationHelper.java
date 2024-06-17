@@ -1,5 +1,6 @@
 package icbm.classic.lib.transform;
 
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
@@ -8,7 +9,7 @@ import net.minecraft.util.math.Vec3d;
  *
  * MC uses xyz, with x being east-west, y being up-down, and z being north-south
  *
- * {@link net.minecraft.util.EnumFacing}
+ * {@link Direction}
  *
  * up is +Y (0,1,0)
  * down is -y (0,-1,0)

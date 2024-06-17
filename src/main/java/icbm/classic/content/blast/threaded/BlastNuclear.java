@@ -9,7 +9,7 @@ import icbm.classic.content.blast.BlastRadioactiveBlockSwaps;
 import icbm.classic.lib.transform.vector.Location;
 import icbm.classic.lib.transform.vector.Pos;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -86,7 +86,7 @@ public class BlastNuclear extends BlastThreaded {
                             continue;
 
                         //Get block state and block from position
-                        final IBlockState state = world.getBlockState(blockPos);
+                        final BlockState state = world.getBlockState(blockPos);
                         final Block block = state.getBlock();
 
                         //Ignore air blocks
@@ -114,7 +114,7 @@ public class BlastNuclear extends BlastThreaded {
         return false;
     }
 
-    public float getResistance(BlockPos pos, IBlockState state) {
+    public float getResistance(BlockPos pos, BlockState state) {
         final Block block = state.getBlock();
         if (state.getMaterial().isLiquid()) {
             return 0.25f;

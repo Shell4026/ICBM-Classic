@@ -1,6 +1,6 @@
 package icbm.classic.lib.saving;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -44,7 +44,7 @@ public class NbtSaveRootTest
             final RandomThingMany thing = new RandomThingMany();
             final NbtSaveRoot root = new NbtSaveRoot("thing", null, null);
 
-            final NBTTagCompound save = root.save(thing);
+            final CompoundNBT save = root.save(thing);
 
             Assertions.assertTrue(save.hasNoTags());
         }
@@ -57,10 +57,10 @@ public class NbtSaveRootTest
             final NbtSaveRoot<RandomThingMany> root = new NbtSaveRoot<RandomThingMany>("thing", null, null)
                 .nodeInteger("i", (t) -> t.field1, (t, i) -> t.field1 = i);
 
-            final NBTTagCompound expectedSave = new NBTTagCompound();
+            final CompoundNBT expectedSave = new CompoundNBT();
             expectedSave.setInteger("i", 4567);
 
-            final NBTTagCompound save = root.save(thing);
+            final CompoundNBT save = root.save(thing);
 
             Assertions.assertEquals(expectedSave, save);
         }
@@ -74,9 +74,9 @@ public class NbtSaveRootTest
             final NbtSaveRoot<RandomThingMany> root = new NbtSaveRoot<RandomThingMany>("thing", null, null)
                 .node(new NbtSaveNode("i", (t) -> null, null));
 
-            final NBTTagCompound expectedSave = new NBTTagCompound();
+            final CompoundNBT expectedSave = new CompoundNBT();
 
-            final NBTTagCompound save = root.save(thing);
+            final CompoundNBT save = root.save(thing);
 
             Assertions.assertEquals(expectedSave, save);
         }
@@ -88,11 +88,11 @@ public class NbtSaveRootTest
             thing.field1 = 4567;
 
             final NbtSaveRoot<RandomThingMany> root = new NbtSaveRoot<RandomThingMany>("thing", null, null)
-                .node(new NbtSaveNode("i", (t) -> new NBTTagCompound(), null));
+                .node(new NbtSaveNode("i", (t) -> new CompoundNBT(), null));
 
-            final NBTTagCompound expectedSave = new NBTTagCompound();
+            final CompoundNBT expectedSave = new CompoundNBT();
 
-            final NBTTagCompound save = root.save(thing);
+            final CompoundNBT save = root.save(thing);
 
             Assertions.assertEquals(expectedSave, save);
         }
@@ -108,13 +108,13 @@ public class NbtSaveRootTest
                 /* */.nodeBoolean("b", (t) -> t.field1 > 0, null)
                 .parent();
 
-            final NBTTagCompound expectedSave = new NBTTagCompound();
+            final CompoundNBT expectedSave = new CompoundNBT();
             expectedSave.setInteger("i", 4567);
-            final NBTTagCompound dave = new NBTTagCompound();
+            final CompoundNBT dave = new CompoundNBT();
             dave.setBoolean("b", true);
             expectedSave.setTag("dave", dave);
 
-            final NBTTagCompound save = root.save(thing);
+            final CompoundNBT save = root.save(thing);
 
             Assertions.assertEquals(expectedSave, save);
         }
@@ -129,7 +129,7 @@ public class NbtSaveRootTest
             final NbtSaveRoot<RandomThingMany> root = new NbtSaveRoot<RandomThingMany>("thing", null, null)
                 .nodeInteger("i", null, null);
 
-            final NBTTagCompound saveToLoad = new NBTTagCompound();
+            final CompoundNBT saveToLoad = new CompoundNBT();
 
             root.load(thing, saveToLoad);
 
@@ -142,7 +142,7 @@ public class NbtSaveRootTest
 
             final NbtSaveRoot<RandomThingMany> root = new NbtSaveRoot<RandomThingMany>("thing", null, null);
 
-            final NBTTagCompound saveToLoad = new NBTTagCompound();
+            final CompoundNBT saveToLoad = new CompoundNBT();
             saveToLoad.setInteger("i", 12345);
 
             root.load(thing, saveToLoad);
@@ -157,7 +157,7 @@ public class NbtSaveRootTest
             final NbtSaveRoot<RandomThingMany> root = new NbtSaveRoot<RandomThingMany>("thing", null, null)
                 .nodeInteger("i", null, (t, i) -> t.field1 = i);
 
-            final NBTTagCompound saveToLoad = new NBTTagCompound();
+            final CompoundNBT saveToLoad = new CompoundNBT();
 
             root.load(thing, saveToLoad);
 
@@ -183,7 +183,7 @@ public class NbtSaveRootTest
             final NbtSaveRoot<RandomThingMany> root = new NbtSaveRoot<RandomThingMany>("thing", null, null)
                 .nodeInteger("i", null, (t, i) -> t.field1 = i);
 
-            final NBTTagCompound saveToLoad = new NBTTagCompound();
+            final CompoundNBT saveToLoad = new CompoundNBT();
             saveToLoad.setInteger("j", 456);
 
             root.load(thing, saveToLoad);
@@ -198,7 +198,7 @@ public class NbtSaveRootTest
             final NbtSaveRoot<RandomThingMany> root = new NbtSaveRoot<RandomThingMany>("thing", null, null)
                 .nodeInteger("i", null, (t, i) -> t.field1 = i);
 
-            final NBTTagCompound saveToLoad = new NBTTagCompound();
+            final CompoundNBT saveToLoad = new CompoundNBT();
             saveToLoad.setInteger("j", 456);
             saveToLoad.setInteger("i", 123);
 
@@ -217,11 +217,11 @@ public class NbtSaveRootTest
                 /* */.nodeInteger("j", null, (t, i) -> t.field2 = i)
                 .parent();
 
-            final NBTTagCompound saveToLoad = new NBTTagCompound();
+            final CompoundNBT saveToLoad = new CompoundNBT();
             saveToLoad.setInteger("j", 456);
             saveToLoad.setInteger("i", 123);
 
-            final NBTTagCompound jim = new NBTTagCompound();
+            final CompoundNBT jim = new CompoundNBT();
             jim.setInteger("j", 789);
             saveToLoad.setTag("jim", jim);
 

@@ -6,23 +6,21 @@ import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.lib.capability.ex.CapabilityExplosiveStack;
 import icbm.classic.lib.transform.vector.Pos;
 import icbm.classic.prefab.tile.BlockICBM;
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.item.Items;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -43,19 +41,19 @@ public class BlockExplosive extends BlockICBM
     }
 
     @Override
-    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
+    public ItemStack getPickBlock(BlockState state, RayTraceResult target, World world, BlockPos pos, PlayerEntity player)
     {
         return getItem(world, pos, getActualState(state, world, pos));
     }
 
     @Override
-    public int damageDropped(IBlockState state)
+    public int damageDropped(BlockState state)
     {
         return state.getValue(EX_PROP).getRegistryID();
     }
 
     @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
+    public BlockState getActualState(BlockState state, IBlockAccess worldIn, BlockPos pos)
     {
         IExplosiveData explosiveData = null;
         TileEntity tile = worldIn.getTileEntity(pos);
@@ -72,33 +70,33 @@ public class BlockExplosive extends BlockICBM
     }
 
     @Override
-    public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos)
+    public boolean isNormalCube(BlockState state, IBlockAccess world, BlockPos pos)
     {
         return true;
     }
 
     @Override
-    public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side)
+    public boolean isSideSolid(BlockState base_state, IBlockAccess world, BlockPos pos, Direction side)
     {
         return isNormalCube(base_state, world, pos);
     }
 
     @Override
-    public boolean isTopSolid(IBlockState state)
+    public boolean isTopSolid(BlockState state)
     {
         return true;
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state)
+    public boolean isOpaqueCube(BlockState state)
     {
         return true;
     }
 
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state)
+    public BlockRenderType getRenderType(BlockState state)
     {
-        return EnumBlockRenderType.MODEL;
+        return BlockRenderType.MODEL;
     }
 
     @Override
@@ -108,10 +106,10 @@ public class BlockExplosive extends BlockICBM
     }
 
     @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand)
+    public BlockState getStateForPlacement(World world, BlockPos pos, Direction facing, float hitX, float hitY, float hitZ, int meta, LivingEntity placer, Hand hand)
     {
         ItemStack stack = placer.getHeldItem(hand);
-        IBlockState state = getDefaultState().withProperty(ROTATION_PROP, facing);
+        BlockState state = getDefaultState().withProperty(ROTATION_PROP, facing);
         IExplosiveData prop = ICBMClassicAPI.EXPLOSIVE_REGISTRY.getExplosiveData(stack.getItemDamage());
         if(prop != null) {
             return state.withProperty(EX_PROP, prop);
@@ -125,7 +123,7 @@ public class BlockExplosive extends BlockICBM
     }
 
     @Override
-    public void onBlockAdded(World world, BlockPos pos, IBlockState state)
+    public void onBlockAdded(World world, BlockPos pos, BlockState state)
     {
         // Can't be implemented as we lack blockState for explosive at this point
         //super.onBlockAdded(world, pos, state);
@@ -140,7 +138,7 @@ public class BlockExplosive extends BlockICBM
      * Called when the block is placed in the world.
      */
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entityLiving, ItemStack itemStack)
+    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity entityLiving, ItemStack itemStack)
     {
         final TileEntity tile = world.getTileEntity(pos);
         if (tile instanceof TileEntityExplosive)
@@ -155,12 +153,12 @@ public class BlockExplosive extends BlockICBM
 
             // Check to see if there is fire nearby.
             // If so, then detonate.
-            for (EnumFacing rotation : EnumFacing.HORIZONTALS)
+            for (Direction rotation : Direction.HORIZONTALS)
             {
                 Pos position = new Pos(pos).add(rotation);
                 Block blockId = position.getBlock(world);
 
-                if (blockId == Blocks.FIRE || blockId == Blocks.FLOWING_LAVA || blockId == Blocks.LAVA)
+                if (blockId == net.minecraft.block.Blocks.FIRE || blockId == net.minecraft.block.Blocks.FLOWING_LAVA || blockId == Blocks.LAVA)
                 {
                     BlockExplosive.triggerExplosive(world, pos, true);
                     break;
@@ -181,7 +179,7 @@ public class BlockExplosive extends BlockICBM
      * (coordinates passed are their own) Args: x, y, z, neighbor block
      */
     @Override
-    public void neighborChanged(IBlockState thisBlock, World world, BlockPos pos, Block blockIn, BlockPos fromPos)
+    public void neighborChanged(BlockState thisBlock, World world, BlockPos pos, Block blockIn, BlockPos fromPos)
     {
         if (world.isBlockPowered(pos))
         {
@@ -228,7 +226,7 @@ public class BlockExplosive extends BlockICBM
      * represent x,y,z of the block.
      */
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World world, BlockPos pos, BlockState state, PlayerEntity player, Hand hand, Direction facing, float hitX, float hitY, float hitZ)
     {
         ItemStack itemstack = player.getHeldItem(hand);
 
@@ -254,11 +252,11 @@ public class BlockExplosive extends BlockICBM
     }
 
     @Override
-    public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entityIn)
+    public void onEntityCollidedWithBlock(World world, BlockPos pos, BlockState state, Entity entityIn)
     {
-        if (!world.isRemote && entityIn instanceof EntityArrow)
+        if (!world.isRemote && entityIn instanceof AbstractArrowEntity)
         {
-            EntityArrow entityarrow = (EntityArrow)entityIn;
+            AbstractArrowEntity entityarrow = (AbstractArrowEntity)entityIn;
 
             if (entityarrow.isBurning())
             {

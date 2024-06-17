@@ -7,13 +7,13 @@ import icbm.classic.content.entity.EntityBombCart;
 import icbm.classic.lib.LanguageUtility;
 import icbm.classic.prefab.item.ItemICBMElectrical;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityTNTPrimed;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.item.TNTEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.MinecraftForge;
 
 //Explosive Defuser
@@ -36,7 +36,7 @@ public class ItemDefuser extends ItemICBMElectrical
      * @return True to cancel the rest of the interaction.
      */
     @Override
-    public boolean onLeftClickEntity(ItemStack itemStack, EntityPlayer player, Entity entity)
+    public boolean onLeftClickEntity(ItemStack itemStack, PlayerEntity player, Entity entity)
     {
         if (this.getEnergy(itemStack) >= ENERGY_COST)
         {
@@ -57,7 +57,7 @@ public class ItemDefuser extends ItemICBMElectrical
                     entity.setDead();
                 }
             }
-            else if (entity instanceof EntityTNTPrimed)
+            else if (entity instanceof TNTEntity)
             {
                 if (MinecraftForge.EVENT_BUS.post(new ExplosiveDefuseEvent.TNTExplosive(player, entity)))
                 {
@@ -66,7 +66,7 @@ public class ItemDefuser extends ItemICBMElectrical
 
                 if (!entity.world.isRemote)
                 {
-                    entity.world.spawnEntity(new EntityItem(entity.world, entity.posX, entity.posY, entity.posZ, new ItemStack(Blocks.TNT)));
+                    entity.world.spawnEntity(new ItemEntity(entity.world, entity.posX, entity.posY, entity.posZ, new ItemStack(Blocks.TNT)));
                 }
                 entity.setDead();
             }
@@ -85,7 +85,7 @@ public class ItemDefuser extends ItemICBMElectrical
         }
         else
         {
-            player.sendMessage(new TextComponentString(LanguageUtility.getLocal("message.defuser.nopower")));
+            player.sendMessage(new StringTextComponent(LanguageUtility.getLocal("message.defuser.nopower")));
         }
 
         return false;

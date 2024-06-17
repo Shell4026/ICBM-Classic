@@ -12,9 +12,9 @@ import icbm.classic.lib.actions.status.MissingFieldStatus;
 import icbm.classic.lib.projectile.EntityProjectile;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -32,7 +32,7 @@ public class ActionSpawnEntity extends ActionBase {
         ActionFields.ENTITY_REG_NAME, ActionFields.ENTITY_DATA);
 
     private ResourceLocation entityID;
-    private NBTTagCompound entityData;
+    private CompoundNBT entityData;
     private Vec3d motion;
     private Float yaw;
     private Float pitch;
@@ -70,9 +70,9 @@ public class ActionSpawnEntity extends ActionBase {
         } else {
             entity.rotationYaw = entity.prevRotationYaw = MathHelper.wrapDegrees(getWorld().rand.nextFloat() * 360.0F);
         }
-        if (entity instanceof EntityLivingBase) {
-            ((EntityLivingBase) entity).rotationYawHead = entity.rotationYaw;
-            ((EntityLivingBase) entity).renderYawOffset = entity.rotationYaw;
+        if (entity instanceof LivingEntity) {
+            ((LivingEntity) entity).rotationYawHead = entity.rotationYaw;
+            ((LivingEntity) entity).renderYawOffset = entity.rotationYaw;
         }
 
         // Apply pitch
@@ -86,7 +86,7 @@ public class ActionSpawnEntity extends ActionBase {
         if (entityData != null) {
             final UUID uuid = entity.getUniqueID();
 
-            NBTTagCompound mergedData = entity.writeToNBT(new NBTTagCompound());
+            CompoundNBT mergedData = entity.writeToNBT(new CompoundNBT());
             mergedData.merge(entityData);
             entity.readFromNBT(mergedData);
 
@@ -115,7 +115,7 @@ public class ActionSpawnEntity extends ActionBase {
             this.entityID = (ResourceLocation) value;
         }
         if (key == ActionFields.ENTITY_DATA) {
-            this.entityData = (NBTTagCompound) value;
+            this.entityData = (CompoundNBT) value;
         }
     }
 

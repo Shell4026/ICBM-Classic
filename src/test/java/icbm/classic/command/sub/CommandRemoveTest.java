@@ -7,7 +7,7 @@ import icbm.classic.command.ICBMCommands;
 import icbm.classic.content.missile.entity.explosive.EntityExplosiveMissile;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.EntitySheep;
+import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.util.math.Vec3d;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -130,7 +130,7 @@ public class CommandRemoveTest
         TestUtils.missile(testManager.getWorld(), 100, 20, 100);
 
         //Validate start condition
-        Assertions.assertEquals(3, testManager.getWorld().loadedEntityList.stream().filter(e -> e instanceof EntitySheep).count(), "Should start with 3 sheep");
+        Assertions.assertEquals(3, testManager.getWorld().loadedEntityList.stream().filter(e -> e instanceof SheepEntity).count(), "Should start with 3 sheep");
         Assertions.assertEquals(2, testManager.getWorld().loadedEntityList.stream().filter(e -> e instanceof EntityExplosiveMissile).count(), "Should start with 2 missiles");
 
         //Trigger command
@@ -141,7 +141,7 @@ public class CommandRemoveTest
         Assertions.assertEquals(CommandRemove.TRANSLATION_REMOVE, dummyCommandSender.pollLastMessage(), "Should get translation");
 
         //Should still have 3 sheep
-        Assertions.assertEquals(3, testManager.getWorld().loadedEntityList.stream().filter(e -> e instanceof EntitySheep).count(), "Should end with 3 sheep");
+        Assertions.assertEquals(3, testManager.getWorld().loadedEntityList.stream().filter(e -> e instanceof SheepEntity).count(), "Should end with 3 sheep");
         Assertions.assertEquals(removeMissile ? 0 : 2, testManager.getWorld().loadedEntityList.stream().filter(e -> e instanceof EntityExplosiveMissile).filter(Entity::isEntityAlive).count(), "Should end with 0 missiles");
     }
 }

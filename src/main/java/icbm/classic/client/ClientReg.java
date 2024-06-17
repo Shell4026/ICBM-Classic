@@ -36,7 +36,7 @@ import net.minecraft.client.renderer.model.ModelBakery;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -60,7 +60,7 @@ public class ClientReg
 {
     private final static Map<IExplosiveData, net.minecraft.client.renderer.model.ModelResourceLocation> grenadeModelMap = new HashMap();
     private final static Map<IExplosiveData, net.minecraft.client.renderer.model.ModelResourceLocation> missileModelMap = new HashMap();
-    private final static Map<IExplosiveData, Map<EnumFacing, net.minecraft.client.renderer.model.ModelResourceLocation>> blockModelMap = new HashMap();
+    private final static Map<IExplosiveData, Map<Direction, net.minecraft.client.renderer.model.ModelResourceLocation>> blockModelMap = new HashMap();
     private final static Map<IExplosiveData, net.minecraft.client.renderer.model.ModelResourceLocation> itemBlockModelMap = new HashMap();
     private final static Map<IExplosiveData, net.minecraft.client.renderer.model.ModelResourceLocation> cartModelMap = new HashMap();
     private final static Map<IExplosiveData, net.minecraft.client.renderer.model.ModelResourceLocation> bombletModelMap = new HashMap();
@@ -214,10 +214,10 @@ public class ClientReg
         for (IExplosiveData data : ICBMClassicAPI.EX_BLOCK_REGISTRY.getExplosives()) //TODO run loop once for all 4 content types
         {
             //Add block state
-            final HashMap<EnumFacing, net.minecraft.client.renderer.model.ModelResourceLocation> facingModelMap = new HashMap<>();
+            final HashMap<Direction, net.minecraft.client.renderer.model.ModelResourceLocation> facingModelMap = new HashMap<>();
             final String resourcePath = data.getRegistryKey().getResourceDomain() + ":explosives/" + data.getRegistryKey().getResourcePath();
 
-            for(EnumFacing facing : EnumFacing.VALUES)
+            for(Direction facing : Direction.VALUES)
             {
                 facingModelMap.put(facing, new net.minecraft.client.renderer.model.ModelResourceLocation(resourcePath, "explosive=" + data.getRegistryKey().toString().replace(":", "_") + ",rotation=" + facing));
             }
@@ -230,7 +230,7 @@ public class ClientReg
             itemBlockModelMap.put(data, new net.minecraft.client.renderer.model.ModelResourceLocation(resourcePath, "inventory"));
         }
         //Block state mapper
-        ModelLoader.setCustomStateMapper(BlockReg.blockExplosive, new BlockModelMapperExplosive(blockModelMap, blockModelMap.get(ICBMExplosives.CONDENSED).get(EnumFacing.UP)));
+        ModelLoader.setCustomStateMapper(BlockReg.blockExplosive, new BlockModelMapperExplosive(blockModelMap, blockModelMap.get(ICBMExplosives.CONDENSED).get(Direction.UP)));
         //Item state mapper
         ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(BlockReg.blockExplosive), new ItemModelMapperExplosive(itemBlockModelMap, itemBlockModelMap.get(ICBMExplosives.CONDENSED)));
         ModelBakery.registerItemVariants(Item.getItemFromBlock(BlockReg.blockExplosive), itemBlockModelMap.values()

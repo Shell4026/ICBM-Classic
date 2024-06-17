@@ -8,11 +8,11 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -65,7 +65,7 @@ public abstract class PacketCodex<RAW, TARGET> {
 
     /** Called when decoding is finished and all data is written to the target */
     @Accessors(chain = true, fluent = true)
-    private TriConsumer<RAW, TARGET, EntityPlayer> onFinished;
+    private TriConsumer<RAW, TARGET, PlayerEntity> onFinished;
 
     public PacketCodex<RAW, TARGET> asClientOnly() {
         this.allowClient = true;
@@ -103,8 +103,8 @@ public abstract class PacketCodex<RAW, TARGET> {
         return nodeByte((t) -> (byte) getter.apply(t).ordinal(), (t, v) -> setter.accept(t, e.getEnumConstants()[v]));
     }
 
-    public PacketCodex<RAW, TARGET> nodeFacing(Function<TARGET, EnumFacing> getter, BiConsumer<TARGET, EnumFacing> setter) {
-        return node(EnumFacing.class, false, getter, setter, (byteBuf, face) -> byteBuf.writeByte((byte)face.ordinal()), (byteBuf) -> EnumFacing.getFront(byteBuf.readByte()));
+    public PacketCodex<RAW, TARGET> nodeFacing(Function<TARGET, Direction> getter, BiConsumer<TARGET, Direction> setter) {
+        return node(Direction.class, false, getter, setter, (byteBuf, face) -> byteBuf.writeByte((byte)face.ordinal()), (byteBuf) -> Direction.getFront(byteBuf.readByte()));
     }
 
     public PacketCodex<RAW, TARGET> nodeDouble(Function<TARGET, Double> getter, BiConsumer<TARGET, Double> setter) {
@@ -135,8 +135,8 @@ public abstract class PacketCodex<RAW, TARGET> {
         return this;
     }
 
-    public PacketCodex<RAW, TARGET> nodeNbtCompound(Function<TARGET, NBTTagCompound> getter, BiConsumer<TARGET, NBTTagCompound> setter) {
-        return node(NBTTagCompound.class,false,  getter, setter,ByteBufUtils::writeTag, ByteBufUtils::readTag);
+    public PacketCodex<RAW, TARGET> nodeNbtCompound(Function<TARGET, CompoundNBT> getter, BiConsumer<TARGET, CompoundNBT> setter) {
+        return node(CompoundNBT.class,false,  getter, setter,ByteBufUtils::writeTag, ByteBufUtils::readTag);
     }
 
     public PacketCodex<RAW, TARGET> nodeBoolean(Function<TARGET, Boolean> getter, BiConsumer<TARGET, Boolean> setter) {
@@ -208,12 +208,12 @@ public abstract class PacketCodex<RAW, TARGET> {
         }
     }
 
-    public void sendPacketToGuiUsers(RAW raw, Collection<EntityPlayer> players)
+    public void sendPacketToGuiUsers(RAW raw, Collection<PlayerEntity> players)
     {
         try {
             final IPacket packet = build(raw);
-            players.stream().filter(player -> player instanceof EntityPlayerMP).forEach((player) -> {
-                ICBMClassic.packetHandler.sendToPlayer(packet, (EntityPlayerMP) player);
+            players.stream().filter(player -> player instanceof ServerPlayerEntity).forEach((player) -> {
+                ICBMClassic.packetHandler.sendToPlayer(packet, (ServerPlayerEntity) player);
             });
         }
         catch (Exception e) {

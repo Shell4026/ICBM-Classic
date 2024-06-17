@@ -2,16 +2,14 @@ package icbm.classic.content.blocks.explosive;
 
 import com.adelean.inject.resources.junit.jupiter.GivenJsonResource;
 import com.adelean.inject.resources.junit.jupiter.TestWithResources;
-import icbm.classic.ICBMClassic;
 import icbm.classic.TestBase;
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.caps.IExplosive;
-import icbm.classic.lib.capability.ex.CapabilityExplosive;
 import net.minecraft.block.Block;
-import net.minecraft.init.Bootstrap;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.registry.Bootstrap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -22,7 +20,7 @@ import org.junit.jupiter.api.*;
 class TileEntityExplosiveTest extends TestBase {
 
     @GivenJsonResource("data/saves/4.0.0/tileEntity_IncendiaryExplosive.json")
-    NBTTagCompound version4save;
+    CompoundNBT version4save;
 
     private static Block block;
     private static Item item;

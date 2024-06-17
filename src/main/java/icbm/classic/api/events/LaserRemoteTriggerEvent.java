@@ -1,6 +1,6 @@
 package icbm.classic.api.events;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
@@ -21,13 +21,13 @@ import javax.annotation.Nonnull;
 public class LaserRemoteTriggerEvent extends Event
 {
     public final World world;
-    public final EntityPlayer player;
+    public final PlayerEntity player;
     private Vec3d pos;
 
     /** Optional translation key to show user for why it was canceled */
     public String cancelReason;
 
-    public LaserRemoteTriggerEvent(World world, Vec3d pos, EntityPlayer player)
+    public LaserRemoteTriggerEvent(World world, Vec3d pos, PlayerEntity player)
     {
         this.world = world;
         this.pos = pos;

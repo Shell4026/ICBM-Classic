@@ -15,19 +15,19 @@ import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.ItemBlock;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.WorldServer;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.ServerWorld;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -35,7 +35,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 
-public abstract class CargoProjectileData<T extends IBuildableObject, ENTITY extends Entity> implements IBuildableObject, IProjectileData<ENTITY>, INBTSerializable<NBTTagCompound> {
+public abstract class CargoProjectileData<T extends IBuildableObject, ENTITY extends Entity> implements IBuildableObject, IProjectileData<ENTITY>, INBTSerializable<CompoundNBT> {
 
     private final static ImmutableList<MetaTag> TYPE = ImmutableList.of(EntityActionTypes.ENTITY_CREATION, ProjectileTypes.TYPE_HOLDER, ProjectileTypes.TYPE_THROWABLE);
 
@@ -71,14 +71,14 @@ public abstract class CargoProjectileData<T extends IBuildableObject, ENTITY ext
 
     @Override
     public ITextComponent getTooltip() {
-        return new TextComponentTranslation(
+        return new TranslationTextComponent(
             getTranslationKey() + ".info." + parachuteMode.name().toLowerCase(),
             heldItem.getItem().getItemStackDisplayName(heldItem)
         );
     }
 
     @Override
-    public void onEntitySpawned(@Nonnull ENTITY entity, @Nullable Entity source, @Nullable EnumHand hand) {
+    public void onEntitySpawned(@Nonnull ENTITY entity, @Nullable Entity source, @Nullable Hand hand) {
         if (!heldItem.isEmpty()) {
             switch (parachuteMode) {
                 case PROJECTILE:
@@ -127,7 +127,7 @@ public abstract class CargoProjectileData<T extends IBuildableObject, ENTITY ext
             if (mob != null) {
                 mob.startRiding(entity);
 
-                if (mob instanceof EntityLivingBase && heldItem.hasDisplayName()) {
+                if (mob instanceof LivingEntity && heldItem.hasDisplayName()) {
                     entity.setCustomNameTag(heldItem.getDisplayName());
                 }
 
@@ -143,7 +143,7 @@ public abstract class CargoProjectileData<T extends IBuildableObject, ENTITY ext
     }
 
     private void spawnItemEntity(@Nonnull ENTITY entity) {
-        final EntityItem entityItem = createItemEntity(entity);
+        final ItemEntity entityItem = createItemEntity(entity);
 
         // Spawn item
         if (!entity.world.spawnEntity(entityItem)) {
@@ -158,30 +158,30 @@ public abstract class CargoProjectileData<T extends IBuildableObject, ENTITY ext
         }
     }
 
-    private EntityItem createItemEntity(@Nonnull ENTITY entity) {
-        final EntityItem entityItem = new EntityItem(entity.world);
+    private ItemEntity createItemEntity(@Nonnull ENTITY entity) {
+        final ItemEntity entityItem = new ItemEntity(entity.world);
         entityItem.setItem(heldItem.copy());
         entityItem.setPosition(entity.posX, entity.posY, entity.posZ);
         entityItem.setDefaultPickupDelay();
         return entityItem;
     }
 
-    private void spawnBlockEntity(@Nonnull ENTITY entity, Entity source, EnumHand hand) {
-        if (!(heldItem.getItem() instanceof ItemBlock)) { //TODO handle blocks that have non-itemBlock entities
+    private void spawnBlockEntity(@Nonnull ENTITY entity, Entity source, Hand hand) {
+        if (!(heldItem.getItem() instanceof BlockItem)) { //TODO handle blocks that have non-itemBlock entities
             spawnItemEntity(entity);
             return;
         }
         int i = heldItem.getItem().getMetadata(heldItem.getMetadata());
-        IBlockState iblockstate = null;
+        BlockState iblockstate = null;
 
         try {
             // TODO if source is a missile try to get caused by player
-            final EntityLivingBase entityLivingBase = source instanceof EntityLivingBase ? (EntityLivingBase) source : FakePlayerFactory.getMinecraft((WorldServer) entity.world);
-            iblockstate = ((ItemBlock) heldItem.getItem()).getBlock()
-                .getStateForPlacement(entity.world, entity.getPosition(), EnumFacing.NORTH, 0.5f, 1f, 0.5f, i, entityLivingBase, hand);
+            final LivingEntity entityLivingBase = source instanceof LivingEntity ? (LivingEntity) source : FakePlayerFactory.getMinecraft((ServerWorld) entity.world);
+            iblockstate = ((BlockItem) heldItem.getItem()).getBlock()
+                .getStateForPlacement(entity.world, entity.getPosition(), Direction.NORTH, 0.5f, 1f, 0.5f, i, entityLivingBase, hand);
         } catch (Exception e) {
             ICBMClassic.logger().error("CargoProjectileData: Failed to use Block#getStateForPlacement to get block state. This may cause incorrect block placements", e);
-            iblockstate = ((ItemBlock) heldItem.getItem()).getBlock().getStateFromMeta(i);
+            iblockstate = ((BlockItem) heldItem.getItem()).getBlock().getStateFromMeta(i);
         }
 
         // TODO add itemstack to flying block for better placement and handling of TE data
@@ -192,12 +192,12 @@ public abstract class CargoProjectileData<T extends IBuildableObject, ENTITY ext
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
+    public CompoundNBT serializeNBT() {
         return SAVE_LOGIC.save(this);
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         SAVE_LOGIC.load(this, nbt);
     }
 

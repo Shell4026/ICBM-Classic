@@ -12,13 +12,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
-public abstract class FlightLogic  implements IMissileFlightLogic, IMissileFlightLogicStep, INBTSerializable<NBTTagCompound> {
+public abstract class FlightLogic  implements IMissileFlightLogic, IMissileFlightLogicStep, INBTSerializable<CompoundNBT> {
 
     @Getter @Setter @Accessors(chain = true)
     private IMissileFlightLogic nextStep;
@@ -75,12 +75,12 @@ public abstract class FlightLogic  implements IMissileFlightLogic, IMissileFligh
     public abstract boolean isDone();
 
     @Override
-    public NBTTagCompound serializeNBT() {
+    public CompoundNBT serializeNBT() {
         return SAVE_LOGIC.save(this);
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         SAVE_LOGIC.load(this, nbt);
     }
 

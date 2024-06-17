@@ -4,7 +4,7 @@ import icbm.classic.api.actions.data.EntityActionTypes;
 import icbm.classic.api.data.meta.ITypeTaggable;
 import icbm.classic.api.reg.obj.IBuildableObject;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
  * @param <E> created from the projectile data
  *
  * @deprecated being replaced with {@link icbm.classic.api.actions.IActionData} and {@link EntityActionTypes#PROJECTILE}
- * as current solution isn't flexible enough and results in odd spawning when {@link #onEntitySpawned(Entity, Entity, EnumHand)} is invoked. It
+ * as current solution isn't flexible enough and results in odd spawning when {@link #onEntitySpawned(Entity, Entity, Hand)} is invoked. It
  * also gives caller too much visibility into what is spawned. When it should just provide starting information via {@link icbm.classic.api.actions.data.IActionFieldProvider}
  * then let the spawn entity use what it needs. Plus this makes it far easier for reuse of common actions and provide implemetation for other mods.
  * As the majority of projects can be implemented as ActionSpawnEntity((world, pos, provider) -> new Entity(world, pos, provider)). Dropping
@@ -51,7 +51,7 @@ public interface IProjectileData<E extends Entity>  extends IBuildableObject, IT
      * @param source that created the entity, may not always be present
      * @param hand used to spawn entity, for non-humanoid this will always be main hand
      */
-    default void onEntitySpawned(@Nonnull E entity, @Nullable Entity source, @Nullable EnumHand hand) {
+    default void onEntitySpawned(@Nonnull E entity, @Nullable Entity source, @Nullable Hand hand) {
 
     }
 

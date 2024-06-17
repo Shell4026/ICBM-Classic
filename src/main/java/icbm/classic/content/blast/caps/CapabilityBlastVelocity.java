@@ -4,7 +4,7 @@ import icbm.classic.api.explosion.IBlast;
 import icbm.classic.api.explosion.redmatter.IBlastVelocity;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 
@@ -28,13 +28,13 @@ public class CapabilityBlastVelocity implements IBlastVelocity
                 {
                     @Nullable
                     @Override
-                    public NBTBase writeNBT(Capability<IBlastVelocity> capability, IBlastVelocity instance, EnumFacing side)
+                    public NBTBase writeNBT(Capability<IBlastVelocity> capability, IBlastVelocity instance, Direction side)
                     {
                         return null;
                     }
 
                     @Override
-                    public void readNBT(Capability<IBlastVelocity> capability, IBlastVelocity instance, EnumFacing side, NBTBase nbt)
+                    public void readNBT(Capability<IBlastVelocity> capability, IBlastVelocity instance, Direction side, NBTBase nbt)
                     {
 
                     }

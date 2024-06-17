@@ -8,16 +8,12 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityEnderman;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSourceIndirect;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.monster.EndermanEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -29,9 +25,9 @@ import java.util.List;
 public class EntityFragments extends Entity implements IEntityAdditionalSpawnData
 {
     private BlockPos inTilePosition = new BlockPos(0, 0, 0);
-    private IBlockState inTile;
+    private BlockState inTile;
 
-    public EntityLivingBase shootingEntity;
+    public LivingEntity shootingEntity;
 
     //Type settings
     @Setter @Accessors(chain = true)
@@ -165,7 +161,7 @@ public class EntityFragments extends Entity implements IEntityAdditionalSpawnDat
             this.prevRotationPitch = this.rotationPitch;
         }
 
-        IBlockState iblockstate = this.world.getBlockState(inTilePosition);
+        BlockState iblockstate = this.world.getBlockState(inTilePosition);
 
         if (iblockstate.getMaterial() != Material.AIR)
         {
@@ -335,19 +331,19 @@ public class EntityFragments extends Entity implements IEntityAdditionalSpawnDat
             final int damageScaled = MathHelper.ceil(getDamage(speed));
 
             //TODO change damage source to match fragment
-            DamageSource damagesource = new EntityDamageSourceIndirect("arrow", this, shootingEntity).setProjectile(); //TODO track source, TODO custom damage type
+            DamageSource damagesource = new IndirectEntityDamageSource("arrow", this, shootingEntity).setProjectile(); //TODO track source, TODO custom damage type
 
             //Notify that we hit an entity
             this.onImpactEntity(entity);
 
-            if (this.isBurning() && !(entity instanceof EntityEnderman))
+            if (this.isBurning() && !(entity instanceof EndermanEntity))
             {
                 entity.setFire(5);
             }
 
             if (entity.attackEntityFrom(damagesource, (float) damageScaled))
             {
-                if (!(entity instanceof EntityEnderman))
+                if (!(entity instanceof EndermanEntity))
                 {
                     this.setDead();
                 }
@@ -431,11 +427,11 @@ public class EntityFragments extends Entity implements IEntityAdditionalSpawnDat
         {
             if (this.isAnvil)
             {
-                this.world.playSound(this.posX, (int) this.posY, (int) this.posZ, SoundEvents.BLOCK_ANVIL_HIT, SoundCategory.BLOCKS, 1, 1, true);
+                this.world.playSound(this.posX, (int) this.posY, (int) this.posZ, net.minecraft.util.SoundEvents.BLOCK_ANVIL_HIT, SoundCategory.BLOCKS, 1, 1, true);
             }
             else
             {
-                this.playSound(SoundEvents.ENTITY_ARROW_HIT, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
+                this.playSound(net.minecraft.util.SoundEvents.ENTITY_ARROW_HIT, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
             }
         }
     }
@@ -474,7 +470,7 @@ public class EntityFragments extends Entity implements IEntityAdditionalSpawnDat
 
     /** (abstract) Protected helper method to write subclass entity data to NBT. */
     @Override
-    public void writeEntityToNBT(NBTTagCompound nbt)
+    public void writeEntityToNBT(CompoundNBT nbt)
     {
         nbt.setByte(NBTConstants.SHAKE, (byte) this.arrowShake);
         nbt.setBoolean(NBTConstants.IS_EXPLOSIVE, this.isExplosive);
@@ -482,7 +478,7 @@ public class EntityFragments extends Entity implements IEntityAdditionalSpawnDat
 
     /** (abstract) Protected helper method to read subclass entity data from NBT. */
     @Override
-    public void readEntityFromNBT(NBTTagCompound nbt)
+    public void readEntityFromNBT(CompoundNBT nbt)
     {
         this.arrowShake = nbt.getByte(NBTConstants.SHAKE) & 255;
         this.isExplosive = nbt.getBoolean(NBTConstants.IS_EXPLOSIVE);

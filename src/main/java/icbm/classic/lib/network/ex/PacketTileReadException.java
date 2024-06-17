@@ -1,7 +1,7 @@
 package icbm.classic.lib.network.ex;
 
 import icbm.classic.lib.transform.vector.Location;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
 
 /**
@@ -14,7 +14,7 @@ public class PacketTileReadException extends RuntimeException
 {
     protected Location location;
     private TileEntity tile;
-    private IBlockState block;
+    private BlockState block;
 
     public PacketTileReadException(Location location, String message)
     {

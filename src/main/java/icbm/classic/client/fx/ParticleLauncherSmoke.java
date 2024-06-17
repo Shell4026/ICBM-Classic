@@ -2,8 +2,8 @@ package icbm.classic.client.fx;
 
 import icbm.classic.content.reg.BlockReg;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.particle.ParticleSmokeNormal;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.particle.SmokeParticle;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 @SideOnly(Side.CLIENT)
-public class ParticleLauncherSmoke extends ParticleSmokeNormal
+public class ParticleLauncherSmoke extends SmokeParticle
 {
     public static Set<Block> blocksToIgnoreCollisions = new HashSet();
 
@@ -96,7 +96,7 @@ public class ParticleLauncherSmoke extends ParticleSmokeNormal
         }
     }
 
-    public static boolean shouldAllowCollision(IBlockState blockState)
+    public static boolean shouldAllowCollision(BlockState blockState)
     {
         final Block block = blockState.getBlock();
         return block != BlockReg.blockLaunchBase

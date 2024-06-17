@@ -1,15 +1,15 @@
 package icbm.classic.lib.capability.chicken;
 
 import icbm.classic.ICBMConstants;
+import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityAgeable;
-import net.minecraft.entity.passive.EntityChicken;
+import net.minecraft.entity.passive.ChickenEntity;
+import net.minecraft.nbt.ByteNBT;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -26,21 +26,21 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 @Mod.EventBusSubscriber(modid = ICBMConstants.DOMAIN)
-public class CapSpaceChicken implements ICapabilityProvider, INBTSerializable<NBTTagByte> {
+public class CapSpaceChicken implements ICapabilityProvider, INBTSerializable<ByteNBT> {
 
     @CapabilityInject(CapSpaceChicken.class)
     public static Capability<CapSpaceChicken> INSTANCE;
 
     public static final ResourceLocation CHICKEN_CAP = new ResourceLocation(ICBMConstants.DOMAIN, "space_chicken");
-    private static final DataParameter<Boolean> SPACE = EntityDataManager.<Boolean>createKey(EntityAgeable.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> SPACE = EntityDataManager.<Boolean>createKey(AgeableEntity.class, DataSerializers.BOOLEAN);
 
-    private final EntityChicken chicken;
+    private final ChickenEntity chicken;
 
-    public CapSpaceChicken(EntityChicken chicken) {
+    public CapSpaceChicken(ChickenEntity chicken) {
         this.chicken = chicken;
     }
 
-    public static boolean isSpace(EntityChicken chicken) {
+    public static boolean isSpace(ChickenEntity chicken) {
         if(chicken.hasCapability(CapSpaceChicken.INSTANCE, null)) {
             final CapSpaceChicken cap = chicken.getCapability(CapSpaceChicken.INSTANCE, null);
             if(cap != null) {
@@ -52,26 +52,26 @@ public class CapSpaceChicken implements ICapabilityProvider, INBTSerializable<NB
 
     @SubscribeEvent
     public static void attachCap(AttachCapabilitiesEvent<Entity> event) {
-       if(event.getObject() instanceof EntityChicken) {
-           event.addCapability(CHICKEN_CAP, new CapSpaceChicken((EntityChicken) event.getObject()));
+       if(event.getObject() instanceof ChickenEntity) {
+           event.addCapability(CHICKEN_CAP, new CapSpaceChicken((ChickenEntity) event.getObject()));
        }
     }
 
     @SubscribeEvent
     public static void createEntityEvent(EntityEvent.EntityConstructing event) {
-        if(event.getEntity() instanceof EntityChicken) {
+        if(event.getEntity() instanceof ChickenEntity) {
             event.getEntity().getDataManager().register(SPACE, false);
         }
     }
 
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction facing) {
         return capability == INSTANCE;
     }
 
     @Nullable
     @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
         if(capability == INSTANCE) {
             return (T) this;
         }
@@ -84,14 +84,14 @@ public class CapSpaceChicken implements ICapabilityProvider, INBTSerializable<NB
             {
                 @Nullable
                 @Override
-                public NBTBase writeNBT(Capability<CapSpaceChicken> capability, CapSpaceChicken instance, EnumFacing side) {
-                    return new NBTTagByte(instance.isSpace() ? (byte)1 : (byte)0);
+                public NBTBase writeNBT(Capability<CapSpaceChicken> capability, CapSpaceChicken instance, Direction side) {
+                    return new ByteNBT(instance.isSpace() ? (byte)1 : (byte)0);
                 }
 
                 @Override
-                public void readNBT(Capability<CapSpaceChicken> capability, CapSpaceChicken instance, EnumFacing side, NBTBase nbt) {
-                    if(nbt instanceof NBTTagByte) {
-                        instance.setSpace(((NBTTagByte) nbt).getByte() == 1);
+                public void readNBT(Capability<CapSpaceChicken> capability, CapSpaceChicken instance, Direction side, NBTBase nbt) {
+                    if(nbt instanceof ByteNBT) {
+                        instance.setSpace(((ByteNBT) nbt).getByte() == 1);
                     }
                 }
             },
@@ -99,12 +99,12 @@ public class CapSpaceChicken implements ICapabilityProvider, INBTSerializable<NB
     }
 
     @Override
-    public NBTTagByte serializeNBT() {
-        return new NBTTagByte(isSpace() ? (byte)1 : (byte)0);
+    public ByteNBT serializeNBT() {
+        return new ByteNBT(isSpace() ? (byte)1 : (byte)0);
     }
 
     @Override
-    public void deserializeNBT(NBTTagByte nbt) {
+    public void deserializeNBT(ByteNBT nbt) {
         setSpace(nbt.getByte() == 1);
     }
 

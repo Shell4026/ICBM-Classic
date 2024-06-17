@@ -3,8 +3,8 @@ package icbm.classic.content.entity.flyingblock;
 import icbm.classic.config.ConfigFlyingBlocks;
 import icbm.classic.config.util.BlockStateConfigListOld;
 import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.IFluidBlock;
@@ -33,7 +33,7 @@ public class FlyingBlock {
      * @param state to check
      * @return true if allowed
      */
-    public static boolean isAllowed(IBlockState state) {
+    public static boolean isAllowed(BlockState state) {
         if(!ConfigFlyingBlocks.enabled
             || state == null
             || state.getBlock().getMaterial(state) == Material.FIRE
@@ -58,7 +58,7 @@ public class FlyingBlock {
      * @param state to mutate
      * @return new state to use
      */
-    public static IBlockState applyMutations(IBlockState state) {
+    public static BlockState applyMutations(BlockState state) {
         return state;
     }
 
@@ -74,7 +74,7 @@ public class FlyingBlock {
     public static boolean spawnFlyingBlock(World world, BlockPos pos,
                                            Consumer<EntityFlyingBlock> preSpawnCallback,
                                            Consumer<EntityFlyingBlock> postSpawnCallback) {
-        final IBlockState blockState = world.getBlockState(pos);
+        final BlockState blockState = world.getBlockState(pos);
         if (!blockState.getBlock().isAir(blockState, world, pos) && isAllowed(blockState))
         {
             final float hardness = blockState.getBlockHardness(world, pos);

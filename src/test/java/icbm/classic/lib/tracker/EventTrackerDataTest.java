@@ -1,9 +1,9 @@
 package icbm.classic.lib.tracker;
 
 import icbm.classic.content.missile.entity.EntityMissile;
-import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.monster.ZombieEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -20,10 +20,10 @@ class EventTrackerDataTest {
     static Stream<Arguments> testData_isImmutable() {
         return Stream.of(
             Arguments.of(World.class, false),
-            Arguments.of(EntityPlayer.class, false),
-            Arguments.of(EntityZombie.class, false),
+            Arguments.of(PlayerEntity.class, false),
+            Arguments.of(ZombieEntity.class, false),
             Arguments.of(EntityMissile.class, false),
-            Arguments.of(NBTTagCompound.class, false),
+            Arguments.of(CompoundNBT.class, false),
             Arguments.of(BlockPos.MutableBlockPos.class, false),
 
             Arguments.of(Object.class, true),
@@ -44,10 +44,10 @@ class EventTrackerDataTest {
     static Stream<Arguments> testData_scanClass() {
         return Stream.of(
             Arguments.of(World.class, false),
-            Arguments.of(EntityPlayer.class, false),
-            Arguments.of(EntityZombie.class, false),
+            Arguments.of(PlayerEntity.class, false),
+            Arguments.of(ZombieEntity.class, false),
             Arguments.of(EntityMissile.class, false),
-            Arguments.of(NBTTagCompound.class, false),
+            Arguments.of(CompoundNBT.class, false),
             Arguments.of(BlockPos.MutableBlockPos.class, false),
 
             Arguments.of(ResourceLocation.class, true),

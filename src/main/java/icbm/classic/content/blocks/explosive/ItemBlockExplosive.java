@@ -9,10 +9,10 @@ import icbm.classic.lib.LanguageUtility;
 import icbm.classic.lib.capability.ex.CapabilityExplosiveStack;
 import icbm.classic.prefab.item.ItemBlockAbstract;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -40,7 +40,7 @@ public class ItemBlockExplosive extends ItemBlockAbstract
 
     @Override
     @Nullable
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt)
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt)
     {
         final CapabilityExplosiveStack capabilityExplosive = new CapabilityExplosiveStack(stack);
         if(nbt != null)
@@ -51,7 +51,7 @@ public class ItemBlockExplosive extends ItemBlockAbstract
     }
 
     @Override
-    public void getDetailedInfo(ItemStack stack, @Nullable EntityPlayer player, List list)
+    public void getDetailedInfo(ItemStack stack, @Nullable PlayerEntity player, List list)
     {
         final IExplosiveData data = ICBMClassicHelpers.getExplosive(stack.getItemDamage(), true);
         if (data != null)
@@ -123,7 +123,7 @@ public class ItemBlockExplosive extends ItemBlockAbstract
         }
     }
 
-    protected boolean shouldTauntPlayer(@Nullable EntityPlayer player)
+    protected boolean shouldTauntPlayer(@Nullable PlayerEntity player)
     {
         return player != null && player.getName() != null
                 && (player.getName().toLowerCase().startsWith("sips_") || player.getName().toLowerCase().startsWith("sjin"));

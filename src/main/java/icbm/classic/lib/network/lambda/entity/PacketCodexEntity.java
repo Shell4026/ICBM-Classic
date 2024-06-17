@@ -6,7 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.ServerWorld;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import java.util.Optional;
@@ -36,8 +36,8 @@ public class PacketCodexEntity<R extends Entity, T> extends PacketCodex<R, T> {
     public void sendToAllAround(R tile){
         double range = 200;
         // TODO consider getting player's chunk map instead
-        if(tile.world instanceof WorldServer) {
-            final WorldServer worldServer = (WorldServer) tile.world;
+        if(tile.world instanceof ServerWorld) {
+            final ServerWorld worldServer = (ServerWorld) tile.world;
             range = Optional.ofNullable(worldServer.getMinecraftServer())
                 .map(MinecraftServer::getPlayerList)
                 .map(PlayerList::getViewDistance)

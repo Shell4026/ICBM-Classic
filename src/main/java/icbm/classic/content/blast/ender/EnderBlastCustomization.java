@@ -10,10 +10,10 @@ import icbm.classic.lib.LanguageUtility;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.common.DimensionManager;
@@ -26,7 +26,7 @@ import java.util.function.Consumer;
 
 @Data
 @NoArgsConstructor
-public class EnderBlastCustomization implements IExplosiveCustomization, INBTSerializable<NBTTagCompound> {
+public class EnderBlastCustomization implements IExplosiveCustomization, INBTSerializable<CompoundNBT> {
 
     public static final ResourceLocation NAME = new ResourceLocation(ICBMConstants.DOMAIN, "ender");
 
@@ -59,14 +59,14 @@ public class EnderBlastCustomization implements IExplosiveCustomization, INBTSer
     public void collectCustomizationInformation(Consumer<String> collector) {
         if(pos != null) {
             if(posTooltip == null) {
-                posTooltip = LanguageUtility.buildToolTipString(new TextComponentTranslation("explosive.icbmclassic:ender.pos", pos.x, pos.y, pos.z));
+                posTooltip = LanguageUtility.buildToolTipString(new TranslationTextComponent("explosive.icbmclassic:ender.pos", pos.x, pos.y, pos.z));
             }
             collector.accept(posTooltip);
         }
         if(dim != null) {
             if(dimTooltip == null) {
                 final String worldName = Optional.ofNullable(DimensionManager.getWorld(dim)).map(World::getWorldInfo).map(WorldInfo::getWorldName).orElse("???");
-                dimTooltip = LanguageUtility.buildToolTipString(new TextComponentTranslation("explosive.icbmclassic:ender.world", dim, worldName));
+                dimTooltip = LanguageUtility.buildToolTipString(new TranslationTextComponent("explosive.icbmclassic:ender.world", dim, worldName));
             }
             collector.accept(dimTooltip);
         }
@@ -92,12 +92,12 @@ public class EnderBlastCustomization implements IExplosiveCustomization, INBTSer
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
+    public CompoundNBT serializeNBT() {
         return SAVE_LOGIC.save(this);
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         SAVE_LOGIC.load(this, nbt);
     }
 

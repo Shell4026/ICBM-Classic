@@ -3,31 +3,27 @@ package icbm.classic.content.entity.flyingblock;
 import icbm.classic.ICBMClassic;
 import icbm.classic.ICBMConstants;
 import icbm.classic.config.ConfigFlyingBlocks;
-import icbm.classic.content.entity.EntityPlayerSeat;
 import icbm.classic.lib.projectile.EntityProjectile;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import io.netty.buffer.ByteBuf;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemDoor;
+import net.minecraft.entity.item.FallingBlockEntity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.block.Blocks;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTUtil;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.ServerWorld;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -36,7 +32,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import javax.annotation.Nonnull;
 
 /**
- * Similiar to {@link net.minecraft.entity.item.EntityFallingBlock} but specifically as a projectile to be spawned
+ * Similiar to {@link FallingBlockEntity} but specifically as a projectile to be spawned
  * by {@link icbm.classic.content.blast.redmatter.EntityRedmatter} and other sources.
  *
  * Normally created by {@link FlyingBlock} handling logic
@@ -129,7 +125,7 @@ public class EntityFlyingBlock extends EntityProjectile<EntityFlyingBlock> imple
 
     @Override
     protected void destroy() {
-        this.placeBlockIntoWorld(this.getPos(), new RayTraceResult(this.getPositionVector(), EnumFacing.UP));
+        this.placeBlockIntoWorld(this.getPos(), new RayTraceResult(this.getPositionVector(), Direction.UP));
         this.setDead();
     }
 
@@ -173,24 +169,24 @@ public class EntityFlyingBlock extends EntityProjectile<EntityFlyingBlock> imple
         if(!sourceStack.isEmpty()) {
 
             // Use fake player to handle TE placement or other special placement rules
-            final FakePlayer player = FakePlayerFactory.getMinecraft((WorldServer) world); //TODO attempt to get actual player who create the source of this entity
-            player.setHeldItem(EnumHand.MAIN_HAND, sourceStack);
+            final FakePlayer player = FakePlayerFactory.getMinecraft((ServerWorld) world); //TODO attempt to get actual player who create the source of this entity
+            player.setHeldItem(Hand.MAIN_HAND, sourceStack);
 
             //TODO pull entityYaw to get placement direction. This way furnace places facing the same way as it renders.
-            final EnumActionResult result =  sourceStack.getItem()
-                .onItemUse(player, world, pos, EnumHand.MAIN_HAND, hit.sideHit, (float)hit.hitVec.x, (float)hit.hitVec.y, (float)hit.hitVec.z);
+            final ActionResultType result =  sourceStack.getItem()
+                .onItemUse(player, world, pos, Hand.MAIN_HAND, hit.sideHit, (float)hit.hitVec.x, (float)hit.hitVec.y, (float)hit.hitVec.z);
 
             // cleanup fake
-            player.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
+            player.setHeldItem(Hand.MAIN_HAND, ItemStack.EMPTY);
 
-            if(result == EnumActionResult.SUCCESS) {
+            if(result == ActionResultType.SUCCESS) {
                 return true;
             }
         }
 
         // Backup plan if we can't place via item, this will break in some cases TODO implement a config to disable blocks or change placement rules
-        final IBlockState blockState = this.getBlockData().getBlockState();
-        if (this.world.mayPlace(blockState.getBlock(), pos, true, EnumFacing.UP, this)) {
+        final BlockState blockState = this.getBlockData().getBlockState();
+        if (this.world.mayPlace(blockState.getBlock(), pos, true, Direction.UP, this)) {
 
             if (!world.setBlockState(pos, blockState, 11)) return false;
 
@@ -200,7 +196,7 @@ public class EntityFlyingBlock extends EntityProjectile<EntityFlyingBlock> imple
 
                 if (tileentity != null)
                 {
-                    final NBTTagCompound currentSave = tileentity.writeToNBT(new NBTTagCompound());
+                    final CompoundNBT currentSave = tileentity.writeToNBT(new CompoundNBT());
 
                     // Ensure these are the same tile saves, otherwise we can corrupt a block badly
                     if(currentSave.getString("id").equals(this.getBlockData().getTileEntityData().getString("id"))) {
@@ -226,7 +222,7 @@ public class EntityFlyingBlock extends EntityProjectile<EntityFlyingBlock> imple
     protected void dropSourceStack(ItemStack itemStack) {
         // TODO implement this.shouldDropItem && this.world.getGameRules().getBoolean("doEntityDrops")
         if(itemStack != null && !itemStack.isEmpty()) {
-            final EntityItem entityItem = new EntityItem(world, posX, posY, posZ);
+            final ItemEntity entityItem = new ItemEntity(world, posX, posY, posZ);
             entityItem.setItem(itemStack);
             if(!world.spawnEntity(entityItem)) {
                 ICBMClassic.logger().error("EntityFlyingBlock: Failed to drop source stack '{}' at dim[{}] pos[{}]", itemStack, this.world.provider.getDimension(), this.getPos());
@@ -245,14 +241,14 @@ public class EntityFlyingBlock extends EntityProjectile<EntityFlyingBlock> imple
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound save)
+    public void writeEntityToNBT(CompoundNBT save)
     {
         super.writeEntityToNBT(save);
         SAVE_LOGIC.save(this, save);
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound save)
+    public void readEntityFromNBT(CompoundNBT save)
     {
        super.readEntityFromNBT(save);
        SAVE_LOGIC.load(this, save);

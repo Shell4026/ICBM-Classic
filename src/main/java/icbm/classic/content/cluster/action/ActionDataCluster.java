@@ -12,8 +12,8 @@ import icbm.classic.api.data.meta.MetaTag;
 import lombok.Getter;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 
-public class ActionDataCluster implements IActionData, INBTSerializable<NBTTagCompound> {
+public class ActionDataCluster implements IActionData, INBTSerializable<CompoundNBT> {
     public final static ResourceLocation REG_NAME = new ResourceLocation(ICBMConstants.DOMAIN, "entity.cluster.spawning");
     private final static ImmutableList<MetaTag> TAGS = ImmutableList.of(EntityActionTypes.ENTITY_CREATION);
 
@@ -60,9 +60,9 @@ public class ActionDataCluster implements IActionData, INBTSerializable<NBTTagCo
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
-        final NBTTagCompound save = new NBTTagCompound();
-        final NBTTagList spawnEntries = new NBTTagList(); //TODO convert to node
+    public CompoundNBT serializeNBT() {
+        final CompoundNBT save = new CompoundNBT();
+        final ListNBT spawnEntries = new ListNBT(); //TODO convert to node
         for (ItemStack stack : clusterSpawnEntries) {
             spawnEntries.appendTag(stack.serializeNBT());
         }
@@ -71,8 +71,8 @@ public class ActionDataCluster implements IActionData, INBTSerializable<NBTTagCo
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
-        final NBTTagList tagList = nbt.getTagList("clusterSpawnEntries", 10);
+    public void deserializeNBT(CompoundNBT nbt) {
+        final ListNBT tagList = nbt.getTagList("clusterSpawnEntries", 10);
         clusterSpawnEntries.clear();
         for (int i = 0; i < tagList.tagCount(); i++) {
             ItemStack stack = new ItemStack(tagList.getCompoundTagAt(i));

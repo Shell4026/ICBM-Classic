@@ -1,6 +1,6 @@
 package icbm.classic.content.blast.redmatter.logic;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -128,7 +128,7 @@ public class RedmatterBlockCollectorTest
         @Test
         void north() {
             final List<BlockPos> posList = new ArrayList();
-            RedmatterBlockCollector.collectBlocksOnWall(1, EnumFacing.NORTH, (x, y, z) -> {
+            RedmatterBlockCollector.collectBlocksOnWall(1, Direction.NORTH, (x, y, z) -> {
                 posList.add(new BlockPos(x, y, z));
             });
             Assertions.assertEquals(posList, NORTH_DATA);
@@ -137,7 +137,7 @@ public class RedmatterBlockCollectorTest
         @Test
         void south() {
             final List<BlockPos> posList = new ArrayList();
-            RedmatterBlockCollector.collectBlocksOnWall(1, EnumFacing.SOUTH, (x, y, z) -> {
+            RedmatterBlockCollector.collectBlocksOnWall(1, Direction.SOUTH, (x, y, z) -> {
                 posList.add(new BlockPos(x, y, z));
             });
             Assertions.assertEquals(posList, SOUTH_DATA);
@@ -146,7 +146,7 @@ public class RedmatterBlockCollectorTest
         @Test
         void east() {
             final List<BlockPos> posList = new ArrayList();
-            RedmatterBlockCollector.collectBlocksOnWall(1, EnumFacing.EAST, (x, y, z) -> {
+            RedmatterBlockCollector.collectBlocksOnWall(1, Direction.EAST, (x, y, z) -> {
                 posList.add(new BlockPos(x, y, z));
             });
             Assertions.assertEquals(posList, EAST_DATA);
@@ -155,7 +155,7 @@ public class RedmatterBlockCollectorTest
         @Test
         void west() {
             final List<BlockPos> posList = new ArrayList();
-            RedmatterBlockCollector.collectBlocksOnWall(1, EnumFacing.WEST, (x, y, z) -> {
+            RedmatterBlockCollector.collectBlocksOnWall(1, Direction.WEST, (x, y, z) -> {
                 posList.add(new BlockPos(x, y, z));
             });
             Assertions.assertEquals(posList, WEST_DATA);
@@ -164,7 +164,7 @@ public class RedmatterBlockCollectorTest
         @Test
         void up() {
             final List<BlockPos> posList = new ArrayList();
-            RedmatterBlockCollector.collectBlocksOnWall(1, EnumFacing.UP, (x, y, z) -> {
+            RedmatterBlockCollector.collectBlocksOnWall(1, Direction.UP, (x, y, z) -> {
                 posList.add(new BlockPos(x, y, z));
             });
             Assertions.assertEquals(posList, UP_DATA);
@@ -173,7 +173,7 @@ public class RedmatterBlockCollectorTest
         @Test
         void down() {
             final List<BlockPos> posList = new ArrayList();
-            RedmatterBlockCollector.collectBlocksOnWall(1, EnumFacing.DOWN, (x, y, z) -> {
+            RedmatterBlockCollector.collectBlocksOnWall(1, Direction.DOWN, (x, y, z) -> {
                 posList.add(new BlockPos(x, y, z));
             });
             Assertions.assertEquals(posList, DOWN_DATA);

@@ -9,8 +9,8 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Random;
 
 @SideOnly(Side.CLIENT)
-public class RenderRedmatter extends Render<EntityRedmatter>
+public class RenderRedmatter extends EntityRenderer<EntityRedmatter>
 {
     public static final ResourceLocation TEXTURE_FILE = new ResourceLocation(ICBMConstants.DOMAIN, ICBMConstants.TEXTURE_DIRECTORY + "entity/redmatter/blackhole.png");
     public static ResourceLocation GREY_TEXTURE = new ResourceLocation(ICBMConstants.DOMAIN, ICBMConstants.TEXTURE_DIRECTORY + "models/grey.png");
@@ -34,7 +34,7 @@ public class RenderRedmatter extends Render<EntityRedmatter>
     public ColorB colorIn = new ColorB(255, 255, 255); //TODO figure out how this works
     public ColorB colorOut = new ColorB(0, 0, 0);
 
-    public RenderRedmatter(RenderManager renderManager)
+    public RenderRedmatter(EntityRendererManager renderManager)
     {
         super(renderManager);
     }

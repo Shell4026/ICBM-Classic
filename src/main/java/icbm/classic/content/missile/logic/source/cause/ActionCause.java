@@ -5,10 +5,10 @@ import icbm.classic.api.actions.cause.IActionCause;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public abstract class ActionCause implements IActionCause, INBTSerializable<NBTTagCompound> {
+public abstract class ActionCause implements IActionCause, INBTSerializable<CompoundNBT> {
 
     private IActionCause parent;
 
@@ -26,12 +26,12 @@ public abstract class ActionCause implements IActionCause, INBTSerializable<NBTT
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
-        return SAVE_LOGIC.save(this, new NBTTagCompound());
+    public CompoundNBT serializeNBT() {
+        return SAVE_LOGIC.save(this, new CompoundNBT());
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         SAVE_LOGIC.load(this, nbt);
     }
 

@@ -3,19 +3,19 @@ package icbm.classic.lib.saving.nodes;
 import icbm.classic.api.reg.obj.IBuildableObject;
 import icbm.classic.api.reg.obj.IBuilderRegistry;
 import icbm.classic.lib.saving.NbtSaveNode;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.ListNBT;
 
 import java.util.Collection;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class SaveBuildableObjectList<E, BUILDABLE extends IBuildableObject> extends NbtSaveNode<E, NBTTagList>  {
+public class SaveBuildableObjectList<E, BUILDABLE extends IBuildableObject> extends NbtSaveNode<E, ListNBT>  {
     public <LIST extends Collection<BUILDABLE>> SaveBuildableObjectList(String name, final Supplier<IBuilderRegistry<BUILDABLE>> reg, Function<E, LIST> getter) {
         super(name,
             (source) -> {
                 final LIST list = getter.apply(source);
                 if(list != null && !list.isEmpty()) {
-                    final NBTTagList tagList = new NBTTagList();
+                    final ListNBT tagList = new ListNBT();
                     for(BUILDABLE obj : list) {
                         tagList.appendTag(reg.get().save(obj));
                     }

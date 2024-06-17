@@ -6,7 +6,7 @@ import icbm.classic.lib.transform.vector.Pos;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -94,9 +94,9 @@ public class PacketBase<P extends PacketBase> implements IPacket<P>
         {
             ByteBufUtils.writeUTF8String(buffer, (String) object);
         }
-        else if (object instanceof NBTTagCompound)
+        else if (object instanceof CompoundNBT)
         {
-            ByteBufUtils.writeTag(buffer, (NBTTagCompound) object);
+            ByteBufUtils.writeTag(buffer, (CompoundNBT) object);
         }
         else if (object instanceof ItemStack)
         {

@@ -8,7 +8,7 @@ import net.minecraft.command.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -89,7 +89,7 @@ public class CommandRemove extends SubCommand
         entities.forEach(Entity::setDead);
 
         //User feedback
-        sender.sendMessage(new TextComponentTranslation(TRANSLATION_REMOVE, entities.size(), range));
+        sender.sendMessage(new TranslationTextComponent(TRANSLATION_REMOVE, entities.size(), range));
 
         return true;
     }

@@ -1,7 +1,7 @@
 package icbm.classic.client.fx;
 
 import com.google.common.collect.Lists;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -13,7 +13,7 @@ import java.util.function.Function;
 public final class ParticleCollisionLogic
 {
     //Taken from world code, customized to allow ignoring some blocks
-    public static List<AxisAlignedBB> getCollisionBoxes(World world, AxisAlignedBB aabb, Function<IBlockState, Boolean> allowCollision)
+    public static List<AxisAlignedBB> getCollisionBoxes(World world, AxisAlignedBB aabb, Function<BlockState, Boolean> allowCollision)
     {
         final List<AxisAlignedBB> outList = Lists.<AxisAlignedBB>newArrayList();
 
@@ -42,7 +42,7 @@ public final class ParticleCollisionLogic
                             if (!flag2 && !flag3 || posY != endY - 1)
                             {
                                 blockPos.setPos(posX, posY, posZ);
-                                IBlockState blockState = world.getBlockState(blockPos);
+                                BlockState blockState = world.getBlockState(blockPos);
 
                                 if(allowCollision.apply(blockState))
                                 {

@@ -7,10 +7,10 @@ import icbm.classic.lib.world.IProjectileBlockInteraction;
 import icbm.classic.lib.world.ProjectileBlockInteraction;
 import icbm.classic.mods.ModProxy;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -46,7 +46,7 @@ public class MekProxy extends ModProxy
         if(machineBlock != null && basicBlock != null) {
 
             // Teleporter frame is basic block meta 7
-            final IBlockState frameState = basicBlock.getStateFromMeta(7);
+            final BlockState frameState = basicBlock.getStateFromMeta(7);
 
             ICBMClassic.logger().info("Mekanism interaction: " + frameState);
 
@@ -89,7 +89,7 @@ public class MekProxy extends ModProxy
             entity.setPosition(telePos.getX() + 0.5, telePos.getY() + 1.5, telePos.getZ() + 0.5);
         }
 
-        final EnumFacing facingDirection = entity.getHorizontalFacing();
+        final Direction facingDirection = entity.getHorizontalFacing();
 
         // Figure out how high above the top of the teleport block we are located
         // Once teleported mekanism will set the entity to +1 of the bottom of the teleporter block... which is not where we entered
@@ -110,7 +110,7 @@ public class MekProxy extends ModProxy
                     if(teleporter != null) {
 
                         // Update rotation to face exit
-                        final EnumFacing openSide = getSide(world, possiblePortal);
+                        final Direction openSide = getSide(world, possiblePortal);
                         if(openSide != null) {
 
                             // Move to outside portal
@@ -120,11 +120,11 @@ public class MekProxy extends ModProxy
                             double motionX = entity.motionX;
                             double motionZ = entity.motionZ;
 
-                            if(facingDirection.getAxis() == EnumFacing.Axis.X && openSide.getAxis() != EnumFacing.Axis.X) {
+                            if(facingDirection.getAxis() == Axis.X && openSide.getAxis() != Axis.X) {
                                 entity.motionX = openSide.getFrontOffsetX() * motionZ;
                                 entity.motionZ = motionX;
                             }
-                            else if(facingDirection.getAxis() == EnumFacing.Axis.Z && openSide.getAxis() != EnumFacing.Axis.Z) {
+                            else if(facingDirection.getAxis() == Axis.Z && openSide.getAxis() != Axis.Z) {
                                 entity.motionX = motionZ;
                                 entity.motionZ = openSide.getFrontOffsetZ() * motionX;
                             }
@@ -163,12 +163,12 @@ public class MekProxy extends ModProxy
         }
     }
 
-    protected boolean isTeleporter(IBlockState state) {
+    protected boolean isTeleporter(BlockState state) {
         return state.getBlock() == machineBlock && state.getBlock().getMetaFromState(state) == 11;
     }
 
-    protected EnumFacing getSide(World world, BlockPos pos) {
-        for (EnumFacing side : EnumFacing.HORIZONTALS) {
+    protected Direction getSide(World world, BlockPos pos) {
+        for (Direction side : Direction.HORIZONTALS) {
             final BlockPos sidePos = pos.offset(side);
             if (world.isAirBlock(sidePos)) {
                return side;
@@ -179,7 +179,7 @@ public class MekProxy extends ModProxy
 
     }
 
-    protected float getYaw(EnumFacing side) {
+    protected float getYaw(Direction side) {
         switch (side) {
             case NORTH:
                 return 180;

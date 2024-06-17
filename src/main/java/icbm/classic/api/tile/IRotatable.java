@@ -1,6 +1,6 @@
 package icbm.classic.api.tile;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 
 /**
  * Applied to any TileEntity that has a rotation based placement.
@@ -15,5 +15,5 @@ import net.minecraft.util.EnumFacing;
 public interface IRotatable extends IRotation
 {
 	/** Sets the facing direction, is not supported by all machines */
-	void setDirection(EnumFacing direction);
+	void setDirection(Direction direction);
 }

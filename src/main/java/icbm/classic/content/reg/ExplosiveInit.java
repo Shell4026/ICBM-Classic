@@ -29,16 +29,13 @@ import icbm.classic.content.entity.EntityFragments;
 import icbm.classic.lib.LanguageUtility;
 import icbm.classic.lib.explosive.reg.ExplosiveRegistry;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
 /**
@@ -309,7 +306,7 @@ public class ExplosiveInit
         return data;
     }
 
-    private static boolean enderMissileCoordSet(Entity entity, EntityPlayer player, EnumHand hand)
+    private static boolean enderMissileCoordSet(Entity entity, PlayerEntity player, Hand hand)
     {
         if (entity.hasCapability(ICBMClassicAPI.EXPLOSIVE_CAPABILITY, null))
         {
@@ -318,7 +315,7 @@ public class ExplosiveInit
         return false;
     }
 
-    private static boolean enderBlockCoordSet(World world, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitz)
+    private static boolean enderBlockCoordSet(World world, BlockPos pos, PlayerEntity player, Hand hand, Direction facing, float hitX, float hitY, float hitz)
     {
         final TileEntity tileEntity = world.getTileEntity(pos);
 
@@ -330,7 +327,7 @@ public class ExplosiveInit
         return false;
     }
 
-    private static boolean encodeEnderCoordSet(IExplosive provider, EntityPlayer player, EnumHand hand) {
+    private static boolean encodeEnderCoordSet(IExplosive provider, PlayerEntity player, Hand hand) {
         if(provider == null) {
             return false;
         }
@@ -342,11 +339,11 @@ public class ExplosiveInit
             if (position != null)
             {
                 provider.addCustomization(new EnderBlastCustomization(gpsData.getWorldId(), position));
-                player.sendMessage(new TextComponentString(LanguageUtility.getLocal("chat.launcher.toolTargetSet")));
+                player.sendMessage(new StringTextComponent(LanguageUtility.getLocal("chat.launcher.toolTargetSet")));
             }
             else
             {
-                player.sendMessage(new TextComponentString(LanguageUtility.getLocal("chat.launcher.noTargetInTool")));
+                player.sendMessage(new StringTextComponent(LanguageUtility.getLocal("chat.launcher.noTargetInTool")));
             }
             return true;
         }

@@ -6,7 +6,7 @@ import icbm.classic.lib.actions.WorkTickingActionHandler;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -57,6 +57,6 @@ public class CommandLag extends SubCommand
                 range);
 
         //Update user with data
-        sender.sendMessage(new TextComponentTranslation(TRANSLATION_LAG_REMOVE, blastRemoveCount, entities.size(), range));
+        sender.sendMessage(new TranslationTextComponent(TRANSLATION_LAG_REMOVE, blastRemoveCount, entities.size(), range));
     }
 }

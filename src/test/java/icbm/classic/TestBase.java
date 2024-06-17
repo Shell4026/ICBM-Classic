@@ -9,10 +9,10 @@ import com.lunarshark.nbttool.utils.SaveToJson;
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.caps.IExplosive;
 import icbm.classic.api.reg.IExplosiveData;
-import net.minecraft.init.Bootstrap;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.registry.Bootstrap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -86,11 +86,11 @@ public abstract class TestBase {
         }
     }
 
-    protected static void assertExplosive(@Nonnull ItemStack stack, @Nonnull String registryName, @Nonnull NBTTagCompound customTag) {
+    protected static void assertExplosive(@Nonnull ItemStack stack, @Nonnull String registryName, @Nonnull CompoundNBT customTag) {
         assertExplosive(stack.getCapability(ICBMClassicAPI.EXPLOSIVE_CAPABILITY, null), registryName, customTag);
     }
 
-    protected static void assertExplosive(IExplosive explosive, @Nonnull String registryName, @Nonnull NBTTagCompound customTag) {
+    protected static void assertExplosive(IExplosive explosive, @Nonnull String registryName, @Nonnull CompoundNBT customTag) {
 
         // Check capability is returned with the correct type
         Assertions.assertNotNull(explosive, "Failed to get explosive capability");
@@ -111,13 +111,13 @@ public abstract class TestBase {
         }
     }
 
-    protected void assertTags(NBTTagCompound expectedTag, NBTTagCompound actualTag) {
+    protected void assertTags(CompoundNBT expectedTag, CompoundNBT actualTag) {
         if(!expectedTag.equals(actualTag)) {
             throw new AssertionFailedError("Compound tags do not match",  outputJson(expectedTag), outputJson(actualTag));
         }
     }
 
-    protected String outputJson(NBTTagCompound tag) {
+    protected String outputJson(CompoundNBT tag) {
         JsonObject saveData = sortAndGet(SaveToJson.convertToGsonObjects(tag));
         return gson.toJson(saveData);
     }
@@ -138,7 +138,7 @@ public abstract class TestBase {
         return temp;
     }
 
-    protected NBTTagCompound readSaveFile(File file) {
+    protected CompoundNBT readSaveFile(File file) {
         try(FileInputStream fileinputstream = new FileInputStream(file)) {
             return CompressedStreamTools.readCompressed(fileinputstream);
         }

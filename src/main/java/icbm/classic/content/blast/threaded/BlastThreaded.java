@@ -6,9 +6,9 @@ import icbm.classic.lib.thread.IThreadWork;
 import icbm.classic.lib.thread.WorkerThreadManager;
 import icbm.classic.lib.transform.BlockEditHandler;
 import icbm.classic.lib.transform.PosDistanceSorter;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.ServerWorld;
 
 import java.util.Comparator;
 import java.util.List;
@@ -60,13 +60,13 @@ public abstract class BlastThreaded extends Blast
      */
     protected void onWorkerThreadComplete(List<BlockPos> edits)
     {
-        if (world instanceof WorldServer)
+        if (world instanceof ServerWorld)
         {
             //Sort distance
             edits.sort(buildSorter());
 
             //Schedule edits to run in the world
-            ((WorldServer) world).addScheduledTask(() -> {
+            ((ServerWorld) world).addScheduledTask(() -> {
 
                 if (skipQueue())
                 {
@@ -108,7 +108,7 @@ public abstract class BlastThreaded extends Blast
 
     public void destroyBlock(BlockPos pos)
     {
-        IBlockState state = this.world().getBlockState(pos);
+        BlockState state = this.world().getBlockState(pos);
         if (!state.getBlock().isAir(state, world(), pos))
         {
             state.getBlock().onBlockExploded(this.world(), pos, this);

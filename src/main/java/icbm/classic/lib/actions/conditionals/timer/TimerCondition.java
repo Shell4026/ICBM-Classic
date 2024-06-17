@@ -9,7 +9,7 @@ import icbm.classic.lib.actions.conditionals.Condition;
 import icbm.classic.lib.actions.status.ActionResponses;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.*;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
@@ -59,12 +59,12 @@ public class TimerCondition extends Condition implements IConditionCause {
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
+    public CompoundNBT serializeNBT() {
         return SAVE_LOGIC.save(this, super.serializeNBT());
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         super.deserializeNBT(nbt);
         SAVE_LOGIC.load(this, nbt);
     }

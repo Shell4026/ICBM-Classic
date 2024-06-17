@@ -34,16 +34,16 @@ import icbm.classic.prefab.tile.IGuiTile;
 import icbm.classic.prefab.tile.TileMachine;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -60,11 +60,11 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
     public static final ResourceLocation REGISTRY_NAME = new ResourceLocation(ICBMConstants.DOMAIN, "radarstation");
 
 
-    public static final ITextComponent TRANSLATION_GUI_NAME = new TextComponentTranslation("gui.icbmclassic:radar.name");
-    public static final ITextComponent TRANSLATION_TOOLTIP_RANGE = new TextComponentTranslation("gui.icbmclassic:radar.range");
-    public static final ITextComponent TRANSLATION_TOOLTIP_RANGE_SHIFT = new TextComponentTranslation("gui.icbmclassic:radar.range.shift");
-    public static final ITextComponent TRANSLATION_TOOLTIP_REDSTONE_OFF = new TextComponentTranslation("gui.icbmclassic:radar.redstone.off");
-    public static final ITextComponent TRANSLATION_TOOLTIP_REDSTONE_ON = new TextComponentTranslation("gui.icbmclassic:radar.redstone.on");
+    public static final ITextComponent TRANSLATION_GUI_NAME = new TranslationTextComponent("gui.icbmclassic:radar.name");
+    public static final ITextComponent TRANSLATION_TOOLTIP_RANGE = new TranslationTextComponent("gui.icbmclassic:radar.range");
+    public static final ITextComponent TRANSLATION_TOOLTIP_RANGE_SHIFT = new TranslationTextComponent("gui.icbmclassic:radar.range.shift");
+    public static final ITextComponent TRANSLATION_TOOLTIP_REDSTONE_OFF = new TranslationTextComponent("gui.icbmclassic:radar.redstone.off");
+    public static final ITextComponent TRANSLATION_TOOLTIP_REDSTONE_ON = new TranslationTextComponent("gui.icbmclassic:radar.redstone.on");
 
     public static final String NBT_DETECTION_RANGE = "detection_range"; //TODO fix name
     public static final String NBT_TRIGGER_RANGE = "safetyRadius"; //TODO fix name
@@ -110,7 +110,7 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
     private final TickDoOnce descriptionPacketSender = new TickDoOnce((t) -> PACKET_DESCRIPTION.sendToAllAround(this));
 
     @Getter
-    private final List<EntityPlayer> playersUsing = new LinkedList<>();
+    private final List<PlayerEntity> playersUsing = new LinkedList<>();
 
     private int firingCooldown = 0;
 
@@ -186,7 +186,7 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
                 final BlockPos selfPos = getPos();
 
                 world.setBlockState(selfPos, getBlockState().withProperty(BlockRadarStation.REDSTONE_PROPERTY, shouldBeOn), 3);
-                for (EnumFacing facing : EnumFacing.values())
+                for (Direction facing : Direction.values())
                 {
                     final BlockPos targetPos = selfPos.offset(facing);
                     world.neighborChanged(targetPos, getBlockType(), getPos());
@@ -209,7 +209,7 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
     }
 
     @Override
-    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
+    public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState)
     {
         return !(oldState.getBlock() == BlockReg.blockRadarStation && newState.getBlock() == BlockReg.blockRadarStation); //Don't kill tile if the radar station is still there
     }
@@ -324,7 +324,7 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
         return EnumRadarState.ON;
     }
 
-    public int getStrongRedstonePower(EnumFacing side)
+    public int getStrongRedstonePower(Direction side)
     {
         if (this.outputRedstone && incomingThreats.size() > 0) //TODO add UI customization to pick side of redstone output and minimal number of missiles to trigger
         {
@@ -348,7 +348,7 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+    public <T> T getCapability(Capability<T> capability, @Nullable Direction facing)
     {
         if (capability == CapabilityEnergy.ENERGY)
         {
@@ -358,26 +358,26 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+    public boolean hasCapability(Capability<?> capability, @Nullable Direction facing)
     {
         return super.hasCapability(capability, facing)
             || capability == CapabilityEnergy.ENERGY && ConfigMain.REQUIRES_POWER;
     }
 
     @Override
-    public Object getServerGuiElement(int ID, EntityPlayer player)
+    public Object getServerGuiElement(int ID, PlayerEntity player)
     {
         return new ContainerRadarStation(player, this);
     }
 
     @Override
-    public Object getClientGuiElement(int ID, EntityPlayer player)
+    public Object getClientGuiElement(int ID, PlayerEntity player)
     {
         return new GuiRadarStation(player, this);
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt)
+    public void readFromNBT(CompoundNBT nbt)
     {
         super.readFromNBT(nbt);
         SAVE_LOGIC.load(this, nbt);
@@ -387,7 +387,7 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+    public CompoundNBT writeToNBT(CompoundNBT nbt)
     {   SAVE_LOGIC.save(this, nbt);
         return super.writeToNBT(nbt);
     }

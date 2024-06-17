@@ -2,13 +2,12 @@ package icbm.classic.content.cargo;
 
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.missiles.projectile.IProjectileStack;
-import icbm.classic.content.cluster.missile.ClusterMissileHandler;
 import icbm.classic.content.reg.ItemReg;
 import icbm.classic.lib.projectile.ProjectileStack;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
@@ -35,14 +34,14 @@ public class RecipeCargoData extends net.minecraftforge.registries.IForgeRegistr
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)
+    public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv)
     {
         // Don't leave container items, since we store the entire item
         return NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
     }
 
     @Override
-    public boolean matches(InventoryCrafting inv, World worldIn) {
+    public boolean matches(CraftingInventory inv, World worldIn) {
         int itemCount = 0;
         boolean hasCargoItem = false;
         for(int slot = 0; slot < inv.getSizeInventory(); slot++) {
@@ -83,7 +82,7 @@ public class RecipeCargoData extends net.minecraftforge.registries.IForgeRegistr
     }
 
     @Override
-    public ItemStack getCraftingResult(InventoryCrafting inv) {
+    public ItemStack getCraftingResult(CraftingInventory inv) {
         ItemStack cargoHolder = null;
         ItemStack cargo = null;
         for(int slot = 0; slot < inv.getSizeInventory() && (cargo == null || cargoHolder == null); slot++) {

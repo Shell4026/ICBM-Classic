@@ -3,7 +3,7 @@ package icbm.classic.lib.recipe;
 import com.google.gson.JsonObject;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.JsonUtils;
+import net.minecraft.util.JSONUtils;
 import net.minecraftforge.common.crafting.IRecipeFactory;
 import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -22,7 +22,7 @@ public class ExRecipeFactory implements IRecipeFactory
     public IRecipe parse(JsonContext context, JsonObject json)
     {
         //Pull result from json
-        final JsonObject resultObject = JsonUtils.getJsonObject(json, RESULT_KEY);
+        final JsonObject resultObject = JSONUtils.getJsonObject(json, RESULT_KEY);
         final ItemStack resultStack = ExIngredientFactory.getStack(resultObject);
 
         //Convert stack back to json
@@ -32,7 +32,7 @@ public class ExRecipeFactory implements IRecipeFactory
         {
             newResult.addProperty(METADATA_KEY, resultStack.getItemDamage());
         }
-        newResult.addProperty(STACKSIZE_KEY, JsonUtils.getInt(json, STACKSIZE_KEY, 1));
+        newResult.addProperty(STACKSIZE_KEY, JSONUtils.getInt(json, STACKSIZE_KEY, 1));
 
         //TODO add support NBT
 

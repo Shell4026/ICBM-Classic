@@ -3,7 +3,6 @@ package icbm.classic.content.missile.entity.explosive;
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.actions.IActionData;
 import icbm.classic.api.actions.data.ActionFields;
-import icbm.classic.api.actions.data.IActionFieldProvider;
 import icbm.classic.api.actions.status.ActionStatusTypes;
 import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.content.missile.entity.EntityMissile;
@@ -15,11 +14,11 @@ import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
@@ -88,7 +87,7 @@ public class EntityMissileActionable extends EntityMissile<EntityMissileActionab
     @Override
     public void writeSpawnData(ByteBuf additionalMissileData)
     {
-        final NBTTagCompound saveData = SAVE_LOGIC.save(this, new NBTTagCompound());
+        final CompoundNBT saveData = SAVE_LOGIC.save(this, new CompoundNBT());
         ByteBufUtils.writeTag(additionalMissileData, saveData);
         super.writeSpawnData(additionalMissileData);
     }
@@ -96,7 +95,7 @@ public class EntityMissileActionable extends EntityMissile<EntityMissileActionab
     @Override
     public void readSpawnData(ByteBuf additionalMissileData)
     {
-        final NBTTagCompound saveData = ByteBufUtils.readTag(additionalMissileData);
+        final CompoundNBT saveData = ByteBufUtils.readTag(additionalMissileData);
         SAVE_LOGIC.load(this, saveData);
         super.readSpawnData(additionalMissileData);
     }
@@ -115,7 +114,7 @@ public class EntityMissileActionable extends EntityMissile<EntityMissileActionab
     }
 
     @Override
-    public boolean processInitialInteract(@Nonnull EntityPlayer player, @Nonnull EnumHand hand)
+    public boolean processInitialInteract(@Nonnull PlayerEntity player, @Nonnull Hand hand)
     {
         //Allow missile to override interaction
         if (ICBMClassicAPI.EX_MISSILE_REGISTRY.onInteraction(this, player, hand))
@@ -140,14 +139,14 @@ public class EntityMissileActionable extends EntityMissile<EntityMissileActionab
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound nbt)
+    public void readEntityFromNBT(CompoundNBT nbt)
     {
         super.readEntityFromNBT(nbt);
         SAVE_LOGIC.load(this, nbt);
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound nbt)
+    public void writeEntityToNBT(CompoundNBT nbt)
     {
         super.writeEntityToNBT(nbt);
         SAVE_LOGIC.save(this, nbt);

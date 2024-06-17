@@ -1,27 +1,21 @@
 package icbm.classic.content.blast;
 
 import com.google.common.collect.ImmutableList;
-import icbm.classic.ICBMClassic;
 import icbm.classic.api.actions.data.ActionField;
 import icbm.classic.api.actions.data.ActionFields;
-import icbm.classic.api.actions.data.IActionFieldProvider;
-import icbm.classic.api.actions.data.IActionFieldReceiver;
-import icbm.classic.api.tile.IRotatable;
 import icbm.classic.content.missile.entity.EntityMissile;
-import icbm.classic.lib.transform.vector.Pos;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
-import java.util.Collections;
 
 public class BlastBreach extends BlastTNT
 {
@@ -42,7 +36,7 @@ public class BlastBreach extends BlastTNT
     private float energyCostDistance;
 
     @Setter @Accessors(chain = true)
-    private EnumFacing direction; //TODO recode to be angle based
+    private Direction direction; //TODO recode to be angle based
 
     @Override
     public <VALUE, TAG extends NBTBase> void setValue(ActionField<VALUE, TAG> key, VALUE value) {
@@ -72,20 +66,20 @@ public class BlastBreach extends BlastTNT
                 if (this.exploder != null) {
                     // TODO move this logic to projectile and provide via ActionField.HOST_DIRECTION
                     if (this.exploder.rotationPitch > 45) {
-                        direction = this.exploder instanceof EntityMissile ? EnumFacing.UP : EnumFacing.DOWN;
+                        direction = this.exploder instanceof EntityMissile ? Direction.UP : Direction.DOWN;
                     } else if (this.exploder.rotationPitch < -45) {
-                        direction = this.exploder instanceof EntityMissile ? EnumFacing.DOWN : EnumFacing.UP;
+                        direction = this.exploder instanceof EntityMissile ? Direction.DOWN : Direction.UP;
                     } else {
                         direction = this.exploder.getAdjustedHorizontalFacing();
 
                         // fixes explosion going backwards when the missile flies east or west.
-                        if (direction == EnumFacing.EAST || direction == EnumFacing.WEST) {
+                        if (direction == Direction.EAST || direction == Direction.WEST) {
                             direction = direction.getOpposite();
                         }
                     }
                 }
                 else {
-                    direction = EnumFacing.DOWN;
+                    direction = Direction.DOWN;
                 }
             }
 
@@ -106,17 +100,17 @@ public class BlastBreach extends BlastTNT
                         int y = this.yi() + direction.getFrontOffsetY() * depthIndex;
                         int z = this.zi() + direction.getFrontOffsetZ() * depthIndex;
 
-                        if (direction == EnumFacing.DOWN || direction == EnumFacing.UP)
+                        if (direction == Direction.DOWN || direction == Direction.UP)
                         {
                             x += h;
                             z += w;
                         }
-                        else if (direction == EnumFacing.EAST || direction == EnumFacing.WEST)
+                        else if (direction == Direction.EAST || direction == Direction.WEST)
                         {
                             y += h;
                             z += w;
                         }
-                        else if (direction == EnumFacing.NORTH || direction == EnumFacing.SOUTH)
+                        else if (direction == Direction.NORTH || direction == Direction.SOUTH)
                         {
                             y += h;
                             x += w;
@@ -128,7 +122,7 @@ public class BlastBreach extends BlastTNT
 
                         //Get block
                         final BlockPos pos = new BlockPos(x, y, z);
-                        final IBlockState state = world.getBlockState(pos);
+                        final BlockState state = world.getBlockState(pos);
                         final Block block = state.getBlock();
 
                         if (!block.isAir(state, world(), pos))

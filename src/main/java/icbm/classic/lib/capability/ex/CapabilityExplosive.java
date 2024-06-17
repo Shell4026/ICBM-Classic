@@ -9,8 +9,8 @@ import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.lib.NBTConstants;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 /**
  * Created by Dark(DarkGuardsman, Robin) on 1/7/19.
  */
-public class CapabilityExplosive implements IExplosive, ICapabilitySerializable<NBTTagCompound>
+public class CapabilityExplosive implements IExplosive, ICapabilitySerializable<CompoundNBT>
 {
     public int explosiveID; //TODO change over to resource location or include in save to check for issues using ID only for in memory
 
@@ -59,14 +59,14 @@ public class CapabilityExplosive implements IExplosive, ICapabilitySerializable<
     }
 
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
+    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction facing)
     {
         return capability == ICBMClassicAPI.EXPLOSIVE_CAPABILITY;
     }
 
     @Nullable
     @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
+    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing)
     {
         if (capability == ICBMClassicAPI.EXPLOSIVE_CAPABILITY)
         {
@@ -76,22 +76,22 @@ public class CapabilityExplosive implements IExplosive, ICapabilitySerializable<
     }
 
     @Override
-    public final NBTTagCompound serializeNBT()
+    public final CompoundNBT serializeNBT()
     {
-        final NBTTagCompound tagCompound = new NBTTagCompound();
+        final CompoundNBT tagCompound = new CompoundNBT();
         serializeNBT(tagCompound);
 
         tagCompound.setInteger(NBTConstants.EXPLOSIVE_ID, explosiveID);
         return tagCompound;
     }
 
-    protected void serializeNBT(NBTTagCompound tag)
+    protected void serializeNBT(CompoundNBT tag)
     {
 
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt)
+    public void deserializeNBT(CompoundNBT nbt)
     {
         if (nbt.hasKey(NBTConstants.EXPLOSIVE_ID))
         {
@@ -105,7 +105,7 @@ public class CapabilityExplosive implements IExplosive, ICapabilitySerializable<
         {
             @Nullable
             @Override
-            public NBTBase writeNBT(Capability<IExplosive> capability, IExplosive instance, EnumFacing side)
+            public NBTBase writeNBT(Capability<IExplosive> capability, IExplosive instance, Direction side)
             {
                 if (instance instanceof CapabilityExplosive)
                 {
@@ -115,11 +115,11 @@ public class CapabilityExplosive implements IExplosive, ICapabilitySerializable<
             }
 
             @Override
-            public void readNBT(Capability<IExplosive> capability, IExplosive instance, EnumFacing side, NBTBase nbt)
+            public void readNBT(Capability<IExplosive> capability, IExplosive instance, Direction side, NBTBase nbt)
             {
-                if (instance instanceof CapabilityExplosive && nbt instanceof NBTTagCompound)
+                if (instance instanceof CapabilityExplosive && nbt instanceof CompoundNBT)
                 {
-                    ((CapabilityExplosive) instance).deserializeNBT((NBTTagCompound) nbt);
+                    ((CapabilityExplosive) instance).deserializeNBT((CompoundNBT) nbt);
                 }
             }
         },

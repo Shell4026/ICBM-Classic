@@ -10,9 +10,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.ServerWorld;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -73,7 +73,7 @@ public class PacketLambdaEntity<TARGET> implements IPacket<PacketLambdaEntity<TA
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void handleClientSide(Minecraft minecraft, EntityPlayer player)
+    public void handleClientSide(Minecraft minecraft, PlayerEntity player)
     {
         final int playerDim = player.world.provider.getDimension();
 
@@ -90,7 +90,7 @@ public class PacketLambdaEntity<TARGET> implements IPacket<PacketLambdaEntity<TA
     }
 
     @Override
-    public void handleServerSide(EntityPlayer player)
+    public void handleServerSide(PlayerEntity player)
     {
         final int playerDim = player.world.provider.getDimension();
 
@@ -102,17 +102,17 @@ public class PacketLambdaEntity<TARGET> implements IPacket<PacketLambdaEntity<TA
         }
 
         // Issue, should never happen
-        if(!(player.world instanceof WorldServer)) {
+        if(!(player.world instanceof ServerWorld)) {
             final String message = String.format(ERROR_NOT_SERVER, getDimensionId());
             codex.logError(player.world, player.getPosition(), message);
             return;
         }
 
-        final WorldServer world = (WorldServer) player.world;
+        final ServerWorld world = (ServerWorld) player.world;
         world.addScheduledTask(() -> loadDataIntoTile(world, player));
     }
 
-    private void loadDataIntoTile(World world, EntityPlayer player) {
+    private void loadDataIntoTile(World world, PlayerEntity player) {
         Entity entity = null;
         try {
             entity = player.world.getEntityByID(getEntityId());

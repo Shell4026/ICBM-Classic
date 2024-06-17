@@ -6,8 +6,8 @@ import icbm.classic.api.explosion.IBlast;
 import icbm.classic.api.reg.IExplosiveCustomization;
 import icbm.classic.api.reg.IExplosiveData;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
@@ -21,7 +21,7 @@ import java.util.function.Consumer;
  * Used by any item that has an explosive capability
  * Created by Dark(DarkGuardsman, Robin) on 1/7/19.
  */
-public class CapabilityExplosiveStack implements IExplosive, ICapabilitySerializable<NBTTagCompound>
+public class CapabilityExplosiveStack implements IExplosive, ICapabilitySerializable<CompoundNBT>
 {
     private final ItemStack stack;
     private final List<IExplosiveCustomization> customizationList = new ArrayList();
@@ -79,15 +79,15 @@ public class CapabilityExplosiveStack implements IExplosive, ICapabilitySerializ
     }
 
     @Override
-    public NBTTagCompound serializeNBT()
+    public CompoundNBT serializeNBT()
     {
-        final NBTTagCompound save = new NBTTagCompound();
+        final CompoundNBT save = new CompoundNBT();
         save.setTag("customizations", ICBMClassicAPI.EXPLOSIVE_CUSTOMIZATION_REGISTRY.save(customizationList));
         return save;
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt)
+    public void deserializeNBT(CompoundNBT nbt)
     {
         if(nbt.hasKey("customizations")) {
             ICBMClassicAPI.EXPLOSIVE_CUSTOMIZATION_REGISTRY.load(nbt.getTagList("customizations", 10), customizationList);
@@ -95,14 +95,14 @@ public class CapabilityExplosiveStack implements IExplosive, ICapabilitySerializ
     }
 
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
+    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction facing)
     {
         return capability == ICBMClassicAPI.EXPLOSIVE_CAPABILITY;
     }
 
     @Nullable
     @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
+    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing)
     {
         if (capability == ICBMClassicAPI.EXPLOSIVE_CAPABILITY)
         {

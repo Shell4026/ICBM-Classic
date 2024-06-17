@@ -2,7 +2,7 @@ package icbm.classic.api.reg.obj;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
@@ -85,7 +85,7 @@ public interface IBuildableObject {
      */
     @Nonnull
     default ITextComponent getDisplayName() {
-        return new TextComponentTranslation(getTranslationKey());
+        return new TranslationTextComponent(getTranslationKey());
     }
 
     /**
@@ -98,6 +98,6 @@ public interface IBuildableObject {
      */
     @Nonnull
     default ITextComponent getTooltip() {
-        return new TextComponentTranslation(getTranslationKey());
+        return new TranslationTextComponent(getTranslationKey());
     }
 }

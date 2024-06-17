@@ -5,16 +5,16 @@ import icbm.classic.lib.transform.rotation.EulerAngle;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.item.EntityMinecart;
-import net.minecraft.entity.item.EntityMinecartEmpty;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
+import net.minecraft.entity.item.minecart.MinecartEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -36,8 +36,8 @@ public class EntityPlayerSeat extends Entity implements IEntityAdditionalSpawnDa
     public float offsetX = 0;
     public float offsetY = 0;
     public float offsetZ = 0;
-    public EnumFacing prevFace;
-    public EnumFacing prevRotation;
+    public Direction prevFace;
+    public Direction prevRotation;
 
     public EntityPlayerSeat(World world)
     {
@@ -115,7 +115,7 @@ public class EntityPlayerSeat extends Entity implements IEntityAdditionalSpawnDa
         }
     }
 
-    protected void updatePosition(EnumFacing face, EnumFacing rotation) {
+    protected void updatePosition(Direction face, Direction rotation) {
 
         // Rotation relative to block face
         offsetX = rotation.getFrontOffsetX() * 0.2f; //TODO customize to match missile visuals
@@ -127,22 +127,22 @@ public class EntityPlayerSeat extends Entity implements IEntityAdditionalSpawnDa
         offsetY += face.getFrontOffsetY() * 0.5f;
         offsetZ += face.getFrontOffsetZ() * 0.5f;
 
-        if(face == EnumFacing.DOWN) {
+        if(face == Direction.DOWN) {
             offsetY -= height;
         }
-        else if(face == EnumFacing.EAST) {
+        else if(face == Direction.EAST) {
             offsetX += width / 2;
             offsetY -= 0.6f;
         }
-        else if(face == EnumFacing.WEST) {
+        else if(face == Direction.WEST) {
             offsetX -= width / 2;
             offsetY -= 0.6f;
         }
-        else if(face == EnumFacing.NORTH) {
+        else if(face == Direction.NORTH) {
             offsetZ -= width / 2;
             offsetY -= 0.6f;
         }
-        else if(face == EnumFacing.SOUTH) {
+        else if(face == Direction.SOUTH) {
             offsetZ += width / 2;
             offsetY -= 0.6f;
         }
@@ -158,12 +158,12 @@ public class EntityPlayerSeat extends Entity implements IEntityAdditionalSpawnDa
         this.rotationPitch = this.prevRotationPitch = (float) angle.pitch();
     }
 
-    protected void updateBox(EnumFacing face, EnumFacing rotation) {
+    protected void updateBox(Direction face, Direction rotation) {
 
         final float dimA;
         final float dimB;
         // Size
-        if(face == EnumFacing.UP || face == EnumFacing.DOWN) {
+        if(face == Direction.UP || face == Direction.DOWN) {
             setSize(0.5f, 2.5f);
             dimA = this.width / 2;
             dimB = this.height;
@@ -175,7 +175,7 @@ public class EntityPlayerSeat extends Entity implements IEntityAdditionalSpawnDa
         }
 
         // bounding box
-        if(face == EnumFacing.UP) {
+        if(face == Direction.UP) {
             double minX = posX - dimA;
             double minY = posY;
             double minZ = posZ - dimA;
@@ -185,7 +185,7 @@ public class EntityPlayerSeat extends Entity implements IEntityAdditionalSpawnDa
             double maxZ = posZ + dimA;
             setEntityBoundingBox(new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ));
         }
-        else if(face == EnumFacing.DOWN) {
+        else if(face == Direction.DOWN) {
             double minX = posX - dimA;
             double minY = posY - dimB;
             double minZ = posZ - dimA;
@@ -195,7 +195,7 @@ public class EntityPlayerSeat extends Entity implements IEntityAdditionalSpawnDa
             double maxZ = posZ + dimA;
             setEntityBoundingBox(new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ));
         }
-        else if(face == EnumFacing.EAST) {
+        else if(face == Direction.EAST) {
             double minX = posX;
             double minY = posY - dimA;
             double minZ = posZ - dimA;
@@ -205,7 +205,7 @@ public class EntityPlayerSeat extends Entity implements IEntityAdditionalSpawnDa
             double maxZ = posZ + dimA;
             setEntityBoundingBox(new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ));
         }
-        else if(face == EnumFacing.WEST) {
+        else if(face == Direction.WEST) {
             double minX = posX - dimB;
             double minY = posY - dimA;
             double minZ = posZ - dimA;
@@ -215,7 +215,7 @@ public class EntityPlayerSeat extends Entity implements IEntityAdditionalSpawnDa
             double maxZ = posZ + dimA;
             setEntityBoundingBox(new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ));
         }
-        else if(face == EnumFacing.NORTH) {
+        else if(face == Direction.NORTH) {
             double minX = posX - dimA;
             double minY = posY - dimA;
             double minZ = posZ - dimB;
@@ -226,7 +226,7 @@ public class EntityPlayerSeat extends Entity implements IEntityAdditionalSpawnDa
             setEntityBoundingBox(new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ));
         }
 
-        else if(face == EnumFacing.SOUTH) {
+        else if(face == Direction.SOUTH) {
             double minX = posX - dimA;
             double minY = posY - dimA;
             double minZ = posZ;
@@ -255,7 +255,7 @@ public class EntityPlayerSeat extends Entity implements IEntityAdditionalSpawnDa
 
 
     @Override
-    public boolean processInitialInteract(EntityPlayer player, EnumHand hand)
+    public boolean processInitialInteract(PlayerEntity player, Hand hand)
     {
         if (player.isSneaking())
         {
@@ -272,7 +272,7 @@ public class EntityPlayerSeat extends Entity implements IEntityAdditionalSpawnDa
                 if(player.isCreative()) {
                     final ItemStack itemStack = player.getHeldItem(hand);
                     if (itemStack.getItem() == Items.MINECART) {
-                        final EntityMinecart cart = new EntityMinecartEmpty(world);
+                        final AbstractMinecartEntity cart = new MinecartEntity(world);
                         cart.setPosition(posX, posY, posZ);
                         world.spawnEntity(cart);
 
@@ -338,7 +338,7 @@ public class EntityPlayerSeat extends Entity implements IEntityAdditionalSpawnDa
     }
 
     @Override
-    protected void readEntityFromNBT(NBTTagCompound save)
+    protected void readEntityFromNBT(CompoundNBT save)
     {
         if(save.hasKey("pos")) {
             this.hostPos = NBTUtil.getPosFromTag(save.getCompoundTag("pos"));
@@ -347,7 +347,7 @@ public class EntityPlayerSeat extends Entity implements IEntityAdditionalSpawnDa
     }
 
     @Override
-    protected void writeEntityToNBT(NBTTagCompound save)
+    protected void writeEntityToNBT(CompoundNBT save)
     {
         if(hostPos != null) {
             save.setTag("pos", NBTUtil.createPosTag(hostPos));

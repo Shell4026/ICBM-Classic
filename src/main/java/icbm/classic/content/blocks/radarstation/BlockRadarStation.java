@@ -4,16 +4,16 @@ import icbm.classic.ICBMClassic;
 import icbm.classic.prefab.tile.BlockICBM;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -35,7 +35,7 @@ public class BlockRadarStation extends BlockICBM
     }
 
     @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
+    public BlockState getActualState(BlockState state, IBlockAccess worldIn, BlockPos pos)
     {
         final TileEntity tile = worldIn.getTileEntity(pos);
         if(tile instanceof TileRadarStation) {
@@ -51,7 +51,7 @@ public class BlockRadarStation extends BlockICBM
     }
 
     @Override
-    public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EnumFacing side)
+    public boolean canConnectRedstone(BlockState state, IBlockAccess world, BlockPos pos, @Nullable Direction side)
     {
         final TileEntity tileEntity = world.getTileEntity(pos);
         if(tileEntity instanceof TileRadarStation) {
@@ -61,19 +61,19 @@ public class BlockRadarStation extends BlockICBM
     }
 
     @Override
-    public boolean canProvidePower(IBlockState state)
+    public boolean canProvidePower(BlockState state)
     {
         return state.getValue(REDSTONE_PROPERTY);
     }
 
     @Override
-    public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
+    public int getWeakPower(BlockState blockState, IBlockAccess blockAccess, BlockPos pos, Direction side)
     {
         return getStrongPower(blockState, blockAccess, pos, side);
     }
 
     @Override
-    public int getStrongPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
+    public int getStrongPower(BlockState blockState, IBlockAccess blockAccess, BlockPos pos, Direction side)
     {
         TileEntity tile = blockAccess.getTileEntity(pos);
         if (tile instanceof TileRadarStation)
@@ -84,7 +84,7 @@ public class BlockRadarStation extends BlockICBM
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World world, BlockPos pos, BlockState state, PlayerEntity player, Hand hand, Direction facing, float hitX, float hitY, float hitZ)
     {
         if (!world.isRemote)
         {
@@ -95,11 +95,11 @@ public class BlockRadarStation extends BlockICBM
                 if (tile instanceof TileRadarStation)
                 {
                     ((TileRadarStation) tile).setOutputRedstone(!((TileRadarStation) tile).isOutputRedstone());
-                    player.sendMessage(new TextComponentTranslation(((TileRadarStation) tile).isOutputRedstone() ? "message.radar.redstone.on" : "message.radar.redstone.off"));
+                    player.sendMessage(new TranslationTextComponent(((TileRadarStation) tile).isOutputRedstone() ? "message.radar.redstone.on" : "message.radar.redstone.off"));
                 }
                 else
                 {
-                    player.sendMessage(new TextComponentString("\u00a7cUnexpected error: Couldn't access radar station tile"));
+                    player.sendMessage(new StringTextComponent("\u00a7cUnexpected error: Couldn't access radar station tile"));
                 }
             }
             else
@@ -111,9 +111,9 @@ public class BlockRadarStation extends BlockICBM
     }
 
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state)
+    public BlockRenderType getRenderType(BlockState state)
     {
-        return EnumBlockRenderType.MODEL;
+        return BlockRenderType.MODEL;
     }
 
     @Nullable

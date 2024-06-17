@@ -3,9 +3,9 @@ package icbm.classic.prefab.gui.textbox;
 import icbm.classic.prefab.gui.GuiContainerBase;
 import icbm.classic.prefab.gui.IGuiComponent;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 
-public class GuiTextFieldBase extends GuiTextField implements IGuiComponent {
+public class GuiTextFieldBase extends TextFieldWidget implements IGuiComponent {
 
     protected GuiContainerBase container;
 

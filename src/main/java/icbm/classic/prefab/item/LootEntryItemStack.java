@@ -3,22 +3,23 @@ package icbm.classic.prefab.item;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.storage.loot.ItemLootEntry;
 import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootEntry;
-import net.minecraft.world.storage.loot.conditions.LootCondition;
+import net.minecraft.world.storage.loot.ILootGenerator;
+import net.minecraft.world.storage.loot.conditions.ILootCondition;
 
 import java.util.Collection;
 import java.util.Random;
 
 /**
- * ItemStack version of {@link net.minecraft.world.storage.loot.LootEntryItem}
+ * ItemStack version of {@link ItemLootEntry}
  */
-public class LootEntryItemStack extends LootEntry
+public class LootEntryItemStack extends ILootGenerator
 {
     public static Random random = new Random();
     protected final ItemStack itemStack;
 
-    public LootEntryItemStack(String entryName, ItemStack itemIn, int weightIn, int qualityIn, LootCondition... conditionsIn)
+    public LootEntryItemStack(String entryName, ItemStack itemIn, int weightIn, int qualityIn, ILootCondition... conditionsIn)
     {
         super(weightIn, qualityIn, conditionsIn, entryName);
         this.itemStack = itemIn;

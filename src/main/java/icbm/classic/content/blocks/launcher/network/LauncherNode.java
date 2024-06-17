@@ -2,7 +2,7 @@ package icbm.classic.content.blocks.launcher.network;
 
 import lombok.Data;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
 @Data
@@ -49,7 +49,7 @@ public class LauncherNode {
     }
 
     public void connectToTiles() {
-        for (EnumFacing side : EnumFacing.VALUES) {
+        for (Direction side : Direction.VALUES) {
             final BlockPos nextPos = self.getPos().offset(side);
 
             // Only search for tiles in loaded chunks

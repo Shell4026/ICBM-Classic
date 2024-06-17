@@ -4,12 +4,12 @@ import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.missiles.projectile.IProjectileData;
 import icbm.classic.api.missiles.projectile.IProjectileDataRegistry;
 import icbm.classic.lib.buildable.BuildableObject;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.entity.projectile.EntityTippedArrow;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-public class SpectralArrowProjectileData extends BuildableObject<SpectralArrowProjectileData, IProjectileDataRegistry> implements IProjectileData<EntityArrow> {
+public class SpectralArrowProjectileData extends BuildableObject<SpectralArrowProjectileData, IProjectileDataRegistry> implements IProjectileData<AbstractArrowEntity> {
 
     public static final ResourceLocation NAME = new ResourceLocation("minecraft", "arrow.spectral");
 
@@ -18,9 +18,9 @@ public class SpectralArrowProjectileData extends BuildableObject<SpectralArrowPr
     }
 
     @Override
-    public EntityArrow newEntity(World world, boolean allowItemPickup) {
-        final EntityTippedArrow arrow = new EntityTippedArrow(world);
-        arrow.pickupStatus = allowItemPickup ? EntityArrow.PickupStatus.ALLOWED : EntityArrow.PickupStatus.DISALLOWED;
+    public AbstractArrowEntity newEntity(World world, boolean allowItemPickup) {
+        final ArrowEntity arrow = new ArrowEntity(world);
+        arrow.pickupStatus = allowItemPickup ? PickupStatus.ALLOWED : PickupStatus.DISALLOWED;
         return arrow;
     }
 }

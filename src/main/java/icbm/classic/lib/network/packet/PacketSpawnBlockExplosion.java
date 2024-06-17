@@ -5,7 +5,7 @@ import icbm.classic.lib.network.IPacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -69,7 +69,7 @@ public class PacketSpawnBlockExplosion implements IPacket<PacketSpawnBlockExplos
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void handleClientSide(Minecraft minecraft, EntityPlayer player)
+    public void handleClientSide(Minecraft minecraft, PlayerEntity player)
     {
         if (minecraft.world != null && player.world.provider.getDimension() == dimId)
         {

@@ -4,13 +4,10 @@ import com.adelean.inject.resources.junit.jupiter.GivenJsonResource;
 import com.adelean.inject.resources.junit.jupiter.TestWithResources;
 import icbm.classic.ICBMClassic;
 import icbm.classic.TestBase;
-import icbm.classic.api.ICBMClassicAPI;
-import icbm.classic.api.caps.IExplosive;
-import icbm.classic.lib.capability.ex.CapabilityExplosive;
-import net.minecraft.init.Bootstrap;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.registry.Bootstrap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,7 +18,7 @@ import org.junit.jupiter.api.Test;
 public class ItemBombCartTest extends TestBase {
 
     @GivenJsonResource("data/saves/4.0.0/itemstack_ExplosiveCart_sonic.json")
-    NBTTagCompound version4save;
+    CompoundNBT version4save;
 
     private static Item item;
 
@@ -49,6 +46,6 @@ public class ItemBombCartTest extends TestBase {
         Assertions.assertTrue(ItemStack.areItemsEqual(expected, stack));
 
         // Confirm capability returns the correct explosive
-        assertExplosive(stack, "icbmclassic:sonic", new NBTTagCompound());
+        assertExplosive(stack, "icbmclassic:sonic", new CompoundNBT());
     }
 }

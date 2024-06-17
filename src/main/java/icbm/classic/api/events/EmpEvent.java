@@ -1,7 +1,7 @@
 package icbm.classic.api.events;
 
 import icbm.classic.api.actions.IAction;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -67,9 +67,9 @@ public abstract class EmpEvent extends BlastEvent
     {
         public final World world;
         public final BlockPos blockPos;
-        public final IBlockState state;
+        public final BlockState state;
 
-        public BlockPre(IAction emp, World world, BlockPos pos, IBlockState state)
+        public BlockPre(IAction emp, World world, BlockPos pos, BlockState state)
         {
             super(emp);
             this.world = world;
@@ -86,9 +86,9 @@ public abstract class EmpEvent extends BlastEvent
     {
         public final World world;
         public final BlockPos blockPos;
-        public final IBlockState state;
+        public final BlockState state;
 
-        public BlockPost(IAction emp, World world, BlockPos pos, IBlockState state)
+        public BlockPost(IAction emp, World world, BlockPos pos, BlockState state)
         {
             super(emp);
             this.world = world;

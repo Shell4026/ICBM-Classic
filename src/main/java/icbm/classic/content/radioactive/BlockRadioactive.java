@@ -6,18 +6,18 @@ import icbm.classic.ICBMConstants;
 import icbm.classic.config.ConfigMain;
 import icbm.classic.content.gas.ProtectiveArmorHandler;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.MobEffects;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.Effects;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -57,17 +57,17 @@ public class BlockRadioactive extends Block {
     }
 
     @Override
-    public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random) {
+    public void randomTick(World worldIn, BlockPos pos, BlockState state, Random random) {
         if (!worldIn.isRemote)
         {
             final AxisAlignedBB bounds = new AxisAlignedBB(pos).grow(areaOfEffect, areaOfEffect, areaOfEffect);
-            final List<EntityLivingBase> entities = worldIn.getEntitiesWithinAABB(EntityLivingBase.class, bounds);
-            for(EntityLivingBase entity : entities) {
+            final List<LivingEntity> entities = worldIn.getEntitiesWithinAABB(LivingEntity.class, bounds);
+            for(LivingEntity entity : entities) {
                 if(random.nextFloat() < decayChance) {
                     float protection = ProtectiveArmorHandler.getProtectionRating(entity);
                     if (protection < ConfigMain.protectiveArmor.minProtectionRadiation || protection < random.nextFloat()) {
                         entity.attackEntityFrom(damageSource, damage); //TODO consider reducing damage by random amount of protection found. This way iron armor can reduce damage every so often
-                        entity.addPotionEffect(new PotionEffect(MobEffects.WITHER, 20));
+                        entity.addPotionEffect(new EffectInstance(Effects.WITHER, 20));
                     }
                 }
             }
@@ -78,7 +78,7 @@ public class BlockRadioactive extends Block {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+    public void randomDisplayTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         if (rand.nextInt(12) == 0)
         {
             worldIn.playSound(((float)pos.getX() + 0.5F), ((float)pos.getY() + 0.5F), ((float)pos.getZ() + 0.5F),
@@ -90,14 +90,14 @@ public class BlockRadioactive extends Block {
     }
 
     @Deprecated
-    public float getBlockHardness(IBlockState blockState, World worldIn, BlockPos pos) {
+    public float getBlockHardness(BlockState blockState, World worldIn, BlockPos pos) {
         if (blockState.getProperties().containsKey(TYPE_PROP)) {
             final EnumType type = (EnumType) blockState.getProperties().get(TYPE_PROP);
             switch (type) {
                 case DIRT:
-                    return Blocks.DIRT.getBlockHardness(Blocks.DIRT.getDefaultState(), worldIn, pos);
+                    return Blocks.DIRT.getBlockHardness(net.minecraft.block.Blocks.DIRT.getDefaultState(), worldIn, pos);
                 case STONE:
-                    return Blocks.STONE.getBlockHardness(Blocks.STONE.getDefaultState(), worldIn, pos);
+                    return net.minecraft.block.Blocks.STONE.getBlockHardness(net.minecraft.block.Blocks.STONE.getDefaultState(), worldIn, pos);
 
             }
         }
@@ -106,21 +106,21 @@ public class BlockRadioactive extends Block {
 
     @Override
     public float getExplosionResistance(World world, BlockPos pos, @Nullable Entity exploder, Explosion explosion) {
-        final IBlockState blockState = world.getBlockState(pos);
+        final BlockState blockState = world.getBlockState(pos);
         if (blockState.getProperties().containsKey(TYPE_PROP)) {
             final EnumType type = (EnumType) blockState.getProperties().get(TYPE_PROP);
             switch (type) {
                 case DIRT:
-                    return Blocks.DIRT.getExplosionResistance(world, pos, exploder, explosion);
+                    return net.minecraft.block.Blocks.DIRT.getExplosionResistance(world, pos, exploder, explosion);
                 case STONE:
-                    return Blocks.STONE.getExplosionResistance(world, pos, exploder, explosion);
+                    return net.minecraft.block.Blocks.STONE.getExplosionResistance(world, pos, exploder, explosion);
             }
         }
         return getExplosionResistance(exploder);
     }
 
     @Override
-    public int damageDropped(IBlockState state) {
+    public int damageDropped(BlockState state) {
         return getMetaFromState(state);
     }
 
@@ -130,17 +130,17 @@ public class BlockRadioactive extends Block {
     }
 
     @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+    public BlockState getStateForPlacement(World world, BlockPos pos, Direction facing, float hitX, float hitY, float hitZ, int meta, LivingEntity placer, Hand hand) {
         return getDefaultState().withProperty(TYPE_PROP, EnumType.get(meta));
     }
 
     @Override
-    public int getMetaFromState(IBlockState state) {
+    public int getMetaFromState(BlockState state) {
         return state.getValue(TYPE_PROP).ordinal();
     }
 
     @Deprecated
-    public IBlockState getStateFromMeta(int meta) {
+    public BlockState getStateFromMeta(int meta) {
         return this.getDefaultState().withProperty(TYPE_PROP, EnumType.get(meta));
     }
 

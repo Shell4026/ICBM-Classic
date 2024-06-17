@@ -1,13 +1,13 @@
 package icbm.classic.client.fx;
 
 import icbm.classic.lib.transform.vector.Pos;
-import net.minecraft.client.particle.ParticleSmokeNormal;
+import net.minecraft.client.particle.SmokeParticle;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ParticleSmokeICBM extends ParticleSmokeNormal
+public class ParticleSmokeICBM extends SmokeParticle
 {
     public ParticleSmokeICBM(World worldIn, Pos pos, double vx, double vy, double vz, float scale)
     {

@@ -7,7 +7,7 @@ import icbm.classic.api.reg.content.IExplosiveContentRegistry;
 import icbm.classic.content.reg.ItemReg;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.JsonUtils;
+import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.IIngredientFactory;
 import net.minecraftforge.common.crafting.JsonContext;
@@ -32,14 +32,14 @@ public class ExIngredientFactory implements IIngredientFactory
     @Nonnull
     public static ItemStack getStack(JsonObject json)
     {
-        final String device = JsonUtils.getString(json, DEVICE_KEY, ICBMClassicAPI.EX_BLOCK.toString());
+        final String device = JSONUtils.getString(json, DEVICE_KEY, ICBMClassicAPI.EX_BLOCK.toString());
 
         //TODO fix having to work around missile module not showing in content registry as `icbmclassic:missile`
         if("icbmclassic:missile.module".equalsIgnoreCase(device)) {
             return new ItemStack(ItemReg.itemExplosiveMissile, 1, 24);
         }
 
-        final String explosive = JsonUtils.getString(json, EX_KEY);
+        final String explosive = JSONUtils.getString(json, EX_KEY);
 
         if(device.equals("icbmclassic:explosive_bomblet")) { //work around for lack of content registry
             return new ItemStack(ItemReg.itemBombletExplosive, 1, ICBMClassicAPI.EX_GRENADE_REGISTRY.getDeviceStack(new ResourceLocation(explosive)).getItemDamage());

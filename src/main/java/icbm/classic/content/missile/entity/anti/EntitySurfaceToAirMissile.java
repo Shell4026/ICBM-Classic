@@ -7,7 +7,7 @@ import icbm.classic.content.reg.ItemReg;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
@@ -71,13 +71,13 @@ public class EntitySurfaceToAirMissile extends EntityMissile<EntitySurfaceToAirM
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+    public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
         //TODO add AB capability so radars can redirect targets
         return super.getCapability(capability, facing);
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+    public boolean hasCapability(Capability<?> capability, @Nullable Direction facing) {
         //TODO add AB capability so radars can redirect targets
         return super.hasCapability(capability, facing);
     }

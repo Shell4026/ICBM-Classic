@@ -9,7 +9,7 @@ import lombok.Setter;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -141,7 +141,7 @@ public class TextInput<Output> extends GuiTextFieldBase implements IToolTip, IGu
                 // Parse input from user and store into tile client side
                 final String error = validator.apply(getText(), setter);
                 if(error != null) {
-                    errorFeedback = new TextComponentTranslation(error);
+                    errorFeedback = new TranslationTextComponent(error);
                 }
             }
         };

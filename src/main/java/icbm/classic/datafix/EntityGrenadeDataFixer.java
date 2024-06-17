@@ -2,13 +2,13 @@ package icbm.classic.datafix;
 
 import icbm.classic.api.refs.ICBMEntities;
 import icbm.classic.lib.NBTConstants;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.datafix.IFixableData;
 
 public class EntityGrenadeDataFixer implements IFixableData
 {
     @Override
-    public NBTTagCompound fixTagCompound(NBTTagCompound tag)
+    public CompoundNBT fixTagCompound(CompoundNBT tag)
     {
         if(tag.hasKey(NBTConstants.ID) && tag.getString(NBTConstants.ID).equalsIgnoreCase(ICBMEntities.GRENADE.toString()))
         {

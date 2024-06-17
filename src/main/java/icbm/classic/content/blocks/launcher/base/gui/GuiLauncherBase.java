@@ -8,10 +8,10 @@ import icbm.classic.prefab.gui.TextInput;
 import icbm.classic.prefab.gui.button.FaceRotationButton;
 import icbm.classic.prefab.gui.components.SlotEnergyBar;
 import icbm.classic.prefab.gui.tooltip.TooltipTranslations;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -19,14 +19,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GuiLauncherBase extends GuiContainerBase
 {
     public static final ResourceLocation TEXTURE = new ResourceLocation(ICBMConstants.DOMAIN, ICBMConstants.GUI_DIRECTORY + "gui_silo_base.png");
-    public static final ITextComponent LOCK_HEIGHT_TOOLTIP = new TextComponentTranslation("gui.icbmclassic:launcherbase.lock_height");
-    public static final ITextComponent GROUP_ID_TOOLTIP = new TextComponentTranslation("gui.icbmclassic:launcherbase.group_id");
-    public static final ITextComponent GROUP_INDEX_TOOLTIP = new TextComponentTranslation("gui.icbmclassic:launcherbase.group_index");
-    public static final ITextComponent FIRING_DELAY_TOOLTIP = new TextComponentTranslation("gui.icbmclassic:launcherbase.firing_delay");
+    public static final ITextComponent LOCK_HEIGHT_TOOLTIP = new TranslationTextComponent("gui.icbmclassic:launcherbase.lock_height");
+    public static final ITextComponent GROUP_ID_TOOLTIP = new TranslationTextComponent("gui.icbmclassic:launcherbase.group_id");
+    public static final ITextComponent GROUP_INDEX_TOOLTIP = new TranslationTextComponent("gui.icbmclassic:launcherbase.group_index");
+    public static final ITextComponent FIRING_DELAY_TOOLTIP = new TranslationTextComponent("gui.icbmclassic:launcherbase.firing_delay");
 
     private final TileLauncherBase tileEntity;
 
-    public GuiLauncherBase(EntityPlayer player, TileLauncherBase tileEntity)
+    public GuiLauncherBase(PlayerEntity player, TileLauncherBase tileEntity)
     {
         super(new ContainerLaunchBase(player, tileEntity));
         this.tileEntity = tileEntity;

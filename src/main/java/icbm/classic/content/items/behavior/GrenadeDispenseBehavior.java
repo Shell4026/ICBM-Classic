@@ -1,15 +1,15 @@
 package icbm.classic.content.items.behavior;
 
 import icbm.classic.content.entity.EntityGrenade;
-import net.minecraft.block.BlockDispenser;
-import net.minecraft.dispenser.IBehaviorDispenseItem;
+import net.minecraft.block.DispenserBlock;
+import net.minecraft.dispenser.IDispenseItemBehavior;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.world.World;
 
-public class GrenadeDispenseBehavior implements IBehaviorDispenseItem
+public class GrenadeDispenseBehavior implements IDispenseItemBehavior
 {
     @Override
     public ItemStack dispense(IBlockSource blockSource, ItemStack itemStack)
@@ -29,7 +29,7 @@ public class GrenadeDispenseBehavior implements IBehaviorDispenseItem
 
     private Entity create(World world, IBlockSource blockSource, ItemStack itemStack)
     {
-        final EnumFacing enumFacing = blockSource.getBlockState().getValue(BlockDispenser.FACING);
+        final Direction enumFacing = blockSource.getBlockState().getValue(DispenserBlock.FACING);
 
         final EntityGrenade entity = new EntityGrenade(world);
         entity.setPosition(blockSource.getX(), blockSource.getY(), blockSource.getZ());

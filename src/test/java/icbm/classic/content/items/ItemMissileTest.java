@@ -4,29 +4,21 @@ import com.adelean.inject.resources.junit.jupiter.GivenJsonResource;
 import com.adelean.inject.resources.junit.jupiter.TestWithResources;
 import icbm.classic.ICBMClassic;
 import icbm.classic.TestBase;
-import icbm.classic.content.entity.EntityGrenade;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
 
 /**
  * Created by Dark(DarkGuardsman, Robin) on 12/25/2019.
@@ -35,10 +27,10 @@ import static org.mockito.Mockito.*;
 public class ItemMissileTest extends TestBase
 {
     @GivenJsonResource("data/saves/4.0.0/itemstack_missile.json")
-    NBTTagCompound version400save;
+    CompoundNBT version400save;
 
     @GivenJsonResource("data/saves/4.2.0/itemstack_missile.json")
-    NBTTagCompound version420save;
+    CompoundNBT version420save;
 
     private static Item item;
 
@@ -69,7 +61,7 @@ public class ItemMissileTest extends TestBase
         Assertions.assertTrue(ItemStack.areItemsEqual(expected, stack));
 
         // Confirm capability returns the correct explosive
-        assertExplosive(stack, "icbmclassic:shrapnel", new NBTTagCompound());
+        assertExplosive(stack, "icbmclassic:shrapnel", new CompoundNBT());
     }
 
     @Test
@@ -89,6 +81,6 @@ public class ItemMissileTest extends TestBase
         Assertions.assertTrue(ItemStack.areItemsEqual(expected, stack));
 
         // Confirm capability returns the correct explosive
-        assertExplosive(stack, "icbmclassic:shrapnel", new NBTTagCompound());
+        assertExplosive(stack, "icbmclassic:shrapnel", new CompoundNBT());
     }
 }

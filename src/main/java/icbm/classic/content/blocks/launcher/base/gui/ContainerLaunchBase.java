@@ -2,8 +2,8 @@ package icbm.classic.content.blocks.launcher.base.gui;
 
 import icbm.classic.content.blocks.launcher.base.TileLauncherBase;
 import icbm.classic.prefab.gui.ContainerBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 
@@ -13,7 +13,7 @@ import net.minecraftforge.items.SlotItemHandler;
  */
 public class ContainerLaunchBase extends ContainerBase<TileLauncherBase>
 {
-    public ContainerLaunchBase(EntityPlayer player, TileLauncherBase tileEntity)
+    public ContainerLaunchBase(PlayerEntity player, TileLauncherBase tileEntity)
     {
         super(player, tileEntity);
 
@@ -26,7 +26,7 @@ public class ContainerLaunchBase extends ContainerBase<TileLauncherBase>
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int slotIndex)
+    public ItemStack transferStackInSlot(PlayerEntity par1EntityPlayer, int slotIndex)
     {
         ItemStack targetItemStackCopy = null;
         Slot targetSlot = (Slot) this.inventorySlots.get(slotIndex);

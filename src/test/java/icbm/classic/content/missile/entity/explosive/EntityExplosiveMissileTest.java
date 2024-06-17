@@ -12,9 +12,9 @@ import icbm.classic.content.missile.logic.source.ActionSource;
 import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.content.reg.ItemReg;
 import icbm.classic.lib.projectile.InGroundData;
-import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.Blocks;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -27,7 +27,7 @@ import java.util.UUID;
 public class EntityExplosiveMissileTest extends TestBase
 {
     @GivenJsonResource("data/saves/4.2.0/entity_missile_rpg.json")
-    NBTTagCompound rpgSave;
+    CompoundNBT rpgSave;
 
     @BeforeAll
     public static void beforeAllTests()
@@ -45,7 +45,7 @@ public class EntityExplosiveMissileTest extends TestBase
         // Load entity custom save
         missile.readEntityFromNBT(rpgSave);
 
-        final NBTTagCompound newSave = new NBTTagCompound();
+        final CompoundNBT newSave = new CompoundNBT();
         missile.writeEntityToNBT(newSave);
 
         // Validate our new save matches the inputted data
@@ -86,7 +86,7 @@ public class EntityExplosiveMissileTest extends TestBase
             missile.getMissileCapability().getMissileSource());
 
         // Projectile
-        Assertions.assertEquals(new InGroundData(new BlockPos(10, 5, 290), EnumFacing.EAST, Blocks.STONE.getDefaultState()), missile.getInGroundData());
+        Assertions.assertEquals(new InGroundData(new BlockPos(10, 5, 290), Direction.EAST, Blocks.STONE.getDefaultState()), missile.getInGroundData());
         Assertions.assertEquals(117, missile.ticksInAir);
         Assertions.assertEquals(45, missile.ticksInGround);
 

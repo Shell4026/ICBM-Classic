@@ -7,7 +7,7 @@ import icbm.classic.lib.transform.vector.Pos;
 import icbm.classic.mods.ModInteraction;
 import icbm.classic.prefab.tile.IGuiTile;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -48,7 +48,7 @@ public class CommonProxy implements IGuiHandler
     }
 
     @Override
-    public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+    public Object getServerGuiElement(int ID, PlayerEntity player, World world, int x, int y, int z)
     {
         if (ID == GUI_ITEM)
         {
@@ -61,7 +61,7 @@ public class CommonProxy implements IGuiHandler
         return getServerGuiElement(ID, player, world.getTileEntity(new BlockPos(x, y, z)));
     }
 
-    public Object getServerGuiElement(int ID, EntityPlayer player, int slot)
+    public Object getServerGuiElement(int ID, PlayerEntity player, int slot)
     {
         ItemStack stack = player.inventory.getStackInSlot(slot);
         if (stack != null && stack.getItem() instanceof IGuiTile)
@@ -71,7 +71,7 @@ public class CommonProxy implements IGuiHandler
         return null;
     }
 
-    public Object getServerGuiElement(int ID, EntityPlayer player, TileEntity tile)
+    public Object getServerGuiElement(int ID, PlayerEntity player, TileEntity tile)
     {
         if (tile instanceof IGuiTile)
         {
@@ -80,7 +80,7 @@ public class CommonProxy implements IGuiHandler
         return null;
     }
 
-    public Object getServerGuiElement(int ID, EntityPlayer player, Entity entity)
+    public Object getServerGuiElement(int ID, PlayerEntity player, Entity entity)
     {
         if (entity instanceof IGuiTile)
         {
@@ -90,7 +90,7 @@ public class CommonProxy implements IGuiHandler
     }
 
     @Override
-    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+    public Object getClientGuiElement(int ID, PlayerEntity player, World world, int x, int y, int z)
     {
         if (ID == GUI_ITEM)
         {
@@ -103,7 +103,7 @@ public class CommonProxy implements IGuiHandler
         return getClientGuiElement(ID, player, world.getTileEntity(new BlockPos(x, y, z)));
     }
 
-    public Object getClientGuiElement(int ID, EntityPlayer player, int slot)
+    public Object getClientGuiElement(int ID, PlayerEntity player, int slot)
     {
         ItemStack stack = player.inventory.getStackInSlot(slot);
         if (stack != null && stack.getItem() instanceof IGuiTile)
@@ -113,7 +113,7 @@ public class CommonProxy implements IGuiHandler
         return null;
     }
 
-    public Object getClientGuiElement(int ID, EntityPlayer player, TileEntity tile)
+    public Object getClientGuiElement(int ID, PlayerEntity player, TileEntity tile)
     {
         if (tile instanceof IGuiTile)
         {
@@ -122,7 +122,7 @@ public class CommonProxy implements IGuiHandler
         return null;
     }
 
-    public Object getClientGuiElement(int ID, EntityPlayer player, Entity entity)
+    public Object getClientGuiElement(int ID, PlayerEntity player, Entity entity)
     {
         if (entity instanceof IGuiTile)
         {

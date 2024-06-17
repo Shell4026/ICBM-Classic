@@ -1,6 +1,6 @@
 package icbm.classic.client.render.entity.item;
 
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -13,7 +13,7 @@ public class RenderAsItem<E extends Entity> extends RenderItemImp<E>
 {
     private final Function<E, ItemStack> itemAccessor;
 
-    public RenderAsItem(RenderManager renderManagerIn, Function<E, ItemStack> itemAccessor)
+    public RenderAsItem(EntityRendererManager renderManagerIn, Function<E, ItemStack> itemAccessor)
     {
         super(renderManagerIn);
         this.itemAccessor = itemAccessor;

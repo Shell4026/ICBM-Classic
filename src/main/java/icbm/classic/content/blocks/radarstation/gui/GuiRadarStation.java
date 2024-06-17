@@ -8,7 +8,7 @@ import icbm.classic.prefab.gui.TextInput;
 import icbm.classic.prefab.gui.button.RedstoneButton;
 import icbm.classic.prefab.gui.components.SlotEnergyBar;
 import icbm.classic.prefab.gui.tooltip.TooltipTranslations;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiRadarStation extends GuiContainerBase
@@ -17,7 +17,7 @@ public class GuiRadarStation extends GuiContainerBase
 
     private final TileRadarStation tileEntity;
 
-    public GuiRadarStation(EntityPlayer player, TileRadarStation tileEntity)
+    public GuiRadarStation(PlayerEntity player, TileRadarStation tileEntity)
     {
         super(new ContainerRadarStation(player, tileEntity));
         this.tileEntity = tileEntity;

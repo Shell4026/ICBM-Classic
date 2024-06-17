@@ -7,7 +7,7 @@ import icbm.classic.command.FakeBlast;
 import icbm.classic.content.missile.entity.explosive.EntityExplosiveMissile;
 import icbm.classic.lib.actions.WorkTickingActionHandler;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.EntitySheep;
+import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.util.math.Vec3d;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -84,7 +84,7 @@ public class CommandLagTest
         TestUtils.missile(testManager.getWorld(), -100, 10, -100);
 
         //Validate start condition
-        Assertions.assertEquals(3, testManager.getWorld().loadedEntityList.stream().filter(e -> e instanceof EntitySheep).count(), "Should start with 3 sheep");
+        Assertions.assertEquals(3, testManager.getWorld().loadedEntityList.stream().filter(e -> e instanceof SheepEntity).count(), "Should start with 3 sheep");
         Assertions.assertEquals(2, testManager.getWorld().loadedEntityList.stream().filter(e -> e instanceof EntityExplosiveMissile).count(), "Should start with 2 missiles");
 
         //Trigger command
@@ -95,7 +95,7 @@ public class CommandLagTest
         Assertions.assertEquals(CommandLag.TRANSLATION_LAG_REMOVE, dummyCommandSender.pollLastMessage(), "Should get translation");
 
         //Should still have 3 sheep
-        Assertions.assertEquals(3, testManager.getWorld().loadedEntityList.stream().filter(e -> e instanceof EntitySheep).count(), "Should end with 3 sheep");
+        Assertions.assertEquals(3, testManager.getWorld().loadedEntityList.stream().filter(e -> e instanceof SheepEntity).count(), "Should end with 3 sheep");
         Assertions.assertEquals(0, testManager.getWorld().loadedEntityList.stream().filter(e -> e instanceof EntityExplosiveMissile).filter(Entity::isEntityAlive).count(), "Should end with 0 missiles");
     }
 

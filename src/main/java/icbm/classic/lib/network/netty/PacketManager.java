@@ -4,7 +4,7 @@ import com.builtbroken.jlib.data.vector.IPos3D;
 import icbm.classic.ICBMClassic;
 import icbm.classic.api.data.IWorldPosition;
 import icbm.classic.lib.network.IPacket;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.FMLEmbeddedChannel;
@@ -38,7 +38,7 @@ public class PacketManager
      * @param packet the packet to send to the player
      * @param player the player MP object
      */
-    public void sendToPlayer(IPacket packet, EntityPlayerMP player)
+    public void sendToPlayer(IPacket packet, ServerPlayerEntity player)
     {
         //Null check is for JUnit
         if (channelEnumMap != null)

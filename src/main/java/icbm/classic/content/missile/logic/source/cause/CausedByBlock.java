@@ -9,8 +9,8 @@ import icbm.classic.lib.saving.NbtSaveHandler;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -30,11 +30,11 @@ public class CausedByBlock extends ActionCause implements ICausedByBlock {
 
     private World world;
     private BlockPos blockPos;
-    private IBlockState blockState;
+    private BlockState blockState;
 
     private int worldId;
 
-    public CausedByBlock(World world, BlockPos pos, IBlockState state) {
+    public CausedByBlock(World world, BlockPos pos, BlockState state) {
         this.world = world;
         this.worldId = world.provider.getDimension();
         this.blockPos = pos;
@@ -61,12 +61,12 @@ public class CausedByBlock extends ActionCause implements ICausedByBlock {
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
+    public CompoundNBT serializeNBT() {
         return SAVE_LOGIC.save(this, super.serializeNBT());
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         super.deserializeNBT(nbt);
         SAVE_LOGIC.load(this, nbt);
     }

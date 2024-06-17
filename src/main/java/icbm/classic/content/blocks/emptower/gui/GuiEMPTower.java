@@ -10,10 +10,10 @@ import icbm.classic.prefab.gui.TextInput;
 import icbm.classic.prefab.gui.button.DisableButton;
 import icbm.classic.prefab.gui.components.SlotEnergyBar;
 import icbm.classic.prefab.gui.tooltip.TooltipTranslations;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class GuiEMPTower extends GuiContainerBase {
     // Localizations
@@ -23,14 +23,14 @@ public class GuiEMPTower extends GuiContainerBase {
     private static final String COOLING_NEEDED = LANG_KEY + ".cooling";
     private static final String READY = LANG_KEY + ".ready";
 
-    public static final ITextComponent TRANSLATION_TOOLTIP_RANGE = new TextComponentTranslation(LANG_KEY + ".range");
+    public static final ITextComponent TRANSLATION_TOOLTIP_RANGE = new TranslationTextComponent(LANG_KEY + ".range");
 
     // Texture
     public static final ResourceLocation TEXTURE = new ResourceLocation(ICBMConstants.DOMAIN, ICBMConstants.GUI_DIRECTORY + "gui_emp_tower.png");
 
     private final TileEMPTower tileEntity;
 
-    public GuiEMPTower(EntityPlayer player, TileEMPTower tileEntity) {
+    public GuiEMPTower(PlayerEntity player, TileEMPTower tileEntity) {
         super(new ContainerEMPTower(player, tileEntity));
         this.tileEntity = tileEntity;
         this.ySize = 166;
@@ -62,12 +62,12 @@ public class GuiEMPTower extends GuiContainerBase {
             .setTooltip(() -> {
                 if (!tileEntity.isReady()) {
                     if (tileEntity.getCooldown() > 0) {
-                        return new TextComponentTranslation(COOLING_NEEDED, String.format("%.2f", tileEntity.getCooldownPercentage() * 100));
+                        return new TranslationTextComponent(COOLING_NEEDED, String.format("%.2f", tileEntity.getCooldownPercentage() * 100));
                     } else if (!tileEntity.energyStorage.consumePower(tileEntity.getFiringCost(), false)) {
-                        return new TextComponentTranslation(POWER_NEEDED, String.format("%.2f", tileEntity.getChargePercentage() * 100));
+                        return new TranslationTextComponent(POWER_NEEDED, String.format("%.2f", tileEntity.getChargePercentage() * 100));
                     }
                 }
-                return new TextComponentTranslation(READY);
+                return new TranslationTextComponent(READY);
             })
             .setAction(() -> TileEMPTower.PACKET_FIRE.sendToServer(tileEntity))
             .setEnabledCheck(tileEntity::isReady)

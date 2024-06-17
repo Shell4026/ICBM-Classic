@@ -8,11 +8,11 @@ import icbm.classic.content.blast.redmatter.logic.RedmatterLogic;
 import icbm.classic.content.blast.redmatter.render.RedmatterClientLogic;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -109,7 +109,7 @@ public class EntityRedmatter extends Entity
 
     //<editor-fold desc="saving">
     @Override
-    protected void readEntityFromNBT(NBTTagCompound nbt)
+    protected void readEntityFromNBT(CompoundNBT nbt)
     {
         if(nbt.hasKey(NBT_BLAST_SIZE))
         {
@@ -122,7 +122,7 @@ public class EntityRedmatter extends Entity
     }
 
     @Override
-    protected void writeEntityToNBT(NBTTagCompound nbt)
+    protected void writeEntityToNBT(CompoundNBT nbt)
     {
         nbt.setFloat(NBT_BLAST_SIZE, getBlastSize());
         nbt.setFloat(NBT_BLAST_SIZE_MAX, getBlastMaxSize());
@@ -145,7 +145,7 @@ public class EntityRedmatter extends Entity
 
     //<editor-fold desc="cap-system">
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+    public boolean hasCapability(Capability<?> capability, @Nullable Direction facing)
     {
         return capability == ICBMClassicAPI.BLAST_CAPABILITY
                 || capability == ICBMClassicAPI.BLAST_VELOCITY_CAPABILITY
@@ -154,7 +154,7 @@ public class EntityRedmatter extends Entity
 
     @Override
     @Nullable
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+    public <T> T getCapability(Capability<T> capability, @Nullable Direction facing)
     {
         if (capability == ICBMClassicAPI.BLAST_CAPABILITY)
         {
