@@ -22,6 +22,7 @@ import icbm.classic.content.blocks.radarstation.BlockRadarStation;
 import icbm.classic.content.blocks.radarstation.TileRadarStation;
 import icbm.classic.content.radioactive.BlockRadioactive;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -83,7 +84,20 @@ public class BlockReg
         event.getRegistry().register(new BlockGlassPressurePlate());
         event.getRegistry().register(new BlockGlassButton());
         event.getRegistry().register(new BlockSpikes());
-        event.getRegistry().register(new BlockConcrete());
+
+        event.getRegistry().register(new Block(
+            Block.Properties.create(Material.ROCK)
+                .hardnessAndResistance(10, 28)
+        ).setRegistryName(ICBMConstants.PREFIX + "concrete_normal"));
+        event.getRegistry().register(new Block(
+            Block.Properties.create(Material.ROCK)
+                .hardnessAndResistance(10, 280)
+        ).setRegistryName(ICBMConstants.PREFIX + "concrete_compact"));
+        event.getRegistry().register(new Block(
+            Block.Properties.create(Material.ROCK)
+                .hardnessAndResistance(10, 2800)
+        ).setRegistryName(ICBMConstants.PREFIX + "concrete_reinforced"));
+
         event.getRegistry().register(new BlockReinforcedGlass());
         event.getRegistry().register(new BlockExplosive());
 
