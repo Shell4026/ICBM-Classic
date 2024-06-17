@@ -13,25 +13,25 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.ChickenRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.ChickenEntity;
-import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Random;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class ClientProxy extends CommonProxy
 {
     @Override
     public void init()
     {
         super.init();
-        final EntityRenderer render = Minecraft.getMinecraft().getRenderManager().getEntityClassRenderObject(ChickenEntity.class);
+        final EntityRenderer<ChickenEntity> render = Minecraft.getInstance().getRenderManager().getRenderer(ChickenEntity.class);
         if(render instanceof ChickenRenderer) {
-            ((ChickenRenderer) render).addLayer(new LayerChickenHelmet((ChickenRenderer) render));
+            ((ChickenRenderer) render).addLayer(new LayerChickenHelmet((ChickenRenderer)render));
         }
     }
 
@@ -43,7 +43,7 @@ public class ClientProxy extends CommonProxy
             ParticleSmokeICBM particleSmokeICBM = new ParticleSmokeICBM(world, position, v, v1, v2, scale);
             particleSmokeICBM.setColor(red, green, blue, true);
             particleSmokeICBM.setAge(ticksToLive);
-            Minecraft.getMinecraft().effectRenderer.addEffect(particleSmokeICBM);
+            Minecraft.getInstance().particles.addEffect(particleSmokeICBM);
         }
     }
 
@@ -55,7 +55,7 @@ public class ClientProxy extends CommonProxy
             ParticleAirICBM particleAirParticleICBM = new ParticleAirICBM(world, x, y, z, v, v1, v2, scale);
             particleAirParticleICBM.setColor(red, green, blue, true);
             particleAirParticleICBM.setAge(ticksToLive);
-            Minecraft.getMinecraft().effectRenderer.addEffect(particleAirParticleICBM);
+            Minecraft.getInstance().particles.addEffect(particleAirParticleICBM);
         }
     }
 
@@ -85,12 +85,12 @@ public class ClientProxy extends CommonProxy
         particleMY *= multiplier;
         particleMZ *= multiplier;
 
-        world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL,
+        world.addParticle(ParticleTypes.EXPLOSION,
             (particleX + sourceX) / 2.0D,
             (particleY + sourceY) / 2.0D,
             (particleZ + sourceZ) / 2.0D,
             particleMX, particleMY, particleMZ);
-        world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, particleX, particleY, particleZ, particleMX, particleMY, particleMZ);
+        world.addParticle(ParticleTypes.SMOKE, particleX, particleY, particleZ, particleMX, particleMY, particleMZ);
     }
 
     @Override
@@ -116,7 +116,7 @@ public class ClientProxy extends CommonProxy
             {
                 spawnAirParticle(entity.world,
                     position.x(), position.y(), position.z(),
-                    -entity.motionX * 0.5, -entity.motionY * 0.5, -entity.motionZ * 0.5,
+                    -entity.getMotion().x * 0.5, -entity.getMotion().y * 0.5, -entity.getMotion().z * 0.5,
                     flightLogic.engineSmokeRed(entity), flightLogic.engineSmokeGreen(entity), flightLogic.engineSmokeBlue(entity),
                     (int) Math.max(1d, 6d * (1 / (1 + entity.posY / 100))), 100);
                 position.multiply(1 - 0.025 * Math.random(), 1 - 0.025 * Math.random(), 1 - 0.025 * Math.random());
@@ -150,7 +150,7 @@ public class ClientProxy extends CommonProxy
                 );
                 particleAirParticleICBM.setColor(1, 1, 1, true);
                 particleAirParticleICBM.setAge(180);
-                Minecraft.getMinecraft().effectRenderer.addEffect(particleAirParticleICBM);
+                Minecraft.getInstance().particles.addEffect(particleAirParticleICBM);
             }
         }
     }

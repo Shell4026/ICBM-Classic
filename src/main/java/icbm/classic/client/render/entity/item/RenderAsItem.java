@@ -3,12 +3,12 @@ package icbm.classic.client.render.entity.item;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.function.Function;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class RenderAsItem<E extends Entity> extends RenderItemImp<E>
 {
     private final Function<E, ItemStack> itemAccessor;

@@ -94,7 +94,7 @@ public class BlockSpikes extends Block
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public BlockRenderLayer getBlockLayer()
     {
         return BlockRenderLayer.CUTOUT;

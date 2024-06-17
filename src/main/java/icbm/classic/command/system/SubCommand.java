@@ -1,6 +1,5 @@
 package icbm.classic.command.system;
 
-import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;

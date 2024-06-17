@@ -3,9 +3,6 @@ package icbm.classic.config.util;
 import icbm.classic.ICBMClassic;
 import lombok.Getter;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
@@ -39,7 +36,6 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
     protected static final Pattern DOMAIN_VALE_REGEX = Pattern.compile("^@domain:([^=]*)(?:=(\\S))?$");
 
     protected static final Pattern KEY_VALUE_REGEX = Pattern.compile("^([^\\s@]*):([^\\s=]*)(?:=(\\S*))?");
-    protected static final Pattern META_KEY_REGEX = Pattern.compile("^([^\\s@]*):([^\\s=@]*)@([0-9]+)(?:=(\\S*))?");
 
     // Constructor
     @Getter
@@ -296,42 +292,12 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
         return new ResourceConfigEntry<>("resource_domain", index, matcher);
     }
 
-    protected ResourceConfigEntry<CONTENT, VALUE> handleMeta(Matcher metaMatcher, String source, String entry, int index) {
-        final String domain = metaMatcher.group(1);
-        final String resource = metaMatcher.group(2);
-        final ResourceLocation key = new ResourceLocation(domain, resource);
-        if (!isDomainValid(key.getResourceDomain())) {
-            error(source, entry, "No matching mod domain found for '" + key + "'");
-            return null;
-        } else if (!isValidKey(key)) {
-            error(source, entry, "No matching content found for '" + key + "'");
-            return null;
-        }
-
-        final int meta = Integer.parseInt(metaMatcher.group(3));
-
-        final String valueStr = metaMatcher.group(4);
-        VALUE value = null;
-        if(valueStr != null) {
-            value = parseValue(source, entry, valueStr);
-            if(value == null) {
-                return null;
-            }
-        }
-
-        final Function<CONTENT, VALUE> matcher = getMetaValue(key, meta, value);
-        if (matcher == null) {
-            return null;
-        }
-        return new ResourceConfigEntry<>("resource_metadata", index, matcher).setKey(key);
-    }
-
     protected ResourceConfigEntry<CONTENT, VALUE> handleSimple(Matcher regexMatcher, String source, String entry, Integer index) {
         final String domain = regexMatcher.group(1);
         final String resource = regexMatcher.group(2);
         final ResourceLocation key = new ResourceLocation(domain, resource);
 
-        if(!isDomainValid(key.getResourceDomain())) {
+        if(!isDomainValid(key.getNamespace())) {
             error(source, entry, "No matching mod domain found for '" + key + "'");
             return null;
         }
@@ -356,52 +322,48 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
     }
 
     protected Function<CONTENT, VALUE> getDomainValue(String domain, @Nullable VALUE value) {
-        return (content) -> domain.equalsIgnoreCase(getContentKey(content).getResourceDomain()) ? value : null;
+        return (content) -> domain.equalsIgnoreCase(getContentKey(content).getNamespace()) ? value : null;
     }
 
     protected Function<CONTENT, VALUE> getSimpleValue(ResourceLocation targetKey, @Nullable VALUE value) {
         // TODO consider caching for faster matching.
         //      As string compare will be slower than object.is(object) for Items and Blocks
         // Contains: ~stone~ ->  dark_stone_deep
-        if(targetKey.getResourcePath().startsWith("~") && targetKey.getResourcePath().endsWith("~")) {
-            final String checkStr = targetKey.getResourcePath().substring(1, targetKey.getResourcePath().length() - 1);
+        if(targetKey.getPath().startsWith("~") && targetKey.getPath().endsWith("~")) {
+            final String checkStr = targetKey.getPath().substring(1, targetKey.getPath().length() - 1);
             return (content) -> {
                 final ResourceLocation contentKey = getContentKey(content);
-                if(!targetKey.getResourceDomain().equalsIgnoreCase(contentKey.getResourceDomain())) {
+                if(!targetKey.getNamespace().equalsIgnoreCase(contentKey.getNamespace())) {
                     return null;
                 }
-                return  targetKey.getResourcePath().contains(checkStr) ? value : null;
+                return  targetKey.getPath().contains(checkStr) ? value : null;
             };
         }
         // Starts: ~stone -> dark_stone
-        else if(targetKey.getResourcePath().startsWith("~")) {
-            final String checkStr = targetKey.getResourcePath().substring(1);
+        else if(targetKey.getPath().startsWith("~")) {
+            final String checkStr = targetKey.getPath().substring(1);
             return (content) -> {
                 final ResourceLocation contentKey = getContentKey(content);
-                if(!targetKey.getResourceDomain().equalsIgnoreCase(contentKey.getResourceDomain())) {
+                if(!targetKey.getNamespace().equalsIgnoreCase(contentKey.getNamespace())) {
                     return null;
                 }
-                return  targetKey.getResourcePath().endsWith(checkStr) ? value : null;
+                return  targetKey.getPath().endsWith(checkStr) ? value : null;
             };
         }
         // Ends: stone~ -> stone_dark
-        else if(targetKey.getResourcePath().endsWith("~")) {
-            final String checkStr = targetKey.getResourcePath().substring(0, targetKey.getResourcePath().length() - 1);
+        else if(targetKey.getPath().endsWith("~")) {
+            final String checkStr = targetKey.getPath().substring(0, targetKey.getPath().length() - 1);
             return (content) -> {
                 final ResourceLocation contentKey = getContentKey(content);
-                if(!targetKey.getResourceDomain().equalsIgnoreCase(contentKey.getResourceDomain())) {
+                if(!targetKey.getNamespace().equalsIgnoreCase(contentKey.getNamespace())) {
                     return null;
                 }
-                return  targetKey.getResourcePath().startsWith(checkStr) ? value : null;
+                return  targetKey.getPath().startsWith(checkStr) ? value : null;
             };
         }
 
         // equals: a is a
         return (content) -> targetKey.equals(getContentKey(content)) ? value : null;
-    }
-
-    protected Function<CONTENT, VALUE> getMetaValue(ResourceLocation key, int metadata, @Nullable VALUE value) {
-        return null;
     }
 
     protected abstract VALUE parseValue(String source, String entry, String value);
@@ -421,8 +383,6 @@ public abstract class ResourceConfigList<CONFIG extends ResourceConfigList, CONT
         //TODO fuzzy domains?
         return "minecraft".equalsIgnoreCase(domain) || Loader.isModLoaded(domain);
     }
-
-
 
     protected void error(String source, String entry, String error) {
         issue(source, entry, error, true);

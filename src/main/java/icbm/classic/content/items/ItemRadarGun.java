@@ -28,6 +28,8 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.ServerWorld;
 import net.minecraft.world.storage.WorldInfo;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -62,18 +64,18 @@ public class ItemRadarGun extends ItemBase implements IPacketIDReceiver
         provider.add("gps_data", ICBMClassicAPI.GPS_CAPABILITY, data);
 
         // Legacy logic from before IGPSData, v5.3.x
-        if(nbt != null && nbt.hasKey("linkPos")) {
-            final CompoundNBT save = nbt.getCompoundTag("linkPos");
+        if(nbt != null && nbt.contains("linkPos")) {
+            final CompoundNBT save = nbt.getCompound("linkPos");
             data.setWorld(save.getInt("dimension"));
             data.setPosition(new Vec3d(save.getDouble("x"), save.getDouble("y"), save.getDouble("z")));
-            nbt.removeTag("linkPos");
+            nbt.remove("linkPos");
         }
         return provider;
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> lines, ITooltipFlag flagIn)
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> lines, ITooltipFlag flagIn)
     {
         // Stored data
         final IGPSData gpsData = ICBMClassicHelpers.getGPSData(stack);

@@ -11,7 +11,6 @@ import icbm.classic.lib.transform.vector.Pos;
 import icbm.classic.lib.world.IProjectileBlockInteraction;
 import icbm.classic.lib.world.ProjectileBlockInteraction;
 import icbm.classic.prefab.entity.EntityICBM;
-import io.netty.buffer.ByteBuf;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,17 +18,18 @@ import lombok.experimental.Accessors;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ITeleporter;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -98,18 +98,18 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
     // Debug
     public boolean freezeMotion = false;
 
-    public EntityProjectile(World world) {
-        super(world);
-        this.setSize(0.5F, 0.5F);
+    public EntityProjectile(EntityType<?> entityTypeIn, World world) {
+        super(entityTypeIn, world);
+        //this.setSize(0.5F, 0.5F);
     }
 
     @Override
-    public void writeSpawnData(ByteBuf buffer) {
+    public void writeSpawnData(PacketBuffer buffer) {
         buffer.writeBoolean(freezeMotion);
     }
 
     @Override
-    public void readSpawnData(ByteBuf additionalData) {
+    public void readSpawnData(PacketBuffer additionalData) {
         freezeMotion = additionalData.readBoolean();
     }
 
@@ -129,7 +129,7 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
 
         this.posY = shooter.posY + (double) shooter.getEyeHeight() - 0.10000000149011612D;
         double deltaX = target.posX - shooter.posX;
-        double deltaY = target.getEntityBoundingBox().minY + (double) (target.height / 3.0F) - this.posY; //TODO why div3
+        double deltaY = target.getBoundingBox().minY + (double) (target.getHeight() / 3.0F) - this.posY; //TODO why div3
         double deltaZ = target.posZ - shooter.posZ;
         double deltaMag = MathHelper.sqrt(deltaX * deltaX + deltaZ * deltaZ);
 
@@ -159,10 +159,13 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
         this.posZ -= (double) (MathHelper.sin(this.rotationYaw / 180.0F * (float) Math.PI) * 0.16F * distanceScale);
         this.setPosition(this.posX, this.posY, this.posZ);
 
-        this.motionX = (double) (-MathHelper.sin(this.rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float) Math.PI));
-        this.motionZ = (double) (MathHelper.cos(this.rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float) Math.PI));
-        this.motionY = (double) (-MathHelper.sin(this.rotationPitch / 180.0F * (float) Math.PI));
-        this.shoot(this.motionX, this.motionY, this.motionZ, multiplier, 0);
+        this.setMotion(
+            (double) (-MathHelper.sin(this.rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float) Math.PI)),
+            (double) (-MathHelper.sin(this.rotationPitch / 180.0F * (float) Math.PI)),
+            (double) (MathHelper.cos(this.rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float) Math.PI))
+        );
+
+        this.shoot(this.getMotion().x, this.getMotion().y, this.getMotion().z, multiplier, 0);
 
         return (PROJECTILE) this;
     }
@@ -194,8 +197,8 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
     }
 
     @Override
-    public void onUpdate() {
-        super.onUpdate();
+    public void tick() {
+        super.tick();
         //ICBMClassic.logger().info(String.format("Projectile: - Pos(%.5f,%.5f,%.5f), VEL(%.5f,%.5f,%.5f)", posX, posY, posZ, motionX, motionY, motionZ));
 
         this.checkInGround();
@@ -220,9 +223,9 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
                 return;
             }
 
-            double rayEndVecX = motionX;
-            double rayEndVecY = motionY;
-            double rayEndVecZ = motionZ;
+            double rayEndVecX = getMotion().x;
+            double rayEndVecY = getMotion().y;
+            double rayEndVecZ = getMotion().z;
 
             // Ensure we always raytrace 1 block ahead to allow early detection of collisions
             double velocity = Math.sqrt(rayEndVecX * rayEndVecX + rayEndVecY * rayEndVecY + rayEndVecZ * rayEndVecZ);
@@ -294,7 +297,7 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
     /**
      * Runs each tick to check what block we are inside. Raytrace this in air movement
      * but once in ground we need to refresh manually to detect block breaking.
-     *
+     * <p>
      * If block isn't the same or has changed logic will revalidate. If block has no
      * collision then things will fall
      */
@@ -446,7 +449,7 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
      * @param entityHit
      */
     protected void handleEntityCollision(RayTraceResult hit, Entity entityHit) {
-        onImpactEntity(entityHit, (float) getVelocity().magnitude(), hit);
+        onImpactEntity(entityHit, (float) getMotion().length(), hit);
     }
 
     /**
@@ -650,9 +653,7 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
         zz *= (double) speed;
 
         //Set motion
-        this.motionX = xx;
-        this.motionY = yy;
-        this.motionZ = zz;
+        this.setMotion(xx, yy, zz);
 
         //Update rotation
         float f3 = MathHelper.sqrt(xx * xx + zz * zz);
@@ -669,7 +670,7 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport) {
         this.setPosition(x, y, z);
         this.setRotation(yaw, pitch);
@@ -686,7 +687,7 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
 
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public boolean isInRangeToRenderDist(double distanceSq) {
         final double renderDistance = getAverageEdgeLength() * getRenderDistanceWeight() * getRenderDistance();
         return distanceSq < renderDistance * renderDistance;
@@ -706,14 +707,14 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
     }
 
     @Override
-    public void writeEntityToNBT(CompoundNBT nbt) {
+    public void writeAdditional(CompoundNBT nbt) {
         SAVE_LOGIC.save(this, nbt);
-        super.writeEntityToNBT(nbt);
+        super.writeAdditional(nbt);
     }
 
     @Override
-    public void readEntityFromNBT(CompoundNBT nbt) {
-        super.readEntityFromNBT(nbt);
+    public void readAdditional(CompoundNBT nbt) {
+        super.readAdditional(nbt);
         SAVE_LOGIC.load(this, nbt);
     }
 

@@ -37,7 +37,7 @@ public class BlockReinforcedGlass extends Block
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public BlockRenderLayer getBlockLayer()
     {
         return BlockRenderLayer.CUTOUT;
@@ -50,7 +50,7 @@ public class BlockReinforcedGlass extends Block
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public boolean shouldSideBeRendered(BlockState blockState, IBlockAccess blockAccess, BlockPos pos, Direction side)
     {
         BlockState iblockstate = blockAccess.getBlockState(pos.offset(side));

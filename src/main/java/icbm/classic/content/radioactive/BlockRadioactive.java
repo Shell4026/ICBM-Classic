@@ -77,7 +77,7 @@ public class BlockRadioactive extends Block {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void randomDisplayTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         if (rand.nextInt(12) == 0)
         {

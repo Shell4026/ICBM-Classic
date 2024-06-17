@@ -45,7 +45,7 @@ public class PacketInboundHandler extends SimpleChannelInboundHandler<IPacket>
         }
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     private void handleClientSide(IPacket packet) {
         packet.handleClientSide(Minecraft.getMinecraft(), Minecraft.getMinecraft().player);
     }

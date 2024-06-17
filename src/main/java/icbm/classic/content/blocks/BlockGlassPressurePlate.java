@@ -26,7 +26,7 @@ public class BlockGlassPressurePlate extends PressurePlateBlock
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public BlockRenderLayer getBlockLayer()
     {
         return BlockRenderLayer.CUTOUT;

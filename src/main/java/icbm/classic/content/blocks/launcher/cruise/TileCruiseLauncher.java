@@ -287,7 +287,7 @@ public class TileCruiseLauncher extends TileMachine implements IGuiTile, ILaunch
         currentAim.set(aim);
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt)
     {

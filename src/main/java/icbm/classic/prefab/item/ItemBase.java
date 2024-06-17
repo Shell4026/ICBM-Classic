@@ -7,11 +7,15 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -22,23 +26,19 @@ import java.util.List;
  */
 public class ItemBase extends Item
 {
-
-    public ItemBase setName(String name)
-    {
-        this.setUnlocalizedName(ICBMConstants.PREFIX + name);
-        this.setRegistryName(ICBMConstants.PREFIX + name);
-        return this;
+    public ItemBase(Properties p_i48487_1_) {
+        super(p_i48487_1_);
     }
 
     //Make sure to mirror all changes to other abstract class
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag flag)
+    @OnlyIn(Dist.CLIENT)
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> list, ITooltipFlag flagIn)
     {
-        PlayerEntity player = Minecraft.getMinecraft().player;
+        PlayerEntity player = Minecraft.getInstance().player;
 
         //Generic info, shared by item group
-        splitAdd(getUnlocalizedName(stack) + ".info", list, false, true);
+        /*splitAdd(this.getTranslationKey(stack) + ".info", list, false, true);
 
         if (hasDetailedInfo(stack, player))
         {
@@ -55,7 +55,7 @@ public class ItemBase extends Item
             {
                 getShiftDetailedInfo(stack, player, list);
             }
-        }
+        }*/
     }
 
     /**
@@ -69,7 +69,7 @@ public class ItemBase extends Item
     protected void getDetailedInfo(ItemStack stack, PlayerEntity player, List<String> list)
     {
         //Per item detailed info
-        splitAdd(getUnlocalizedName(stack) + ".info", list, true, true);
+        splitAdd(getTranslationKey(stack) + ".info", list, true, true);
     }
 
     /**
@@ -85,7 +85,7 @@ public class ItemBase extends Item
     protected void getShiftDetailedInfo(ItemStack stack, PlayerEntity player, List<String> list)
     {
         //Per item detailed info
-        splitAdd(getUnlocalizedName(stack) + ".info.detailed", list, true, true);
+        splitAdd(getTranslationKey(stack) + ".info.detailed", list, true, true);
     }
 
     protected void splitAdd(String translationKey, List<String> list, boolean addKeyIfEmpty, boolean translate)

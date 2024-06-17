@@ -2,8 +2,8 @@ package icbm.classic.prefab.entity;
 
 import icbm.classic.api.data.IWorldPosition;
 import icbm.classic.lib.saving.NbtSaveHandler;
-import icbm.classic.lib.transform.vector.Pos;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -14,8 +14,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Base entity class to be shared by most entities
@@ -29,9 +27,9 @@ public abstract class EntityICBM extends Entity implements IWorldPosition
     private static final DataParameter<Float> HEALTH = EntityDataManager.<Float>createKey(EntityICBM.class, DataSerializers.FLOAT);
     private static final DataParameter<Float> MAX_HEALTH = EntityDataManager.<Float>createKey(EntityICBM.class, DataSerializers.FLOAT);
 
-    public EntityICBM(World world)
+    public EntityICBM(EntityType<?> entityTypeIn, World world)
     {
-        super(world);
+        super(entityTypeIn, world);
     }
 
     @Override
@@ -91,13 +89,13 @@ public abstract class EntityICBM extends Entity implements IWorldPosition
      */
     public boolean canDamage(Entity entity, DamageSource source)
     {
-        if (!entity.isEntityInvulnerable(source) && entity.isEntityAlive())
+        if (!entity.isInvulnerableTo(source) && entity.isAlive())
         {
             if (entity instanceof LivingEntity)
             {
                 if (entity instanceof PlayerEntity)
                 {
-                    if (((PlayerEntity) entity).capabilities.isCreativeMode)
+                    if (((PlayerEntity) entity).abilities.isCreativeMode)
                     {
                         return false;
                     }
@@ -122,17 +120,7 @@ public abstract class EntityICBM extends Entity implements IWorldPosition
      * is destroyed in some way.
      */
     protected void destroy() {
-        this.setDead();
-    }
-
-    /**
-     * Sets the position based on the bounding box
-     */
-    protected void alignToBounds()
-    {
-        this.posX = (this.getEntityBoundingBox().minX + this.getEntityBoundingBox().maxX) / 2.0D;
-        this.posY = this.getEntityBoundingBox().minY + (double) this.getYOffset() - (double) this.height;
-        this.posZ = (this.getEntityBoundingBox().minZ + this.getEntityBoundingBox().maxZ) / 2.0D;
+        this.remove();
     }
 
     /**
@@ -143,17 +131,17 @@ public abstract class EntityICBM extends Entity implements IWorldPosition
      */
     public Vec3d getPredictedPosition(int t)
     {
-        return new Vec3d(posX + motionX * t, posY + motionY * t, posZ + motionZ * t);
+        return new Vec3d(posX + getMotion().x * t, posY + getMotion().y * t, posZ + getMotion().z * t);
     }
 
     @Override
-    protected void readEntityFromNBT(CompoundNBT nbt)
+    protected void readAdditional(CompoundNBT nbt)
     {
         SAVE_LOGIC.load(this, nbt);
     }
 
     @Override
-    protected void writeEntityToNBT(CompoundNBT nbt)
+    protected void writeAdditional(CompoundNBT nbt)
     {
         SAVE_LOGIC.save(this, nbt);
     }
@@ -186,25 +174,5 @@ public abstract class EntityICBM extends Entity implements IWorldPosition
     public double z()
     {
         return posZ;
-    }
-
-    public Pos getVelocity()
-    {
-        return new Pos(motionX, motionY, motionZ); //TODO make wrapper object
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void setVelocity(double xx, double yy, double zz) {
-        //ICBMClassic.logger().info("Projectile#setVelocity: {} {} {} from {}", xx, yy, zz, Thread.currentThread().getStackTrace()[2]);
-
-        // Client side only gets 5 decimal places due to packet storing as int then converting back to double using divide by 8000... effectively a float
-        setMotionVector(xx, yy, zz);
-    }
-
-    public void setMotionVector(double xx, double yy, double zz) {
-        this.motionX = xx;
-        this.motionY = yy;
-        this.motionZ = zz;
     }
 }

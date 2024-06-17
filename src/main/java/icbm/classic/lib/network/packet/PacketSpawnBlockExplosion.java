@@ -68,7 +68,7 @@ public class PacketSpawnBlockExplosion implements IPacket<PacketSpawnBlockExplos
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void handleClientSide(Minecraft minecraft, PlayerEntity player)
     {
         if (minecraft.world != null && player.world.provider.getDimension() == dimId)

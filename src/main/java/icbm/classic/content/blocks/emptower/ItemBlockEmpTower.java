@@ -19,7 +19,7 @@ public class ItemBlockEmpTower extends ItemBlockSubTypes {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World world, List list, ITooltipFlag flag)
     {
         if(stack.getMetadata() == 1){

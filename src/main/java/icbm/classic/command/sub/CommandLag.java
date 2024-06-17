@@ -3,7 +3,6 @@ package icbm.classic.command.sub;
 import icbm.classic.command.CommandUtils;
 import icbm.classic.command.system.SubCommand;
 import icbm.classic.lib.actions.WorkTickingActionHandler;
-import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -19,7 +18,7 @@ import java.util.function.Predicate;
 public class CommandLag extends SubCommand
 {
     public static final String TRANSLATION_LAG_REMOVE = "command.icbmclassic:icbm.lag.remove";
-    private final Predicate<Entity> icbmEntitySelector = (entity) -> entity.isEntityAlive() && CommandUtils.isICBMEntity(entity);
+    private final Predicate<Entity> icbmEntitySelector = (entity) -> entity.isAlive() && CommandUtils.isICBMEntity(entity);
 
     public CommandLag()
     {

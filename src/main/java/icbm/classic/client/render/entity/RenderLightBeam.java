@@ -1,18 +1,18 @@
 package icbm.classic.client.render.entity;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import icbm.classic.content.entity.EntityLightBeam;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class RenderLightBeam extends EntityRenderer<EntityLightBeam>
 {
     public static final ResourceLocation TEXTURE_BEACON_BEAM = new ResourceLocation("textures/entity/beacon_beam.png");
@@ -61,14 +61,13 @@ public class RenderLightBeam extends EntityRenderer<EntityLightBeam>
                                          double beamRadius, double glowRadius)
     {
         //Setup render state
-        GlStateManager.glTexParameteri(3553, 10242, 10497);
-        GlStateManager.glTexParameteri(3553, 10243, 10497);
+        GlStateManager.texParameter(3553, 10242, 10497);
+        GlStateManager.texParameter(3553, 10243, 10497);
         GlStateManager.disableLighting();
         GlStateManager.disableCull();
         GlStateManager.disableBlend();
         GlStateManager.depthMask(true);
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-
+        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
@@ -91,7 +90,7 @@ public class RenderLightBeam extends EntityRenderer<EntityLightBeam>
 
 
         GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         GlStateManager.depthMask(false);
 
         nw_corner_x = 0.5D - glowRadius;
@@ -116,7 +115,7 @@ public class RenderLightBeam extends EntityRenderer<EntityLightBeam>
 
         //Reset state
         GlStateManager.enableLighting();
-        GlStateManager.enableTexture2D();
+        GlStateManager.enableTexture();
         GlStateManager.depthMask(true);
     }
 

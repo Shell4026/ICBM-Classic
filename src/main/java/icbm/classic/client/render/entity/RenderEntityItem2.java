@@ -1,7 +1,7 @@
 package icbm.classic.client.render.entity;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import icbm.classic.client.render.entity.item.RenderItemImp;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -14,8 +14,8 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Random;
 
@@ -23,7 +23,7 @@ import java.util.Random;
  * @deprecated used {@link RenderItemImp}
  */
 @Deprecated
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class RenderEntityItem2 extends EntityRenderer<ItemEntity>
 {
     private final ItemRenderer itemRenderer;
@@ -43,7 +43,7 @@ public class RenderEntityItem2 extends EntityRenderer<ItemEntity>
     public void doRender(ItemEntity entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
         ItemStack itemstack = entity.getItem();
-        int seed = itemstack.isEmpty() ? 187 : Item.getIdFromItem(itemstack.getItem()) + itemstack.getMetadata();
+        int seed = itemstack.isEmpty() ? 187 : Item.getIdFromItem(itemstack.getItem()) + itemstack.getDamage();
         this.random.setSeed((long) seed);
         boolean hasTexture = false;
 
@@ -57,7 +57,7 @@ public class RenderEntityItem2 extends EntityRenderer<ItemEntity>
         GlStateManager.alphaFunc(516, 0.1F);
         GlStateManager.enableBlend();
         RenderHelper.enableStandardItemLighting();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         GlStateManager.pushMatrix();
         IBakedModel ibakedmodel = this.itemRenderer.getItemModelWithOverrides(itemstack, entity.world, (LivingEntity) null);
 

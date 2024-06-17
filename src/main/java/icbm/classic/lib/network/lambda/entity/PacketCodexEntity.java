@@ -6,8 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.ServerWorld;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraft.world.server.ServerWorld;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -38,7 +37,7 @@ public class PacketCodexEntity<R extends Entity, T> extends PacketCodex<R, T> {
         // TODO consider getting player's chunk map instead
         if(tile.world instanceof ServerWorld) {
             final ServerWorld worldServer = (ServerWorld) tile.world;
-            range = Optional.ofNullable(worldServer.getMinecraftServer())
+            range = Optional.ofNullable(worldServer.getServer())
                 .map(MinecraftServer::getPlayerList)
                 .map(PlayerList::getViewDistance)
                 .map(d -> d * 16 + 1.0)
@@ -59,7 +58,7 @@ public class PacketCodexEntity<R extends Entity, T> extends PacketCodex<R, T> {
 
     @Override
     public boolean isValid(Entity tile) {
-        return tile != null && tile.isEntityAlive();
+        return tile != null && tile.isAlive();
     }
 
     public PacketLambdaEntity<T> build(R tile) {

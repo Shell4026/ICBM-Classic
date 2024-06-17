@@ -29,6 +29,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
@@ -148,7 +149,7 @@ public class ItemThrowableProjectile extends ItemBase {
     }
 
     @Override
-    public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag flag) {
+    public void addInformation(ItemStack stack, World world, List<ITextComponent> list, ITooltipFlag flag) {
         final IProjectileStack projectileStack = stack.getCapability(ICBMClassicAPI.PROJECTILE_STACK_CAPABILITY, null);
 
         // Only show basic info if we have no projectile data

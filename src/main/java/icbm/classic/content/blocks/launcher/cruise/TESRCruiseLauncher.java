@@ -24,7 +24,7 @@ public class TESRCruiseLauncher extends TileEntityRenderer<TileCruiseLauncher>
     public static final CruiseLauncherTopModel model = new CruiseLauncherTopModel();
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void render(TileCruiseLauncher launcher, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
     {
         float yaw = (float) launcher.currentAim.yaw();

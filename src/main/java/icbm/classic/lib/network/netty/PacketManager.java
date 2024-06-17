@@ -137,7 +137,7 @@ public class PacketManager
             sendToAllAround(message, new NetworkRegistry.TargetPoint(world.provider.getDimension(), x, y, z, range));
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void sendToServer(IPacket packet)
     {
         //Null check is for JUnit

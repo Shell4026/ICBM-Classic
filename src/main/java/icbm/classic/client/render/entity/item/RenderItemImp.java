@@ -1,5 +1,6 @@
 package icbm.classic.client.render.entity.item;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import icbm.classic.lib.data.LazyBuilder;
 import lombok.Getter;
 import lombok.Setter;
@@ -59,18 +60,18 @@ public abstract class RenderItemImp<E extends Entity> extends EntityRenderer<E>
     }
 
     protected void translate(@Nullable E entity, net.minecraft.client.renderer.model.IBakedModel iBakedModel, double x, double y, double z, float partialTicks) {
-        float hoverStart = iBakedModel.getItemCameraTransforms().getTransform(net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType.GROUND).scale.y;
-        GlStateManager.translate((float)x, (float)y + 0.25F * hoverStart, (float)z);
+        float hoverStart = iBakedModel.getItemCameraTransforms().getTransform(net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType.GROUND).scale.getY();
+        GlStateManager.translatef((float)x, (float)y + 0.25F * hoverStart, (float)z);
     }
 
     protected void rotate(@Nullable E entity, float entityYaw, float entityPitch, float partialTicks) {
         // Rotate by entity yaw
         if(billboard) {
-            GlStateManager.rotate(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F); //fish ><>
+            GlStateManager.rotatef(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F); //fish ><>
         }
         else
         {
-            GlStateManager.rotate(entityYaw, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotatef(entityYaw, 0.0F, 1.0F, 0.0F);
         }
     }
 
@@ -114,12 +115,12 @@ public abstract class RenderItemImp<E extends Entity> extends EntityRenderer<E>
     }
 
     protected void renderItem(@Nullable E entity, ItemStack itemstack, World world, double x, double y, double z, float entityYaw, float entityPitch, float partialTicks) {
-        this.random.setSeed(Item.getIdFromItem(itemstack.getItem()) + itemstack.getMetadata());
+        this.random.setSeed(Item.getIdFromItem(itemstack.getItem()) + itemstack.getDamage());
         boolean hasTexture = false;
 
         if (this.bindEntityTexture(entity))
         {
-            this.renderManager.renderEngine.getTexture(this.getEntityTexture(entity)).setBlurMipmap(false, false);
+            this.renderManager.textureManager.getTexture(this.getEntityTexture(entity)).setBlurMipmap(false, false);
             hasTexture = true;
         }
 
@@ -128,7 +129,7 @@ public abstract class RenderItemImp<E extends Entity> extends EntityRenderer<E>
         GlStateManager.alphaFunc(516, 0.1F);
         GlStateManager.enableBlend();
         RenderHelper.enableStandardItemLighting();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         GlStateManager.pushMatrix();
 
         IBakedModel ibakedmodel = this.getBakedModel(entity, world, itemstack);
@@ -139,7 +140,7 @@ public abstract class RenderItemImp<E extends Entity> extends EntityRenderer<E>
         if (this.renderOutlines)
         {
             GlStateManager.enableColorMaterial();
-            GlStateManager.enableOutlineMode(this.getTeamColor(entity));
+            GlStateManager.setupSolidRenderingTextureCombine(this.getTeamColor(entity));
         }
 
         // Render item
@@ -151,7 +152,7 @@ public abstract class RenderItemImp<E extends Entity> extends EntityRenderer<E>
         // Reset
         if (this.renderOutlines)
         {
-            GlStateManager.disableOutlineMode();
+            GlStateManager.tearDownSolidRenderingTextureCombine();
             GlStateManager.disableColorMaterial();
         }
 
@@ -162,7 +163,7 @@ public abstract class RenderItemImp<E extends Entity> extends EntityRenderer<E>
 
         if (hasTexture)
         {
-            this.renderManager.renderEngine.getTexture(this.getEntityTexture(entity)).restoreLastBlurMipmap();
+            this.renderManager.textureManager.getTexture(this.getEntityTexture(entity)).restoreLastBlurMipmap();
         }
     }
 

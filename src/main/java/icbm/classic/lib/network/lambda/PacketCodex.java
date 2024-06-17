@@ -19,7 +19,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import org.apache.logging.log4j.util.TriConsumer;
 
 import javax.annotation.Nonnull;
@@ -104,7 +103,7 @@ public abstract class PacketCodex<RAW, TARGET> {
     }
 
     public PacketCodex<RAW, TARGET> nodeFacing(Function<TARGET, Direction> getter, BiConsumer<TARGET, Direction> setter) {
-        return node(Direction.class, false, getter, setter, (byteBuf, face) -> byteBuf.writeByte((byte)face.ordinal()), (byteBuf) -> Direction.getFront(byteBuf.readByte()));
+        return node(Direction.class, false, getter, setter, (byteBuf, face) -> byteBuf.writeByte((byte)face.ordinal()), (byteBuf) -> Direction.byIndex(byteBuf.readByte()));
     }
 
     public PacketCodex<RAW, TARGET> nodeDouble(Function<TARGET, Double> getter, BiConsumer<TARGET, Double> setter) {
@@ -226,7 +225,7 @@ public abstract class PacketCodex<RAW, TARGET> {
             ICBMClassic.packetHandler.sendToAllAround(build(raw), point);
         }
         catch (Exception e) {
-            ICBMClassic.logger().error("Failed to send packet(" + parent + ", " + name + ") to server for " + raw, e);
+            ICBMClassic.logger().error("Failed to send packet({}, {}) to server for {}", parent, name, raw, e);
         }
     }
 

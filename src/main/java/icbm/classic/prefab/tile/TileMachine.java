@@ -2,16 +2,15 @@ package icbm.classic.prefab.tile;
 
 import icbm.classic.lib.tile.ITick;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.texture.ITickable;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ITickable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +24,12 @@ public class TileMachine extends TileEntity implements ITickable
 
     protected final List<ITick> tickActions = new ArrayList();
 
+    public TileMachine(TileEntityType<?> p_i48289_1_) {
+        super(p_i48289_1_);
+    }
+
     @Override
-    public void update()
+    public void tick()
     {
         //Increase tick
         ticks++;
@@ -41,12 +44,6 @@ public class TileMachine extends TileEntity implements ITickable
     }
 
     @Override
-    public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newSate)
-    {
-        return oldState.getBlock() != newSate.getBlock();
-    }
-
-    @Override
     public SUpdateTileEntityPacket getUpdatePacket()
     {
         return new SUpdateTileEntityPacket(pos, 0, getUpdateTag());
@@ -55,14 +52,14 @@ public class TileMachine extends TileEntity implements ITickable
     @Override
     public CompoundNBT getUpdateTag()
     {
-        return writeToNBT(new CompoundNBT());
+        return write(new CompoundNBT());
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt)
     {
-        readFromNBT(pkt.getNbtCompound());
+        read(pkt.getNbtCompound());
     }
 
     public boolean isServer()
@@ -79,9 +76,9 @@ public class TileMachine extends TileEntity implements ITickable
     public Direction getRotation()
     {
         BlockState state = getBlockState();
-        if (state.getProperties().containsKey(BlockICBM.ROTATION_PROP))
+        if (state.has(BlockICBM.ROTATION_PROP))
         {
-            return state.getValue(BlockICBM.ROTATION_PROP);
+            return state.get(BlockICBM.ROTATION_PROP);
         }
         return Direction.NORTH;
     }

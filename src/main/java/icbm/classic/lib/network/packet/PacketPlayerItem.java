@@ -51,7 +51,7 @@ public class PacketPlayerItem extends PacketBase<PacketPlayerItem>
         super.decodeInto(ctx, buffer);
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void handleClientSide(Minecraft minecraft, PlayerEntity player)
     {

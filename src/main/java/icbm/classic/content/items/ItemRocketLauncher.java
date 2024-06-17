@@ -55,7 +55,7 @@ public class ItemRocketLauncher extends ItemICBMElectrical
         this.fireUpDown = fireUpDown;
         this.addPropertyOverride(new ResourceLocation("pulling"), new IItemPropertyGetter()
         {
-            @SideOnly(Side.CLIENT)
+            @OnlyIn(Dist.CLIENT)
             public float apply(ItemStack stack, @Nullable World worldIn, @Nullable LivingEntity entityIn)
             {
                 return entityIn != null && entityIn.isHandActive() && entityIn.getActiveItemStack() == stack ? 1.0F : 0.0F;

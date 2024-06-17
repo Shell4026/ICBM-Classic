@@ -17,7 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.HashSet;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class RenderEntityBlock extends EntityRenderer<EntityFlyingBlock>
 {
     private final HashSet<BlockState> failedBlocks = new HashSet();

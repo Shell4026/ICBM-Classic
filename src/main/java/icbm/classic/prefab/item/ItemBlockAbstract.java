@@ -89,7 +89,7 @@ public class ItemBlockAbstract extends BlockItem
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World world, List list, ITooltipFlag flag)
     {
         //Get player, don't run tool tips without

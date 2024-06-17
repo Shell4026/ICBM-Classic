@@ -13,9 +13,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
 
 public class CommonProxy implements IGuiHandler
 {
@@ -129,12 +126,6 @@ public class CommonProxy implements IGuiHandler
             return ((IGuiTile) entity).getClientGuiElement(ID, player);
         }
         return null;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean isShiftHeld()
-    {
-        return Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
     }
 
     public void spawnSmoke(World world, Pos position, double v, double v1, double v2, float red, float green, float blue, float scale, int age)

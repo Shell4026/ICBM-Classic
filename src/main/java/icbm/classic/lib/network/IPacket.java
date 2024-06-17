@@ -4,8 +4,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.function.Consumer;
 
@@ -53,7 +53,7 @@ public interface IPacket<P extends IPacket>
         return (P) this;
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     default void handleClientSide(final Minecraft minecraft, final PlayerEntity player)
     {
         throw new UnsupportedOperationException("Unsupported operation for Packet: " + getClass().getSimpleName());

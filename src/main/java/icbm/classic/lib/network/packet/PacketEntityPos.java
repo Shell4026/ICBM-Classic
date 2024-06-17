@@ -74,7 +74,7 @@ public class PacketEntityPos extends PacketBase<PacketEntityPos>
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void handleClientSide(Minecraft minecraft, PlayerEntity player)
     {
         if (player != null && player.world.provider.getDimension() == world)

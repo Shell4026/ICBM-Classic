@@ -19,7 +19,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TESREmpTower extends TileEntityRenderer<TileEntity>
 {
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void render(TileEntity tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
     {
         final BlockRendererDispatcher blockRendererDispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();

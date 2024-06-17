@@ -13,7 +13,7 @@ public class ICBMClassicMock extends ICBMClassic {
 
         // Setup ICBM instance and register content
         ICBMClassic.INSTANCE = new ICBMClassicMock();
-        ICBMClassic.INSTANCE.handleExRegistry(null);
+        ICBMClassic.INSTANCE.handleExRegistry();
         ICBMClassic.INSTANCE.handleMissileFlightRegistry();
         ActionSystem.setup();
         ICBMClassic.INSTANCE.handleMissileTargetRegistry();

@@ -12,9 +12,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
-import net.minecraft.world.ServerWorld;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +37,7 @@ public class PacketLambdaEntity<TARGET> implements IPacket<PacketLambdaEntity<TA
     public PacketLambdaEntity(PacketCodex<Entity, TARGET> codex, Entity entity, TARGET target) {
         this.codex = codex;
         this.entityId = entity.getEntityId();
-        this.dimensionId = entity.world.provider.getDimension();
+        this.dimensionId = entity.world.getDimension().getType().getId();
         this.writers = codex.encodeAsWriters(target);
     }
 
@@ -72,7 +71,7 @@ public class PacketLambdaEntity<TARGET> implements IPacket<PacketLambdaEntity<TA
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void handleClientSide(Minecraft minecraft, PlayerEntity player)
     {
         final int playerDim = player.world.provider.getDimension();

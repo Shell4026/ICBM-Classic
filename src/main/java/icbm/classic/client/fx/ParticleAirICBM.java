@@ -1,24 +1,27 @@
 package icbm.classic.client.fx;
 
+import net.minecraft.client.particle.IAnimatedSprite;
 import net.minecraft.client.particle.SmokeParticle;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * Same as normal smoke, but doesn't move upwards on its own
  */
-@SideOnly(Side.CLIENT)
-public class ParticleAirICBM extends SmokeParticle
+@OnlyIn(Dist.CLIENT)
+public class ParticleAirICBM extends SmokeParticle //TODO break link to smoke particle
 {
-    public ParticleAirICBM(World worldIn, double x, double y, double z, double vx, double vy, double vz, float scale)
+    private final IAnimatedSprite sprite;
+    public ParticleAirICBM(World worldIn, double x, double y, double z, double vx, double vy, double vz, float scale, IAnimatedSprite spriteSet)
     {
-        super(worldIn, x, y, z, vx, vy, vz, scale);
+        super(worldIn, x, y, z, vx, vy, vz, scale, spriteSet);
+        this.sprite = spriteSet;
     }
 
     public ParticleAirICBM setAge(int age)
     {
-        this.particleMaxAge = age;
+        this.maxAge = age;
         return this;
     }
 
@@ -39,18 +42,18 @@ public class ParticleAirICBM extends SmokeParticle
     }
 
     @Override
-    public void onUpdate() // same code as in vanilla particle, but the vertical velocity acceleration is set to 0
+    public void tick() // same code as in vanilla particle, but the vertical velocity acceleration is set to 0
     {
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
 
-        if (this.particleAge++ >= this.particleMaxAge)
+        if (this.age++ >= this.age)
         {
             this.setExpired();
         }
 
-        this.setParticleTextureIndex(7 - this.particleAge * 8 / this.particleMaxAge);
+        this.selectSpriteWithAge(this.sprite);
         this.move(this.motionX, this.motionY, this.motionZ);
 
         if (this.posY == this.prevPosY)

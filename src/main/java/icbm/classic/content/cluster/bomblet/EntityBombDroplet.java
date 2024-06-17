@@ -9,10 +9,10 @@ import icbm.classic.lib.capability.ex.CapabilityExplosiveEntity;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import icbm.classic.lib.saving.NbtSaveNode;
 import icbm.classic.lib.projectile.EntityProjectile;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -20,8 +20,10 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -35,7 +37,7 @@ public class EntityBombDroplet extends EntityProjectile<EntityBombDroplet> imple
     public final CapabilityExplosiveEntity explosive = new CapabilityExplosiveEntity(this);
     public EntityBombDroplet(World world) {
         super(world);
-        this.setSize(0.25f, 0.25f);
+        //this.setSize(0.25f, 0.25f);
         this.hasHealth = false;
     }
 
@@ -52,14 +54,7 @@ public class EntityBombDroplet extends EntityProjectile<EntityBombDroplet> imple
     @Override
     protected void onImpact(RayTraceResult hit) {
        super.onImpact(hit);
-       explosive.doExplosion(hit.hitVec.x, hit.hitVec.y, hit.hitVec.z, new ActionSource(world, new Vec3d(posX, posY, posZ), new EntityCause(this))); //TODO include impact cause info
-    }
-
-    @Override
-    public Vec3d getLook(float partialTicks)
-    {
-        double mag = Math.sqrt(motionX * motionX + motionY * motionY + motionZ * motionZ);
-        return new Vec3d(motionX / mag, motionY / mag, motionZ / mag);
+       explosive.doExplosion(hit.getHitVec().x, hit.getHitVec().y, hit.getHitVec().z, new ActionSource(world, new Vec3d(posX, posY, posZ), new EntityCause(this))); //TODO include impact cause info
     }
 
     @Override
@@ -85,37 +80,19 @@ public class EntityBombDroplet extends EntityProjectile<EntityBombDroplet> imple
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable Direction facing)
+    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing)
     {
         if(capability == ICBMClassicAPI.EXPLOSIVE_CAPABILITY) {
-            return ICBMClassicAPI.EXPLOSIVE_CAPABILITY.cast(explosive);
+            return (LazyOptional<T>) LazyOptional.of(() -> explosive);
         }
         return super.getCapability(capability, facing);
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable Direction facing)
-    {
-        return capability == ICBMClassicAPI.EXPLOSIVE_CAPABILITY
-            || super.hasCapability(capability, facing);
-    }
-
-    @Override
-    public String getName()
-    {
-        final IExplosiveData data = explosive.getExplosiveData();
-        if (data != null)
-        {
-            return I18n.translateToLocal("bomb.droplet." + data.getRegistryKey().toString() + ".name");
-        }
-        return I18n.translateToLocal("bomb.droplet.icbmclassic:generic.name");
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public boolean isInRangeToRenderDist(double distance)
     {
-        double d0 = this.getEntityBoundingBox().getAverageEdgeLength() * 10.0D;
+        double d0 = this.getBoundingBox().getAverageEdgeLength() * 10.0D;
 
         if (Double.isNaN(d0))
         {
@@ -127,18 +104,18 @@ public class EntityBombDroplet extends EntityProjectile<EntityBombDroplet> imple
     }
 
     @Override
-    public void writeSpawnData(ByteBuf additionalMissileData)
+    public void writeSpawnData(PacketBuffer additionalMissileData)
     {
         super.writeSpawnData(additionalMissileData);
         final CompoundNBT saveData = SAVE_LOGIC.save(this, new CompoundNBT());
-        ByteBufUtils.writeTag(additionalMissileData, saveData);
+        additionalMissileData.writeCompoundTag(saveData);
     }
 
     @Override
-    public void readSpawnData(ByteBuf additionalMissileData)
+    public void readSpawnData(PacketBuffer additionalMissileData)
     {
         super.readSpawnData(additionalMissileData);
-        final CompoundNBT saveData = ByteBufUtils.readTag(additionalMissileData);
+        final CompoundNBT saveData = additionalMissileData.readCompoundTag();
         SAVE_LOGIC.load(this, saveData);
     }
 

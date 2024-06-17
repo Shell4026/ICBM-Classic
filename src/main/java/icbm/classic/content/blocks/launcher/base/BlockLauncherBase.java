@@ -91,7 +91,7 @@ public class BlockLauncherBase extends ContainerBlock
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public BlockRenderLayer getBlockLayer()
     {
         return BlockRenderLayer.SOLID;

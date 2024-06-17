@@ -1,84 +1,87 @@
 package icbm.classic.content.cluster.bomblet;
 
-import icbm.classic.ICBMConstants;
-import icbm.classic.client.render.entity.RenderEntityItem2;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.EntityRenderer;
+import com.mojang.blaze3d.platform.GlStateManager;
+import icbm.classic.client.render.entity.item.RenderItemImp;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@SideOnly(Side.CLIENT)
-public class RenderBombDroplet extends EntityRenderer<EntityBombDroplet>
+@OnlyIn(Dist.CLIENT)
+public class RenderBombDroplet extends RenderItemImp<EntityBombDroplet>
 {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(ICBMConstants.DOMAIN, "textures/entity/fragments/fragment.png");
-
-    private final ItemEntity entityItem;
-    private final RenderEntityItem2 renderEntityItem;
     public RenderBombDroplet(EntityRendererManager renderManager)
     {
         super(renderManager);
-        entityItem = new ItemEntity(null);
-        renderEntityItem = new RenderEntityItem2(renderManager, Minecraft.getMinecraft().getRenderItem(), ItemCameraTransforms.TransformType.NONE);
     }
 
     @Override
-    public void doRender(EntityBombDroplet entity, double x, double y, double z, float entityYaw, float partialTicks)
-    {
-        this.bindEntityTexture(entity);
+    protected ItemStack getRenderItem(EntityBombDroplet entity) {
+        return entity.toStack();
+    }
 
-        //Setup
-        GlStateManager.pushMatrix();
-
+    @Override
+    protected void translate(@Nullable EntityBombDroplet entity, IBakedModel iBakedModel, double x, double y, double z, float partialTicks) {
         //Translate to center of entity collider
-        GlStateManager.translate(x, y + 0.15, z);
-
-        //Rotate
-        float yaw = entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks - 180;
-        float pitch = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks + 90;
-        GlStateManager.rotate(yaw, 0F, 1F, 0F);
-        GlStateManager.rotate(pitch, 1F, 0F, 0F);
-
-        //Translate to rotation point of model TODO extract from model file
-        GlStateManager.translate(0, 0.2, 0);
-
-        //Render missile
-        renderMissile(entity.toStack(),
-            entity.world, entity.posX, entity.posY, entity.posZ,
-            0, 0, 0, entityYaw, partialTicks);
-
-        //Reset
-        GlStateManager.popMatrix();
-
-
-        super.doRender(entity, x, y, z, entityYaw, partialTicks);
+        if (entity != null) {
+            GlStateManager.translated(x, y + 0.15, z); //TODO handle in JSON
+        } else {
+            GlStateManager.translated(x, y, z);
+        }
     }
 
-    public void renderMissile(ItemStack missileStack, World world, double wx, double wy, double wz,
-                              double x, double y, double z, float entityYaw, float partialTicks)
-    {
-        //Set data for fake entity
-        entityItem.setWorld(world);
-        entityItem.rotationYaw = 0;
-        entityItem.setPosition(wx, wy, wz);
-        entityItem.setItem(missileStack);
-
-        //render entity item
-        renderEntityItem.doRender(entityItem, x, y, z, entityYaw, partialTicks);
-    }
-
-    @Nullable
     @Override
-    protected ResourceLocation getEntityTexture(EntityBombDroplet entity)
-    {
-        return TEXTURE;
+    protected float getYaw(@Nonnull EntityBombDroplet EntityBombDroplet, float providedYaw, float partialTicks) {
+        return providedYaw - 180; //TODO handle offset in JSON
+    }
+
+    @Override
+    protected float getPitch(@Nonnull EntityBombDroplet EntityBombDroplet, float providedPitch, float partialTicks) {
+        return providedPitch + 90; //TODO handle offset in JSON
+    }
+
+    @Override
+    protected void rotate(@Nullable EntityBombDroplet EntityBombDroplet, float entityYaw, float entityPitch, float partialTicks) {
+        //Rotate
+        GlStateManager.rotatef(entityYaw, 0F, 1F, 0F);
+        GlStateManager.rotatef(entityPitch, 1F, 0F, 0F);
+
+        //Translate to rotation point of model TODO handle in JSON
+        if (EntityBombDroplet != null) {
+            GlStateManager.translated(0, 0.2, 0);
+        }
+    }
+
+    @Override
+    public void doRender(EntityBombDroplet EntityBombDroplet, double x, double y, double z, float entityYaw, float partialTicks) {
+        super.doRender(EntityBombDroplet, x, y, z, entityYaw, partialTicks);
+
+        if (renderManager.isDebugBoundingBox()) //TODO fix so we can see motion vector
+        {
+            Tessellator tessellator = Tessellator.getInstance();
+            BufferBuilder bufferbuilder = tessellator.getBuffer();
+            bufferbuilder.begin(3, DefaultVertexFormats.POSITION_COLOR);
+            bufferbuilder.pos(x, y, z).color(0, 255, 0, 255).endVertex();
+            bufferbuilder.pos(
+                    x + EntityBombDroplet.getMotion().x * 2.0D,
+                    y + EntityBombDroplet.getMotion().y * 2.0D,
+                    z + EntityBombDroplet.getMotion().z * 2.0D
+                )
+                .color(0, 255, 0, 2555)
+                .endVertex();
+            tessellator.draw();
+            GlStateManager.enableTexture();
+            GlStateManager.enableLighting();
+            GlStateManager.enableCull();
+            GlStateManager.disableBlend();
+            GlStateManager.depthMask(true);
+        }
     }
 }

@@ -7,7 +7,10 @@ import icbm.classic.prefab.item.ItemStackCapProvider;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -42,8 +45,8 @@ public class ItemBattery extends ItemICBMBase
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag flag)
+    @OnlyIn(Dist.CLIENT)
+    public void addInformation(ItemStack stack, World world, List<ITextComponent> list, ITooltipFlag flag)
     {
         if (stack.hasCapability(CapabilityEnergy.ENERGY, null))
         {

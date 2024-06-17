@@ -128,7 +128,7 @@ public class BlockLaunchConnector extends ContainerBlock
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public BlockRenderLayer getBlockLayer()
     {
         return BlockRenderLayer.CUTOUT;

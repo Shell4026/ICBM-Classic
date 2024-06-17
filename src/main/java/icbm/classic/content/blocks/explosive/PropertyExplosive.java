@@ -1,12 +1,12 @@
 package icbm.classic.content.blocks.explosive;
 
-import com.google.common.base.Optional;
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.reg.IExplosiveData;
-import net.minecraft.block.properties.IProperty;
+import net.minecraft.state.IProperty;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Created by Dark(DarkGuardsman, Robin) on 1/6/2019.
@@ -34,7 +34,7 @@ public class PropertyExplosive implements IProperty<IExplosiveData>
     @Override
     public Optional<IExplosiveData> parseValue(String value)
     {
-        return Optional.fromNullable(ICBMClassicAPI.EXPLOSIVE_REGISTRY.getExplosiveData(new ResourceLocation(value.replace("_", ":"))));
+        return Optional.ofNullable(ICBMClassicAPI.EXPLOSIVE_REGISTRY.getExplosiveData(new ResourceLocation(value.replace("_", ":"))));
     }
 
     @Override

@@ -1,8 +1,9 @@
 package icbm.classic.client.models;
 
-import net.minecraft.client.model.ModelBase;
 
-public abstract class ModelICBM extends ModelBase
+import net.minecraft.client.renderer.model.Model;
+
+public abstract class ModelICBM extends Model
 {
     public void render(float f5)
     {

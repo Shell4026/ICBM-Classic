@@ -13,10 +13,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DeferredWorkQueue;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -39,10 +40,10 @@ public class PacketLambdaTile<TARGET> implements IPacket<PacketLambdaTile<TARGET
       this(codex, dimensionId, pos.getX(), pos.getY(), pos.getZ(), target);
     }
 
-    public PacketLambdaTile(PacketCodexTile codex, World dimensionId, int x, int y, int z, TARGET target) {
+    public PacketLambdaTile(PacketCodexTile codex, World world, int x, int y, int z, TARGET target) {
         this.codex = codex;
 
-        setDimensionId(dimensionId.provider.getDimension());
+        setDimensionId(world.getDimension().getType().getId());
         setPos(new BlockPos(x, y, z));
 
         writers = codex.encodeAsWriters(target);
@@ -74,10 +75,10 @@ public class PacketLambdaTile<TARGET> implements IPacket<PacketLambdaTile<TARGET
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void handleClientSide(final Minecraft minecraft, final PlayerEntity player)
     {
-        final int playerDim = player.world.provider.getDimension();
+        final int playerDim = player.world.getDimension().getType().getId();
 
         // Normal, player may have changed dim between network calls
         if (playerDim != getDimensionId()) {
@@ -87,13 +88,13 @@ public class PacketLambdaTile<TARGET> implements IPacket<PacketLambdaTile<TARGET
 
         final World world = player.world;
 
-        minecraft.addScheduledTask(() -> loadDataIntoTile(world, player));
+        DeferredWorkQueue.runLater(() -> loadDataIntoTile(world, player));
     }
 
     @Override
     public void handleServerSide(PlayerEntity player)
     {
-        final int playerDim = player.world.provider.getDimension();
+        final int playerDim = player.world.getDimension().getType().getId();
 
         // Normal, player may have changed dim between network calls
         if (playerDim != getDimensionId()) {
@@ -108,7 +109,7 @@ public class PacketLambdaTile<TARGET> implements IPacket<PacketLambdaTile<TARGET
         }
 
         final ServerWorld world = (ServerWorld) player.world;
-        world.addScheduledTask(() -> loadDataIntoTile(world, player));
+        DeferredWorkQueue.runLater(() -> loadDataIntoTile(world, player));
     }
 
     private void loadDataIntoTile(World world, PlayerEntity player) {

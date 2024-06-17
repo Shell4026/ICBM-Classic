@@ -28,6 +28,7 @@ import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.*;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -35,12 +36,12 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -73,24 +74,17 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
     }
 
     @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing)
+    public <T> LazyOptional<T> getCapability(@Nonnull final Capability<T> cap, final @Nullable Direction side)
     {
-        if (capability == CapabilityEMP.EMP)
+        if (cap == CapabilityEMP.EMP)
         {
-            return (T) getEmpCapability();
-        } else if (capability == ICBMClassicAPI.MISSILE_CAPABILITY)
-        {
-            return (T) getMissileCapability();
+            return (LazyOptional<T>) LazyOptional.of(this::getEmpCapability);
         }
-        return super.getCapability(capability, facing);
-    }
-
-    @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable Direction facing)
-    {
-        return capability == CapabilityEMP.EMP
-            || capability == ICBMClassicAPI.MISSILE_CAPABILITY
-            || super.hasCapability(capability, facing);
+        else if (cap == ICBMClassicAPI.MISSILE_CAPABILITY)
+        {
+            return (LazyOptional<T>) LazyOptional.of(this::getMissileCapability);
+        }
+        return super.getCapability(cap, side);
     }
 
     public EntityMissile<E> ignore(Entity entity)
@@ -146,17 +140,15 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
             if(getRidingEntity() == null) {
                 ICBMSounds.MEEP.play(entityHit, 2, 1, true);
                 entityHit.startRiding(this, true);
-                if(entityHit.hasCapability(CapSpaceChicken.INSTANCE, null)) {
-                    final CapSpaceChicken cap = entityHit.getCapability(CapSpaceChicken.INSTANCE, null);
-                    if(cap != null) {
-                        cap.setSpace(true);
-                    }
-                }
+
+                entityHit.getCapability(CapSpaceChicken.INSTANCE).ifPresent((cap) -> {
+                    cap.setSpace(true);
+                });
             }
         }
         else
         {
-            onImpactEntity(entityHit, (float) getVelocity().magnitude(), hit);
+            onImpactEntity(entityHit, (float) getMotion().length(), hit);
         }
     }
 
@@ -170,18 +162,18 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
         {
             return null;
         }
-        return getEntityBoundingBox();
+        return super.getBoundingBox();
     }
 
     @Override
-    public void setDead()
+    public void remove()
     {
         if (!world.isRemote)
         {
             RadarRegistry.remove(this);
         }
 
-        super.setDead();
+        super.remove();
     }
 
     @Override
@@ -190,18 +182,19 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
         return true;
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public AxisAlignedBB getRenderBoundingBox()
     {
-        return this.getEntityBoundingBox().expand(5, 5, 5);
+        //TODO handle this with pose to reduce size to angle
+        return this.getBoundingBox().expand(5, 5, 5);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public boolean isInRangeToRenderDist(double distance)
     {
-        double d0 = this.getEntityBoundingBox().getAverageEdgeLength() * 10.0D;
+        double d0 = this.getBoundingBox().getAverageEdgeLength() * 10.0D;
 
         if (Double.isNaN(d0))
         {
@@ -236,13 +229,13 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
     {
         if (this.ticksInAir <= 0 && getMissileCapability().getFlightLogic() instanceof BallisticFlightLogicOld) //TODO abstract or find better way to handle seat position
         {
-            return height;
+            return getHeight();
         } else if (getMissileCapability().getFlightLogic() instanceof DeadFlightLogic)
         {
-            return height / 10;
+            return getHeight() / 10;
         }
 
-        return height / 2 + motionY;
+        return getHeight() / 2 + getMotion().y;
     }
 
     @Override
@@ -279,7 +272,7 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
     protected final void onImpact(RayTraceResult impactLocation) {
         if(!hasImpacted) {
             this.hasImpacted = true; //TODO store impact information and move this to projectile
-            logImpact(impactLocation.hitVec);
+            logImpact(impactLocation.getHitVec());
             actionOnImpact(impactLocation);
         }
     }
@@ -299,7 +292,7 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
             xi(),
             yi(),
             zi(),
-            world().provider.getDimension(),
+            world().getDimension().getType().getId(),
             impactLocation.x,
             impactLocation.y,
             impactLocation.z
@@ -318,25 +311,25 @@ public abstract class EntityMissile<E extends EntityMissile<E>> extends EntityPr
     @Override
     public boolean read(ByteBuf buf, int id, PlayerEntity player, IPacket type) {
         if(id == 1) {
-            readSpawnData(buf);
+           //readSpawnData(buf); TODO
             return true;
         }
         return false;
     }
 
     @Override
-    public void writeSpawnData(ByteBuf additionalMissileData)
+    public void writeSpawnData(PacketBuffer additionalMissileData)
     {
         super.writeSpawnData(additionalMissileData);
         final CompoundNBT saveData = SAVE_LOGIC.save(this, new CompoundNBT());
-        ByteBufUtils.writeTag(additionalMissileData, saveData);
+        additionalMissileData.writeCompoundTag(saveData);
     }
 
     @Override
-    public void readSpawnData(ByteBuf additionalMissileData)
+    public void readSpawnData(PacketBuffer additionalMissileData)
     {
         super.readSpawnData(additionalMissileData);
-        final CompoundNBT saveData = ByteBufUtils.readTag(additionalMissileData);
+        final CompoundNBT saveData = additionalMissileData.readCompoundTag();
         SAVE_LOGIC.load(this, saveData);
     }
 
