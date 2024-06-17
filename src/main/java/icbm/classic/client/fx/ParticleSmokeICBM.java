@@ -3,10 +3,10 @@ package icbm.classic.client.fx;
 import icbm.classic.lib.transform.vector.Pos;
 import net.minecraft.client.particle.SmokeParticle;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class ParticleSmokeICBM extends SmokeParticle
 {
     public ParticleSmokeICBM(World worldIn, Pos pos, double vx, double vy, double vz, float scale)

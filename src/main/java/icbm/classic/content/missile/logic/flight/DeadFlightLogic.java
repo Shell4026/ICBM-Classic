@@ -63,7 +63,7 @@ public class DeadFlightLogic implements IMissileFlightLogic, INBTSerializable<Co
     public CompoundNBT serializeNBT()
     {
         final CompoundNBT tagCompound = new CompoundNBT();
-        tagCompound.setInteger("fuel", fuelTicks);
+        tagCompound.putInt("fuel", fuelTicks);
         return tagCompound;
     }
 
@@ -71,7 +71,7 @@ public class DeadFlightLogic implements IMissileFlightLogic, INBTSerializable<Co
     public void deserializeNBT(CompoundNBT save)
     {
         if(save.hasKey("fuel")) {
-            fuelTicks = save.getInteger("fuel");
+            fuelTicks = save.getInt("fuel");
         }
     }
 

@@ -58,7 +58,7 @@ public class NbtSaveRootTest
                 .nodeInteger("i", (t) -> t.field1, (t, i) -> t.field1 = i);
 
             final CompoundNBT expectedSave = new CompoundNBT();
-            expectedSave.setInteger("i", 4567);
+            expectedSave.putInt("i", 4567);
 
             final CompoundNBT save = root.save(thing);
 
@@ -109,7 +109,7 @@ public class NbtSaveRootTest
                 .parent();
 
             final CompoundNBT expectedSave = new CompoundNBT();
-            expectedSave.setInteger("i", 4567);
+            expectedSave.putInt("i", 4567);
             final CompoundNBT dave = new CompoundNBT();
             dave.setBoolean("b", true);
             expectedSave.setTag("dave", dave);
@@ -143,7 +143,7 @@ public class NbtSaveRootTest
             final NbtSaveRoot<RandomThingMany> root = new NbtSaveRoot<RandomThingMany>("thing", null, null);
 
             final CompoundNBT saveToLoad = new CompoundNBT();
-            saveToLoad.setInteger("i", 12345);
+            saveToLoad.putInt("i", 12345);
 
             root.load(thing, saveToLoad);
 
@@ -184,7 +184,7 @@ public class NbtSaveRootTest
                 .nodeInteger("i", null, (t, i) -> t.field1 = i);
 
             final CompoundNBT saveToLoad = new CompoundNBT();
-            saveToLoad.setInteger("j", 456);
+            saveToLoad.putInt("j", 456);
 
             root.load(thing, saveToLoad);
 
@@ -199,8 +199,8 @@ public class NbtSaveRootTest
                 .nodeInteger("i", null, (t, i) -> t.field1 = i);
 
             final CompoundNBT saveToLoad = new CompoundNBT();
-            saveToLoad.setInteger("j", 456);
-            saveToLoad.setInteger("i", 123);
+            saveToLoad.putInt("j", 456);
+            saveToLoad.putInt("i", 123);
 
             root.load(thing, saveToLoad);
 
@@ -218,11 +218,11 @@ public class NbtSaveRootTest
                 .parent();
 
             final CompoundNBT saveToLoad = new CompoundNBT();
-            saveToLoad.setInteger("j", 456);
-            saveToLoad.setInteger("i", 123);
+            saveToLoad.putInt("j", 456);
+            saveToLoad.putInt("i", 123);
 
             final CompoundNBT jim = new CompoundNBT();
-            jim.setInteger("j", 789);
+            jim.putInt("j", 789);
             saveToLoad.setTag("jim", jim);
 
             root.load(thing, saveToLoad);

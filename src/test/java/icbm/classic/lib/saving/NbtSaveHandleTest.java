@@ -69,7 +69,7 @@ public class NbtSaveHandleTest
 
             final CompoundNBT expectedSave = new CompoundNBT();
             final CompoundNBT dave = new CompoundNBT();
-            dave.setInteger("i", 23);
+            dave.putInt("i", 23);
             expectedSave.setTag("dave", dave);
 
             final RandomSaveThing saveThing = new RandomSaveThing();
@@ -92,7 +92,7 @@ public class NbtSaveHandleTest
                 .base();
 
             final CompoundNBT expectedSave = new CompoundNBT();
-            expectedSave.setInteger("i", 23);
+            expectedSave.putInt("i", 23);
 
             final RandomSaveThing saveThing = new RandomSaveThing();
             saveThing.field1 = 23;
@@ -176,8 +176,8 @@ public class NbtSaveHandleTest
             final NbtSaveHandler<RandomSaveThing> saveHandler = new NbtSaveHandler<RandomSaveThing>();
 
             final CompoundNBT saveToLoad = new CompoundNBT();
-            saveToLoad.setInteger("i", 3);
-            saveToLoad.setString("bob", "dave");
+            saveToLoad.putInt("i", 3);
+            saveToLoad.putString("bob", "dave");
 
             final RandomSaveThing saveThing = new RandomSaveThing();
 
@@ -198,8 +198,8 @@ public class NbtSaveHandleTest
                 .base();
 
             final CompoundNBT saveToLoad = new CompoundNBT();
-            saveToLoad.setInteger("i", 3);
-            saveToLoad.setString("bob", "dave");
+            saveToLoad.putInt("i", 3);
+            saveToLoad.putString("bob", "dave");
 
             final RandomSaveThing saveThing = new RandomSaveThing();
 
@@ -221,8 +221,8 @@ public class NbtSaveHandleTest
                 .base();
 
             final CompoundNBT saveToLoad = new CompoundNBT();
-            saveToLoad.setInteger("i", 3);
-            saveToLoad.setString("bob", "dave");
+            saveToLoad.putInt("i", 3);
+            saveToLoad.putString("bob", "dave");
 
             final RandomSaveThing saveThing = new RandomSaveThing();
 
@@ -245,9 +245,9 @@ public class NbtSaveHandleTest
 
             final CompoundNBT saveToLoad = new CompoundNBT();
             final CompoundNBT bob = new CompoundNBT();
-            bob.setInteger("i", 3);
+            bob.putInt("i", 3);
             saveToLoad.setTag("bob", bob);
-            saveToLoad.setString("f", "dave");
+            saveToLoad.putString("f", "dave");
 
             final RandomSaveThing saveThing = new RandomSaveThing();
 
@@ -272,8 +272,8 @@ public class NbtSaveHandleTest
                 .base();
 
             final CompoundNBT saveToLoad = new CompoundNBT();
-            saveToLoad.setInteger("i", 3);
-            saveToLoad.setString("bob", "dave");
+            saveToLoad.putInt("i", 3);
+            saveToLoad.putString("bob", "dave");
 
             final RandomSaveThing saveThing = new RandomSaveThing();
 

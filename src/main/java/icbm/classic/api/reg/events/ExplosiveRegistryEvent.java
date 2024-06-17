@@ -7,7 +7,7 @@ import icbm.classic.api.explosion.IBlastFactory;
 import icbm.classic.api.reg.IExplosiveRegistry;
 import icbm.classic.api.reg.content.IExplosiveContentRegistry;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.eventbus.api.Event;
 
 /**
  * Fired to allow registering new explosive types

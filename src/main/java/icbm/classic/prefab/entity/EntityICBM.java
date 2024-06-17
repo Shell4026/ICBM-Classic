@@ -35,7 +35,7 @@ public abstract class EntityICBM extends Entity implements IWorldPosition
     }
 
     @Override
-    protected void entityInit()
+    protected void registerData()
     {
         this.dataManager.register(HEALTH, 1f);
         this.dataManager.register(MAX_HEALTH, 1f);

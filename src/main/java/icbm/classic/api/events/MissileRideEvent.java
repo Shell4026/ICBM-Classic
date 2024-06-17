@@ -2,8 +2,8 @@ package icbm.classic.api.events;
 
 import icbm.classic.api.missiles.IMissile;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraftforge.fml.common.eventhandler.Cancelable;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.eventbus.api.Cancelable;
+import net.minecraftforge.eventbus.api.Event;
 
 public class MissileRideEvent extends Event
 {

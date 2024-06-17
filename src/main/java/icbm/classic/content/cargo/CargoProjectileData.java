@@ -22,6 +22,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.SpawnEggItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
@@ -122,7 +123,7 @@ public abstract class CargoProjectileData<T extends IBuildableObject, ENTITY ext
             return;
         }
 
-        if (heldItem.getItem() instanceof ItemMonsterPlacer) {
+        if (heldItem.getItem() instanceof SpawnEggItem) {
             final Entity mob = ItemMonsterPlacer.spawnCreature(entity.world, ItemMonsterPlacer.getNamedIdFrom(heldItem), entity.posX, entity.posY, entity.posZ);
             if (mob != null) {
                 mob.startRiding(entity);

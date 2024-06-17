@@ -5,7 +5,7 @@ import icbm.classic.api.caps.IEMPReceiver;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
@@ -29,13 +29,13 @@ public class CapabilityEMP
         CapabilityManager.INSTANCE.register(IEMPReceiver.class, new Capability.IStorage<IEMPReceiver>()
                 {
                     @Override
-                    public NBTBase writeNBT(Capability<IEMPReceiver> capability, IEMPReceiver instance, Direction side)
+                    public INBT writeNBT(Capability<IEMPReceiver> capability, IEMPReceiver instance, Direction side)
                     {
                         return null;
                     }
 
                     @Override
-                    public void readNBT(Capability<IEMPReceiver> capability, IEMPReceiver instance, Direction side, NBTBase nbt)
+                    public void readNBT(Capability<IEMPReceiver> capability, IEMPReceiver instance, Direction side, INBT nbt)
                     {
 
                     }

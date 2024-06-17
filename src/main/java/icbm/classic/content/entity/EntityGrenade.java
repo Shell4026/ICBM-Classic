@@ -203,7 +203,7 @@ public class EntityGrenade extends Entity implements IEntityAdditionalSpawnData
     }
 
     @Override
-    protected void entityInit()
+    protected void registerData()
     {
     }
 

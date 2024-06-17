@@ -55,7 +55,7 @@ public class EntityRedmatter extends Entity
     }
 
     @Override
-    protected void entityInit()
+    protected void  registerData()
     {
         this.dataManager.register(SIZE_DATA, ConfigBlast.redmatter.DEFAULT_SIZE);
         this.dataManager.register(MAX_SIZE_DATA, ConfigBlast.redmatter.MAX_SIZE);
@@ -124,8 +124,8 @@ public class EntityRedmatter extends Entity
     @Override
     protected void writeEntityToNBT(CompoundNBT nbt)
     {
-        nbt.setFloat(NBT_BLAST_SIZE, getBlastSize());
-        nbt.setFloat(NBT_BLAST_SIZE_MAX, getBlastMaxSize());
+        nbt.putFloat(NBT_BLAST_SIZE, getBlastSize());
+        nbt.putFloat(NBT_BLAST_SIZE_MAX, getBlastMaxSize());
     }
     //</editor-fold>
 

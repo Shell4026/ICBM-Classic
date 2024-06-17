@@ -62,11 +62,11 @@ public interface IBuilderRegistry<Part extends IBuildableObject> {
         }
 
         final CompoundNBT save = new CompoundNBT();
-        save.setString("id", part.getRegistryKey().toString());
+        save.putString("id", part.getRegistryKey().toString());
 
         if(part instanceof INBTSerializable) {
             // Data is optional, only id is required as some objects are constants and need no save info
-            final NBTBase additionalData = ((INBTSerializable<NBTBase>)part).serializeNBT();
+            final INBT additionalData = ((INBTSerializable<INBT>)part).serializeNBT();
             if (additionalData != null && (!additionalData.hasNoTags() || additionalData instanceof NumberNBT)) {
                 save.setTag("data", additionalData);
             }
@@ -90,8 +90,8 @@ public interface IBuilderRegistry<Part extends IBuildableObject> {
             final ResourceLocation id = new ResourceLocation(save.getString("id"));
             final Part part = getOrBuild(id);
             if(part instanceof INBTSerializable && save.hasKey("data")) {
-                final NBTBase additionalData = save.getTag("data");
-                ((INBTSerializable<NBTBase>)part).deserializeNBT(additionalData);
+                final INBT additionalData = save.getTag("data");
+                ((INBTSerializable<INBT>)part).deserializeNBT(additionalData);
             }
             return part;
         }

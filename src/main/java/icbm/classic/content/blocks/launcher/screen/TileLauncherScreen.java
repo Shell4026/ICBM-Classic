@@ -162,8 +162,8 @@ public class TileLauncherScreen extends TileMachine implements ILauncherComponen
             final ListNBT list = new ListNBT();
             t.statusList.forEach((pair) -> {
                 final CompoundNBT save = new CompoundNBT();
-                save.setInteger("g", pair.getGroup());
-                save.setInteger("i", pair.getIndex());
+                save.putInt("g", pair.getGroup());
+                save.putInt("i", pair.getIndex());
                 save.setTag("p", ICBMClassicAPI.ACTION_STATUS_REGISTRY.save(pair.getStatus()));
                 list.appendTag(save);
             });
@@ -174,8 +174,8 @@ public class TileLauncherScreen extends TileMachine implements ILauncherComponen
             final List<LauncherPair> status = new ArrayList<>(list.tagCount());
             for(int i = 0; i < list.tagCount(); i++) {
                 final CompoundNBT save = (CompoundNBT) list.get(i);
-                final int group = save.getInteger("g");
-                final int index = save.getInteger("i");
+                final int group = save.getInt("g");
+                final int index = save.getInt("i");
                 final CompoundNBT partSave = save.getCompoundTag("p");
                 final IActionStatus part = ICBMClassicAPI.ACTION_STATUS_REGISTRY.load(partSave);
                 if(part != null) {
@@ -380,7 +380,7 @@ public class TileLauncherScreen extends TileMachine implements ILauncherComponen
 
         // Legacy handling TODO data fixer
         if(nbt.hasKey(NBTConstants.FREQUENCY)) {
-            this.radioCap.setChannel(Integer.toString(nbt.getInteger(NBTConstants.FREQUENCY)));
+            this.radioCap.setChannel(Integer.toString(nbt.getInt(NBTConstants.FREQUENCY)));
         }
     }
 

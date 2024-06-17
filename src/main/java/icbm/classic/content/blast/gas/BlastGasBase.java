@@ -317,7 +317,7 @@ public abstract class BlastGasBase extends Blast implements IBlastTickable
     public void load(CompoundNBT nbt)
     {
         super.load(nbt);
-        this.duration = nbt.getInteger(NBTConstants.DURATION);
+        this.duration = nbt.getInt(NBTConstants.DURATION);
         this.playShortSoundFX = nbt.getBoolean(NBTConstants.PLAY_SHORT_SOUND_FX);
     }
 
@@ -325,7 +325,7 @@ public abstract class BlastGasBase extends Blast implements IBlastTickable
     public void save(CompoundNBT nbt)
     {
         super.save(nbt);
-        nbt.setInteger(NBTConstants.DURATION, this.duration);
+        nbt.putInt(NBTConstants.DURATION, this.duration);
         nbt.setBoolean(NBTConstants.PLAY_SHORT_SOUND_FX, this.playShortSoundFX);
     }
 }

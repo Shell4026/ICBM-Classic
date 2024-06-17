@@ -8,7 +8,7 @@ import icbm.classic.api.reg.IExplosiveCustomization;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.lib.NBTConstants;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
@@ -81,7 +81,7 @@ public class CapabilityExplosive implements IExplosive, ICapabilitySerializable<
         final CompoundNBT tagCompound = new CompoundNBT();
         serializeNBT(tagCompound);
 
-        tagCompound.setInteger(NBTConstants.EXPLOSIVE_ID, explosiveID);
+        tagCompound.putInt(NBTConstants.EXPLOSIVE_ID, explosiveID);
         return tagCompound;
     }
 
@@ -95,7 +95,7 @@ public class CapabilityExplosive implements IExplosive, ICapabilitySerializable<
     {
         if (nbt.hasKey(NBTConstants.EXPLOSIVE_ID))
         {
-            explosiveID = nbt.getInteger(NBTConstants.EXPLOSIVE_ID);
+            explosiveID = nbt.getInt(NBTConstants.EXPLOSIVE_ID);
         }
     }
 
@@ -105,7 +105,7 @@ public class CapabilityExplosive implements IExplosive, ICapabilitySerializable<
         {
             @Nullable
             @Override
-            public NBTBase writeNBT(Capability<IExplosive> capability, IExplosive instance, Direction side)
+            public INBT writeNBT(Capability<IExplosive> capability, IExplosive instance, Direction side)
             {
                 if (instance instanceof CapabilityExplosive)
                 {
@@ -115,7 +115,7 @@ public class CapabilityExplosive implements IExplosive, ICapabilitySerializable<
             }
 
             @Override
-            public void readNBT(Capability<IExplosive> capability, IExplosive instance, Direction side, NBTBase nbt)
+            public void readNBT(Capability<IExplosive> capability, IExplosive instance, Direction side, INBT nbt)
             {
                 if (instance instanceof CapabilityExplosive && nbt instanceof CompoundNBT)
                 {

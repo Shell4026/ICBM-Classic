@@ -5,7 +5,7 @@ import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.api.explosion.IBlast;
 import icbm.classic.api.reg.IExplosiveData;
 import icbm.classic.content.blast.BlastStatus;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -75,13 +75,13 @@ public class CapabilityBlast implements IBlast
                 {
                     @Nullable
                     @Override
-                    public NBTBase writeNBT(Capability<IBlast> capability, IBlast instance, Direction side)
+                    public INBT writeNBT(Capability<IBlast> capability, IBlast instance, Direction side)
                     {
                         return null;
                     }
 
                     @Override
-                    public void readNBT(Capability<IBlast> capability, IBlast instance, Direction side, NBTBase nbt)
+                    public void readNBT(Capability<IBlast> capability, IBlast instance, Direction side, INBT nbt)
                     {
 
                     }

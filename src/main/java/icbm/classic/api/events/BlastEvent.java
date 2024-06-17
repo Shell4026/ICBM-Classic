@@ -4,7 +4,7 @@ import icbm.classic.api.actions.IAction;
 import icbm.classic.api.explosion.IBlast;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.eventbus.api.Event;
 
 /**
  *

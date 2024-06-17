@@ -3,7 +3,7 @@ package icbm.classic.lib.tracker;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.INBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -41,7 +41,7 @@ final class EventTrackerData {
 
         INVALID_OBJECTS.add(Entity.class);
         INVALID_OBJECTS.add(World.class);
-        INVALID_OBJECTS.add(NBTBase.class);
+        INVALID_OBJECTS.add(INBT.class);
 
         return this;
     }

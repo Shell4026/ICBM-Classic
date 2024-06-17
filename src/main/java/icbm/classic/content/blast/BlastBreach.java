@@ -8,7 +8,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -39,7 +39,7 @@ public class BlastBreach extends BlastTNT
     private Direction direction; //TODO recode to be angle based
 
     @Override
-    public <VALUE, TAG extends NBTBase> void setValue(ActionField<VALUE, TAG> key, VALUE value) {
+    public <VALUE, TAG extends INBT> void setValue(ActionField<VALUE, TAG> key, VALUE value) {
         if(key == ActionFields.HOST_DIRECTION) {
             direction = ActionFields.HOST_DIRECTION.cast(value);
         }

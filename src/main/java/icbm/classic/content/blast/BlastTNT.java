@@ -259,7 +259,7 @@ public class BlastTNT extends Blast
     public void load(CompoundNBT nbt)
     {
         super.load(nbt);
-        this.pushType = PushType.values()[nbt.getInteger(NBTConstants.PUSH_TYPE)];
+        this.pushType = PushType.values()[nbt.getInt(NBTConstants.PUSH_TYPE)];
         this.destroyItem = nbt.getBoolean(NBTConstants.DESTROY_ITEM);
     }
 
@@ -267,7 +267,7 @@ public class BlastTNT extends Blast
     public void save(CompoundNBT nbt)
     {
         super.save(nbt);
-        nbt.setInteger(NBTConstants.PUSH_TYPE, this.pushType.ordinal());
+        nbt.putInt(NBTConstants.PUSH_TYPE, this.pushType.ordinal());
         nbt.setBoolean(NBTConstants.DESTROY_ITEM, this.destroyItem);
     }
 

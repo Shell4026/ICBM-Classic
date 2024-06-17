@@ -2,7 +2,7 @@ package icbm.classic.lib.capability.gps;
 
 import icbm.classic.api.caps.IGPSData;
 import icbm.classic.lib.saving.NbtSaveHandler;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -61,12 +61,12 @@ public class CapabilityGPSData implements IGPSData, INBTSerializable<CompoundNBT
             {
                 @Nullable
                 @Override
-                public NBTBase writeNBT(Capability<IGPSData> capability, IGPSData instance, Direction side) {
+                public INBT writeNBT(Capability<IGPSData> capability, IGPSData instance, Direction side) {
                     return SAVE_LOGIC.save(instance);
                 }
 
                 @Override
-                public void readNBT(Capability<IGPSData> capability, IGPSData instance, Direction side, NBTBase nbt) {
+                public void readNBT(Capability<IGPSData> capability, IGPSData instance, Direction side, INBT nbt) {
                     if(nbt instanceof CompoundNBT) {
                         SAVE_LOGIC.load(instance, (CompoundNBT) nbt);
                     }

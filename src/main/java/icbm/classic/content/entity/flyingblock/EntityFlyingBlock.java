@@ -201,9 +201,9 @@ public class EntityFlyingBlock extends EntityProjectile<EntityFlyingBlock> imple
                     // Ensure these are the same tile saves, otherwise we can corrupt a block badly
                     if(currentSave.getString("id").equals(this.getBlockData().getTileEntityData().getString("id"))) {
                         currentSave.merge(this.getBlockData().getTileEntityData());
-                        currentSave.setInteger("x", pos.getX());
-                        currentSave.setInteger("y", pos.getY());
-                        currentSave.setInteger("z", pos.getZ());
+                        currentSave.putInt("x", pos.getX());
+                        currentSave.putInt("y", pos.getY());
+                        currentSave.putInt("z", pos.getZ());
                         tileentity.readFromNBT(currentSave);
                         tileentity.markDirty();
                     }

@@ -61,7 +61,7 @@ public class EntityPlayerSeat extends Entity implements IEntityAdditionalSpawnDa
     }
 
     @Override
-    protected void entityInit()
+    protected void registerData()
     {
     }
 

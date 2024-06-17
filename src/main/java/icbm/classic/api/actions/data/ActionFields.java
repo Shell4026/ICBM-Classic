@@ -14,7 +14,7 @@ public final class ActionFields {
     public static ActionField<Float, FloatNBT> AREA_SIZE;
 
     /** RUNTIME_ONLY: Way to access host entity, usually provided by the entity itself */
-    public static ActionField<Entity, NBTBase> HOST_ENTITY;
+    public static ActionField<Entity, INBT> HOST_ENTITY;
 
     /** RUNTIME_ONLY: Position of the host */
     public static ActionField<Vec3d, CompoundNBT> HOST_POSITION;

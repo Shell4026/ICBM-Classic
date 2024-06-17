@@ -137,7 +137,7 @@ public class EntityBombCart extends TNTMinecartEntity implements IEntityAddition
 
         //Legacy
         if(nbt.hasKey(NBTConstants.EXPLOSIVE, 99)) {
-            explosive.setStack(new ItemStack(ItemReg.itemBombCart, 1, nbt.getInteger(NBTConstants.EXPLOSIVE)));
+            explosive.setStack(new ItemStack(ItemReg.itemBombCart, 1, nbt.getInt(NBTConstants.EXPLOSIVE)));
         }
         else {
             explosive.deserializeNBT(nbt.getCompoundTag("explosive"));

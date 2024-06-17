@@ -129,7 +129,7 @@ public class EntityExplosive extends Entity implements IRotatable, IEntityAdditi
     }
 
     @Override
-    protected void entityInit()
+    protected void registerData()
     {
     }
 

@@ -73,7 +73,7 @@ public class NbtSaveRoot<SaveObject> implements INbtSaveNode<SaveObject, Compoun
     protected CompoundNBT save(SaveObject objectToSave, CompoundNBT tagCompound)
     {
         nodes.forEach(node -> {
-            final NBTBase tag = node.save(objectToSave);
+            final INBT tag = node.save(objectToSave);
             if (tag != null && !tag.hasNoTags())
             {
                 tagCompound.setTag(node.getSaveKey(), tag);
@@ -103,7 +103,7 @@ public class NbtSaveRoot<SaveObject> implements INbtSaveNode<SaveObject, Compoun
         return root;
     }
 
-    public <O extends NBTBase> NbtSaveRoot<SaveObject> node(NbtSaveNode<SaveObject, O> node)
+    public <O extends INBT> NbtSaveRoot<SaveObject> node(NbtSaveNode<SaveObject, O> node)
     {
         nodes.add(node);
         return this;
@@ -237,7 +237,7 @@ public class NbtSaveRoot<SaveObject> implements INbtSaveNode<SaveObject, Compoun
 
 
     public <SerializableObject extends INBTSerializable<CompoundNBT>> NbtSaveRoot<SaveObject> nodeINBTSerializable(final String name,
-                                                                                                                   Function<SaveObject, SerializableObject> accessor) { //TODO recode to allow any NBTBase
+                                                                                                                   Function<SaveObject, SerializableObject> accessor) { //TODO recode to allow any INBT
         return node(new NbtSaveNode<SaveObject, CompoundNBT>(name,
             (source) -> Optional.ofNullable(accessor.apply(source)).map(INBTSerializable::serializeNBT).orElse(null),
             (source, data) -> {

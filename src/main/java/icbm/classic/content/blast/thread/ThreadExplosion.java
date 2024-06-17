@@ -3,8 +3,8 @@ package icbm.classic.content.blast.thread;
 import icbm.classic.ICBMClassic;
 import icbm.classic.config.ConfigDebug;
 import icbm.classic.content.blast.Blast;
-import icbm.classic.lib.transform.vector.Location;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 /** @author Calclavia */
@@ -12,7 +12,8 @@ import net.minecraft.world.World;
 public abstract class ThreadExplosion extends Thread //TODO replace with worker threads, best not to spawn a thread per blast
 {
     public final Blast blast;
-    public final Location position;
+    public final World world;
+    public final Vec3d position;
     public int radius;
     public float energy;
     public Entity source;
@@ -27,7 +28,8 @@ public abstract class ThreadExplosion extends Thread //TODO replace with worker 
     {
         super(null, null, "ThreadExplosion-" + nextThreadID(), 0);
         this.blast = blast;
-        this.position = blast.location;
+        this.world = blast.world;
+        this.position = blast.getPosition();
         this.radius = radius;
         this.energy = energy;
         this.source = source;
@@ -66,14 +68,14 @@ public abstract class ThreadExplosion extends Thread //TODO replace with worker 
         //Normal run
         try
         {
-            if (position != null && position.world() != null)
+            if (position != null && world != null)
             {
-                doRun(position.world, position);
+                doRun(world, position);
             }
             else
             {
                 ICBMClassic.logger().error("ThreadExplosion#run() -> Invalid world or position provided for thread. " +
-                        "Canceling action to prevent issues. \n Pos = " + position + " World = " + (position != null ? position.world : "null"));
+                        "Canceling action to prevent issues. \n Pos = " + position + " World = " + (world != null ? world : "null"));
             }
         }
         catch (Exception e)
@@ -103,5 +105,5 @@ public abstract class ThreadExplosion extends Thread //TODO replace with worker 
         }
     }
 
-    protected abstract void doRun(World world, Location center);
+    protected abstract void doRun(World world, Vec3d center);
 }

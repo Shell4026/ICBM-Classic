@@ -3,7 +3,7 @@ package icbm.classic.content.blast.caps;
 import icbm.classic.api.explosion.IBlast;
 import icbm.classic.api.explosion.redmatter.IBlastVelocity;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -28,13 +28,13 @@ public class CapabilityBlastVelocity implements IBlastVelocity
                 {
                     @Nullable
                     @Override
-                    public NBTBase writeNBT(Capability<IBlastVelocity> capability, IBlastVelocity instance, Direction side)
+                    public INBT writeNBT(Capability<IBlastVelocity> capability, IBlastVelocity instance, Direction side)
                     {
                         return null;
                     }
 
                     @Override
-                    public void readNBT(Capability<IBlastVelocity> capability, IBlastVelocity instance, Direction side, NBTBase nbt)
+                    public void readNBT(Capability<IBlastVelocity> capability, IBlastVelocity instance, Direction side, INBT nbt)
                     {
 
                     }

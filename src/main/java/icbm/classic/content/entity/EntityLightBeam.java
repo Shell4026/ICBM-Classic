@@ -4,14 +4,15 @@ import com.builtbroken.jlib.data.vector.IPos3D;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 
@@ -40,15 +41,15 @@ public class EntityLightBeam extends Entity implements IEntityAdditionalSpawnDat
     public EntityLightBeam(World world)
     {
         super(world);
-        this.setSize(1F, 1F);
+        //this.setSize(1F, 1F);
         this.preventEntitySpawning = true;
         this.ignoreFrustumCheck = true;
-        this.height = 1;
-        this.width = 1;
+        //this.height = 1;
+        //this.width = 1;
     }
 
     @Override
-    protected void entityInit()
+    protected void registerData()
     {
         this.getDataManager().register(BEAM_PROGRESS, -1f);
     }
@@ -88,7 +89,7 @@ public class EntityLightBeam extends Entity implements IEntityAdditionalSpawnDat
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Nonnull
     public AxisAlignedBB getRenderBoundingBox()
     {
@@ -96,7 +97,7 @@ public class EntityLightBeam extends Entity implements IEntityAdditionalSpawnDat
     }
 
     @Override
-    public void writeSpawnData(ByteBuf data)
+    public void writeSpawnData(PacketBuffer data)
     {
         data.writeFloat(this.red);
         data.writeFloat(this.green);
@@ -106,7 +107,7 @@ public class EntityLightBeam extends Entity implements IEntityAdditionalSpawnDat
     }
 
     @Override
-    public void readSpawnData(ByteBuf data)
+    public void readSpawnData(PacketBuffer data)
     {
         this.red = data.readFloat();
         this.green = data.readFloat();
@@ -116,7 +117,7 @@ public class EntityLightBeam extends Entity implements IEntityAdditionalSpawnDat
     }
 
     @Override
-    public void onUpdate()
+    public void tick()
     {
         //Grow beam slowly
         if (getBeamProgress() < targetBeamProgress)
@@ -132,12 +133,12 @@ public class EntityLightBeam extends Entity implements IEntityAdditionalSpawnDat
         //Kill off beam when animation finishes
         if (deathCycle && Math.abs(getBeamProgress() - targetBeamProgress) <= 0.01)
         {
-            setDead();
+            remove();
         }
         //Safety in case the beam is never killed
         else if (ticksExisted > 20 * 60 * 5) //ticks per second * seconds * mins = 5 mins
         {
-            setDead();
+            remove();
         }
     }
 
@@ -157,17 +158,5 @@ public class EntityLightBeam extends Entity implements IEntityAdditionalSpawnDat
     public boolean canBeCollidedWith()
     {
         return false;
-    }
-
-    @Override
-    protected void readEntityFromNBT(CompoundNBT var1)
-    {
-
-    }
-
-    @Override
-    protected void writeEntityToNBT(CompoundNBT var1)
-    {
-
     }
 }

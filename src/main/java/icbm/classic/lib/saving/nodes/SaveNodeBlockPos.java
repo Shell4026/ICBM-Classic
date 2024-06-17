@@ -19,9 +19,9 @@ public class SaveNodeBlockPos<E> extends NbtSaveNode<E, CompoundNBT>
     public static CompoundNBT save(BlockPos pos) {
         if(pos != null) {
             final CompoundNBT compound = new CompoundNBT();
-            compound.setInteger("x", pos.getX());
-            compound.setInteger("y", pos.getY());
-            compound.setInteger("z", pos.getZ());
+            compound.putInt("x", pos.getX());
+            compound.putInt("y", pos.getY());
+            compound.putInt("z", pos.getZ());
             return compound;
         }
         return null;
@@ -29,9 +29,9 @@ public class SaveNodeBlockPos<E> extends NbtSaveNode<E, CompoundNBT>
 
     public static BlockPos load(CompoundNBT data) {
         return new BlockPos(
-            data.getInteger("x"),
-            data.getInteger("y"),
-            data.getInteger("z")
+            data.getInt("x"),
+            data.getInt("y"),
+            data.getInt("z")
         );
     }
 }

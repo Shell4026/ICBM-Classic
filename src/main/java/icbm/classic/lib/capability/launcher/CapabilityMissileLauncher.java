@@ -6,7 +6,7 @@ import icbm.classic.api.launcher.ILauncherSolution;
 import icbm.classic.api.launcher.IMissileLauncher;
 import icbm.classic.api.missiles.parts.IMissileTarget;
 import icbm.classic.content.blocks.launcher.status.LauncherStatus;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -25,13 +25,13 @@ public class CapabilityMissileLauncher implements IMissileLauncher
         {
             @Nullable
             @Override
-            public NBTBase writeNBT(Capability<IMissileLauncher> capability, IMissileLauncher instance, Direction side)
+            public INBT writeNBT(Capability<IMissileLauncher> capability, IMissileLauncher instance, Direction side)
             {
                 return null;
             }
 
             @Override
-            public void readNBT(Capability<IMissileLauncher> capability, IMissileLauncher instance, Direction side, NBTBase nbt)
+            public void readNBT(Capability<IMissileLauncher> capability, IMissileLauncher instance, Direction side, INBT nbt)
             {
 
             }

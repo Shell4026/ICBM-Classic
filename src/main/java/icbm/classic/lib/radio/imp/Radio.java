@@ -32,7 +32,7 @@ public abstract class Radio implements IRadio, INBTSerializable<CompoundNBT>, IR
     public CompoundNBT serializeNBT() {
         final CompoundNBT tag = new CompoundNBT();
         if(channel != null) {
-            tag.setString("channel", channel);
+            tag.putString("channel", channel);
         }
         tag.setBoolean("disabled", isDisabled);
         return tag;

@@ -5,7 +5,7 @@ import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.nbt.ByteNBT;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.INBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -84,12 +84,12 @@ public class CapSpaceChicken implements ICapabilityProvider, INBTSerializable<By
             {
                 @Nullable
                 @Override
-                public NBTBase writeNBT(Capability<CapSpaceChicken> capability, CapSpaceChicken instance, Direction side) {
+                public INBT writeNBT(Capability<CapSpaceChicken> capability, CapSpaceChicken instance, Direction side) {
                     return new ByteNBT(instance.isSpace() ? (byte)1 : (byte)0);
                 }
 
                 @Override
-                public void readNBT(Capability<CapSpaceChicken> capability, CapSpaceChicken instance, Direction side, NBTBase nbt) {
+                public void readNBT(Capability<CapSpaceChicken> capability, CapSpaceChicken instance, Direction side, INBT nbt) {
                     if(nbt instanceof ByteNBT) {
                         instance.setSpace(((ByteNBT) nbt).getByte() == 1);
                     }

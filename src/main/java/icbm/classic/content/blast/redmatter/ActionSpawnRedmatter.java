@@ -8,7 +8,7 @@ import icbm.classic.api.actions.status.IActionStatus;
 import icbm.classic.config.blast.ConfigBlast;
 import icbm.classic.lib.actions.ActionBase;
 import icbm.classic.lib.actions.status.ActionResponses;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.INBT;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -26,7 +26,7 @@ public class ActionSpawnRedmatter extends ActionBase
     }
 
     @Override
-    public <VALUE, TAG extends NBTBase> void setValue(ActionField<VALUE, TAG> key, VALUE value) {
+    public <VALUE, TAG extends INBT> void setValue(ActionField<VALUE, TAG> key, VALUE value) {
         if(key == ActionFields.AREA_SIZE) {
             size = ActionFields.AREA_SIZE.cast(value);
         }

@@ -13,7 +13,7 @@ import icbm.classic.lib.projectile.EntityProjectile;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -101,7 +101,7 @@ public class ActionSpawnEntity extends ActionBase {
     }
 
     @Override
-    public <VALUE, TAG extends NBTBase> void setValue(ActionField<VALUE, TAG> key, VALUE value) {
+    public <VALUE, TAG extends INBT> void setValue(ActionField<VALUE, TAG> key, VALUE value) {
         if (key == ActionFields.YAW) {
             this.yaw = ActionFields.YAW.cast(value);
         }
@@ -120,7 +120,7 @@ public class ActionSpawnEntity extends ActionBase {
     }
 
     @Override
-    public <VALUE, TAG extends NBTBase> VALUE getValue(ActionField<VALUE, TAG> key) {
+    public <VALUE, TAG extends INBT> VALUE getValue(ActionField<VALUE, TAG> key) {
         if (key == ActionFields.YAW) {
             return key.cast(yaw);
         }

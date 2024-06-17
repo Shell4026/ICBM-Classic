@@ -6,11 +6,13 @@ import icbm.classic.content.missile.entity.EntityMissile;
 import icbm.classic.content.missile.entity.explosive.EntityExplosiveMissile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.HashMap;
 
@@ -24,7 +26,7 @@ import java.util.HashMap;
 public class MissileTrackerHandler
 {
     /** World save data key */
-    private static final String DATA_SAVE_ID = ICBMConstants.DOMAIN + "MissileTracker";
+    private static final String DATA_SAVE_ID = ICBMConstants.DOMAIN + "MissileTracker_";
 
     /** Map of handlers per dimension <DimensionID, Handler> */
     private static final HashMap<Integer, MissileTrackerWorld> dimToHandlerMap = new HashMap<>();
@@ -42,7 +44,7 @@ public class MissileTrackerHandler
     {
         //TODO add an event to capture missile and change how simulation works... specifically AR support
         // Can't save missiles that are dead, riding another entity, or have a player riding
-        if(missile != null && !missile.isDead && !missile.isRiding() && noPlayer(missile)) {
+        if(missile != null && missile.world instanceof ServerWorld && missile.isAlive() && !missile.hasPlayerRiding()) {
 
             // Fire event to allow canceling simulation
             final MissileEvent.EnteringSimQueue event = new MissileEvent.EnteringSimQueue(missile.getMissileCapability(), missile);
@@ -50,14 +52,9 @@ public class MissileTrackerHandler
                 return false;
             }
 
-            getOrCreateHandler(missile.world, true).simulateMissile(missile);
+            getOrCreateHandler((ServerWorld) missile.world, true).simulateMissile(missile);
         }
         return false;
-    }
-
-    private static boolean noPlayer(EntityMissile missile) {
-        // TODO check for riding chains
-        return missile.getPassengers().stream().noneMatch(e -> e instanceof PlayerEntity);
     }
 
     /**
@@ -71,55 +68,48 @@ public class MissileTrackerHandler
      * @param create - build handler if missing
      * @return handler
      */
-    public static MissileTrackerWorld getOrCreateHandler(World world, boolean create)
+    public static MissileTrackerWorld getOrCreateHandler(ServerWorld world, boolean create)
     {
-        String trackerName = DATA_SAVE_ID + world.provider.getDimension();
+        final String trackerName = DATA_SAVE_ID + DimensionType.getKey(world.getDimension().getType());
+        final int key = world.getDimension().getType().getId();
         //Get handler from map
-        if (dimToHandlerMap.containsKey(world.provider.getDimension()))
+        if (dimToHandlerMap.containsKey(key))
         {
-            return dimToHandlerMap.get(world.provider.getDimension());
+            return dimToHandlerMap.get(key);
         }
 
         if (create)
         {
             //Try to get handler from world save
-            MissileTrackerWorld instance = (MissileTrackerWorld) world.getPerWorldStorage().getOrLoadData(MissileTrackerWorld.class, trackerName);
-
-            //If missing create
-            if (instance == null)
-            {
-                instance = new MissileTrackerWorld(trackerName);
-                world.getPerWorldStorage().setData(trackerName, instance);
-            }
-
-            dimToHandlerMap.put(world.provider.getDimension(), instance);
+            MissileTrackerWorld instance = world.getSavedData().getOrCreate(() -> new MissileTrackerWorld(trackerName), trackerName);
+            dimToHandlerMap.put(key, instance);
             return instance;
         }
         else
         {
-            return dimToHandlerMap.getOrDefault(world.provider.getDimension(), null);
+            return dimToHandlerMap.getOrDefault(key, null);
         }
     }
 
     @SubscribeEvent
     public static void onWorldLoad(WorldEvent.Load event)
     {
-        if (!event.getWorld().isRemote)
+        if (event.getWorld() instanceof ServerWorld)
         {
-            getOrCreateHandler(event.getWorld(),true); // load handlers, to make missiles continue their flight
+            getOrCreateHandler((ServerWorld) event.getWorld(),true); // load handlers, to make missiles continue their flight
         }
     }
 
     @SubscribeEvent
     public static void onWorldUnload(WorldEvent.Unload event) // used to destroy existing handlers on unload
     {
-        if (!event.getWorld().isRemote)
+        if (event.getWorld() instanceof ServerWorld)
         {
-            MissileTrackerWorld handler = getOrCreateHandler(event.getWorld(), false);
+            MissileTrackerWorld handler = getOrCreateHandler((ServerWorld) event.getWorld(), false);
             if (handler != null)
             {
                 handler.destroy();
-                dimToHandlerMap.remove(event.getWorld().provider.getDimension());
+                dimToHandlerMap.remove(event.getWorld().getDimension().getType().getId());
             }
         }
     }
@@ -127,12 +117,12 @@ public class MissileTrackerHandler
     @SubscribeEvent
     public static void onWorldTick(TickEvent.WorldTickEvent event)
     {
-        if (!event.world.isRemote)
+        if (event.world instanceof ServerWorld)
         {
-            MissileTrackerWorld handler = getOrCreateHandler(event.world, false);
+            MissileTrackerWorld handler = getOrCreateHandler((ServerWorld)event.world, false);
             if (handler != null)
             {
-                handler.onWorldTick(event.world);
+                handler.onWorldTick((ServerWorld) event.world);
             }
         }
     }

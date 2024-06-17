@@ -4,11 +4,11 @@ import com.builtbroken.jlib.lang.StringHelpers;
 import icbm.classic.ICBMClassic;
 import icbm.classic.config.ConfigDebug;
 import icbm.classic.content.blast.Blast;
-import icbm.classic.lib.transform.vector.Location;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import static java.lang.Math.cos;
@@ -36,7 +36,7 @@ public class ThreadLargeExplosion extends ThreadExplosion
     }
 
     @Override
-    public void doRun(World world, Location center)
+    public void doRun(World world, Vec3d center)
     {
         long time = System.nanoTime();
 
@@ -73,14 +73,14 @@ public class ThreadLargeExplosion extends ThreadExplosion
                 dz = sin(pitch) * sin(yaw) * 0.5;
 
                 //Reset position to current
-                x = center.x();
-                y = center.y();
-                z = center.z();
+                x = center.x;
+                y = center.y;
+                z = center.z;
 
                 BlockPos prevPos = null;
 
                 //Trace from start to end
-                while (center.distance(x, y, z) <= this.radius && power > 0 && !kill)
+                while (Math.sqrt(center.squareDistanceTo(x, y, z)) <= this.radius && power > 0 && !kill)
                 {
                     //Consume power per loop
                     power -= 0.3F * 0.75F * 5; //TODO why the magic numbers?
@@ -91,7 +91,7 @@ public class ThreadLargeExplosion extends ThreadExplosion
                     //Only do action one time per block (not a perfect solution, but solves double hit on the same block in the same line)
                     if (prevPos != blockPos)
                     {
-                        if(!position.world().isBlockLoaded(blockPos)) //TODO: find better fix for non main thread loading
+                        if(!world.isBlockLoaded(blockPos)) //TODO: find better fix for non main thread loading
                             continue;
 
                         //Get block state and block from position

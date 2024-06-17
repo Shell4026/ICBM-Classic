@@ -11,9 +11,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +32,7 @@ public class ICBMCreativeTab extends ItemGroup
     {
         super(name);
     }
+
 
     //call during FMLInitializationEvent as registries need to be frozen for this
     public void init()
@@ -92,8 +93,8 @@ public class ICBMCreativeTab extends ItemGroup
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void displayAllRelevantItems(final NonNullList<ItemStack> list)
+    @OnlyIn(Dist.CLIENT)
+    public void fill(final NonNullList<ItemStack> list)
     {
         //Insert items in order
         definedTabItemsInOrder.forEach(item -> collectSubItems(item, list));
@@ -108,7 +109,7 @@ public class ICBMCreativeTab extends ItemGroup
 
         //Collect stacks
         final NonNullList<ItemStack> collectedItemStacks = NonNullList.create();
-        item.getSubItems(this, collectedItemStacks);
+        item.fillItemGroup(this, collectedItemStacks);
 
         //Sort explosive types, if not explosive it will leave it alone
         collectedItemStacks.sort(this::compareExplosives);
@@ -144,7 +145,7 @@ public class ICBMCreativeTab extends ItemGroup
     }
 
     @Override
-    public ItemStack getTabIconItem()
+    public ItemStack createIcon()
     {
         return new ItemStack(ItemReg.itemExplosiveMissile);
     }

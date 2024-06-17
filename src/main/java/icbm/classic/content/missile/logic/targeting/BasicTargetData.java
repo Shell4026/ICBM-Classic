@@ -99,7 +99,7 @@ public class BasicTargetData implements IMissileTarget, IMissileTargetDelayed, I
         saveData.setDouble("x", position.x);
         saveData.setDouble("y", position.y);
         saveData.setDouble("z", position.z);
-        saveData.setInteger("firingDelay", firingDelay);
+        saveData.putInt("firingDelay", firingDelay);
         return saveData;
     }
 
@@ -109,7 +109,7 @@ public class BasicTargetData implements IMissileTarget, IMissileTargetDelayed, I
         double y = nbt.getDouble("y");
         double z = nbt.getDouble("z");
         this.position = new Vec3d(x, y, z);
-        this.firingDelay = nbt.getInteger("firingDelay");
+        this.firingDelay = nbt.getInt("firingDelay");
     }
 
     @Override

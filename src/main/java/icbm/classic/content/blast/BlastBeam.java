@@ -168,7 +168,7 @@ public abstract class BlastBeam extends Blast implements IBlastTickable
     protected void collectBlocks(Consumer<BlockPos> edits, int r)
     {
         final int radiusSQ = r * r;
-        final BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos();
+        final BlockPos.MutableBlockPos mutPos = new BlockPos.MutableBlockPos();
 
         BlastHelpers.forEachPosInRadius(r, (x, y, z) ->
         {
@@ -176,16 +176,16 @@ public abstract class BlastBeam extends Blast implements IBlastTickable
             if (distanceSQ <= radiusSQ)
             {
                 //Update position
-                blockPos.setPos(location.x() + x, location.y() + y, location.z() + z);
+                mutPos.setPos(this.x + x, this.y + y, this.z + z);
 
                 //Get block
-                final BlockState state = world.getBlockState(blockPos);
+                final BlockState state = world.getBlockState(mutPos);
                 final Block block = state.getBlock();
 
                 //Validate TODO rework to not access blockstates, instead just collect positions
-                if (!block.isAir(state, world, blockPos) && state.getBlockHardness(world, blockPos) >= 0)
+                if (!block.isAir(state, world, mutPos) && state.getBlockHardness(world, mutPos) >= 0)
                 {
-                    edits.accept(blockPos.toImmutable());
+                    edits.accept(mutPos.toImmutable());
                 }
             }
         });

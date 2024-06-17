@@ -30,7 +30,7 @@ public class EntitySmoke extends Entity implements IEntityAdditionalSpawnData
     }
 
     @Override
-    protected void entityInit()
+    protected void registerData()
     {
 
     }

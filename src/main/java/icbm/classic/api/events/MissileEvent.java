@@ -3,8 +3,8 @@ package icbm.classic.api.events;
 import icbm.classic.api.missiles.IMissile;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraftforge.fml.common.eventhandler.Cancelable;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.eventbus.api.Cancelable;
+import net.minecraftforge.eventbus.api.Event;
 
 /**
  * Created by Dark(DarkGuardsman, Robin) on 1/7/19.

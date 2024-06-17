@@ -153,12 +153,13 @@ public class BlockExplosive extends BlockICBM
 
             // Check to see if there is fire nearby.
             // If so, then detonate.
-            for (Direction rotation : Direction.HORIZONTALS)
+            for (Direction rotation : Direction.values())
             {
-                Pos position = new Pos(pos).add(rotation);
-                Block blockId = position.getBlock(world);
+                final BlockPos position = pos.offset(rotation);
+                final BlockState blockState = world.getBlockState(position);
+                final Block block = blockState.getBlock();
 
-                if (blockId == net.minecraft.block.Blocks.FIRE || blockId == net.minecraft.block.Blocks.FLOWING_LAVA || blockId == Blocks.LAVA)
+                if (block == net.minecraft.block.Blocks.FIRE || block == Blocks.LAVA)
                 {
                     BlockExplosive.triggerExplosive(world, pos, true);
                     break;

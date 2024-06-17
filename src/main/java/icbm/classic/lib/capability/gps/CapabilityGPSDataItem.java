@@ -56,7 +56,7 @@ public class CapabilityGPSDataItem implements IGPSData {
             stack.setTagCompound(new CompoundNBT());
         }
 
-        stack.getTagCompound().setInteger(DIM_KEY, dimension);
+        stack.getTagCompound().putInt(DIM_KEY, dimension);
     }
 
     @Nullable
@@ -72,7 +72,7 @@ public class CapabilityGPSDataItem implements IGPSData {
     @Override
     public Integer getWorldId() {
         if(stack.getTagCompound() != null && stack.getTagCompound().hasKey(DIM_KEY)) {
-            return stack.getTagCompound().getInteger(POS_KEY);
+            return stack.getTagCompound().getInt(POS_KEY);
         }
         return null;
     }

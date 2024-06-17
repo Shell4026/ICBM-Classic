@@ -14,21 +14,19 @@ import icbm.classic.content.entity.EntityExplosion;
 import icbm.classic.lib.NBTConstants;
 import icbm.classic.lib.actions.WorkTickingActionHandler;
 import icbm.classic.lib.actions.status.ActionResponses;
-import icbm.classic.lib.transform.vector.Location;
+import net.minecraft.enchantment.ProtectionEnchantment;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.world.Explosion;
-import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nonnull;
@@ -48,7 +46,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
     private boolean threadComplete = false;
 
     //TODO remove position as we are double storing location data
-    public Location location;
+    public BlockPos pos;
 
     /**
      * Host of the blast
@@ -77,7 +75,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
      */
     public Blast()
     {
-        super(null, null, 0, 0, 0, 0, false, false);
+        super(null, null, 0, 0, 0, 0, false, Mode.NONE);
     }
 
     public Blast(World world, double x, double y, double z) {
@@ -129,7 +127,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
                 //Start explosion
                 if (this instanceof IBlastTickable)
                 {
-                    if (!this.world().spawnEntity(new EntityExplosion(this)))
+                    if (!this.world().spawnEntity(new EntityExplosion(this))) //entitytype.spawn
                     {
                         isAlive = false;
                         return ActionResponses.ENTITY_SPAWN_FAILED;
@@ -286,15 +284,14 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
         this.x = posX;
         this.y = posY;
         this.z = posZ;
-        location = new Location(world, posX, posY, posZ);
-        //TODO super contains a vec3 also called position, we need to set that value instead of overriding the return
+        this.pos = new BlockPos(posX, posY, posZ);
         return this;
     }
 
     @Override
     public Vec3d getPosition()
     {
-        return this.location.toVec3d();
+        return new Vec3d(this.x, this.y, this.z);
     }
 
     /**
@@ -340,9 +337,14 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
     }
 
     protected List<Entity> getEntities(double radius) {
-        Location minCoord = location.add(-radius - 1); //TODO drop need for location
-        Location maxCoord = location.add(radius + 1);
-        return world().getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(minCoord.xi(), minCoord.yi(), minCoord.zi(), maxCoord.xi(), maxCoord.yi(), maxCoord.zi()));
+        return world().getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(
+            x - radius,
+            y - radius,
+            z - radius,
+            x + radius,
+            y + radius,
+            z + radius
+        ));
     }
 
     /**
@@ -355,7 +357,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
     }
 
     protected boolean  doDamageEntities(List<Entity> entities, float radius, float power, boolean destroyItem) {
-        final Vec3d center = new Vec3d(location.x(), location.y(), location.z());
+        final Vec3d center = this.getVec3d();
         for (Entity entity : entities) {
             if (this.onDamageEntity(entity)) {
                 continue;
@@ -365,12 +367,12 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
                 continue;
             }
 
-            double distance = entity.getDistance(location.x(), location.y(), location.z()) / radius;
+            double distance = entity.getDistanceSq(center.x, center.y, center.z) / radius;
 
             if (distance <= 1.0D) {
-                double xDifference = entity.posX - location.x();
-                double yDifference = entity.posY - location.y();
-                double zDifference = entity.posZ - location.z();
+                double xDifference = entity.posX - center.x;
+                double yDifference = entity.posY - center.y;
+                double zDifference = entity.posZ - center.z;
 
                 double mag = MathHelper.sqrt(xDifference * xDifference + yDifference * yDifference + zDifference * zDifference); //TODO switch to sq for better speed
 
@@ -378,24 +380,57 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
                 yDifference /= mag;
                 zDifference /= mag;
 
-                double var34 = world().getBlockDensity(center, entity.getEntityBoundingBox());
-                double var36 = (1.0D - distance) * var34;
-                int damage = 0;
-
-                damage = (int) ((var36 * var36 + var36) / 2.0D * 8.0D * power + 1.0D);
+                double blockProtection = getBlockDensity(center, entity);
+                double exScale = (1.0D - distance) * blockProtection;
+                int damage = (int) ((exScale * exScale + exScale) / 2.0D * 8.0D * power + 1.0D);
 
                 entity.attackEntityFrom(getDamageSource(), damage);
 
-                entity.motionX += xDifference * var36;
-                entity.motionY += yDifference * var36;
-                entity.motionZ += zDifference * var36;
+                // Knock back
+                if (entity instanceof LivingEntity) {
+                    exScale = ProtectionEnchantment.getBlastDamageReduction((LivingEntity)entity, exScale);
+                }
+                entity.setMotion(entity.getMotion().add(xDifference * exScale, yDifference * exScale, zDifference * exScale));
             }
         }
 
         return true;
     }
 
-    protected DamageSource getDamageSource() {
+    public static float getBlockDensity(Vec3d center, Entity entity) {
+        AxisAlignedBB axisalignedbb = entity.getBoundingBox();
+        double d0 = 1.0D / ((axisalignedbb.maxX - axisalignedbb.minX) * 2.0D + 1.0D);
+        double d1 = 1.0D / ((axisalignedbb.maxY - axisalignedbb.minY) * 2.0D + 1.0D);
+        double d2 = 1.0D / ((axisalignedbb.maxZ - axisalignedbb.minZ) * 2.0D + 1.0D);
+        double d3 = (1.0D - Math.floor(1.0D / d0) * d0) / 2.0D;
+        double d4 = (1.0D - Math.floor(1.0D / d2) * d2) / 2.0D;
+        if (!(d0 < 0.0D) && !(d1 < 0.0D) && !(d2 < 0.0D)) {
+            int i = 0;
+            int j = 0;
+
+            for(float f = 0.0F; f <= 1.0F; f = (float)((double)f + d0)) {
+                for(float f1 = 0.0F; f1 <= 1.0F; f1 = (float)((double)f1 + d1)) {
+                    for(float f2 = 0.0F; f2 <= 1.0F; f2 = (float)((double)f2 + d2)) {
+                        double d5 = MathHelper.lerp((double)f, axisalignedbb.minX, axisalignedbb.maxX);
+                        double d6 = MathHelper.lerp((double)f1, axisalignedbb.minY, axisalignedbb.maxY);
+                        double d7 = MathHelper.lerp((double)f2, axisalignedbb.minZ, axisalignedbb.maxZ);
+                        Vec3d vec3d = new Vec3d(d5 + d3, d6, d7 + d4);
+                        if (entity.world.rayTraceBlocks(new RayTraceContext(vec3d, center, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, entity)).getType() == RayTraceResult.Type.MISS) {
+                            ++i;
+                        }
+
+                        ++j;
+                    }
+                }
+            }
+
+            return (float)i / (float)j;
+        } else {
+            return 0.0F;
+        }
+    }
+
+    public DamageSource getDamageSource() {
         return DamageSource.causeExplosionDamage(this);
     }
 
@@ -413,24 +448,24 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
     @Override
     public void load(CompoundNBT nbt)
     {
-        this.callCount = nbt.getInteger(NBTConstants.CALL_COUNT);
+        this.callCount = nbt.getInt(NBTConstants.CALL_COUNT);
         this.size = nbt.getFloat(NBTConstants.EXPLOSION_SIZE);
 
         if (world instanceof ServerWorld && nbt.hasUniqueId(NBTConstants.BLAST_EXPLODER_ENT_ID)) //don't load the exploder if it hasn't been saved
         {
-            exploder = ((ServerWorld) world).getEntityFromUuid(nbt.getUniqueId(NBTConstants.BLAST_EXPLODER_ENT_ID));
+            exploder = ((ServerWorld) world).getEntityByUuid(nbt.getUniqueId(NBTConstants.BLAST_EXPLODER_ENT_ID));
         }
     }
 
     @Override
     public void save(CompoundNBT nbt)
     {
-        nbt.setInteger(NBTConstants.CALL_COUNT, this.callCount);
-        nbt.setFloat(NBTConstants.EXPLOSION_SIZE, this.size);
+        nbt.putInt(NBTConstants.CALL_COUNT, this.callCount);
+        nbt.putFloat(NBTConstants.EXPLOSION_SIZE, this.size);
 
         if (world instanceof ServerWorld && exploder != null) //don't save the exploder if there is none to save. TODO: do we even need to save it at all?
         {
-            nbt.setUniqueId(NBTConstants.BLAST_EXPLODER_ENT_ID, this.exploder.getUniqueID());
+            nbt.putUniqueId(NBTConstants.BLAST_EXPLODER_ENT_ID, this.exploder.getUniqueID());
         }
     }
 
@@ -453,19 +488,19 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
     @Override
     public double x()
     {
-        return this.location.x();
+        return x;
     }
 
     @Override
     public double y()
     {
-        return this.location.y();
+        return y;
     }
 
     @Override
     public double z()
     {
-        return this.location.z();
+        return z;
     }
 
     @Override
@@ -663,7 +698,7 @@ public abstract class Blast extends Explosion implements IBlastInit, IBlastResto
         }
         if (controller != null)
         {
-            controller.setDead();
+            controller.remove();
         }
     }
 }

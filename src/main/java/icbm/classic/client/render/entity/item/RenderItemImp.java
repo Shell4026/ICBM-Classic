@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -20,8 +19,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,7 +32,7 @@ import java.util.function.Supplier;
  *
  * @param <E> to render
  */
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public abstract class RenderItemImp<E extends Entity> extends EntityRenderer<E>
 {
     private final ItemRenderer itemRenderer;
@@ -48,7 +47,7 @@ public abstract class RenderItemImp<E extends Entity> extends EntityRenderer<E>
     public RenderItemImp(EntityRendererManager renderManagerIn)
     {
         super(renderManagerIn);
-        this.itemRenderer = Minecraft.getMinecraft().getRenderItem();
+        this.itemRenderer = Minecraft.getInstance().getItemRenderer();;
         this.shadowSize = 0.15F;
         this.shadowOpaque = 0.75F;
     }

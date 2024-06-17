@@ -382,7 +382,7 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
         super.readFromNBT(nbt);
         SAVE_LOGIC.load(this, nbt);
         if(nbt.hasKey(NBTConstants.FREQUENCY)) {
-            this.radio.setChannel(Integer.toString(nbt.getInteger(NBTConstants.FREQUENCY)));
+            this.radio.setChannel(Integer.toString(nbt.getInt(NBTConstants.FREQUENCY)));
         }
     }
 

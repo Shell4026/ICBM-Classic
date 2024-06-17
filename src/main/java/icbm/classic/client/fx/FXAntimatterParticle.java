@@ -3,10 +3,10 @@ package icbm.classic.client.fx;
 import icbm.classic.lib.transform.vector.Pos;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class FXAntimatterParticle extends Particle
 {
     public FXAntimatterParticle(World par1World, Pos position, double par8, double par10, double par12, double distance)

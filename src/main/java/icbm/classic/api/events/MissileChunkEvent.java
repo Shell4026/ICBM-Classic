@@ -1,17 +1,16 @@
 package icbm.classic.api.events;
 
 import icbm.classic.content.missile.tracker.LoadedChunkPair;
-import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.common.ForgeChunkManager.Ticket;
-import net.minecraftforge.fml.common.eventhandler.Cancelable;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraft.world.server.Ticket;
+import net.minecraftforge.eventbus.api.Cancelable;
+import net.minecraftforge.eventbus.api.Event;
 
 public class MissileChunkEvent extends Event
 {
     public final LoadedChunkPair pair;
-    public final ForgeChunkManager.Ticket ticket;
+    public final Ticket ticket;
 
-    public MissileChunkEvent(LoadedChunkPair pair, ForgeChunkManager.Ticket ticket)
+    public MissileChunkEvent(LoadedChunkPair pair, Ticket ticket)
     {
         this.pair = pair;
         this.ticket = ticket;

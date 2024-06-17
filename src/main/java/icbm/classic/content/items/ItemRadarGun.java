@@ -64,7 +64,7 @@ public class ItemRadarGun extends ItemBase implements IPacketIDReceiver
         // Legacy logic from before IGPSData, v5.3.x
         if(nbt != null && nbt.hasKey("linkPos")) {
             final CompoundNBT save = nbt.getCompoundTag("linkPos");
-            data.setWorld(save.getInteger("dimension"));
+            data.setWorld(save.getInt("dimension"));
             data.setPosition(new Vec3d(save.getDouble("x"), save.getDouble("y"), save.getDouble("z")));
             nbt.removeTag("linkPos");
         }

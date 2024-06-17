@@ -71,6 +71,6 @@ public class ItemRadio extends ItemBase {
         if(stack.getTagCompound().hasKey(NBTConstants.HZ)) {
             stack.getTagCompound().removeTag(NBTConstants.HZ);
         }
-        stack.getTagCompound().setString("radio_channel", channel);
+        stack.getTagCompound().putString("radio_channel", channel);
     }
 }

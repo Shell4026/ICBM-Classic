@@ -38,7 +38,7 @@ public final class ActionProvider implements IActionProvider, INBTSerializable<C
         ListNBT list = new ListNBT();
         actions.forEach((tag, action) -> {
             final CompoundNBT entry = new CompoundNBT();
-            entry.setString("key", tag.getKey());
+            entry.putString("key", tag.getKey());
             entry.setTag("value", ICBMClassicAPI.ACTION_POTENTIAL_REGISTRY.save(action));
             list.appendTag(entry);
         });
@@ -69,14 +69,14 @@ public final class ActionProvider implements IActionProvider, INBTSerializable<C
 
                 @Nullable
                 @Override
-                public NBTBase writeNBT(Capability<IActionProvider> capability, IActionProvider instance, Direction side) {
+                public INBT writeNBT(Capability<IActionProvider> capability, IActionProvider instance, Direction side) {
                     return instance instanceof INBTSerializable ? ((INBTSerializable<?>) instance).serializeNBT() : null;
                 }
 
                 @Override
-                public void readNBT(Capability<IActionProvider> capability, IActionProvider instance, Direction side, NBTBase nbt) {
+                public void readNBT(Capability<IActionProvider> capability, IActionProvider instance, Direction side, INBT nbt) {
                     if(instance instanceof INBTSerializable) {
-                        ((INBTSerializable<NBTBase>) instance).deserializeNBT(nbt);
+                        ((INBTSerializable<INBT>) instance).deserializeNBT(nbt);
                     }
                 }
             },

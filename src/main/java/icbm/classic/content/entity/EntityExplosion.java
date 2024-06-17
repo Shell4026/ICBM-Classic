@@ -74,7 +74,7 @@ public class EntityExplosion extends Entity implements IEntityAdditionalSpawnDat
     }
 
     @Override
-    protected void entityInit()
+    protected void registerData()
     {
     }
 
@@ -195,7 +195,7 @@ public class EntityExplosion extends Entity implements IEntityAdditionalSpawnDat
             {
                 ((IBlastRestore) getBlast()).save(blastSave);
             }
-            blastSave.setString(NBTConstants.EX_ID, getBlast().getActionData().getRegistryKey().toString());
+            blastSave.putString(NBTConstants.EX_ID, getBlast().getActionData().getRegistryKey().toString());
 
             //Encode into NBT
             nbt.setTag(NBTConstants.BLAST, blastSave);

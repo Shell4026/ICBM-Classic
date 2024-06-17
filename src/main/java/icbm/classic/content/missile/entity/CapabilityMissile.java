@@ -12,7 +12,7 @@ import icbm.classic.lib.CalculationHelpers;
 import icbm.classic.lib.radar.RadarRegistry;
 import icbm.classic.lib.saving.NbtSaveHandler;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.world.World;
@@ -170,13 +170,13 @@ public class CapabilityMissile implements IMissile, INBTSerializable<CompoundNBT
                 {
                     @Nullable
                     @Override
-                    public NBTBase writeNBT(Capability<IMissile> capability, IMissile instance, Direction side)
+                    public INBT writeNBT(Capability<IMissile> capability, IMissile instance, Direction side)
                     {
                         return null;
                     }
 
                     @Override
-                    public void readNBT(Capability<IMissile> capability, IMissile instance, Direction side, NBTBase nbt)
+                    public void readNBT(Capability<IMissile> capability, IMissile instance, Direction side, INBT nbt)
                     {
 
                     }

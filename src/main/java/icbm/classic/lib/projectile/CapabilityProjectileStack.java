@@ -6,7 +6,7 @@ import icbm.classic.api.missiles.projectile.IProjectileStack;
 import icbm.classic.lib.projectile.vanilla.ArrowProjectileData;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
@@ -36,12 +36,12 @@ public class CapabilityProjectileStack implements IProjectileStack<Entity>
             {
                 @Nullable
                 @Override
-                public NBTBase writeNBT(Capability<IProjectileStack> capability, IProjectileStack instance, Direction side) {
+                public INBT writeNBT(Capability<IProjectileStack> capability, IProjectileStack instance, Direction side) {
                     return null;
                 }
 
                 @Override
-                public void readNBT(Capability<IProjectileStack> capability, IProjectileStack instance, Direction side, NBTBase nbt) {
+                public void readNBT(Capability<IProjectileStack> capability, IProjectileStack instance, Direction side, INBT nbt) {
 
                 }
             },

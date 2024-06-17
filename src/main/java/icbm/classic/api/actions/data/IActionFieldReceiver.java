@@ -1,6 +1,6 @@
 package icbm.classic.api.actions.data;
 
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.INBT;
 
 /**
  * Wrapper to provide fields
@@ -14,7 +14,7 @@ public interface IActionFieldReceiver {
      * @param key to set
      * @param value to set
      */
-    default <VALUE, TAG extends NBTBase> void setValue(ActionField<VALUE, TAG> key, VALUE value) {
+    default <VALUE, TAG extends INBT> void setValue(ActionField<VALUE, TAG> key, VALUE value) {
 
     }
 

@@ -16,14 +16,14 @@ public abstract class ActionDataBase implements IActionData, IActionFieldProvide
     private final Map<ActionField, Object> fieldValueMap = new HashMap<>();
 
     @Override
-    public <VALUE, TAG extends NBTBase> void setValue(ActionField<VALUE, TAG> key, VALUE value) {
+    public <VALUE, TAG extends INBT> void setValue(ActionField<VALUE, TAG> key, VALUE value) {
        if(this.getFields().contains(key)) {
            this.fieldValueMap.put(key, value);
        }
     }
 
     @Override
-    public <VALUE, TAG extends NBTBase> VALUE getValue(ActionField<VALUE, TAG> key) {
+    public <VALUE, TAG extends INBT> VALUE getValue(ActionField<VALUE, TAG> key) {
         return key.cast(this.fieldValueMap.get(key));
     }
 
@@ -34,32 +34,32 @@ public abstract class ActionDataBase implements IActionData, IActionFieldProvide
             final ListNBT list = new ListNBT();
             for(Map.Entry<ActionField, Object> entry : fieldValueMap.entrySet()) {
                 final CompoundNBT entryTag = new CompoundNBT();
-                entryTag.setString("key", entry.getKey().getKey()); //save key even if value is null
+                entryTag.putString("key", entry.getKey().getKey()); //save key even if value is null
                 //TODO see if we can save ActionField#type
                 if(entry.getValue() != null) {
-                    NBTBase valueSave = entry.getKey().save(entry.getValue());
+                    INBT valueSave = entry.getKey().save(entry.getValue());
                     if(valueSave != null) {
-                        entryTag.setTag("value", valueSave);
+                        entryTag.put("value", valueSave);
                     }
                 }
-                list.appendTag(entryTag);
+                list.add(entryTag);
             }
-            tag.setTag("fields", list);
+            tag.put("fields", list);
         }
         return tag;
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        if(nbt.hasKey("fields")) {
+        if(nbt.contains("fields")) {
             this.fieldValueMap.clear();
-            final ListNBT list = nbt.getTagList("fields", 10);
-            for(int i = 0; i < list.tagCount(); i++) {
-                final CompoundNBT entryTag = list.getCompoundTagAt(i);
+            final ListNBT list = nbt.getList("fields", 10);
+            for(int i = 0; i < list.size(); i++) {
+                final CompoundNBT entryTag = list.getCompound(i);
                 final String key = entryTag.getString("key");
                 final ActionField actionField = ActionField.find(key, null);
-                if(actionField != null && entryTag.hasKey("value")) {
-                    this.fieldValueMap.put(actionField, actionField.load(entryTag.getTag("value")));
+                if(actionField != null && entryTag.contains("value")) {
+                    this.fieldValueMap.put(actionField, actionField.load(entryTag.get("value")));
                 }
             }
         }

@@ -3,15 +3,14 @@ package icbm.classic.content.blast.ender;
 import icbm.classic.ICBMClassic;
 import icbm.classic.api.explosion.IBlastTickable;
 import icbm.classic.content.blast.Blast;
-import icbm.classic.lib.transform.vector.Location;
 import icbm.classic.lib.transform.vector.Pos;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EndermanEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -40,24 +39,23 @@ public class BlastEnder extends Blast implements IBlastTickable //TODO handle sa
                 {
                     for (int y = -r; y < r; y++)
                     {
-                        Location targetPosition = location.add(new Pos(x, y, z)); //TODO replace with mutable blockpos
-
-                        double distance = targetPosition.distance(location);
+                        final BlockPos targetPosition = getPos().add(x, y, z);
+                        double distance = targetPosition.distanceSq(getPos());
 
                         if (distance < r && distance > r - 1)
                         {
-                            if (!targetPosition.getBlock(world()).isAir(targetPosition.getBlockState(world()), world(), targetPosition.toBlockPos()))
+                            if (!world().isAirBlock(targetPosition))
                             {
                                 continue;
                             }
 
                             if (this.world().rand.nextFloat() < Math.max(0.001 * r, 0.01))
                             {
-                                float velX = (float) ((targetPosition.x() - location.x()) * 0.6);
-                                float velY = (float) ((targetPosition.y() - location.y()) * 0.6);
-                                float velZ = (float) ((targetPosition.z() - location.z()) * 0.6);
+                                float velX = (float) ((targetPosition.getX() - pos.getX()) * 0.6); //TODO use blast double positions
+                                float velY = (float) ((targetPosition.getY() - pos.getY()) * 0.6);
+                                float velZ = (float) ((targetPosition.getZ() - pos.getZ()) * 0.6);
 
-                                world.spawnParticle(EnumParticleTypes.PORTAL, targetPosition.x(), targetPosition.y(), targetPosition.z(), velX, velY, velZ);
+                                world.addParticle(ParticleTypes.PORTAL, targetPosition.getX() + 0.5, targetPosition.getY() + 0.5, targetPosition.getZ() + 0.5, velX, velY, velZ);
                             }
                         }
                     }

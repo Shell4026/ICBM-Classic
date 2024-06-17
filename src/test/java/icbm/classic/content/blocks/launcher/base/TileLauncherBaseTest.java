@@ -39,7 +39,7 @@ public class TileLauncherBaseTest extends TestBase {
         Assertions.assertNotNull(version400save);
 
         // Update itemMissile registry name, mapping event changes this as start of game for us
-        ((CompoundNBT) version400save.getCompoundTag("inventory").getTagList("Items", 10).get(0)).setString("id", "icbmclassic:explosive_missile");
+        ((CompoundNBT) version400save.getCompoundTag("inventory").getTagList("Items", 10).get(0)).putString("id", "icbmclassic:explosive_missile");
 
         // Load tile
         final TileLauncherBase launcher = new TileLauncherBase();

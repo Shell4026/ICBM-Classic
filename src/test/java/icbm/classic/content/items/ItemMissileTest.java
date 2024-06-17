@@ -49,7 +49,7 @@ public class ItemMissileTest extends TestBase
         Assertions.assertNotNull(version400save);
 
         // Update registry name, this is done by remapping event
-        version400save.setString("id", "icbmclassic:explosive_missile");
+        version400save.putString("id", "icbmclassic:explosive_missile");
 
         // Load stack
         final ItemStack stack = new ItemStack(version400save);

@@ -76,7 +76,7 @@ public class EntityFragments extends Entity implements IEntityAdditionalSpawnDat
     }
 
     @Override
-    protected void entityInit()
+    protected void registerData()
     {
     }
 

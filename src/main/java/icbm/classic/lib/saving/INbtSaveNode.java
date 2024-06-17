@@ -1,8 +1,8 @@
 package icbm.classic.lib.saving;
 
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.INBT;
 
-public interface INbtSaveNode<In, Out extends NBTBase>
+public interface INbtSaveNode<In, Out extends INBT>
 {
     String getSaveKey();
 

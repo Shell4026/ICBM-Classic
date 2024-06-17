@@ -1,11 +1,11 @@
 package icbm.classic.content.blast.thread;
 
 import icbm.classic.content.blast.Blast;
-import icbm.classic.lib.transform.vector.Location;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 /**
@@ -22,7 +22,7 @@ public class ThreadSmallExplosion extends ThreadExplosion
     }
 
     @Override
-    public void doRun(World world, Location center)
+    public void doRun(World world, Vec3d center)
     {
         for (int x = 0; x < this.radius; ++x)
         {
@@ -43,19 +43,19 @@ public class ThreadSmallExplosion extends ThreadExplosion
                         xStep /= diagonalDistance;
                         yStep /= diagonalDistance;
                         zStep /= diagonalDistance;
-                        float power = this.radius * (0.7F + this.position.world().rand.nextFloat() * 0.6F);
-                        double var15 = position.x();
-                        double var17 = position.y();
-                        double var19 = position.z();
+                        float power = this.radius * (0.7F + this.world.rand.nextFloat() * 0.6F);
+                        double var15 = position.x;
+                        double var17 = position.y;
+                        double var19 = position.z;
 
                         for (float var21 = 0.3F; power > 0.0F; power -= var21 * 0.75F)
                         {
                             BlockPos targetPosition = new BlockPos(var15, var17, var19);
 
-                            if(!position.world().isBlockLoaded(targetPosition)) //TODO: find better fix for non main thread loading
+                            if(!world.isBlockLoaded(targetPosition)) //TODO: find better fix for non main thread loading
                                 continue;
 
-                            BlockState state = this.position.world().getBlockState(targetPosition);
+                            BlockState state = this.world.getBlockState(targetPosition);
                             Block block = state.getBlock();
 
                             if (!block.isAir(state, world, targetPosition))
@@ -68,7 +68,7 @@ public class ThreadSmallExplosion extends ThreadExplosion
                                 }
                                 else
                                 {
-                                    resistance = block.getExplosionResistance(world, targetPosition, source, blast);
+                                    resistance = block.getExplosionResistance(state, world, targetPosition, source, blast);
                                 }
                                 // TODO rather than remove power divert a percentage to the
                                 // sides, and then calculate how much is absorbed by the block

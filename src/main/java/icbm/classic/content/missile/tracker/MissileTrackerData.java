@@ -38,21 +38,21 @@ public class MissileTrackerData
     //Helper methods for saving and loading
     public void readFromNBT(CompoundNBT nbt)
     {
-        ticksLeftToTarget = nbt.getInteger(NBTConstants.TICKS);
+        ticksLeftToTarget = nbt.getInt(NBTConstants.TICKS);
         targetPos = new Pos(nbt.getCompoundTag(NBTConstants.TARGET));
 
         missileData = nbt.getCompoundTag(NBTConstants.DATA);
 
         // Fix old saves, [< 4.2.0] didn't include id and is using the pre-missile rewrite data
         if(!missileData.hasKey("id")) {
-            missileData.setString("id", "icbmclassic:missile");
+            missileData.putString("id", "icbmclassic:missile");
             missileData = EntityMissileDataFixer.INSTANCE.fixTagCompound(missileData);
         }
     }
 
     public CompoundNBT writeToNBT(CompoundNBT nbt)
     {
-        nbt.setInteger(NBTConstants.TICKS, ticksLeftToTarget);
+        nbt.putInt(NBTConstants.TICKS, ticksLeftToTarget);
         nbt.setTag(NBTConstants.TARGET, targetPos.writeNBT(new CompoundNBT()));
         nbt.setTag(NBTConstants.DATA, missileData);
         return nbt;

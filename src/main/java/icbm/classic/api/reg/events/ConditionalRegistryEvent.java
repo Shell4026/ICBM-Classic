@@ -2,7 +2,7 @@ package icbm.classic.api.reg.events;
 
 import icbm.classic.api.actions.conditions.ICondition;
 import icbm.classic.api.reg.obj.IBuilderRegistry;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.eventbus.api.Event;
 
 /**
  * Fired to allow registering conditional types
