@@ -81,9 +81,6 @@ public class BlockReg
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event)
     {
-        event.getRegistry().register(new BlockGlassPressurePlate());
-        event.getRegistry().register(new BlockGlassButton());
-
         event.getRegistry().register(new BlockSpikes().setRegistryName(ICBMConstants.PREFIX + "spikes_normal"));
         event.getRegistry().register(new BlockSpikes().setFire(true).setRegistryName(ICBMConstants.PREFIX + "spikes_fire"));
         event.getRegistry().register(new BlockSpikes().setPoison(true).setRegistryName(ICBMConstants.PREFIX + "spikes_poison"));
