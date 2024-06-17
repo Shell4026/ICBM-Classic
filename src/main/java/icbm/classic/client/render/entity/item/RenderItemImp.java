@@ -8,8 +8,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -59,8 +59,8 @@ public abstract class RenderItemImp<E extends Entity> extends Render<E>
         return ItemCameraTransforms.TransformType.NONE;
     }
 
-    protected void translate(@Nullable E entity, IBakedModel iBakedModel, double x, double y, double z, float partialTicks) {
-        float hoverStart = iBakedModel.getItemCameraTransforms().getTransform(ItemCameraTransforms.TransformType.GROUND).scale.y;
+    protected void translate(@Nullable E entity, net.minecraft.client.renderer.model.IBakedModel iBakedModel, double x, double y, double z, float partialTicks) {
+        float hoverStart = iBakedModel.getItemCameraTransforms().getTransform(net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType.GROUND).scale.y;
         GlStateManager.translate((float)x, (float)y + 0.25F * hoverStart, (float)z);
     }
 
@@ -104,7 +104,7 @@ public abstract class RenderItemImp<E extends Entity> extends Render<E>
         return entity.rotationPitch;
     }
 
-    protected IBakedModel getBakedModel(@Nullable E entity, World world, ItemStack stack) {
+    protected net.minecraft.client.renderer.model.IBakedModel getBakedModel(@Nullable E entity, World world, ItemStack stack) {
         // TODO may need optimization, upcraft suggests caching model as doing the lookup per frame is slow.. could do per entity? or tree(item -> key -> model)
         return this.itemRenderer.getItemModelWithOverrides(stack, world, (EntityLivingBase) null);
     }

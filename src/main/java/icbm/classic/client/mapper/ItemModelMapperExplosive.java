@@ -4,7 +4,7 @@ import icbm.classic.api.ICBMClassicHelpers;
 import icbm.classic.api.caps.IExplosive;
 import icbm.classic.api.reg.IExplosiveData;
 import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.item.ItemStack;
 
 import java.util.Map;

@@ -2,8 +2,8 @@ package icbm.classic.client;
 
 import icbm.classic.content.reg.BlockReg;
 import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.model.ModelBakery;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
@@ -14,7 +14,7 @@ import net.minecraftforge.client.model.ModelLoader;
  */
 public class SpikeMeshDefinition implements ItemMeshDefinition
 {
-    public final ModelResourceLocation base;
+    public final net.minecraft.client.renderer.model.ModelResourceLocation base;
     public final ModelResourceLocation fire;
     public final ModelResourceLocation poison;
 
@@ -22,14 +22,14 @@ public class SpikeMeshDefinition implements ItemMeshDefinition
 
     private SpikeMeshDefinition()
     {
-        base = new ModelResourceLocation(BlockReg.blockSpikes.getRegistryName(), "inventory");
+        base = new net.minecraft.client.renderer.model.ModelResourceLocation(BlockReg.blockSpikes.getRegistryName(), "inventory");
         fire = new ModelResourceLocation(BlockReg.blockSpikes.getRegistryName() + "_fire", "inventory");
         poison = new ModelResourceLocation(BlockReg.blockSpikes.getRegistryName() + "_poison", "inventory");
 
+        net.minecraft.client.renderer.model.ModelBakery.registerItemVariants(Item.getItemFromBlock(BlockReg.blockSpikes), base);
         ModelBakery.registerItemVariants(Item.getItemFromBlock(BlockReg.blockSpikes), base);
-        ModelBakery.registerItemVariants(Item.getItemFromBlock(BlockReg.blockSpikes), base);
-        ModelBakery.registerItemVariants(Item.getItemFromBlock(BlockReg.blockSpikes), fire);
-        ModelBakery.registerItemVariants(Item.getItemFromBlock(BlockReg.blockSpikes), poison);
+        net.minecraft.client.renderer.model.ModelBakery.registerItemVariants(Item.getItemFromBlock(BlockReg.blockSpikes), fire);
+        net.minecraft.client.renderer.model.ModelBakery.registerItemVariants(Item.getItemFromBlock(BlockReg.blockSpikes), poison);
         ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(BlockReg.blockSpikes), this);
     }
 
@@ -39,7 +39,7 @@ public class SpikeMeshDefinition implements ItemMeshDefinition
     }
 
     @Override
-    public ModelResourceLocation getModelLocation(ItemStack stack)
+    public net.minecraft.client.renderer.model.ModelResourceLocation getModelLocation(ItemStack stack)
     {
         if (stack.getItemDamage() == 1)
         {

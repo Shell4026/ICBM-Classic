@@ -4,9 +4,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelRenderer;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
@@ -89,7 +89,7 @@ public class TESREmpTower extends TileEntityRenderer<TileEntity>
         final float brightness = 1f;
 
         int i = blockModelRenderer.blockColors.colorMultiplier(state, world, pos, 0);
-        if (EntityRenderer.anaglyphEnable)
+        if (GameRenderer.anaglyphEnable)
         {
             i = TextureUtil.anaglyphColor(i);
         }

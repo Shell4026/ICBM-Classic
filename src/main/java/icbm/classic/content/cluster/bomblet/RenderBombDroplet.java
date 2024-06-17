@@ -2,12 +2,11 @@ package icbm.classic.content.cluster.bomblet;
 
 import icbm.classic.ICBMConstants;
 import icbm.classic.client.render.entity.RenderEntityItem2;
-import icbm.classic.content.cluster.bomblet.EntityBombDroplet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;

@@ -4,10 +4,10 @@ import icbm.classic.client.render.entity.item.RenderItemImp;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -30,7 +30,7 @@ public class RenderEntityItem2 extends Render<EntityItem>
     private final Random random = new Random();
     private final ItemCameraTransforms.TransformType transformType;
 
-    public RenderEntityItem2(RenderManager renderManagerIn, ItemRenderer p_i46167_2_, ItemCameraTransforms.TransformType transformType)
+    public RenderEntityItem2(RenderManager renderManagerIn, ItemRenderer p_i46167_2_, net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType transformType)
     {
         super(renderManagerIn);
         this.itemRenderer = p_i46167_2_;

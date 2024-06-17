@@ -32,8 +32,8 @@ import icbm.classic.content.reg.BlockReg;
 import icbm.classic.content.reg.ItemReg;
 import icbm.classic.lib.colors.ColorHelper;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.model.ModelBakery;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -58,12 +58,12 @@ import java.util.stream.Collectors;
 @Mod.EventBusSubscriber(modid = ICBMConstants.DOMAIN, value=Side.CLIENT)
 public class ClientReg
 {
-    private final static Map<IExplosiveData, ModelResourceLocation> grenadeModelMap = new HashMap();
-    private final static Map<IExplosiveData, ModelResourceLocation> missileModelMap = new HashMap();
-    private final static Map<IExplosiveData, Map<EnumFacing,ModelResourceLocation>> blockModelMap = new HashMap();
-    private final static Map<IExplosiveData, ModelResourceLocation> itemBlockModelMap = new HashMap();
-    private final static Map<IExplosiveData, ModelResourceLocation> cartModelMap = new HashMap();
-    private final static Map<IExplosiveData, ModelResourceLocation> bombletModelMap = new HashMap();
+    private final static Map<IExplosiveData, net.minecraft.client.renderer.model.ModelResourceLocation> grenadeModelMap = new HashMap();
+    private final static Map<IExplosiveData, net.minecraft.client.renderer.model.ModelResourceLocation> missileModelMap = new HashMap();
+    private final static Map<IExplosiveData, Map<EnumFacing, net.minecraft.client.renderer.model.ModelResourceLocation>> blockModelMap = new HashMap();
+    private final static Map<IExplosiveData, net.minecraft.client.renderer.model.ModelResourceLocation> itemBlockModelMap = new HashMap();
+    private final static Map<IExplosiveData, net.minecraft.client.renderer.model.ModelResourceLocation> cartModelMap = new HashMap();
+    private final static Map<IExplosiveData, net.minecraft.client.renderer.model.ModelResourceLocation> bombletModelMap = new HashMap();
 
     private static void clearModelCache()
     {
@@ -159,8 +159,8 @@ public class ClientReg
         newItemModel(ItemReg.itemParachute, 0, "inventory", "");
         newItemModel(ItemReg.itemBalloon, 0, "render=2d", "");
         newItemModel(ItemReg.itemBalloon, 1, "render=3d", ""); // Fake meta version purely for entity renderer
-        ModelLoader.setCustomModelResourceLocation(ItemReg.itemSAM, 0, new ModelResourceLocation(ICBMConstants.DOMAIN + ":missiles/surface_to_air", "inventory"));
-        ModelLoader.setCustomModelResourceLocation(ItemReg.itemClusterMissile, 0, new ModelResourceLocation(ICBMConstants.DOMAIN + ":missiles/cluster", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(ItemReg.itemSAM, 0, new net.minecraft.client.renderer.model.ModelResourceLocation(ICBMConstants.DOMAIN + ":missiles/surface_to_air", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(ItemReg.itemClusterMissile, 0, new net.minecraft.client.renderer.model.ModelResourceLocation(ICBMConstants.DOMAIN + ":missiles/cluster", "inventory"));
 
         //crafting parts
         if(ConfigItems.ENABLE_CRAFTING_ITEMS)
@@ -214,12 +214,12 @@ public class ClientReg
         for (IExplosiveData data : ICBMClassicAPI.EX_BLOCK_REGISTRY.getExplosives()) //TODO run loop once for all 4 content types
         {
             //Add block state
-            final HashMap<EnumFacing,ModelResourceLocation> facingModelMap = new HashMap<>();
+            final HashMap<EnumFacing, net.minecraft.client.renderer.model.ModelResourceLocation> facingModelMap = new HashMap<>();
             final String resourcePath = data.getRegistryKey().getResourceDomain() + ":explosives/" + data.getRegistryKey().getResourcePath();
 
             for(EnumFacing facing : EnumFacing.VALUES)
             {
-                facingModelMap.put(facing, new ModelResourceLocation(resourcePath, "explosive=" + data.getRegistryKey().toString().replace(":", "_") + ",rotation=" + facing));
+                facingModelMap.put(facing, new net.minecraft.client.renderer.model.ModelResourceLocation(resourcePath, "explosive=" + data.getRegistryKey().toString().replace(":", "_") + ",rotation=" + facing));
             }
 
             blockModelMap.put(data, facingModelMap);
@@ -227,7 +227,7 @@ public class ClientReg
             //Add item state
             //IBlockState state = BlockReg.blockExplosive.getDefaultState().withProperty(BlockICBM.ROTATION_PROP, EnumFacing.UP);
             // String properties_string = getPropertyString(state.getProperties());
-            itemBlockModelMap.put(data, new ModelResourceLocation(resourcePath, "inventory"));
+            itemBlockModelMap.put(data, new net.minecraft.client.renderer.model.ModelResourceLocation(resourcePath, "inventory"));
         }
         //Block state mapper
         ModelLoader.setCustomStateMapper(BlockReg.blockExplosive, new BlockModelMapperExplosive(blockModelMap, blockModelMap.get(ICBMExplosives.CONDENSED).get(EnumFacing.UP)));
@@ -245,7 +245,7 @@ public class ClientReg
         for (IExplosiveData data : ICBMClassicAPI.EX_GRENADE_REGISTRY.getExplosives()) //TODO run loop once for all 4 content types
         {
             final String resourcePath = data.getRegistryKey().getResourceDomain() + ":grenades/" + data.getRegistryKey().getResourcePath();
-            grenadeModelMap.put(data, new ModelResourceLocation(resourcePath, "inventory"));
+            grenadeModelMap.put(data, new net.minecraft.client.renderer.model.ModelResourceLocation(resourcePath, "inventory"));
         }
 
         ModelLoader.registerItemVariants(ItemReg.itemGrenade, grenadeModelMap.values()
@@ -271,7 +271,7 @@ public class ClientReg
         for (IExplosiveData data : ICBMClassicAPI.EX_MINECART_REGISTRY.getExplosives()) //TODO run loop once for all 4 content types
         {
             final String resourcePath = data.getRegistryKey().getResourceDomain() + ":bombcarts/" + data.getRegistryKey().getResourcePath();
-            cartModelMap.put(data, new ModelResourceLocation(resourcePath, "inventory"));
+            cartModelMap.put(data, new net.minecraft.client.renderer.model.ModelResourceLocation(resourcePath, "inventory"));
         }
         ModelLoader.registerItemVariants(ItemReg.itemBombCart, cartModelMap.values()
                 .stream().map(model -> new ResourceLocation(model.getResourceDomain() + ":" + model.getResourcePath())).toArray(ResourceLocation[]::new));
@@ -283,11 +283,11 @@ public class ClientReg
         for (IExplosiveData data : ICBMClassicAPI.EX_MISSILE_REGISTRY.getExplosives()) //TODO run loop once for all 4 content types
         {
             final String resourcePath = data.getRegistryKey().getResourceDomain() + ":missiles/" + data.getRegistryKey().getResourcePath();
-            missileModelMap.put(data, new ModelResourceLocation(resourcePath, "inventory"));
+            missileModelMap.put(data, new net.minecraft.client.renderer.model.ModelResourceLocation(resourcePath, "inventory"));
         }
 
         // Missile module, also used as fallback for all renders
-        final ModelResourceLocation fallback = new ModelResourceLocation(ICBMConstants.DOMAIN + ":missiles/missile", "inventory");
+        final net.minecraft.client.renderer.model.ModelResourceLocation fallback = new net.minecraft.client.renderer.model.ModelResourceLocation(ICBMConstants.DOMAIN + ":missiles/missile", "inventory");
         missileModelMap.put(ICBMExplosives.MISSILEMODULE, fallback);
 
         // Register variants to item so model files load
@@ -307,7 +307,7 @@ public class ClientReg
             for (int i = 0; i < itemCrafting.subItems.length; i++)
             {
                 String subItem = itemCrafting.subItems[i];
-                ModelLoader.setCustomModelResourceLocation(itemCrafting, i, new ModelResourceLocation(resourcePath, "name=" + subItem));
+                ModelLoader.setCustomModelResourceLocation(itemCrafting, i, new net.minecraft.client.renderer.model.ModelResourceLocation(resourcePath, "name=" + subItem));
             }
         }
     }
@@ -315,12 +315,12 @@ public class ClientReg
     protected static void newBlockModel(Block block, int meta, String varient, String sub)
     {
         if(block != null) //incase the block was disabled via config or doesn't exist due to something else
-            ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), meta, new ModelResourceLocation(block.getRegistryName() + sub, varient));
+            ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), meta, new net.minecraft.client.renderer.model.ModelResourceLocation(block.getRegistryName() + sub, varient));
     }
 
     protected static void newItemModel(Item item, int meta, String varient, String sub)
     {
         if(item != null) //incase the item was disabled via config or doesn't exist due to something else
-            ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(item.getRegistryName() + sub, varient));
+            ModelLoader.setCustomModelResourceLocation(item, meta, new net.minecraft.client.renderer.model.ModelResourceLocation(item.getRegistryName() + sub, varient));
     }
 }
