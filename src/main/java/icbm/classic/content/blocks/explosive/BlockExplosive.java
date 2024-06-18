@@ -59,6 +59,7 @@ public class BlockExplosive extends Block
         return state.rotate(mirrorIn.toRotation(state.get(FACING)));
     }
 
+    @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }

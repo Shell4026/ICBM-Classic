@@ -55,7 +55,7 @@ public class TESREmpTower extends TileEntityRenderer<TileEntity>
 
         GlStateManager.rotate(rotation, 0.0F, 1.0F, 0.0F);
         GlStateManager.translate(-0.5F, -0.5F, 0.5F);
-        blockRendererDispatcher.renderBlockBrightness(BlockEmpTower.COIL, 1f);
+        blockRendererDispatcher.renderBlockBrightness(BlockEmpTowerBase.COIL, 1f);
         GlStateManager.translate(0.0F, 0.0F, 1.0F);
 
 
@@ -73,7 +73,7 @@ public class TESREmpTower extends TileEntityRenderer<TileEntity>
 
             GlStateManager.rotate(rotation, 0.0F, 1.0F, 0.0F);
             GlStateManager.translate(-0.5F, -0.5F, -0.5F);
-            renderBlock(blockRendererDispatcher, tile.getWorld(), tile.getPos(), BlockEmpTower.ELECTRIC);
+            renderBlock(blockRendererDispatcher, tile.getWorld(), tile.getPos(), BlockEmpTowerBase.ELECTRIC);
             GlStateManager.translate(0.0F, 0.0F, 1.0F);
 
             GlStateManager.disableBlend();

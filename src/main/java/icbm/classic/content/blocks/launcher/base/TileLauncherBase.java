@@ -153,9 +153,9 @@ public class TileLauncherBase extends TileMachine implements ILauncherComponent,
      */
     public Direction getLaunchDirection() {
         BlockState state = getBlockState();
-        if (state.getProperties().containsKey(BlockLauncherBase.ROTATION_PROP))
+        if (state.getProperties().containsKey(BlockLauncherBase.FACING))
         {
-            return state.getValue(BlockLauncherBase.ROTATION_PROP);
+            return state.getValue(BlockLauncherBase.FACING);
         }
         return Direction.UP;
     }

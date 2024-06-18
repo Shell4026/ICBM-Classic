@@ -145,7 +145,7 @@ public class ItemReg
         event.getRegistry().register(new ItemBlockSubTypes(BlockReg.blockConcrete));
         event.getRegistry().register(new BlockItem(BlockReg.blockReinforcedGlass).setRegistryName(BlockReg.blockReinforcedGlass.getRegistryName()));
         event.getRegistry().register(new ItemBlockExplosive(BlockReg.blockExplosive).setRegistryName(BlockReg.blockExplosive.getRegistryName()));
-        event.getRegistry().register(new ItemBlockEmpTower(BlockReg.blockEmpTower));
+        event.getRegistry().register(new ItemBlockEmpTower(BlockReg.EMP_TOWER_BASE_BLOCK));
         event.getRegistry().register(new BlockItem(BlockReg.blockRadarStation).setRegistryName(BlockReg.blockRadarStation.getRegistryName()));
         event.getRegistry().register(new BlockItem(BlockReg.blockLaunchSupport).setRegistryName(BlockReg.blockLaunchSupport.getRegistryName()));
         event.getRegistry().register(new BlockItem(BlockReg.blockLaunchBase).setRegistryName(BlockReg.blockLaunchBase.getRegistryName()));

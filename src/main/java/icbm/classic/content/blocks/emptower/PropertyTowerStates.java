@@ -1,10 +1,10 @@
 package icbm.classic.content.blocks.emptower;
 
 import com.google.common.collect.Lists;
-import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.state.EnumProperty;
 import net.minecraft.util.IStringSerializable;
 
-public class PropertyTowerStates  extends PropertyEnum<PropertyTowerStates.EnumTowerTypes> {
+public class PropertyTowerStates  extends EnumProperty<PropertyTowerStates.EnumTowerTypes> {
     protected PropertyTowerStates() {
         super("type", EnumTowerTypes.class, Lists.newArrayList(EnumTowerTypes.values()));
     }

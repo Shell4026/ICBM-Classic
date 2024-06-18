@@ -55,7 +55,7 @@ public class ClientReg
                 }
             }
             return 0;
-        },  BlockReg.blockEmpTower);
+        },  BlockReg.EMP_TOWER_BASE_BLOCK);
     }
 
     @SubscribeEvent

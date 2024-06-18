@@ -44,7 +44,7 @@ public class ICBMCreativeTab extends ItemGroup
         orderItem(BlockReg.blockLaunchSupport);
         orderItem(BlockReg.blockLaunchConnector);
         orderItem(BlockReg.blockCruiseLauncher);
-        orderItem(BlockReg.blockEmpTower);
+        orderItem(BlockReg.EMP_TOWER_BASE_BLOCK);
         orderItem(BlockReg.blockRadarStation);
 
         orderItem(BlockReg.blockConcrete);

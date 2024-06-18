@@ -1,28 +1,29 @@
 package icbm.classic.content.blocks.launcher.base;
 
 import icbm.classic.ICBMClassic;
-import icbm.classic.ICBMConstants;
 import icbm.classic.content.blocks.launcher.network.ILauncherComponent;
 import icbm.classic.content.blocks.launcher.network.LauncherNetwork;
 import icbm.classic.lib.InventoryUtility;
+import net.minecraft.block.Block;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Items;
+import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.*;
 import net.minecraft.block.BlockRenderType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 
@@ -32,17 +33,26 @@ import javax.annotation.Nullable;
  */
 public class BlockLauncherBase extends ContainerBlock
 {
-    public static final PropertyDirection ROTATION_PROP = PropertyDirection.create("facing");
+    public static final DirectionProperty FACING = BlockStateProperties.FACING;
 
     public BlockLauncherBase()
     {
-        super(Material.IRON);
-        this.blockHardness = 10f;
-        this.blockResistance = 10f;
-        this.fullBlock = true;
-        setRegistryName(ICBMConstants.DOMAIN, "launcherbase");
-        setUnlocalizedName(ICBMConstants.PREFIX + "launcherbase");
-        setCreativeTab(ICBMClassic.CREATIVE_TAB);
+        super(Block.Properties.create(Material.IRON).hardnessAndResistance(10, 10));
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rot) {
+        return state.with(FACING, rot.rotate(state.get(FACING)));
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirrorIn) {
+        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+    }
+
+    @Override
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
     }
 
     @Deprecated
@@ -75,6 +85,7 @@ public class BlockLauncherBase extends ContainerBlock
     @Override
     public void breakBlock(World world, BlockPos pos, BlockState state)
     {
+        super.onPlayerDestroy();
         TileEntity tile = world.getTileEntity(pos);
         if (tile instanceof ILauncherComponent)
         {
@@ -92,43 +103,22 @@ public class BlockLauncherBase extends ContainerBlock
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public BlockRenderLayer getBlockLayer()
+    public BlockRenderLayer getRenderLayer()
     {
         return BlockRenderLayer.SOLID;
     }
 
     @Nullable
     @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta)
+    public TileEntity createNewTileEntity(IBlockReader reader)
     {
         return new TileLauncherBase();
     }
 
-    @Override
-    protected BlockStateContainer createBlockState()
-    {
-        return new BlockStateContainer(this, ROTATION_PROP);
-    }
 
     @Override
-    public BlockState getStateFromMeta(int meta)
+    public BlockState getStateForPlacement(BlockItemUseContext context)
     {
-        if(meta == 0) {
-            return getDefaultState().withProperty(ROTATION_PROP, Direction.UP);
-        }
-        return getDefaultState().withProperty(ROTATION_PROP, Direction.getFront(meta - 1));
-    }
-
-    @Override
-    public int getMetaFromState(BlockState state)
-    {
-        // Shifting by one due to older tiles not having rotation, default should be UP
-        return state.getValue(ROTATION_PROP).ordinal() + 1;
-    }
-
-    @Override
-    public BlockState getStateForPlacement(World world, BlockPos pos, Direction facing, float hitX, float hitY, float hitZ, int meta, LivingEntity placer, Hand hand)
-    {
-        return getDefaultState().withProperty(ROTATION_PROP, facing);
+        return getDefaultState().with(FACING, context.getFace());
     }
 }

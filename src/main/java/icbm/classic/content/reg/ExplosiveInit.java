@@ -222,9 +222,9 @@ public class ExplosiveInit
         ICBMClassicAPI.EX_MINECART_REGISTRY.setFuseSupplier(ICBMExplosives.ENDOTHERMIC.getRegistryKey(), (entity) -> ConfigBlast.FUSE_TIMES.BOMB_CARTS.ENDOTHERMIC);
 
 
-        ICBMExplosives.ANTI_GRAVITATIONAL = newEx(19, "antigravitational", EnumTier.THREE, (w, x, y, z, s) -> new BlastAntiGravitational().setBlastSize(ConfigBlast.antigravitational.scale).setBlastWorld(w).setBlastPosition(x, y, z));
-        ICBMClassicAPI.EX_BLOCK_REGISTRY.setFuseSupplier(ICBMExplosives.ANTI_GRAVITATIONAL.getRegistryKey(), (world, x, y, z) -> ConfigBlast.FUSE_TIMES.EXPLOSIVES.ANTI_GRAVITATIONAL);
-        ICBMClassicAPI.EX_MINECART_REGISTRY.setFuseSupplier(ICBMExplosives.ANTI_GRAVITATIONAL.getRegistryKey(), (entity) -> ConfigBlast.FUSE_TIMES.BOMB_CARTS.ANTI_GRAVITATIONAL);
+        ICBMExplosives.GRAVITY = newEx(19, "antigravitational", EnumTier.THREE, (w, x, y, z, s) -> new BlastAntiGravitational().setBlastSize(ConfigBlast.antigravitational.scale).setBlastWorld(w).setBlastPosition(x, y, z));
+        ICBMClassicAPI.EX_BLOCK_REGISTRY.setFuseSupplier(ICBMExplosives.GRAVITY.getRegistryKey(), (world, x, y, z) -> ConfigBlast.FUSE_TIMES.EXPLOSIVES.ANTI_GRAVITATIONAL);
+        ICBMClassicAPI.EX_MINECART_REGISTRY.setFuseSupplier(ICBMExplosives.GRAVITY.getRegistryKey(), (entity) -> ConfigBlast.FUSE_TIMES.BOMB_CARTS.ANTI_GRAVITATIONAL);
 
 
         ICBMExplosives.ENDER = newEx(20, "ender", EnumTier.THREE, (w, x, y, z, s) -> new BlastEnder().setBlastSize(ConfigBlast.ender.scale).setBlastWorld(w).setBlastPosition(x, y, z));

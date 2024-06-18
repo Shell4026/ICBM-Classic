@@ -32,12 +32,14 @@ import icbm.classic.prefab.tile.IGuiTile;
 import icbm.classic.prefab.tile.TileMachine;
 import lombok.Getter;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -94,6 +96,7 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
     private final List<PlayerEntity> playersUsing = new LinkedList<>();
 
     public TileEMPTower() {
+        super();
         tickActions.add(descriptionPacketSender);
         tickActions.add(new TickAction(3,true,  (t) -> PACKET_GUI.sendPacketToGuiUsers(this, playersUsing)));
         tickActions.add(new TickAction(20,true,  (t) -> {
@@ -135,9 +138,9 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
     }
 
     @Override
-    public void invalidate()
+    public void remove()
     {
-        super.invalidate();
+        super.remove();
         subBlocks.forEach(tile -> tile.setHost(null));
         subBlocks.clear();
         if (isServer()) {
@@ -160,9 +163,9 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
     }
 
     @Override
-    public void update()
+    public void tick()
     {
-        super.update();
+        super.tick();
 
         if (isServer())
         {
@@ -243,7 +246,7 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
         double d0 = x + vecX + faceX;
         double d1 = y + faceYOffset + faceB;
         double d2 = z + vecZ + faceZ;
-        world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+        world.addParticle(ParticleTypes.SMOKE, d0, d1, d2, 0.0D, 0.0D, 0.0D);
     }
 
     private float clamp(float rotation) {
@@ -292,7 +295,7 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
             }
             else
             {
-                ICBMClassic.logger().warn("TileEmpTower( DIM: " + world.provider.getDimension() + ", " + getPos() + ") EMP did not trigger, likely was blocked.");
+                ICBMClassic.logger().warn("TileEmpTower( DIM: " + world.getDimension().getType().getId() + ", " + getPos() + ") EMP did not trigger, likely was blocked.");
                 //TODO display some info to player to explain why blast failed and more detailed debug
             }
         }
@@ -341,44 +344,35 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable Direction facing)
-    {
-        return super.hasCapability(capability, facing)
-            || capability == CapabilityEnergy.ENERGY && ConfigMain.REQUIRES_POWER
-            || capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
-            || capability == ICBMClassicAPI.RADIO_CAPABILITY;
-    }
-
-    @Override
     @Nullable
-    public <T> T getCapability(Capability<T> capability, @Nullable Direction facing)
+    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing)
     {
         if(capability == CapabilityEnergy.ENERGY) {
-            return (T) energyStorage;
+            return LazyOptional.of(() -> energyStorage).cast();
         }
         else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
         {
-            return (T) inventory;
+            return LazyOptional.of(() -> inventory).cast();
         }
         else if(capability == ICBMClassicAPI.RADIO_CAPABILITY)
         {
-            return (T) radioCap;
+            return LazyOptional.of(() ->  radioCap).cast();
         }
         return super.getCapability(capability, facing);
     }
 
     @Override
-    public void readFromNBT(CompoundNBT nbt)
+    public void read(CompoundNBT nbt)
     {
-        super.readFromNBT(nbt);
+        super.read(nbt);
         SAVE_LOGIC.load(this, nbt);
     }
 
     @Override
-    public CompoundNBT writeToNBT(CompoundNBT nbt)
+    public CompoundNBT write(CompoundNBT nbt)
     {
         SAVE_LOGIC.save(this, nbt);
-        return super.writeToNBT(nbt);
+        return super.write(nbt);
     }
 
     private static final NbtSaveHandler<TileEMPTower> SAVE_LOGIC = new NbtSaveHandler<TileEMPTower>()
@@ -396,7 +390,6 @@ public class TileEMPTower extends TileMachine implements IGuiTile, IMachineInfo,
 
 
     public static void register() {
-        GameRegistry.registerTileEntity(TileEMPTower.class, REGISTRY_NAME);
         PacketCodexReg.register(PACKET_RADIUS, PACKET_RADIO_HZ, PACKET_GUI, PACKET_FIRE, PACKET_RADIO_DISABLE, PACKET_DESCRIPTION);
     }
 

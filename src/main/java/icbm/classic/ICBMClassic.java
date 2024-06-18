@@ -14,6 +14,8 @@ import icbm.classic.content.cargo.CargoHolderHandler;
 import icbm.classic.content.cluster.missile.ClusterMissileHandler;
 import icbm.classic.content.missile.logic.flight.move.MoveByVec3Logic;
 import icbm.classic.content.radioactive.RadioactiveHandler;
+import icbm.classic.content.reg.BlockReg;
+import icbm.classic.content.reg.TileReg;
 import icbm.classic.lib.actions.ActionSystem;
 import icbm.classic.content.blast.caps.CapabilityBlast;
 import icbm.classic.content.blast.caps.CapabilityBlastVelocity;
@@ -57,11 +59,13 @@ import icbm.classic.lib.world.ProjectileBlockInteraction;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.command.CommandSource;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -76,8 +80,6 @@ import org.apache.logging.log4j.Logger;
 @Mod.EventBusSubscriber
 public class ICBMClassic
 {
-    public static final int DATA_FIXER_VERSION = 5;
-
     public static final boolean runningAsDev = System.getProperty("development") != null && System.getProperty("development").equalsIgnoreCase("true");
 
     public static ICBMClassic INSTANCE;
@@ -101,6 +103,10 @@ public class ICBMClassic
 
     public ICBMClassic() {
         INSTANCE = this;
+
+        final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+        BlockReg.BLOCKS.register(modBus);
+        TileReg.TYPES.register(modBus);
     }
 
     /*@SubscribeEvent TODO likely moved to JSON

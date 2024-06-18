@@ -35,7 +35,7 @@ public final class ICBMExplosives
     public static IExplosiveData EMP;
     public static IExplosiveData EXOTHERMIC;
     public static IExplosiveData ENDOTHERMIC;
-    public static IExplosiveData ANTI_GRAVITATIONAL;
+    public static IExplosiveData GRAVITY;
     public static IExplosiveData ENDER;
 
 
