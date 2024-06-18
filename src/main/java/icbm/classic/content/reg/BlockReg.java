@@ -26,10 +26,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
-/**
- * Created by Dark(DarkGuardsman, Robin) on 1/7/19.
- */
-@Mod.EventBusSubscriber(modid = ICBMConstants.DOMAIN)
 public class BlockReg {
     public static final DeferredRegister<Block> BLOCKS = new DeferredRegister<Block>(ForgeRegistries.BLOCKS, ICBMConstants.DOMAIN);
     public static final RegistryObject<BlockSpikes> SPIKE_NORMAL = BLOCKS.register("spikes_normal", BlockSpikes::new);

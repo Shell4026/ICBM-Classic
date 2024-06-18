@@ -146,7 +146,7 @@ public class TileLauncherScreen extends TileMachine implements ILauncherComponen
     }
 
     public static void register() {
-        GameRegistry.registerTileEntity(TileLauncherScreen.class, REGISTRY_NAME);
+
         PacketCodexReg.register(PACKET_RADIO_HZ, PACKET_RADIO_DISABLE, PACKET_TARGET, PACKET_GUI, PACKET_LAUNCH);
     }
 

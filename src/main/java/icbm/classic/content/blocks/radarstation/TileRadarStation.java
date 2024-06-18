@@ -403,7 +403,7 @@ public class TileRadarStation extends TileMachine implements IMachineInfo, IGuiT
         /* */.nodeInteger("sam_delay", tile -> tile.firingCooldown, (tile, i) -> tile.firingCooldown = i)
         .base();
     public static void register() {
-        GameRegistry.registerTileEntity(TileRadarStation.class, REGISTRY_NAME);
+
         PacketCodexReg.register(PACKET_DESCRIPTION, PACKET_GUI, PACKET_RADIO_HZ, PACKET_RADIO_DISABLE, PACKET_DETECTION_RANGE, PACKET_TRIGGER_RANGE, PACKET_REDSTONE_OUTPUT);
     }
 

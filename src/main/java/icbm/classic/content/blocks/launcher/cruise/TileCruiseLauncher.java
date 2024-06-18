@@ -434,7 +434,7 @@ public class TileCruiseLauncher extends TileMachine implements IGuiTile, ILaunch
         .base();
 
     public static void register() {
-        GameRegistry.registerTileEntity(TileCruiseLauncher.class, REGISTRY_NAME);
+
         PacketCodexReg.register(PACKET_DESCRIPTION, PACKET_RADIO_HZ, PACKET_RADIO_DISABLE, PACKET_TARGET, PACKET_GUI, PACKET_LAUNCH);
     }
 

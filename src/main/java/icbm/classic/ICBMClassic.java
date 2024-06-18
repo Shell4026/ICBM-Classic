@@ -10,6 +10,11 @@ import icbm.classic.client.ICBMCreativeTab;
 import icbm.classic.command.ICBMCommands;
 import icbm.classic.command.system.CommandEntryPoint;
 import icbm.classic.config.ConfigThread;
+import icbm.classic.content.blocks.emptower.TileEMPTower;
+import icbm.classic.content.blocks.launcher.base.TileLauncherBase;
+import icbm.classic.content.blocks.launcher.cruise.TileCruiseLauncher;
+import icbm.classic.content.blocks.launcher.screen.TileLauncherScreen;
+import icbm.classic.content.blocks.radarstation.TileRadarStation;
 import icbm.classic.content.cargo.CargoHolderHandler;
 import icbm.classic.content.cluster.missile.ClusterMissileHandler;
 import icbm.classic.content.missile.logic.flight.move.MoveByVec3Logic;
@@ -158,6 +163,13 @@ public class ICBMClassic
     {
         proxy.preInit();
         EnergySystem.register(new EnergySystemFE());
+
+        //Network packets
+        TileEMPTower.register();
+        TileRadarStation.register();
+        TileLauncherBase.register();
+        TileLauncherScreen.register();
+        TileCruiseLauncher.register();
 
         //Register caps
         registerCapabilities();

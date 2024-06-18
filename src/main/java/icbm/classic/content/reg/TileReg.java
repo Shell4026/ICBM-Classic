@@ -14,34 +14,24 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
-/**
- * Created by Dark(DarkGuardsman, Robin) on 1/7/19.
- */
-@Mod.EventBusSubscriber(modid = ICBMConstants.DOMAIN)
 public class TileReg
 {
     public static final DeferredRegister<TileEntityType<?>> TYPES = new DeferredRegister<>(ForgeRegistries.TILE_ENTITIES, ICBMConstants.DOMAIN);
 
-    public static final TileEntityType<?> EMP_TOWER_BASE_TILE = TileEntityType.Builder.create(TileEMPTower::new, BlockReg.EM)
-        .build(null).setRegistryName(new ResourceLocation(ICBMConstants.DOMAIN, "emp_tower_base"));
+    public static final RegistryObject<TileEntityType<?>> EMP_TOWER_BASE = TYPES.register("emp_tower_base", () -> TileEntityType.Builder.create(TileEMPTower::new, BlockReg.EMP_TOWER_BASE.get()).build(null));
+    public static final RegistryObject<TileEntityType<?>> EMP_TOWER_COIL = TYPES.register("emp_tower_coil", () -> TileEntityType.Builder.create(TileEmpTowerFake::new, BlockReg.EMP_TOWER_COIL.get()).build(null));
 
+    public static final RegistryObject<TileEntityType<?>> RADAR_STATION = TYPES.register("radar_station", () -> TileEntityType.Builder.create(TileRadarStation::new, BlockReg.RADAR_STATION.get()).build(null));
 
-    @SubscribeEvent
-    public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> evt) {
-        TileEMPTower.register();
-        evt.getRegistry().register(EMP_TOWER_BASE_TILE);
-        GameRegistry.registerTileEntity(TileEmpTowerFake.class, new ResourceLocation(ICBMConstants.DOMAIN, "emptower_fake"));
-        TileRadarStation.register();
-        GameRegistry.registerTileEntity(TileLauncherFrame.class, new ResourceLocation(ICBMConstants.DOMAIN, "launcherframe"));
-        GameRegistry.registerTileEntity(TileLauncherConnector.class, new ResourceLocation(ICBMConstants.DOMAIN, "launcher_connector"));
-        TileLauncherBase.register();
-        TileLauncherScreen.register();
-        GameRegistry.registerTileEntity(TileMulti.class, new ResourceLocation(ICBMConstants.DOMAIN, "multiblock"));
-        TileCruiseLauncher.register();
-    }
+    public static final RegistryObject<TileEntityType<?>> LAUNCHER_FRAME = TYPES.register("launcher_frame", () -> TileEntityType.Builder.create(TileLauncherFrame::new, BlockReg.LAUNCHER_FRAME.get()).build(null));
+    public static final RegistryObject<TileEntityType<?>> LAUNCHER_CONNECTOR = TYPES.register("launcher_connector", () -> TileEntityType.Builder.create(TileLauncherConnector::new, BlockReg.LAUNCHER_CONNECTOR.get()).build(null));
+    public static final RegistryObject<TileEntityType<?>> LAUNCHER_BASE = TYPES.register("launcher_base", () -> TileEntityType.Builder.create(TileLauncherBase::new, BlockReg.LAUNCHER_BASE.get()).build(null));
+    public static final RegistryObject<TileEntityType<?>> LAUNCHER_SCREEN = TYPES.register("launcher_screen", () -> TileEntityType.Builder.create(TileLauncherScreen::new, BlockReg.LAUNCHER_SCREEN.get()).build(null));
+    public static final RegistryObject<TileEntityType<?>> LAUNCHER_CRUISE = TYPES.register("launcher_cruise", () -> TileEntityType.Builder.create(TileCruiseLauncher::new, BlockReg.LAUNCHER_CRUISE.get()).build(null));
 }

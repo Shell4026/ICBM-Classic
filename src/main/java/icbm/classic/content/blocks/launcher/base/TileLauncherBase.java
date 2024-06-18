@@ -395,7 +395,7 @@ public class TileLauncherBase extends TileMachine implements ILauncherComponent,
         .base();
 
     public static void register() {
-        GameRegistry.registerTileEntity(TileLauncherBase.class, REGISTRY_NAME);
+
         PacketCodexReg.register(PACKET_DESCRIPTION, PACKET_GUI, PACKET_LOCK_HEIGHT, PACKET_GROUP_ID, PACKET_GROUP_INDEX, PACKET_FIRING_DELAY, PACKET_SEAT_ROTATION);
     }
 
