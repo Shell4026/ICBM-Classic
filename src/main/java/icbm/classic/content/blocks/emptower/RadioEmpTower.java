@@ -35,7 +35,7 @@ public class RadioEmpTower extends RadioTile<TileEMPTower> implements IRadioRece
             // Radar station
             if(packet instanceof IncomingMissileMessage && ((IncomingMissileMessage) packet).shouldTrigger()) {
                 final IMissile missile = ((IncomingMissileMessage) packet).getMissile();
-                final double distance = host.getDistanceSq(missile.x(), missile.y(), missile.z());
+                final double distance = Math.sqrt(host.getDistanceSq(missile.x(), missile.y(), missile.z()));
                 if(distance < host.getRange()) {
                     if(host.fire(cause)) {
                         sender.onMessageCallback(this, new TextMessage(getChannel(), SUCCESS));
