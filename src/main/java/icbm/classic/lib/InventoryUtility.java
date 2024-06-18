@@ -23,59 +23,12 @@ import java.util.List;
  */
 public class InventoryUtility
 {
-    /**
-     * Attempts to drop the block at the location as an item. Does not check what the block is
-     * and can fail if the block doesn't contain items.
-     *
-     * @param world
-     * @param pos
-     * @param destroy - will break the block
-     */
-    public static List<ItemEntity> dropBlockAsItem(World world, BlockPos pos, boolean destroy)
-    {
-        List<ItemEntity> entities = new ArrayList();
-        if (!world.isRemote)
-        {
-            BlockState state = world.getBlockState(pos);
-
-            if (state != null && !state.getBlock().isAir(state, world, pos))
-            {
-                List<ItemStack> items = state.getBlock().getDrops(world, pos, state, 0);
-
-                for (ItemStack itemStack : items)
-                {
-                    ItemEntity entityItem = dropItemStack(world, new Pos(pos), itemStack, 10);
-                    if (entityItem != null)
-                    {
-                        entities.add(entityItem);
-                    }
-                }
-            }
-            if (destroy)
-            {
-                world.setBlockToAir(pos);
-            }
-        }
-        return entities;
-    }
-
-    public static ItemEntity dropItemStack(World world, IPos3D position, ItemStack itemStack, int delay)
-    {
-        return dropItemStack(world, position, itemStack, delay, 0f);
-    }
-
-    public static ItemEntity dropItemStack(World world, IPos3D position, ItemStack itemStack, int delay, float randomAmount)
-    {
-        return dropItemStack(world, position.x(), position.y(), position.z(), itemStack, delay, randomAmount);
-    }
 
     public static void dropInventory(World world, BlockPos pos) {
         final TileEntity tile = world.getTileEntity(pos);
-        if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+        if (tile != null)
         {
-            final IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-            if(handler != null) {
-
+            tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent((handler) -> {
                 final double x = pos.getX() + 0.5;
                 final double y = pos.getY() + 0.5;
                 final double z = pos.getZ() + 0.5;
@@ -87,7 +40,7 @@ public class InventoryUtility
                     }
                     dropItemStack(world, x, y, z, stack, 0, 0);
                 }
-            }
+            });
         }
     }
 
@@ -112,18 +65,16 @@ public class InventoryUtility
 
             if (randomAmount <= 0)
             {
-                entityitem.motionX = 0;
-                entityitem.motionY = 0;
-                entityitem.motionZ = 0;
+                entityitem.setMotion(0, 0, 0);
             }
 
-            if (itemStack.hasTagCompound())
+            if (itemStack.hasTag())
             {
-                entityitem.getItem().setTagCompound(itemStack.getTagCompound().copy());
+                entityitem.getItem().setTag(itemStack.getTag().copy());
             }
 
             entityitem.setPickupDelay(delay);
-            world.spawnEntity(entityitem);
+            world.addEntity(entityitem);
             return entityitem;
         }
         return null;
@@ -171,13 +122,13 @@ public class InventoryUtility
      */
     public static boolean doesStackNBTMatch(ItemStack stackA, ItemStack stackB)
     {
-        return doTagsMatch(stackA.getTagCompound(), stackB.getTagCompound());
+        return doTagsMatch(stackA.getTag(), stackB.getTag());
     }
 
     public static boolean doTagsMatch(final CompoundNBT tag, final CompoundNBT tag2)
     {
-        boolean firstTagEmpty = tag == null || tag.hasNoTags();
-        boolean firstTagEmpty2 = tag2 == null || tag2.hasNoTags();
+        boolean firstTagEmpty = tag == null || tag.isEmpty();
+        boolean firstTagEmpty2 = tag2 == null || tag2.isEmpty();
         if (firstTagEmpty && firstTagEmpty2)
         {
             return true;

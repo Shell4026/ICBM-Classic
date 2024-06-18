@@ -10,6 +10,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Items;
 import net.minecraft.state.DirectionProperty;
@@ -19,8 +21,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -63,7 +67,7 @@ public class BlockLauncherBase extends ContainerBlock
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, BlockState state, PlayerEntity playerIn, Hand hand, Direction facing, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit)
     {
         final TileEntity tile = worldIn.getTileEntity(pos);
         if (tile instanceof TileLauncherBase && !worldIn.isRemote)
@@ -75,24 +79,24 @@ public class BlockLauncherBase extends ContainerBlock
                 return true;
             }
             if(!((TileLauncherBase) tile).tryInsertMissile(playerIn, hand, playerIn.getHeldItem(hand))) {
-                playerIn.openGui(ICBMClassic.INSTANCE, 0, worldIn, pos.getX(), pos.getY(), pos.getZ());
+                //playerIn.openGui(ICBMClassic.INSTANCE, 0, worldIn, pos.getX(), pos.getY(), pos.getZ()); TODO
             }
             return true;
         }
         return true;
     }
 
-    @Override
-    public void breakBlock(World world, BlockPos pos, BlockState state)
-    {
-        super.onPlayerDestroy();
-        TileEntity tile = world.getTileEntity(pos);
-        if (tile instanceof ILauncherComponent)
-        {
-            ((ILauncherComponent) tile).getNetworkNode().onTileRemoved();
+    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (state.getBlock() != newState.getBlock()) {
+            TileEntity tile = world.getTileEntity(pos);
+            if (tile instanceof TileLauncherBase)
+            {
+                ((TileLauncherBase) tile).getNetworkNode().onTileRemoved();
+                InventoryUtility.dropInventory(world, pos);
+            }
+
+            super.onReplaced(state, world, pos, newState, isMoving);
         }
-        InventoryUtility.dropInventory(world, pos);
-        super.breakBlock(world, pos, state);
     }
 
     @Override

@@ -15,6 +15,7 @@ import icbm.classic.content.blocks.launcher.network.LauncherNode;
 import icbm.classic.content.missile.logic.source.cause.EntityCause;
 import icbm.classic.content.missile.logic.source.cause.RedstoneCause;
 import icbm.classic.content.missile.logic.targeting.BasicTargetData;
+import icbm.classic.content.reg.TileReg;
 import icbm.classic.lib.NBTConstants;
 import icbm.classic.lib.capability.launcher.CapabilityMissileHolder;
 import icbm.classic.lib.data.IMachineInfo;
@@ -47,14 +48,16 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nullable;
@@ -116,6 +119,7 @@ public class TileCruiseLauncher extends TileMachine implements IGuiTile, ILaunch
     private final List<PlayerEntity> playersUsing = new LinkedList<>();
 
     public TileCruiseLauncher() {
+        super(TileReg.LAUNCHER_CRUISE.get());
         tickActions.add(descriptionPacketSender);
         tickActions.add(new TickAction(3, true, (t) -> PACKET_GUI.sendPacketToGuiUsers(this, playersUsing)));
         tickActions.add(new TickAction(20, true, (t) -> {
@@ -155,12 +159,12 @@ public class TileCruiseLauncher extends TileMachine implements IGuiTile, ILaunch
     }
 
     @Override
-    public void invalidate()
+    public void remove()
     {
         if (isServer()) {
             RadioRegistry.remove(radio);
         }
-        super.invalidate();
+        super.remove();
     }
 
     @Override
@@ -204,9 +208,9 @@ public class TileCruiseLauncher extends TileMachine implements IGuiTile, ILaunch
     }
 
     @Override
-    public void update()
+    public void tick()
     {
-        super.update();
+        super.tick();
 
         //TODO add a per tick energy consumption or at least while aiming
 
@@ -222,7 +226,7 @@ public class TileCruiseLauncher extends TileMachine implements IGuiTile, ILaunch
 
             // Check redstone
             if (this.ticks % REDSTONE_CHECK_RATE == 0) {
-                for (Direction side : Direction.VALUES) {
+                for (Direction side : Direction.values()) {
                     final int power = world.getRedstonePower(getPos().offset(side), side);
                     if (power > 1) {
                         firingPackage = new FiringPackage(new BasicTargetData(getTarget()), new RedstoneCause(getWorld(), getPos(), getBlockState(), side), 0);
@@ -327,8 +331,8 @@ public class TileCruiseLauncher extends TileMachine implements IGuiTile, ILaunch
                      final BlockState state = world.getBlockState(pos);
                      final Block block = state.getBlock();
                      if (!block.isAir(state, world, pos)) {
-                         final AxisAlignedBB box = block.getCollisionBoundingBox(state, world, pos);
-                         return box == null || box.maxY < 0.5;
+                         final VoxelShape box = block.getCollisionShape(state, world, pos, ISelectionContext.dummy());
+                         return box.isEmpty() || box.getEnd(Direction.Axis.Y) < 0.5;
                      }
                  }
              }
@@ -360,37 +364,27 @@ public class TileCruiseLauncher extends TileMachine implements IGuiTile, ILaunch
         return new GuiCruiseLauncher(player, this);
     }
 
-    @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable Direction facing)
-    {
-        return super.hasCapability(capability, facing)
-            || capability == CapabilityEnergy.ENERGY && ConfigMain.REQUIRES_POWER
-            || capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
-            || capability == ICBMClassicAPI.MISSILE_HOLDER_CAPABILITY
-            || capability == ICBMClassicAPI.MISSILE_LAUNCHER_CAPABILITY
-            || capability == ICBMClassicAPI.RADIO_CAPABILITY;
-    }
 
     @Override
     @Nullable
-    public <T> T getCapability(Capability<T> capability, @Nullable Direction facing)
+    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing)
     {
         if(capability == CapabilityEnergy.ENERGY) {
-            return (T) energyStorage;
+            return LazyOptional.of(() -> energyStorage).cast();
         }
         else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
         {
-            return (T) inventory;
+            return LazyOptional.of(() -> inventory).cast();
         } else if (capability == ICBMClassicAPI.MISSILE_HOLDER_CAPABILITY)
         {
-            return (T) missileHolder;
+            return LazyOptional.of(() -> missileHolder).cast();
         }
         else if(capability == ICBMClassicAPI.MISSILE_LAUNCHER_CAPABILITY) {
-            return (T) launcher;
+            return LazyOptional.of(() -> launcher).cast();
         }
         else if(capability == ICBMClassicAPI.RADIO_CAPABILITY)
         {
-            return (T) radio;
+            return LazyOptional.of(() -> radio).cast();
         }
         return super.getCapability(capability, facing);
     }
@@ -405,21 +399,18 @@ public class TileCruiseLauncher extends TileMachine implements IGuiTile, ILaunch
     }
 
     @Override
-    public void readFromNBT(CompoundNBT nbt)
+    public void read(CompoundNBT nbt)
     {
-        super.readFromNBT(nbt);
+        super.read(nbt);
         SAVE_LOGIC.load(this, nbt);
-        if(nbt.hasKey(NBTConstants.FREQUENCY)) {
-            this.radio.setChannel(Integer.toString(nbt.getInt(NBTConstants.FREQUENCY)));
-        }
         initFromLoad();
     }
 
     @Override
-    public CompoundNBT writeToNBT(CompoundNBT nbt)
+    public CompoundNBT write(CompoundNBT nbt)
     {
         SAVE_LOGIC.save(this, nbt);
-        return super.writeToNBT(nbt);
+        return super.write(nbt);
     }
 
     private static final NbtSaveHandler<TileCruiseLauncher> SAVE_LOGIC = new NbtSaveHandler<TileCruiseLauncher>()

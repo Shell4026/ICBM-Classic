@@ -2,10 +2,13 @@ package icbm.classic.client.render.entity;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import icbm.classic.content.blocks.explosive.BlockExplosive;
+import icbm.classic.content.blocks.explosive.ItemBlockExplosive;
 import icbm.classic.content.entity.EntityExplosive;
 import icbm.classic.content.reg.BlockReg;
 import icbm.classic.prefab.tile.BlockICBM;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -39,9 +42,13 @@ public class RenderExBlock extends EntityRenderer<EntityExplosive>
 
     public void renderBlock(EntityExplosive entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
-        final BlockState blockState = BlockReg.blockExplosive.getDefaultState()
-            .with(BlockICBM.ROTATION_PROP, Direction.UP) //TODO get direction from rotation
-            .with(BlockExplosive.EX_PROP, entity.getExplosiveData());
+        final Block block = entity.capabilityExplosive.toStack().getItem() instanceof ItemBlockExplosive
+            ? ((ItemBlockExplosive) entity.capabilityExplosive.toStack().getItem()).getBlock()
+            : BlockReg.EXPLOSIVE_CONDENSED.get();
+
+        final BlockState blockState = block.getDefaultState()
+            .with(BlockExplosive.FACING, Direction.UP);
+
         final BlockRendererDispatcher blockrendererdispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
 
         GlStateManager.pushMatrix();
@@ -73,7 +80,7 @@ public class RenderExBlock extends EntityRenderer<EntityExplosive>
             GlStateManager.color4f(1.0F, 1.0F, 1.0F, (1.0F - ((float)entity.fuse - partialTicks + 1.0F) / 100.0F) * 0.8F);
             GlStateManager.polygonOffset(-3.0F, -3.0F);
             GlStateManager.enablePolygonOffset();
-            blockrendererdispatcher.renderBlockBrightness(BlockReg.blockExplosive.getDefaultState(), 1.0F);
+            blockrendererdispatcher.renderBlockBrightness(blockState, 1.0F);
             GlStateManager.polygonOffset(0.0F, 0.0F);
             GlStateManager.disablePolygonOffset();
             GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);

@@ -4,7 +4,10 @@ import icbm.classic.lib.saving.NbtSaveHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.network.IPacket;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.server.SSpawnObjectPacket;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
@@ -22,11 +25,11 @@ public class EntitySmoke extends Entity implements IEntityAdditionalSpawnData
     public EntitySmoke(World world)
     {
         super(world);
-        this.setSize(1F, 1F);
+        //this.setSize(1F, 1F);
         this.preventEntitySpawning = true;
         this.ignoreFrustumCheck = true;
-        this.height = 0.1f;
-        this.width = 0.1f;
+        //this.height = 0.1f;
+        //this.width = 0.1f;
     }
 
     @Override
@@ -44,7 +47,7 @@ public class EntitySmoke extends Entity implements IEntityAdditionalSpawnData
     }
 
     @Override
-    public void writeSpawnData(ByteBuf data)
+    public void writeSpawnData(PacketBuffer data)
     {
         data.writeFloat(this.red);
         data.writeFloat(this.green);
@@ -53,7 +56,7 @@ public class EntitySmoke extends Entity implements IEntityAdditionalSpawnData
     }
 
     @Override
-    public void readSpawnData(ByteBuf data)
+    public void readSpawnData(PacketBuffer data)
     {
         this.red = data.readFloat();
         this.green = data.readFloat();
@@ -62,18 +65,18 @@ public class EntitySmoke extends Entity implements IEntityAdditionalSpawnData
     }
 
     @Override
-    public void onUpdate()
+    public void tick()
     {
         //Safety in case the beam is never killed
         if (ticksExisted > ticksToLive)
         {
-            setDead();
+            remove();
         }
 
         // TODO scale with age with mid life having most, early low and later trailing off
         final int spawnCount = 3 + world.rand.nextInt(4);
         for(int i = 0; i < spawnCount; i++) {
-            world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, posX, posY + 0.1f, posZ,
+            world.addParticle(ParticleTypes.SMOKE, posX, posY + 0.1f, posZ,
                 0.05f * world.rand.nextFloat() - 0.05f * world.rand.nextFloat(),
                 0.1f,
                 0.05f * world.rand.nextFloat() - 0.05f * world.rand.nextFloat());
@@ -99,15 +102,20 @@ public class EntitySmoke extends Entity implements IEntityAdditionalSpawnData
     }
 
     @Override
-    protected void readEntityFromNBT(CompoundNBT tag)
+    protected void readAdditional(CompoundNBT tag)
     {
         SAVE_LOGIC.load(this, tag);
     }
 
     @Override
-    protected void writeEntityToNBT(CompoundNBT tag)
+    protected void writeAdditional(CompoundNBT tag)
     {
         SAVE_LOGIC.save(this, tag);
+    }
+
+    @Override
+    public IPacket<?> createSpawnPacket() {
+        return new SSpawnObjectPacket(this);
     }
 
     private static final NbtSaveHandler<EntitySmoke> SAVE_LOGIC = new NbtSaveHandler<EntitySmoke>()

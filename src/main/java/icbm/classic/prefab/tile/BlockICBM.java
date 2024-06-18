@@ -13,60 +13,20 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 public abstract class BlockICBM extends Block
 {
-    public static final PropertyDirection ROTATION_PROP = PropertyDirection.create("rotation");
-
-    protected boolean dropInventory = false;
-
-    public BlockICBM(String name, Material mat)
-    {
-        super(mat);
-        blockHardness = 10f;
-        blockResistance = 10f;
-        setRegistryName(ICBMConstants.DOMAIN, name.toLowerCase());
-        setUnlocalizedName(ICBMConstants.PREFIX + name.toLowerCase());
-        setCreativeTab(ICBMClassic.CREATIVE_TAB);
-    }
-
-    public BlockICBM(String name)
-    {
-        this(name, Material.IRON);
+    public BlockICBM(Properties p_i48440_1_) {
+        super(p_i48440_1_);
     }
 
     @Override
-    protected BlockStateContainer createBlockState()
+    public void onPlayerDestroy(IWorld worldIn, BlockPos pos, BlockState state)
     {
-        super.stateContainer
-        return new BlockStateContainer(this, ROTATION_PROP);
-    }
-
-    @Override
-    public BlockState getStateFromMeta(int meta)
-    {
-        return getDefaultState().withProperty(ROTATION_PROP, Direction.getFront(meta));
-    }
-
-    @Override
-    public int getMetaFromState(BlockState state)
-    {
-        return state.getValue(ROTATION_PROP).ordinal();
-    }
-
-    @Override
-    public BlockState getStateForPlacement(World world, BlockPos pos, Direction facing, float hitX, float hitY, float hitZ, int meta, LivingEntity placer, Hand hand)
-    {
-        return getDefaultState().withProperty(ROTATION_PROP, placer.getHorizontalFacing());
-    }
-
-    @Override
-    public void breakBlock(World world, BlockPos pos, BlockState state)
-    {
-        if(dropInventory) {
-            InventoryUtility.dropInventory(world, pos);
-        }
-        super.breakBlock(world, pos, state);
+        /*if(dropInventory) {
+            InventoryUtility.dropInventory(worldIn, pos);
+        }*/
     }
 }

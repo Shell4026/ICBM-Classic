@@ -27,6 +27,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -415,10 +416,10 @@ public abstract class EntityProjectile<PROJECTILE extends EntityProjectile<PROJE
     }
 
     @Override
-    public Entity changeDimension(int dimensionIn, ITeleporter teleporter) {
+    public Entity changeDimension(DimensionType destination) {
 
         this.changingDimensions = true;
-        return super.changeDimension(dimensionIn, teleporter);
+        return super.changeDimension(destination);
     }
 
     @Override
