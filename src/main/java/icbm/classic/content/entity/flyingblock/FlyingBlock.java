@@ -5,6 +5,7 @@ import icbm.classic.config.util.BlockStateConfigListOld;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.IFluidBlock;
@@ -81,7 +82,11 @@ public class FlyingBlock {
             if (hardness >= 0)
             {
                 final BlockCaptureData blockCaptureData = new BlockCaptureData(world, pos);
-                return spawnFlyingBlock(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, blockCaptureData, preSpawnCallback, postSpawnCallback, () -> world.setBlockToAir(pos));
+                return spawnFlyingBlock(world,
+                    pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+                    blockCaptureData, preSpawnCallback, postSpawnCallback,
+                    () -> world.setBlockState(pos, Blocks.AIR.getDefaultState(), 2)
+                );
             }
         }
         return false;
