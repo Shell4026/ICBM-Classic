@@ -6,15 +6,19 @@ This log contains changes made to the project. Each entry contains changed made 
 
 ## 1.12.2-6.3.0 - June 20th, 2024
 
+### Runtime Changes
+
 * Added: config to disable JEI support
 * Added: config to disable payload recipes in JEI
+* Changed: emp tower to ignore missile intercepts outside it's max range
 * Reworked: missile emp effect
 * Fixed: conditional action system not building meta types (broke emp and cluster)
 * Fixed: emp tower not firing
 * Fixed: emp tower animation not playing if power requirements were off
 * Fixed: emp tower showing power requirements when power was disabled
+* Fixed: possible issue with flying block duplication, isn't confirmed but changes setBlock from status 3 to 2
 
-### Missile EMP Rework
+#### Missile EMP Rework
 
 Previously missile would only disable it's engine on EMP. With 6.3.0 it will randomly switch between engine disable, engine fuel explosion, missile destruction, and payload triggering. All of this is configurable and can be disabled as desired.
 
@@ -28,6 +32,12 @@ Order of chance is destruction -> engine/guidance -> payload. Chance is less tha
     * ExMissile -> explosive
     * ActionMissile(cluster) -> action
     * SAM -> Explosion: 1f
+
+### Dev Changes
+
+* Fixed: MetaTag generation using key as domain and other janky issues. This broke the MetaTag.isType check
+* Changed: MetaTag key to be namespace (mod's domain) + path (previosuly key)
+* Changed: MetaTag subtype creationg to prefix the parent's path to better organize. Previously key was just `icbmclassic:error` now is `icbmclassic:action.status.red.error`. This will help with translation keys later and make it more clear what the tag is by name alone.
 
 ## 1.12.2-6.2.0 - June 14, 2024
 
