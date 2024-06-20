@@ -15,13 +15,41 @@ public class ConfigEMP
     @Config.Comment("Should a lighting effect be applied to the creeper to super charge it due to EMP effect?")
     public static boolean ALLOW_LIGHTING_CREEPER = true;
 
-    @Config.Name("allow_missiles")
-    @Config.Comment("Should the EMP effect disable missile guidance systems?")
-    public static boolean ALLOW_MISSILES = true;
+    @Config.Name("missiles")
+    @Config.Comment("EMP Settings for missiles")
+    public static final Missiles missiles = new Missiles();
 
-    @Config.Name("allow_missiles_drop")
-    @Config.Comment("Should EMP effect trigger missiles entities to drop as items when killed?")
-    public static boolean ALLOW_MISSILE_DROPS = true;
+    public static class Missiles {
+
+        @Config.Name("enabled")
+        @Config.Comment("Should EMP work on missiles")
+        public boolean enabled = true;
+
+        @Config.Name("engine_kill_chance")
+        @Config.Comment("Chance the engine will be disabled, random <= chance")
+        @Config.RangeDouble(min = 0, max = 1)
+        public float engineKillChance = 0.8f;
+
+        @Config.Name("engine_fuel_blow_chance")
+        @Config.Comment("Chance that when the missile is killed the fuel will detonate, random <= chance")
+        @Config.RangeDouble(min = 0, max = 1)
+        public float engineFullBlowChance = 1f;
+
+        @Config.Name("engine_fuel_blow_strength")
+        @Config.Comment("Power of the explosion from the fuel")
+        @Config.RangeDouble(min = 0.1)
+        public float engineFullBlowStrength = 1f;
+
+        @Config.Name("missile_kill_chance")
+        @Config.Comment("Chance the missile will be destroyed, random <= chance")
+        @Config.RangeDouble(min = 0, max = 1)
+        public float missileKillChance = 0.5f;
+
+        @Config.Name("missile_trigger_chance")
+        @Config.Comment("Chance the missile explosive will be triggered, random <= chance")
+        @Config.RangeDouble(min = 0, max = 1)
+        public float missileTriggerChance = 0.1f;
+    }
 
     @Config.Name("allow_entity_inventory")
     @Config.Comment("Should EMP effect run on entity inventories? (Eg. Player, Cart)")

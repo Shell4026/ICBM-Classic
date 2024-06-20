@@ -4,6 +4,7 @@ import icbm.classic.ICBMConstants;
 import icbm.classic.api.ICBMClassicAPI;
 import icbm.classic.api.missiles.ICapabilityMissileStack;
 import icbm.classic.api.missiles.projectile.IProjectileStack;
+import icbm.classic.config.ConfigJEI;
 import icbm.classic.content.cargo.CargoHolderHandler;
 import icbm.classic.content.cargo.CargoProjectileData;
 import icbm.classic.content.cluster.missile.CapabilityClusterMissileStack;
@@ -65,32 +66,37 @@ public class JEIProxy implements IModPlugin {
 
     @Override
     public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry) {
-        subtypeRegistry.registerSubtypeInterpreter(ItemReg.itemParachute, (i) -> this.cargoItemKey(subtypeRegistry, i));
-        subtypeRegistry.registerSubtypeInterpreter(ItemReg.itemBalloon, (i) -> this.cargoItemKey(subtypeRegistry, i));
-        subtypeRegistry.registerSubtypeInterpreter(ItemReg.itemClusterMissile, (i) -> this.clusterItemKey(subtypeRegistry, i));
+        if(!ConfigJEI.DISABLED) {
+            subtypeRegistry.registerSubtypeInterpreter(ItemReg.itemParachute, (i) -> this.cargoItemKey(subtypeRegistry, i));
+            subtypeRegistry.registerSubtypeInterpreter(ItemReg.itemBalloon, (i) -> this.cargoItemKey(subtypeRegistry, i));
+            subtypeRegistry.registerSubtypeInterpreter(ItemReg.itemClusterMissile, (i) -> this.clusterItemKey(subtypeRegistry, i));
+        }
     }
 
     @Override
     public void register(IModRegistry registry) {
-        //https://github.com/ExtraCells/ExtraCells2/blob/b1d03907d911909aaa3b176a7cc90eac0c1467dc/src/main/scala/extracells/integration/jei/Plugin.scala
 
-        final List recipes = new ArrayList();
-        for(ItemStack stack : registry.getIngredientRegistry().getIngredients(ItemStack.class)) {
-            if(CargoHolderHandler.isAllowed(stack)) {
-                recipes.add(new CargoItemWrapper(new ItemStack(ItemReg.itemBalloon), stack, new ResourceLocation(ICBMConstants.DOMAIN, "balloon_cargo")));
-                recipes.add(new CargoItemWrapper(new ItemStack(ItemReg.itemParachute), stack, new ResourceLocation(ICBMConstants.DOMAIN, "parachute_cargo")));
+        if(!ConfigJEI.DISABLED && !ConfigJEI.DISABLE_PAYLOAD) {
+            //https://github.com/ExtraCells/ExtraCells2/blob/b1d03907d911909aaa3b176a7cc90eac0c1467dc/src/main/scala/extracells/integration/jei/Plugin.scala
+
+            final List recipes = new ArrayList();
+            for (ItemStack stack : registry.getIngredientRegistry().getIngredients(ItemStack.class)) {
+                if (CargoHolderHandler.isAllowed(stack)) {
+                    recipes.add(new CargoItemWrapper(new ItemStack(ItemReg.itemBalloon), stack, new ResourceLocation(ICBMConstants.DOMAIN, "balloon_cargo")));
+                    recipes.add(new CargoItemWrapper(new ItemStack(ItemReg.itemParachute), stack, new ResourceLocation(ICBMConstants.DOMAIN, "parachute_cargo")));
+                }
+                if (ClusterMissileHandler.isAllowed(stack)) {
+                    recipes.add(new ClusterItemWrapper(new ItemStack(ItemReg.itemClusterMissile), stack, new ResourceLocation(ICBMConstants.DOMAIN, "cluster_missile")));
+                }
             }
-            if(ClusterMissileHandler.isAllowed(stack)) {
-                recipes.add(new ClusterItemWrapper(new ItemStack(ItemReg.itemClusterMissile), stack, new ResourceLocation(ICBMConstants.DOMAIN, "cluster_missile")));
-            }
+
+            /*final List<ItemStack> stacks = registry.getIngredientRegistry().getIngredients(ItemStack.class)
+                .stream().filter(i -> ClusterMissileHandler.isAllowed(i))
+                .collect(Collectors.toList());
+            recipes.add(new ClusterItemAllWrapper(new ItemStack(ItemReg.itemClusterMissile), stacks, false, new ResourceLocation(ICBMConstants.DOMAIN, "cluster_missile")));
+            recipes.add(new ClusterItemAllWrapper(new ItemStack(ItemReg.itemClusterMissile), stacks, true, new ResourceLocation(ICBMConstants.DOMAIN, "cluster_missile")));
+            */
+            registry.addRecipes(recipes, VanillaRecipeCategoryUid.CRAFTING);
         }
-
-        /*final List<ItemStack> stacks = registry.getIngredientRegistry().getIngredients(ItemStack.class)
-            .stream().filter(i -> ClusterMissileHandler.isAllowed(i))
-            .collect(Collectors.toList());
-        recipes.add(new ClusterItemAllWrapper(new ItemStack(ItemReg.itemClusterMissile), stacks, false, new ResourceLocation(ICBMConstants.DOMAIN, "cluster_missile")));
-        recipes.add(new ClusterItemAllWrapper(new ItemStack(ItemReg.itemClusterMissile), stacks, true, new ResourceLocation(ICBMConstants.DOMAIN, "cluster_missile")));
-        */
-        registry.addRecipes(recipes, VanillaRecipeCategoryUid.CRAFTING);
     }
 }
